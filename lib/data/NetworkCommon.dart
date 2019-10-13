@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:olx/model/app_exception.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -28,6 +29,23 @@ class NetworkCommon {
       return _decoder.convert(jsonBody);
     } else {
       return jsonBody;
+    }
+  }
+  dynamic _returnResponse(Response response) {
+    switch (response.statusCode) {
+      case 200:
+        var responseJson = json.decode(response.data.toString());
+        print(responseJson);
+        return responseJson;
+      case 400:
+        throw BadRequestException(response.data.toString());
+      case 401:
+      case 403:
+        throw UnauthorisedException(response.data.toString());
+      case 500:
+      default:
+        throw FetchDataException(
+            'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
     }
   }
 

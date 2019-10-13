@@ -5,6 +5,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'dart:convert';
 import 'package:http_parser/http_parser.dart';
+import 'package:olx/data/bloc/bloc_provider.dart';
+import 'package:olx/data/bloc/upload_image_bloc.dart';
+import 'package:olx/model/StateEnum.dart';
+import 'package:olx/model/upload_image_entity.dart';
+import 'package:olx/utils/Theme.dart';
 
 class ImageInput extends StatefulWidget {
   @override
@@ -14,70 +19,21 @@ class ImageInput extends StatefulWidget {
 }
 class _ImageInput extends State<ImageInput> {
   // To store the file provided by the image_picker
-  File _imageFile;
-  // To track the file uploading state
-  bool _isUploading = false;
-  String baseUrl = 'http://YOUR_IPV4_ADDRESS/flutterdemoapi/api.php';
+
+var _bloc;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _bloc = BlocProvider.of<UploadImageBloc>(context);
+  }
   void _getImage(BuildContext context, ImageSource source) async {
     File image = await ImagePicker.pickImage(source: source);
-    setState(() {
-      _imageFile = image;
-    });
+    _bloc.uploadImage(image.path);
     // Closes the bottom sheet
     Navigator.pop(context);
   }
-  Future<Map<String, dynamic>> _uploadImage(File image) async {
-    setState(() {
-      _isUploading = true;
-    });
-    // Find the mime type of the selected file by looking at the header bytes of the file
-    final mimeTypeData =
-    lookupMimeType(image.path, headerBytes: [0xFF, 0xD8]).split('/');
-    // Intilize the multipart request
-    final imageUploadRequest =
-    http.MultipartRequest('POST', Uri.parse(baseUrl));
-    // Attach the file in the request
-    final file = await http.MultipartFile.fromPath('image', image.path,
-        contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-    // Explicitly pass the extension of the image with request body
-    // Since image_picker has some bugs due which it mixes up
-    // image extension with file name like this filenamejpge
-    // Which creates some problem at the server side to manage
-    // or verify the file extension
-    imageUploadRequest.fields['ext'] = mimeTypeData[1];
-    imageUploadRequest.files.add(file);
-    try {
-      final streamedResponse = await imageUploadRequest.send();
-      final response = await http.Response.fromStream(streamedResponse);
-      if (response.statusCode != 200) {
-        return null;
-      }
-      final Map<String, dynamic> responseData = json.decode(response.body);
-      _resetState();
-      return responseData;
-    } catch (e) {
-      print(e);
-      return null;
-    }
-  }
-  void _startUploading() async {
-    final Map<String, dynamic> response = await _uploadImage(_imageFile);
-    print(response);
-    // Check if any error occured
-    if (response == null || response.containsKey("error")) {
-      //Toast.show("Image Upload Failed!!!", context,
-         // duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-    } else {
-      //Toast.show("Image Uploaded Successfully!!!", context,
-         // duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-    }
-  }
-  void _resetState() {
-    setState(() {
-      _isUploading = false;
-      _imageFile = null;
-    });
-  }
+
   void _openImagePickerModal(BuildContext context) {
     final flatButtonColor = Theme.of(context).primaryColor;
     print('Image Picker Modal Called');
@@ -115,32 +71,23 @@ class _ImageInput extends State<ImageInput> {
           );
         });
   }
-  Widget _buildUploadBtn() {
-    Widget btnWidget = Container();
-    if (_isUploading) {
-      // File is being uploaded then show a progress indicator
-      btnWidget = Container(
-          margin: EdgeInsets.only(top: 10.0),
-          child: CircularProgressIndicator());
-    } else if (!_isUploading && _imageFile != null) {
-      // If image is picked by the user then show a upload btn
-      btnWidget = Container(
-        margin: EdgeInsets.only(top: 10.0),
-        child: RaisedButton(
-          child: Text('Upload'),
-          onPressed: () {
-            _startUploading();
-          },
-          color: Colors.pinkAccent,
-          textColor: Colors.white,
-        ),
-      );
-    }
-    return btnWidget;
-  }
   @override
   Widget build(BuildContext context) {
-    ListView.builder(
+   return Expanded(
+      child: StreamBuilder<List<ImageListItem>>(
+          stream: _bloc.stream,
+          builder: (context, snapshot) {
+            return _buildImageList(snapshot.data);
+          }
+      ),
+    );
+
+
+  }
+
+  Widget _buildImageList(List<ImageListItem> items) {
+
+   return ListView.builder(
       // Let the ListView know how many items it needs to build.
       itemCount: items.length,
       // Provide a builder function. This is where the magic happens.
@@ -148,20 +95,38 @@ class _ImageInput extends State<ImageInput> {
       itemBuilder: (context, index) {
         final item = items[index];
 
-        if (item is HeadingItem) {
-          return ListTile(
-            title: Text(
-              item.heading,
-              style: Theme.of(context).textTheme.headline,
-            ),
+        if (item is AddImage) {
+          return GestureDetector(
+              child: Container(
+                  width:100,
+                  height: 60,
+
+              child: Icon(Icons.search,color: Colors.black,),
+              ),onTap:(){
+            _openImagePickerModal(context);
+          }
           );
-        } else if (item is MessageItem) {
-          return ListTile(
-            title: Text(item.sender),
-            subtitle: Text(item.body),
+        } else if (item is UploadedImage) {
+
+          return Stack(
+            children: <Widget>[
+              Container(
+                width:100,
+                height: 60,
+                margin: EdgeInsets.symmetric(horizontal: 5.0,vertical: 5),
+                decoration: BoxDecoration(
+                  color: AppColors.appBackground,
+                ),
+                child: Image.file(
+                  File(item.localPath),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ],
           );
         }
       },
     );
+
   }
 }
