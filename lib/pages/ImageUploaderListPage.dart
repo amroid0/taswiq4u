@@ -73,7 +73,7 @@ var _bloc;
   }
   @override
   Widget build(BuildContext context) {
-   return Expanded(
+   return Container(
       child: StreamBuilder<List<ImageListItem>>(
           stream: _bloc.stream,
           builder: (context, snapshot) {

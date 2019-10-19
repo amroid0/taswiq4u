@@ -13,7 +13,7 @@ class UploadImageBloc implements Bloc {
   final _controller = StreamController<List<ImageListItem>>();
   final _ImageList=List<ImageListItem>();
 
-  Stream<List<UploadedImage>> get stream => _controller.stream;
+  Stream<List<ImageListItem>> get stream => _controller.stream;
   UploadImageBloc(){
     _ImageList.add(AddImage());
     _controller.sink.add(_ImageList);

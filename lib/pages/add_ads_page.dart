@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:olx/data/bloc/upload_image_bloc.dart';
+import 'package:olx/pages/ImageUploaderListPage.dart';
 import 'package:olx/pages/cateogry_dialog_page.dart';
 
 import '../data/bloc/bloc_provider.dart';
@@ -13,7 +15,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_){_showDialog();});
+    //WidgetsBinding.instance.addPostFrameCallback((_){_showDialog();});
   }
   _showDialog() async{
     await showDialog<String>(
@@ -44,6 +46,9 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: BlocProvider(
+          bloc: UploadImageBloc(),child:ImageInput()),
+    );
   }
 }

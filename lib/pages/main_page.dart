@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/cateogry_bloc.dart';
+import 'package:olx/pages/add_ads_page.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/widget/tab_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,23 +56,32 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       key: _scaffoldKey,
 
-      floatingActionButton:   Container(
-        height: 100,
-          width: 70,
-          decoration:  BoxDecoration(
+      floatingActionButton:   InkWell(
+        onTap: ()=>{
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddAdvertisment()),
+          )
+        },
+        child: Container(
+          height: 100,
+            width: 70,
+            decoration:  BoxDecoration(
 
-              color: Colors.green,
-              borderRadius: new BorderRadius.only(
-                  topLeft: const Radius.circular(40.0),
-                  topRight: const Radius.circular(40.0))),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+                color: Colors.green,
+                borderRadius: new BorderRadius.only(
+                    topLeft: const Radius.circular(40.0),
+                    topRight: const Radius.circular(40.0))),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
 
-            Expanded(child: Icon(Icons.add,color: Colors.white,))
-           ,
-           Text('اضافه اعلان',style: TextStyle(color: Colors.white),)
-          ],)
+              Expanded(child: Icon(Icons.add,color: Colors.white,))
+             ,
+             Text('اضافه اعلان',style: TextStyle(color: Colors.white),)
+            ],)
+            ,
+        ),
       ),
       bottomNavigationBar: FABBottomAppBar(
         centerItemText: 'A',
