@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/pages/login_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
+import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/fracation_sized_box.dart';
 
 class CountryPage extends StatelessWidget {
@@ -32,64 +34,65 @@ class CountryPage extends StatelessWidget {
             child: Image.asset('images/logo.png'),
           ),
 
-            Container(
-              height: 100,
-              child: Column(children: <Widget>[
+            FractionallyAlignedSizedBox(
+              topFactor:.5,
 
-                Stack(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
 
                   children: <Widget>[
 
-                    Positioned(
-                      left: 0.0,
-                      right: 0.0,
-
-                      child: InkWell(
-                        onTap: () =>    Navigator.push(context,MaterialPageRoute(builder: (context) => LoginPage())),
-                        child: Container(
-                          margin: EdgeInsets.only(right: 60,left: 10),
-                          height: 60,
-                          decoration: new BoxDecoration(
-                            color: Colors.black38,
-                            borderRadius: new BorderRadius.circular(10.0),
-                          ),
+                    InkWell(
+                      onTap: () {
+                        /*Navigator.push(context,MaterialPageRoute(builder: (context) => CountryPage()))*/
+                        preferences.saveCountryID("1");
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => ParentAuthPage()));},
+                      child: new Container(
+                        height: 60.0,
+                        decoration: new BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: new BorderRadius.circular(10.0),
                         ),
+                        child: new Center(child: new Text(allTranslations.text("page.egypt"), style: new TextStyle(fontSize: 18.0, color: Colors.white),),),
                       ),
                     ),
-                    Positioned(
-                        right: 30,
-                        child: planetThumbnail
-                    )
-                  ],
-                ),Stack(
-                  children: <Widget>[
+                    SizedBox(height: 10,),
+                    InkWell(
+                      onTap: () {
+                        preferences.saveCountryID("2");
 
-                    Positioned(
-                      left: 0.0,
-                      right: 0.0,
-
-                      child: InkWell(
-                          onTap: () =>    Navigator.push(context,MaterialPageRoute(builder: (context) => LoginPage())),
-
-                          child: Container(
-
-                          margin: EdgeInsets.only(right: 60,left: 10),
-                          height: 60,
-                          decoration: new BoxDecoration(
-                            color: Colors.black38,
-                            borderRadius: new BorderRadius.circular(10.0),
-                          ),
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => ParentAuthPage()));
+                      }
+                      ,
+                      child: new Container(
+                        height: 60.0,
+                        decoration: new BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: new BorderRadius.circular(10.0),
                         ),
+                        child: new Center(child: new Text(allTranslations.text("page.kuwait"), style: new TextStyle(fontSize: 18.0, color: Colors.white),),),
                       ),
                     ),
-                    Positioned(
-                        right: 30,
-                        child: planetThumbnail
-                    )
-                  ],
-                )
 
-              ],),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  ],),
+              ),
             )
 
 

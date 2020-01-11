@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:olx/data/AdsClient.dart';
+import 'package:olx/data/remote/AdsClient.dart';
 import 'package:olx/data/bloc/bloc.dart';
 import 'package:olx/model/ads_entity.dart';
 

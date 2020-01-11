@@ -1,0 +1,13 @@
+{
+  "page": {
+    "title": "اولكس",
+    "changeLanguage": "Tap this button to select 'French'",
+    "lang": "انجليزي",
+    "egypt": "مصر",
+    "kuwait": "الكويت"
+
+  },
+  "login_loading": "جاري تسجيل الدخول",
+  "err_email": "Enter a valid email",
+  "err_pass": "Invalid password, please enter more than 4 characters"
+}

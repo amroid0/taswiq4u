@@ -14,10 +14,12 @@ class FieldProprtiresEntity {
 	dynamic CustomValue;
 	String EnglishName;
 	String ArabicName;
+	dynamic Value;
+	dynamic IsCustomValue;
 
-	FieldProprtiresEntity(this.CategoryId, this.Category, this.Required,
+	FieldProprtiresEntity({this.CategoryId, this.Category, this.Required,
 			this.SpeceficationId, this.SpecificationOptions, this.Id, this.HasRange,
-			this.MuliSelect, this.CustomValue, this.EnglishName, this.ArabicName);
+			this.MuliSelect, this.CustomValue, this.EnglishName, this.ArabicName,this.Value,this.IsCustomValue});
 
 	factory FieldProprtiresEntity.fromJson(Map<String, dynamic> json) => _$FieldProprtiresEntityFromJson(json);
 

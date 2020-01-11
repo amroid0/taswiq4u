@@ -1,0 +1,12 @@
+{
+  "page": {
+    "title": "olx",
+    "changeLanguage": "Tap this button to select 'French'",
+    "lang": "english",
+    "egypt": "Egypt",
+    "kuwait": "Kuwait"
+  },
+  "login_loading": "Loading...",
+  "err_email": "Enter a valid email",
+  "err_pass": "Invalid password, please enter more than 4 characters"
+}

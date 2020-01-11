@@ -17,11 +17,16 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 class APIConstants {
-  static const String API_BASE_ENDPOINT = "http://api.wdmsystems.com/api/";
+  static const String API_BASE_ENDPOINT = "http://api.taswiq4u.com/";
   static const String OCTET_STREAM_ENCODING = "application/json";
-  static const String REST_API="www";
-  static const String API_BASE_URL = "http://hatemem-001-site3.htempurl.com/token";
+  static const String LOGIN= "${API_BASE_ENDPOINT}api/token";
   static const String REGISTER_BASE_URL = '${API_BASE_ENDPOINT}api/Auth/Register';
+  static const String FIELDS_ADD_ADS="${API_BASE_ENDPOINT}api/Ads/AddAdvertismentForm/";
+  static const String ADD_ADS="${API_BASE_ENDPOINT}api/Ads/AddNewAdvertisment";
+  static const String CATEOGRY_ADS="${API_BASE_ENDPOINT}api/CommercialAdCategory/GetAllCountryCategory";
+  static const String SEARCH_WITH_PARAM="${API_BASE_ENDPOINT}api/Ads/SearchWithParams";
+  static const String IMAGE_UPLOAD="${API_BASE_ENDPOINT}Api/ImageUpload/AddAdvertismentImage";
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////

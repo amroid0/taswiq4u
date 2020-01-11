@@ -30,7 +30,7 @@ Future<EventObject> loginUser(String emailId, String password) async {
 
   try {
     final encoding = APIConstants.OCTET_STREAM_ENCODING;
-    final response = await http.post(APIConstants.API_BASE_URL,
+    final response = await http.post(APIConstants,
         body: body,);
     if (response != null) {
       if (response.statusCode == APIResponseCode.SC_OK &&

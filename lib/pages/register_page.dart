@@ -56,7 +56,9 @@ class _RegisterPageState extends State<RegisterPage> {
             padding: const EdgeInsets.all(16.0),
             child: Form(
               key: formKey,
-              child: Column(
+              child: ListView(
+                shrinkWrap: true,
+
                 children: [
                   Container(
                     decoration: BoxDecoration(color:Colors.black12,border: Border.all(

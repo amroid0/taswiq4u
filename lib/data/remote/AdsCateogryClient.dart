@@ -1,13 +1,15 @@
 import 'dart:convert';
 
-import 'package:olx/data/NetworkCommon.dart';
+import 'package:olx/data/remote/NetworkCommon.dart';
 import 'package:olx/model/cateogry_entity.dart';
 import 'package:olx/utils/Constants.dart';
 
 class AdsCategoryClient{
-final String BASE_PATH="CommercialAdCategory/GetAllCountryCategory";
 Future<List<CateogryEntity>> getCateogryList( ) async {
-  final results = await NetworkCommon().dio.get(APIConstants.API_BASE_ENDPOINT + BASE_PATH,
+  final results = await NetworkCommon()
+      .dio
+      .get(
+      APIConstants.CATEOGRY_ADS,
       queryParameters: {"countryId": 1});
   if(results.statusCode==200){
   final suggestions = results.data;

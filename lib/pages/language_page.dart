@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:olx/data/bloc/bloc_provider.dart';
+import 'package:olx/data/bloc/languge_bloc.dart';
 import 'package:olx/pages/parentAuthPage.dart';
+import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/fracation_sized_box.dart';
 
 import 'country_page.dart';
@@ -25,20 +28,31 @@ topFactor:.5,
               children: <Widget>[
 
                InkWell(
-                onTap: () =>    Navigator.push(context,MaterialPageRoute(builder: (context) => CountryPage()))
-                 ,
+                onTap: () {
+                  BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
+                      "en");
+                  /*Navigator.push(context,MaterialPageRoute(builder: (context) => CountryPage()))*/
+
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CountryPage()));},
                 child: new Container(
                   height: 60.0,
                   decoration: new BoxDecoration(
                     color: Colors.green,
                     borderRadius: new BorderRadius.circular(10.0),
                   ),
-                  child: new Center(child: new Text('English', style: new TextStyle(fontSize: 18.0, color: Colors.white),),),
+                  child: new Center(child: new Text(allTranslations.text("page.lang"), style: new TextStyle(fontSize: 18.0, color: Colors.white),),),
                 ),
               ),
               SizedBox(height: 10,),
                InkWell(
-                onTap: () =>    Navigator.push(context,MaterialPageRoute(builder: (context) => MainScreen()))
+                onTap: () {
+                  BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
+                      "ar");
+
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CountryPage()));
+                }
                  ,
                 child: new Container(
                   height: 60.0,

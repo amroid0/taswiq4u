@@ -10,6 +10,7 @@ import 'package:olx/data/bloc/upload_image_bloc.dart';
 import 'package:olx/model/StateEnum.dart';
 import 'package:olx/model/upload_image_entity.dart';
 import 'package:olx/utils/Theme.dart';
+import 'package:olx/widget/circle_button.dart';
 
 class ImageInput extends StatefulWidget {
   @override
@@ -28,7 +29,7 @@ var _bloc;
     _bloc = BlocProvider.of<UploadImageBloc>(context);
   }
   void _getImage(BuildContext context, ImageSource source) async {
-    File image = await ImagePicker.pickImage(source: source);
+    File image = await ImagePicker.pickImage(source: source,imageQuality: 50);
     _bloc.uploadImage(image.path);
     // Closes the bottom sheet
     Navigator.pop(context);
@@ -74,6 +75,7 @@ var _bloc;
   @override
   Widget build(BuildContext context) {
    return Container(
+     height: 100,
       child: StreamBuilder<List<ImageListItem>>(
           stream: _bloc.stream,
           builder: (context, snapshot) {
@@ -87,46 +89,99 @@ var _bloc;
 
   Widget _buildImageList(List<ImageListItem> items) {
 
-   return ListView.builder(
-      // Let the ListView know how many items it needs to build.
-      itemCount: items.length,
-      // Provide a builder function. This is where the magic happens.
-      // Convert each item into a widget based on the type of item it is.
-      itemBuilder: (context, index) {
-        final item = items[index];
+   return Padding(
+     padding: EdgeInsets.all(10),
+     child: ListView.builder(
 
-        if (item is AddImage) {
-          return GestureDetector(
-              child: Container(
-                  width:100,
-                  height: 60,
+       // Let the ListView know how many items it needs to build.
+        itemCount: items.length,
+        scrollDirection: Axis.horizontal,
+        // Provide a builder function. This is where the magic happens.
+        // Convert each item into a widget based on the type of item it is.
+        itemBuilder: (context, index) {
+          final item = items[index];
 
-              child: Icon(Icons.search,color: Colors.black,),
-              ),onTap:(){
-            _openImagePickerModal(context);
-          }
-          );
-        } else if (item is UploadedImage) {
+          if (item is AddImage) {
+            return Stack(
+              children:<Widget>[ GestureDetector(
+                  child: Container(
+                      width:100,
+                      height: 60,
+                    margin: EdgeInsets.symmetric(horizontal: 5.0,vertical: 5),
 
-          return Stack(
-            children: <Widget>[
-              Container(
+                  child: Image.asset('images/add_image.png',                    fit: BoxFit.fill,
+                  ),
+                  ),onTap:(){
+                _openImagePickerModal(context);
+              }
+              ),]
+            );
+          } else if (item is UploadedImage) {
+
+
+            Widget state=CircularProgressIndicator();
+            switch(item.state){
+              case StateEnum.NORMAL:
+                state=Icon(Icons.check_circle,color: Colors.lightGreenAccent,);break;
+                break;
+              case StateEnum.LOADING:state=Positioned(
+                  left:20,
+                  top: 20,
+                  child: CircularProgressIndicator());break;
+              case StateEnum.FAILED:state=Container(
                 width:100,
                 height: 60,
-                margin: EdgeInsets.symmetric(horizontal: 5.0,vertical: 5),
-                decoration: BoxDecoration(
-                  color: AppColors.appBackground,
-                ),
-                child: Image.file(
-                  File(item.localPath),
-                  fit: BoxFit.fill,
-                ),
+                child:CircleButton(size: 20,iconSize: 20,onTap: (){
+                  _bloc.retryUpload(index);
+                },
+                    iconData: Icons.cloud_upload),);
+              break;
+            }
+            return Container(
+              width:100,
+              height: 60,
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    width:100,
+                    height: 60,
+                    margin: EdgeInsets.symmetric(horizontal: 5.0,vertical: 5),
+                    decoration: BoxDecoration(
+                      color: AppColors.appBackground,
+                    ),
+                    child: Image.file(
+                      File(item.localPath),
+                      fit: BoxFit.fill,
+                    ),
+                  ),state,
+              /*    FlatButton(
+
+                    onPressed: () {
+
+                    },
+                    child: new Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 20.0,
+                    ),
+                    shape: new CircleBorder(),
+                    color: Colors.black12,
+                  ),*/
+                  new Positioned(
+                    child:  CircleButton(size:20,iconSize: 16,onTap: (){
+                      _bloc.removeImage(index);
+                    },
+                        iconData: Icons.close),
+                    top: 0.0,
+                    right: 0.0,
+                  ),
+                ],
               ),
-            ],
-          );
-        }
-      },
-    );
+            );
+          }
+        },
+      ),
+   );
 
   }
 }

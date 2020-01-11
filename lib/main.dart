@@ -1,29 +1,91 @@
+import 'package:bmprogresshud/progresshud.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:olx/generated/i18n.dart';
 import 'package:olx/pages/login_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/pages/splash_page.dart';
+import 'package:olx/utils/global_locale.dart';
 
-void main() => runApp(MyApp());
+import 'data/bloc/bloc_provider.dart';
+import 'data/bloc/languge_bloc.dart';
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await allTranslations.init();
+
+  runApp(Application());}
+
+
+class Application extends StatefulWidget {
+  @override
+  ApplicationState createState() => ApplicationState();
+}
+
+class ApplicationState extends State<Application> {
+  TranslationsBloc translationsBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    translationsBloc = TranslationsBloc();
+  }
+
+  @override
+  void dispose() {
+    translationsBloc?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<TranslationsBloc>(
+      bloc: translationsBloc,
+      child: StreamBuilder<Locale>(
+          stream: translationsBloc.currentLocale,
+          initialData: allTranslations.locale,
+          builder: (BuildContext context, AsyncSnapshot<Locale> snapshot) {
+
+            return MaterialApp(
+              title: 'Application Title',
+              theme: ThemeData(
+
+                  primarySwatch: Colors.green,
+                  accentColor: Color(0xff53B553)
+              ),
+              ///
+              /// Multi lingual
+              ///
+              locale: snapshot.data ?? allTranslations.locale,
+              localizationsDelegates: [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
+              supportedLocales: allTranslations.supportedLocales(),
+
+              home: SplashScreen(),
+            );
+          }
+      ),
+    );
+  }
+}
+
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: allTranslations.text("page.title"),
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
+
         primarySwatch: Colors.green,
         accentColor: Color(0xff53B553)
       ),
+
+      localizationsDelegates: [S.delegate],
+      supportedLocales: S.delegate.supportedLocales,
       home: SplashScreen(),
     );
   }
@@ -75,34 +137,36 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
+      body: ProgressHud(
+        child: Center(
+          // Center is a layout widget. It takes a single child and positions it
+          // in the middle of the parent.
+          child: Column(
+            // Column is also layout widget. It takes a list of children and
+            // arranges them vertically. By default, it sizes itself to fit its
+            // children horizontally, and tries to be as tall as its parent.
+            //
+            // Invoke "debug painting" (press "p" in the console, choose the
+            // "Toggle Debug Paint" action from the Flutter Inspector in Android
+            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+            // to see the wireframe for each widget.
+            //
+            // Column has various properties to control how it sizes itself and
+            // how it positions its children. Here we use mainAxisAlignment to
+            // center the children vertically; the main axis here is the vertical
+            // axis because Columns are vertical (the cross axis would be
+            // horizontal).
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'You have pushed the button this many times:',
+              ),
+              Text(
+                '$_counter',
+                style: Theme.of(context).textTheme.display1,
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -113,3 +177,40 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

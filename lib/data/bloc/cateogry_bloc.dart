@@ -1,7 +1,7 @@
 
 import 'dart:async';
 
-import 'package:olx/data/AdsCateogryClient.dart';
+import 'package:olx/data/remote/AdsCateogryClient.dart';
 import 'package:olx/data/bloc/bloc.dart';
 import 'package:olx/model/cateogry_entity.dart';
 

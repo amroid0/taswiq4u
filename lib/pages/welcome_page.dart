@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:olx/generated/i18n.dart';
 import 'package:olx/pages/parentAuthPage.dart';
 
 import 'Walkthrouth_page.dart';
@@ -64,9 +65,7 @@ class _WelocmeScreenState extends State<WelocmeScreen> {
              position: currentIndexPage,
                   decorator: DotsDecorator(activeColor: Colors.green),),
 
-
-
-                    FlatButton(child: new Text('تخطي',style: TextStyle(fontWeight: FontWeight.bold),),onPressed: (){
+                    FlatButton(child: new Text("skip",style: TextStyle(fontWeight: FontWeight.bold),),onPressed: (){
                       Navigator.push(context,MaterialPageRoute(builder: (context) => ChooseLanguagePage()));
                     },),
 

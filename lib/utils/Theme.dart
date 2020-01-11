@@ -11,6 +11,9 @@ class AppColors {
   static const Color appBarGradientStart = const Color(0xFF3383FC);
   static const Color appBarGradientEnd = const Color(0xFF00C6FF);
 
+  static const Color validValueColor = Colors.green;
+  static const Color errorValueColor = Colors.red;
+
 
 }
 

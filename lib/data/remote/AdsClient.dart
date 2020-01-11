@@ -1,12 +1,12 @@
-import 'package:olx/data/NetworkCommon.dart';
+import 'package:olx/data/remote/NetworkCommon.dart';
 import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/field_proprtires_entity.dart';
 import 'package:olx/utils/Constants.dart';
 
 class AdsClient{
-  final String BASE_PATH="Ads/SearchWithParams";
+
   Future<AdsEntity> getCateogryList( int orderby) async {
-    final results = await NetworkCommon().dio.post(APIConstants.API_BASE_ENDPOINT + BASE_PATH,
+    final results = await NetworkCommon().dio.post(APIConstants.SEARCH_WITH_PARAM,
         data: {
           "CountryId": 1,
           "CityId": 1,
@@ -19,7 +19,7 @@ class AdsClient{
   }
 
   Future<List<FieldProprtiresEntity>> getAdsFieldsProp( ) async {
-    final results = await NetworkCommon().dio.get(APIConstants.API_BASE_ENDPOINT + BASE_PATH,
+    final results = await NetworkCommon().dio.get(APIConstants.SEARCH_WITH_PARAM,
         queryParameters: {"countryId": 1});
     if(results.statusCode==200){
       final suggestions = results.data;
