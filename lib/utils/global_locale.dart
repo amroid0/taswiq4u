@@ -68,6 +68,7 @@ class GlobalTranslations {
   }
 
   String get currentLanguage => _locale == null ? '' : _locale.languageCode;
+  bool get isEnglish => currentLanguage=='en';
   Locale get locale => _locale;
 
   ///

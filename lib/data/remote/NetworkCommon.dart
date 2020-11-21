@@ -4,6 +4,7 @@ import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/model/LoginResponse.dart';
 import 'package:olx/model/app_exception.dart';
 import 'package:olx/model/userCredit.dart';
+import 'package:olx/utils/Constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -62,13 +63,12 @@ class NetworkCommon {
     // handle timeouts
     dio.options.connectTimeout = 20000; //5s
     dio.options.receiveTimeout = 20000;
-    SharedPreferencesHelper prefs = SharedPreferencesHelper();
 
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
 
       // set the token
-      String token = await prefs.getToken();
+      String token = await preferences.getToken();
       if (token != null) {
         options.headers["Authorization"] = "Bearer " + token;
       }
@@ -82,6 +82,9 @@ class NetworkCommon {
       // print requests
       print("Pre request:${options.method},${options.baseUrl}${options.path}");
       print("Pre request:${options.headers.toString()}");
+      print("Pre request:${options.data.toString()}");
+      print("Pre request:${options.queryParameters.toString()}");
+
 
       return options; //continue
     },
@@ -92,7 +95,7 @@ class NetworkCommon {
             RequestOptions options = error.request;
 
             // If the token has been updated, repeat directly.
-            String accessToken = await prefs.getToken();
+            String accessToken = await preferences.getToken();
 
             String token = "Bearer $accessToken";
             if (token != options.headers["Authorization"]) {
@@ -105,7 +108,7 @@ class NetworkCommon {
             dio.interceptors.errorLock.lock();
 
             try {
-               UserCredit credit=await prefs.getUserCredit();
+               UserCredit credit=await preferences.getUserCredit();
               Response responseRefresh = await refreshTokenDio.post(
                   "${options.baseUrl}/api/token",
                   data: 'grant_type=password&username=${credit.userName}&password=${credit.password}',
@@ -115,12 +118,10 @@ class NetworkCommon {
               );
 
                LoginResponse userResponse=LoginResponse.fromJson(responseRefresh.data);
-
               //update token based on the new refresh token
               options.headers["Authorization"] = "Bearer ${userResponse.accessToken}";
-
               // Save the new token on shared or LocalStorage
-              await prefs.setToken(responseRefresh.data);
+              await preferences.setToken(userResponse);
 
               dio.unlock();
               dio.interceptors.responseLock.unlock();
@@ -149,20 +150,13 @@ class NetworkCommon {
       if (statusCode == 200 || statusCode == 201) {
         if (response.request.path == "login/" ||
             response.request.path == "signup/" ||
-            response.request.path == "token/" ||
+            response.request.path == APIConstants.LOGIN ||
             response.request.path == "login-google/" ||
             response.request.path == "login-facebook/") {
 
-          final SharedPreferences prefs = await SharedPreferences.getInstance();
           final JsonDecoder _decoder = new JsonDecoder();
-          final JsonEncoder _encoder = new JsonEncoder();
           final resultContainer = _decoder.convert(response.toString());
-
-          prefs.setString("token", resultContainer["token"]);
-
-          prefs.setString(
-              "user", _encoder.convert((resultContainer["user"] as Map)));
-          prefs.setBool("isLogined", true);
+           preferences.setToken(LoginResponse.fromJson(resultContainer));
         }
         if (response.request.path == "profile/") {
           final SharedPreferences prefs = await SharedPreferences.getInstance();

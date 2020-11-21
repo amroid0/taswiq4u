@@ -18,6 +18,8 @@ class CateogryEntity {
 	String categoryLogo;
 	@JsonKey(name:"ImageUrl")
 	String imageUrl;
+	@JsonKey(name:"imageId")
+	String imageId;
 	@JsonKey(name:"Id")
 	int id;
 	@JsonKey(name:"SubCats")
@@ -28,9 +30,11 @@ class CateogryEntity {
 	String name;
 	@JsonKey(name:"HasSub")
 	bool hasSub;
+	bool isSelected=false;
 
-	CateogryEntity({this.countryId, this.arabicDescription, this.englishDescription, this.isActive, this.categoryLevel, this.categoryLogo, this.imageUrl, this.id, this.subCats, this.subCategories, this.name, this.hasSub});
+	CateogryEntity({this.countryId, this.arabicDescription, this.englishDescription, this.isActive, this.categoryLevel, this.categoryLogo, this.imageUrl, this.id, this.subCats, this.subCategories, this.name, this.hasSub,this.isSelected=false});
 	factory CateogryEntity.fromJson(Map<String, dynamic> json) => _$CateogryEntityFromJson(json);
+	Map<String, dynamic> toJson() => _$CateogryEntityToJson(this);
 
 
 }

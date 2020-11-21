@@ -1,165 +1,136 @@
+import 'package:bmprogresshud/progresshud.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:olx/data/bloc/bloc_provider.dart';
+import 'package:olx/data/bloc/resgister_bloc.dart';
+import 'package:olx/data/validator.dart';
 import 'package:olx/model/EventObject.dart';
+import 'package:olx/model/login_api_response.dart';
+import 'package:olx/pages/login_page.dart';
+import 'package:olx/pages/verification_page.dart';
 import 'package:olx/remote/client_api.dart';
 import 'package:olx/utils/Constants.dart';
+import 'package:olx/utils/global_locale.dart';
+import 'package:olx/utils/loading_dialog.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class RegisterPage extends StatefulWidget {
+  final Function(int pos) onSelectionChanged; // +added
+  RegisterPage(
+      {this.onSelectionChanged} // +added
+   );
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final formKey = GlobalKey<FormState>();
+  final reigsterKey = GlobalKey<FormState>();
   var passKey = GlobalKey<FormFieldState>();
 
+
+  TextEditingController firstController = TextEditingController();
+  TextEditingController lastController = TextEditingController();
+  TextEditingController phoneContorller = TextEditingController();
+  TextEditingController passwordContoller = TextEditingController();
   ProgressDialog progressDialog ;
   String _email;
   String _password;
+  RegisterBloc bloc;
 
-  void _submit() {
-    final form = formKey.currentState;
+  @override
+  void initState() {
+    // TODO: implement initState
+    bloc=RegisterBloc();
 
-    if (form.validate()) {
-      form.save();
+    bloc.stream.listen((data) {
+      // Redirect to another view, given your condition
 
-      // Email & password matched our validation rules
-      // and are saved to _email and _password fields.
-      _performRegister();
-    }
+      switch (data.status) {
+        case Status.LOADING:
+          Future.delayed(Duration.zero, () {
+            DialogBuilder(context).showLoadingIndicator('loading');
+
+          });
+          break;
+
+
+
+        case Status.ERROR:
+          DialogBuilder(context).hideOpenDialog();
+
+          Fluttertoast.showToast(
+              msg: "Something went Wrong'",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+          break;
+        case Status.AUTHNTICATED:
+          // TODO: Handle this case.
+          break;
+        case Status.UNVERFIED:
+          // TODO: Handle this case.
+          WidgetsBinding.instance.addPostFrameCallback((_) =>  Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => VerificationScreen())
+          ));
+
+          break;
+        case Status.UNAUTHINTICATED:
+          WidgetsBinding.instance.addPostFrameCallback((_) =>  Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage())
+          ));
+          break;
+      }
+    });
+
+    super.initState();
+  }
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
   }
 
-  void _performRegister() {
-    // This is just a demo, so no actual login here.
-    progressDialog = new ProgressDialog(context,ProgressDialogType.Normal);
 
 
-    progressDialog.setMessage("Loading..");
-    progressDialog.show();
-    _registerUser(_email, _password);
-
-
-
-
-
-
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      body: SingleChildScrollView(
-        child: Center(
+    return BlocProvider<RegisterBloc>(
+      bloc: bloc,
+      child: Scaffold(
+        key: scaffoldKey,
+        body: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Form(
-              key: formKey,
-              child: ListView(
-                shrinkWrap: true,
+              key: reigsterKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Image.asset('images/logo.png'),
+                    firstName(bloc),
+                    SizedBox(height: 10,),
+                    secondName(bloc),
+                    SizedBox(height: 10,),
+                    phone(bloc),
+                    SizedBox(height: 10,),
+                    password(bloc),
+                    SizedBox(height: 10,),
+                  //  confrimPassword(bloc),
+                    SizedBox(height: 10,),
+                    submitButton(bloc),
+                 //  registerState(bloc)
 
-                children: [
-                  Container(
-                    decoration: BoxDecoration(color:Colors.black12,border: Border.all(
-                      width: 1.0,
-                      color: Colors.green,
-
-
-                    ),
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(5.0) //         <--- border radius here
-                      ),
-                    ),
-                    child: TextFormField(
-                      keyboardType:TextInputType.numberWithOptions(),
-                      decoration: InputDecoration(labelText: 'Phone',
-                        border: InputBorder.none,
-                      ),
-                      validator: (val) =>
-                      !val.contains('0') ? 'Not a valid phone.' : null,
-                      onSaved: (val) => _email = val,
-                    ),
-                  ),
-                  SizedBox(height: 10,),
-
-                  Container(
-                    decoration: BoxDecoration(color:Colors.black12,border: Border.all(
-                      width: 1.0,
-                      color: Colors.green,
-
-
-                    ),
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(5.0) //         <--- border radius here
-                      ),
-                    ),
-                    child: TextFormField(
-                      key: passKey,
-                      decoration: InputDecoration(labelText: 'Password',
-                        border: InputBorder.none,
-                      ),
-                      validator: (val) =>
-                      val.length < 6 ? 'Password too short.' : null,
-                      onSaved: (val) => _password = val,
-                      obscureText: true,
-                    ),
-                  ),
-                  SizedBox(height: 10,),
-
-                  Container(
-              decoration: BoxDecoration(color:Colors.black12,border: Border.all(
-                width: 1.0,
-                color: Colors.green,
-
-
-              ),
-                borderRadius: BorderRadius.all(
-                    Radius.circular(5.0) //         <--- border radius here
+                  ],
                 ),
-              ),
-              child: TextFormField(
-                decoration: InputDecoration(labelText: 'Confirm Password',
-                  border: InputBorder.none,
-                ),
-                validator: (val) {
-                var passsword = passKey.currentState.value;
-              passsword==val ? null:'dosent match password.';
-              },
-                onSaved: (val) => _password = val,
-                obscureText: true,
-              ),
-            ),
-                  SizedBox(height: 10,),
-                  InkWell(
-                    onTap: () =>_submit
-                    ,
-                    child: new Container(
-                      height: 60.0,
-                      padding: EdgeInsets.all(4),
-                      decoration: new BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: new BorderRadius.circular(10.0),
-                      ),
-                      child:  Stack(children:<Widget>[
-                        Align( child: new Text('انشاء حساب', style: new TextStyle(fontSize: 18.0, color: Colors.white),)
-                          ,alignment: Alignment.centerRight,),
-
-                        Align( child:                 Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                        )    ,alignment: Alignment.centerLeft,),
-
-
-                      ]
-
-                      ),
-                    ),
-                  ),
-
-
-
-                ],
               ),
             ),
           ),
@@ -169,40 +140,289 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
 
-  void _registerUser(String id, String password) async {
-    EventObject eventObject = await registerUser(id, password);
-    switch (eventObject.id) {
-      case EventConstants.USER_REGISTRATION_SUCCESSFUL:
-        {
-          setState(() {
-            scaffoldKey.currentState.showSnackBar(new SnackBar(
-              content: new Text(SnackBarText.REGISTER_SUCCESSFUL),
-            ));
-            progressDialog.hide();
-          });
+
+
+
+/*
+  Widget registerState(RegisterBloc bloc){
+    return StreamBuilder(
+      stream: bloc.stream,
+      builder: (context, snapshot) {
+
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+
+              WidgetsBinding.instance.addPostFrameCallback((_) =>pr.show());
+
+              break;
+            case Status.COMPLETED:
+              pr.hide();
+              var isLogged=snapshot.data as ApiResponse<bool>;
+              var isss=isLogged.data;
+              if(isss)
+                WidgetsBinding.instance.addPostFrameCallback((_) =>showAlertDialog(context));
+
+              break;
+            case Status.ERROR:
+              pr.hide();
+              WidgetsBinding.instance.addPostFrameCallback((_) =>  showSnackBar(context,allTranslations.text('err_something_wrong')));
+              break;
+          }
         }
-        break;
-      case EventConstants.USER_REGISTRATION_UN_SUCCESSFUL:
-        {
-          setState(() {
-            scaffoldKey.currentState.showSnackBar(new SnackBar(
-              content: new Text(SnackBarText.REGISTER_UN_SUCCESSFUL),
-            ));
-            progressDialog.hide();
-          });
-        }
-        break;
-      case EventConstants.NO_INTERNET_CONNECTION:
-        {
-          setState(() {
-            scaffoldKey.currentState.showSnackBar(new SnackBar(
-              content: new Text(SnackBarText.NO_INTERNET_CONNECTION),
-            ));
-            progressDialog.hide();
-          });
-        }
-        break;
-    }
+        return Container();
+
+
+      },
+    );
+
+  }
+*/
+
+
+  Widget firstName(RegisterBloc bloc) {
+    return StreamBuilder(
+        stream: bloc.firstName,
+
+        builder: (context, snapshot) {
+
+          return Container(
+
+            decoration: BoxDecoration(color:Colors.black12,border: Border.all(
+              width: 1.0,
+              color: Colors.green,
+
+
+            ),
+              borderRadius: BorderRadius.all(
+                  Radius.circular(5.0) //         <--- border radius here
+              ),
+            ),
+            child: TextFormField(
+              decoration: InputDecoration(labelText: allTranslations.text('first_name'),filled: true,
+                fillColor: Colors.black12,
+                border: InputBorder.none,
+                errorText: snapshot.error,
+
+              ),
+              onChanged: bloc.changeFirstName,
+              controller: firstController,
+            ),
+          );
+
+        });
   }
 
+  Widget phone(RegisterBloc bloc ){
+    return StreamBuilder(
+        stream: bloc.email,
+        builder: (context, snapshot) {
+
+          return Container(
+
+            decoration: BoxDecoration(color:Colors.black12,border: Border.all(
+              width: 1.0,
+              color: Colors.green,
+
+
+            ),
+              borderRadius: BorderRadius.all(
+                  Radius.circular(5.0) //         <--- border radius here
+              ),
+            ),
+            child: TextFormField(
+              decoration: InputDecoration(labelText: allTranslations.text('phone'),filled: true,
+                fillColor: Colors.black12,
+                border: InputBorder.none,
+                errorText: snapshot.error,
+
+              ),
+              onChanged: bloc.changeEmail,
+              controller: phoneContorller,
+            ),
+          );
+
+        });
+
+  }
+  Widget password(RegisterBloc bloc){
+    return StreamBuilder(
+        stream: bloc.password,
+        builder: (context, snapshot) {
+
+          return Container(
+
+            decoration: BoxDecoration(color:Colors.black12,border: Border.all(
+              width: 1.0,
+              color: Colors.green,
+
+
+            ),
+              borderRadius: BorderRadius.all(
+                  Radius.circular(5.0) //         <--- border radius here
+              ),
+            ),
+            child: TextFormField(
+              decoration: InputDecoration(labelText: allTranslations.text('password'),filled: true,
+                fillColor: Colors.black12,
+                border: InputBorder.none,
+                errorText: snapshot.error,
+
+              ),
+              obscureText: true,
+              onChanged: bloc.changePassword,
+              controller: passwordContoller,
+            ),
+          );
+
+        });
+
+  }
+/*
+  Widget confrimPassword(RegisterBloc bloc){
+    return StreamBuilder(
+        stream: bloc.password,
+        builder: (context, snapshot) {
+
+          return Container(
+
+            decoration: BoxDecoration(color:Colors.black12,border: Border.all(
+              width: 1.0,
+              color: Colors.green,
+
+
+            ),
+              borderRadius: BorderRadius.all(
+                  Radius.circular(5.0) //         <--- border radius here
+              ),
+            ),
+            child: TextFormField(
+              decoration: InputDecoration(labelText: 'Confirm Password',filled: true,
+                fillColor: Colors.black12,
+                border: InputBorder.none,
+                errorText: snapshot.error,
+
+              ),
+              validator: (val) =>
+              val.length < 6 ? 'Password too short.' : null,
+              onSaved: (val) => _password = val,
+              obscureText: true,
+              onChanged: bloc.changePassword,
+
+            ),
+          );
+
+        });
+
+  }
+*/
+
+
+  Widget secondName(RegisterBloc bloc) {
+
+    return StreamBuilder(
+        stream: bloc.seocndName,
+        builder: (context, snapshot) {
+
+          return Container(
+
+            decoration: BoxDecoration(color:Colors.black12,border: Border.all(
+              width: 1.0,
+              color: Colors.green,
+
+
+            ),
+              borderRadius: BorderRadius.all(
+                  Radius.circular(5.0) //         <--- border radius here
+              ),
+            ),
+            child: TextFormField(
+              decoration: InputDecoration(labelText: allTranslations.text('sec_name'),filled: true,
+                fillColor: Colors.black12,
+                border: InputBorder.none,
+                errorText: snapshot.error,
+
+              ),
+              onChanged: bloc.changeSecondName,
+               controller: lastController,
+            ),
+          );
+
+        });
+  }
+
+
+  Widget submitButton(RegisterBloc bloc) {
+    return StreamBuilder(
+        stream: bloc.submitValid,
+        builder: (context, snapshot) {
+
+          return GestureDetector(onTap: (){
+
+            bloc.changeFirstName(firstController.text);
+            bloc.changeSecondName(lastController.text);
+            bloc.changeEmail(phoneContorller.text);
+            bloc.changePassword(passwordContoller.text);
+            if(firstController.text.isNotEmpty &&lastController.text.isNotEmpty
+            &&
+            phoneContorller.text.isNotEmpty&& passwordContoller.text.isNotEmpty)
+            snapshot.hasError?null:bloc.submit();
+          },
+            child: Container(
+              height: 60.0,
+              padding: EdgeInsets.all(4),
+              decoration: new BoxDecoration(
+                color: Colors.green,
+                borderRadius: new BorderRadius.circular(10.0),
+              ),
+              child:  Stack(children:<Widget>[
+                Align( child: new Text(allTranslations.text('register'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
+                  ,alignment: Alignment.centerRight,),
+
+                Align( child:                 Icon(
+                  allTranslations.isEnglish?Icons.arrow_back:Icons.arrow_forward,
+                  color: Colors.white,
+                )    ,alignment: Alignment.centerLeft,),
+
+
+              ]
+
+              ),
+            ),
+          );});
+
+  }
+
+  showAlertDialog(BuildContext context) {
+  return  Alert(
+      context: context,
+      title: allTranslations.text('success'),
+      desc: allTranslations.text('acc_created')
+      ,
+      type: AlertType.success,
+      buttons: [
+        DialogButton(
+          child: Text(
+            allTranslations.text('ok'),
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          width: 120,
+        )
+      ],
+    ).show();
+  }
+
+
+  showSnackBar(BuildContext context,String message){
+
+    final snackBar = SnackBar(
+      content: Text(message),
+      duration: Duration(milliseconds: 1000),
+
+    );
+    Scaffold.of(context).showSnackBar(snackBar);
+  }
 }

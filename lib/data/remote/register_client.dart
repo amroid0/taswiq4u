@@ -1,6 +1,0 @@
-class RegisterApiClient{
-  register(userCredit) {
-
-
-  }
-}

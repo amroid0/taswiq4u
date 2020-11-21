@@ -10,7 +10,7 @@ class FABBottomAppBar extends StatefulWidget {
   FABBottomAppBar({
     this.items,
     this.centerItemText,
-    this.height: 50.0,
+    this.height: 55.0,
     this.iconSize: 24.0,
     this.backgroundColor,
     this.color,
@@ -35,7 +35,7 @@ class FABBottomAppBar extends StatefulWidget {
 }
 
 class FABBottomAppBarState extends State<FABBottomAppBar> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 3;
 
   _updateIndex(int index) {
     widget.onTabSelected(index);

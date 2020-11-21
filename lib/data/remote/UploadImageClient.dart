@@ -33,4 +33,6 @@ class UploadImageClient{
     }
   }
 
+  getImageAds(String imageId) {}
+
 }

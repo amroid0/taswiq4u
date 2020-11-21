@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/cateogry_bloc.dart';
 import 'package:olx/model/cateogry_entity.dart';
+import 'package:olx/utils/global_locale.dart';
 
 typedef Widget SelectOneItemBuilderType<T>(
     BuildContext context, CateogryEntity item, bool isSelected);
@@ -43,7 +44,7 @@ class SelectDialog<T> extends StatefulWidget {
         return AlertDialog(
           title: Text(label ?? ""),
           actions: <Widget>[
-            FlatButton(child:Text("Cancel"), onPressed: () {
+            FlatButton(child:Text(allTranslations.text('cancel')), onPressed: () {
               Navigator.of(context).pop();
             },)
           ],

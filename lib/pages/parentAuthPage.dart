@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:olx/pages/register_page.dart';
 
@@ -8,7 +9,14 @@ class ParentAuthPage extends StatefulWidget {
   _ParentAuthPageState createState() => _ParentAuthPageState();
 }
 
-class _ParentAuthPageState extends State<ParentAuthPage> {
+class _ParentAuthPageState extends State<ParentAuthPage>  with SingleTickerProviderStateMixin  {
+  TabController _tabController;
+  @override
+  void initState() {
+    // TODO: implement initState
+    _tabController=new TabController(length: 2,vsync: this);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -19,6 +27,7 @@ class _ParentAuthPageState extends State<ParentAuthPage> {
           child:
           DefaultTabController(
             length: 2,
+
             child: SizedBox(
 
               child: Column(
@@ -40,8 +49,9 @@ class _ParentAuthPageState extends State<ParentAuthPage> {
                   ),
                   Expanded(
                     child: TabBarView(
+                      controller: _tabController,
                       children: <Widget>[
-                        LoginPage(),
+                        LoginPage(tabController: _tabController),
                         RegisterPage()
 
                       ],

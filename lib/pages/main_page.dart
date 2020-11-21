@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:olx/data/bloc/NavigationBloc.dart';
+import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/cateogry_bloc.dart';
+import 'package:olx/data/bloc/favroite_bloc.dart';
+import 'package:olx/data/bloc/profile_bloc.dart';
+import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/pages/add_ads_page.dart';
+import 'package:olx/pages/favroite_page.dart';
+import 'package:olx/pages/login_page.dart';
+import 'package:olx/pages/offer_page.dart';
+import 'package:olx/pages/parentAuthPage.dart';
+import 'package:olx/pages/profile_page.dart';
+import 'package:olx/pages/search_delegate_page.dart';
+import 'package:olx/pages/search_key_page.dart';
 import 'package:olx/utils/Theme.dart';
+import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/tab_item.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'cateogry_page.dart';
+import 'my_ads_page.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -20,28 +35,94 @@ class NavItem{
   NavItem({this.name,this.navIcon,this.isExpanded=false}){}
 }
 
+List<FABBottomAppBarItem> bottomItems= [
+  FABBottomAppBarItem(iconData: Icons.person, text:allTranslations.text('account')),
+  FABBottomAppBarItem(iconData: Icons.announcement, text: allTranslations.text('offers')),
+  FABBottomAppBarItem(iconData: Icons.favorite, text: allTranslations.text('favroite')),
+  FABBottomAppBarItem(iconData: Icons.home, text: allTranslations.text('home')),
+];
+
+
+
 class _MainScreenState extends State<MainScreen> {
   SharedPreferences sharedPreferences;
+  NaviagtionBloc bloc;
   List<NavItem>NavItemList=[
-    NavItem(name: 'الرئيسيه',navIcon:Icons.home ),
-    NavItem(name: 'الاقسام',navIcon:Icons.apps,isExpanded: true),
-    NavItem(name: 'حسابي',navIcon:Icons.person ),
-    NavItem(name: 'اعلاناتي',navIcon:Icons.announcement),
-    NavItem(name: 'المفضله',navIcon:Icons.favorite),
-  NavItem(name: 'الاعدادات',navIcon:Icons.settings)
+    NavItem(name: allTranslations.text('home'),navIcon:Icons.home ),
+/*
+    NavItem(name: allTranslations.text('sections'),navIcon:Icons.apps,isExpanded: true),
+*/
+    NavItem(name: allTranslations.text('account'),navIcon:Icons.person ),
+    NavItem(name: allTranslations.text('my_ads'),navIcon:Icons.announcement),
+    NavItem(name:allTranslations.text('favroite'),navIcon:Icons.favorite),
+  NavItem(name:allTranslations.text('settings'),navIcon:Icons.settings)
   ];
+/*
   List<NavItem>depratmentNavList=[
     NavItem(name: 'اجهزه الكترونيه',navIcon:Icons.settings ),
     NavItem(name: 'سيارات وقطع غيار',navIcon:Icons.settings ),
     NavItem(name: 'الاعدادات',navIcon:Icons.settings ),
     NavItem(name: 'الاعدادات',navIcon:Icons.settings ),
   ];
+*/
 
   void _selectedTab(int index) {
+    if(allTranslations.isEnglish){
+      if(index==2){
 
+        bloc.navigateToScreen(NavigationScreen.OFFER);
+
+      }else if(index==3){
+
+
+        bloc.navigateToScreen(NavigationScreen.PRFOILE);
+
+      }else if(index==1){
+        bloc.navigateToScreen(NavigationScreen.FAVROITE);
+      }
+      else if(index==0){
+        bloc.navigateToScreen(NavigationScreen.HOME);
+      }
+    }else{
+    if(index==1){
+
+      bloc.navigateToScreen(NavigationScreen.OFFER);
+
+
+    }else if(index==2){
+
+      bloc.navigateToScreen(NavigationScreen.FAVROITE);
+
+    }else if(index==0){
+
+      bloc.navigateToScreen(NavigationScreen.PRFOILE);
+
+
+    }
+    else if(index==3){
+
+      bloc.navigateToScreen(NavigationScreen.HOME);
+
+
+    }
+
+    }
   }
   int _navSelectedIndex=0;
+  Widget appBarTitle =  Text(allTranslations.text('home'),style:TextStyles.appBarTitle ,);
+  Icon actionIcon = new Icon(Icons.search);
+  TextEditingController searchController=null;
 
+@override
+  void initState() {
+    // TODO: implement initState
+  bloc=new NaviagtionBloc();
+   searchController = new TextEditingController();
+   if(allTranslations.isEnglish){
+     bottomItems.reversed.toList();
+   }
+  super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -64,7 +145,7 @@ class _MainScreenState extends State<MainScreen> {
           )
         },
         child: Container(
-          height: 100,
+          height: 90,
             width: 70,
             decoration:  BoxDecoration(
 
@@ -78,7 +159,7 @@ class _MainScreenState extends State<MainScreen> {
 
               Expanded(child: Icon(Icons.add,color: Colors.white,))
              ,
-             Text('اضافه اعلان',style: TextStyle(color: Colors.white),)
+             Text(allTranslations.text('ads_add'),style: TextStyle(color: Colors.white),)
             ],)
             ,
         ),
@@ -88,26 +169,28 @@ class _MainScreenState extends State<MainScreen> {
         color: Colors.grey,
         selectedColor: Theme.of(context).accentColor,
          onTabSelected:_selectedTab,
-        items: [
-          FABBottomAppBarItem(iconData: Icons.person, text: 'حسابي'),
-          FABBottomAppBarItem(iconData: Icons.announcement, text: 'العروض'),
-          FABBottomAppBarItem(iconData: Icons.favorite, text: 'المفضله'),
-          FABBottomAppBarItem(iconData: Icons.home, text: 'الرئيسيه'),
-        ],
+        items:bottomItems,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
 
-
       appBar: AppBar(
         backgroundColor: AppColors.appBackground,
-        title: Text("الرئيسيه",style: TextStyles.appBarTitle,),
+        title: appBarTitle,
         centerTitle: true,
-        actions: <Widget>[
-          IconButton(icon: Icon(Icons.menu,color: Colors.black,),
-              onPressed: () => _scaffoldKey.currentState.openEndDrawer()),
-        ],
-        leading: Icon(Icons.search,color: Colors.black,),
+          leading: IconButton(icon: actionIcon,color: Colors.black,
+            onPressed:
+                  () => showSearch(
+                context: context,
+                delegate: DummyDelegate(),
+              )
+           ,),
+
+          actions: <Widget>[
+
+            IconButton(icon: Icon(Icons.menu,color: Colors.black,),
+                onPressed: () => _scaffoldKey.currentState.openEndDrawer()),
+            ]
 
 
       ),//appbar
@@ -134,11 +217,58 @@ class _MainScreenState extends State<MainScreen> {
                 ,),
             ),//listview
 
-          Container(
-            alignment: Alignment.center,
-            height: 60,
-            color: Theme.of(context).accentColor,
-            child: Text('تسجيل الخروج',style: TextStyle(color: Colors.white),),
+          GestureDetector(
+            onTap: (){
+
+           Alert(context: context,title: allTranslations.text('logout')
+           ,desc: allTranslations.text('logout_msg')
+               ,type: AlertType.warning,
+             buttons: [
+               DialogButton(
+                 child: Text(
+                   allTranslations.text('ok'),
+                   style: TextStyle(color: Colors.white, fontSize: 20),
+                 ),
+                 onPressed: () {
+                   preferences.logout();
+                   Navigator.pushAndRemoveUntil(
+                       context,
+                       PageRouteBuilder(pageBuilder: (BuildContext context, Animation animation,
+                           Animation secondaryAnimation) {
+                         return ParentAuthPage();
+                       }, transitionsBuilder: (BuildContext context, Animation<double> animation,
+                           Animation<double> secondaryAnimation, Widget child) {
+                         return new SlideTransition(
+                           position: new Tween<Offset>(
+                             begin: const Offset(1.0, 0.0),
+                             end: Offset.zero,
+                           ).animate(animation),
+                           child: child,
+                         );
+                       }),
+                           (Route route) => false);
+                 },
+                 width: 120,
+               )
+               ,               DialogButton(
+                 child: Text(
+                   allTranslations.text('cancel'),
+                   style: TextStyle(color: Colors.white, fontSize: 20),
+                 ),
+                 onPressed: () => Navigator.pop(context),
+                 width: 120,
+               )
+             ],
+           ).show();
+
+
+            },
+            child: Container(
+              alignment: Alignment.center,
+              height: 60,
+              color: Theme.of(context).accentColor,
+              child: Text(allTranslations.text('logout'),style: TextStyle(color: Colors.white),),
+            ),
           )
 
           ],
@@ -149,22 +279,48 @@ class _MainScreenState extends State<MainScreen> {
 
       ),
 
-      body: _getDrawerItemWidget(_navSelectedIndex),
+      body:StreamBuilder<NavigationScreen>(
+        initialData: NavigationScreen.HOME,
+        stream: bloc.stream,
+        builder: (context,snap){
+          return  _getDrawerItemWidget(snap.data);
+
+        },
+      )
+
+
     );//scaffold
   }
 
 
 
   _onSelectItem(int index) {
-    setState(() => _navSelectedIndex = index);
-    Navigator.of(context).pop(); // close the drawer
+  //  setState(() => _navSelectedIndex = index);
+
+    if(index==2){
+     bloc.navigateToScreen(NavigationScreen.MYADS);
+    }else if(index==1){
+
+      bloc.navigateToScreen(NavigationScreen.PRFOILE);
+
+
+    }else if(index==3){
+      bloc.navigateToScreen(NavigationScreen.FAVROITE);
+
+    }
+    else if(index==0){
+      bloc.navigateToScreen(NavigationScreen.HOME);
+
+    }
+
+
   }
 
 
 
   Widget createNavItem(NavItem nav,int index){
     if(nav.isExpanded){
-       List<Widget>subItemlist=[];
+     /*  List<Widget>subItemlist=[];
       for (var i = 0; i < depratmentNavList.length; i++) {
         var d = depratmentNavList[i];
         subItemlist.add(
@@ -175,7 +331,7 @@ class _MainScreenState extends State<MainScreen> {
         title: Text(nav.name, textAlign: TextAlign.end,
         ),
          children:subItemlist,
-      );
+      );*/
 
     }else {
       return ListTile(trailing: Icon(nav.navIcon),
@@ -189,15 +345,23 @@ class _MainScreenState extends State<MainScreen> {
 
 
 
-  _getDrawerItemWidget(int pos) {
-    switch (pos) {
-      case 0:
-        return  BlocProvider(
-            bloc: CategoryBloc(),child:CategoryListFragment());
-      case 1:
-        return new CategoryListFragment();
-      case 2:
-        return new CategoryListFragment();
+  _getDrawerItemWidget(NavigationScreen screen) {
+    switch (screen) {
+      case NavigationScreen.HOME:
+
+        return  CategoryListFragment();
+
+        case NavigationScreen.FAVROITE:
+        return new FavroitePage();
+
+        case NavigationScreen.OFFER:
+        return BlocProvider(bloc:CategoryBloc(),child: new OfferPage());
+
+      case NavigationScreen.PRFOILE:
+        return new ProfilePage();
+
+      case NavigationScreen.MYADS:
+        return new MyAdsPage();
 
       default:
         return new Text("Error");

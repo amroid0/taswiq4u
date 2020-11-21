@@ -4,8 +4,9 @@ class UploadedImage extends ImageListItem{
   String localPath;
   String remoteUrl;
   StateEnum state;
+  var base64Image;
 
-  UploadedImage({ this.localPath, this.remoteUrl, this.state});
+  UploadedImage({ this.localPath, this.remoteUrl, this.state,this.base64Image});
 
 
 }

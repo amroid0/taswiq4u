@@ -71,11 +71,14 @@ class _SplashScreenState extends State<SplashScreen> {
                         });
 
                         break;
-                      case Status.ERROR:
-                        Navigator.pushReplacement(
+                      case Status.ERROR
+                          :
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+
+    Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => WelocmeScreen()),
-                        );                        break;
+                        );});                        break;
                     }
                   }
                   return Container();

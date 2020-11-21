@@ -7,17 +7,16 @@ part 'ads_entity.g.dart';
 
 class AdsEntity {
 
+  String $id;
 
-
-
-
-  // To parse this
   @JsonKey(name: "AdvertisementList")
-  AdvertisementList advertisementList;
+  List<AdsModel> advertisementList;
   @JsonKey(name: "CommercialAdsList")
   List<CommercialAdsList> commercialAdsList;
 
-  AdsEntity({
+  bool isLoadMore;
+
+  AdsEntity({this.$id,
   this.advertisementList,
   this.commercialAdsList,
   });
@@ -25,50 +24,9 @@ class AdsEntity {
 
 
 }
+
 @JsonSerializable()
-
-  class AdvertisementList {
-  @JsonKey(name: "TotalItems")
-
-  int totalItems;
-  @JsonKey(name: "Page")
-
-  int page;
-  @JsonKey(name: "Size")
-  int size;
-  @JsonKey(name: "List")
-
-  List<ListElement> list;
-  @JsonKey(name: "TotalPages")
-
-  int totalPages;
-  @JsonKey(name: "HasPreviousPage")
-  bool hasPreviousPage;
-  @JsonKey(name: "HasNextPage")
-
-  bool hasNextPage;
-  @JsonKey(name: "NextPage")
-
-  int nextPage;
-  @JsonKey(name: "PreviousPage")
-  int previousPage;
-
-  AdvertisementList({
-  this.totalItems,
-  this.page,
-  this.size,
-  this.list,
-  this.totalPages,
-  this.hasPreviousPage,
-  this.hasNextPage,
-  this.nextPage,
-  this.previousPage,
-  });
-  factory AdvertisementList.fromJson(Map<String, dynamic> json) => _$AdvertisementListFromJson(json);
-
-}
-@JsonSerializable()
-  class ListElement {
+  class AdsModel {
   int Id;
   String Title;
   String ArabicDescription;
@@ -102,7 +60,7 @@ class AdsEntity {
   bool IsFeatured;
   List<AdvertismentImage> AdvertismentImages;
 
-  ListElement(this.Id, this.Title, this.ArabicDescription,
+  AdsModel(this.Id, this.Title, this.ArabicDescription,
       this.EnglishDescription, this.IsNogitable, this.Price, this.CategoryId,
       this.CategoryName, this.UserId, this.UserName, this.UserPhone,
       this.ArabicDescriptionUrl, this.EnglishDescriptionUrl, this.ArabicTitle,
@@ -113,19 +71,21 @@ class AdsEntity {
       this.StateNameArabic, this.StateNameEnglish, this.IsFeatured,
       this.AdvertismentImages);
 
-  factory ListElement.fromJson(Map<String, dynamic> json) => _$ListElementFromJson(json);
+  factory AdsModel.fromJson(Map<String, dynamic> json) => _$AdsModelFromJson(json);
 
   }
 @JsonSerializable()
   class AdvertismentImage {
   int Id;
   String Url;
-  int Size;
+  double Size;
   bool IsImage;
   DateTime CreationDate;
+  String base64Image="";
+  bool isLoading=false;
 
   AdvertismentImage(this.Id, this.Url, this.Size, this.IsImage,
-      this.CreationDate);
+      this.CreationDate,this.base64Image);
 
   factory AdvertismentImage.fromJson(Map<String, dynamic> json) => _$AdvertismentImageFromJson(json);
 
@@ -145,17 +105,23 @@ class AdsEntity {
   int CountryId;
   int ViewsCount;
   int Likes;
+  bool isLiked;
+  bool isViewed;
   int CommercialAdsCategoryId;
   @JsonKey(name:"CommercialAdsCategory" )
   CommercialAdsCategory commercialAdsCategory;
   @JsonKey(name:"SystemDataFile" )
   SystemDataFile systemDataFile;
+  String base64Image;
+  bool isLoading=false;
 
   CommercialAdsList(this.Id, this.ImageId, this.Type, this.Description,
       this.Link, this.CreationDate, this.EndDate, this.Active,
       this.Notification, this.CountryId, this.ViewsCount, this.Likes,
       this.CommercialAdsCategoryId, this.commercialAdsCategory,
-      this.systemDataFile);
+      this.systemDataFile,
+      this.base64Image,
+      );
   factory CommercialAdsList.fromJson(Map<String, dynamic> json) => _$CommercialAdsListFromJson(json);
 
 
@@ -184,7 +150,7 @@ class AdsEntity {
   class SystemDataFile {
   int Id;
   String Url;
-  int Size;
+  double Size;
   String Extention;
   int Type;
   DateTime CreationDate;

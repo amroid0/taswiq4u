@@ -8,11 +8,14 @@ import 'package:http_parser/http_parser.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/upload_image_bloc.dart';
 import 'package:olx/model/StateEnum.dart';
+import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/upload_image_entity.dart';
 import 'package:olx/utils/Theme.dart';
+import 'package:olx/widget/base64_image.dart';
 import 'package:olx/widget/circle_button.dart';
 
 class ImageInput extends StatefulWidget {
+
   @override
   State<StatefulWidget> createState() {
     return _ImageInput();
@@ -24,6 +27,7 @@ class _ImageInput extends State<ImageInput> {
 var _bloc;
   @override
   void initState() {
+
     // TODO: implement initState
     super.initState();
     _bloc = BlocProvider.of<UploadImageBloc>(context);
@@ -98,6 +102,7 @@ var _bloc;
         scrollDirection: Axis.horizontal,
         // Provide a builder function. This is where the magic happens.
         // Convert each item into a widget based on the type of item it is.
+        // ignore: missing_return
         itemBuilder: (context, index) {
           final item = items[index];
 
@@ -118,6 +123,10 @@ var _bloc;
             );
           } else if (item is UploadedImage) {
 
+            if(item.localPath==null&&item.base64Image==null){
+              _bloc.GetImage( index,item.remoteUrl);
+              //TODO:change index to id
+            }
 
             Widget state=CircularProgressIndicator();
             switch(item.state){
@@ -149,10 +158,11 @@ var _bloc;
                     decoration: BoxDecoration(
                       color: AppColors.appBackground,
                     ),
-                    child: Image.file(
+                    child:item.localPath!=null? Image.file(
                       File(item.localPath),
                       fit: BoxFit.fill,
-                    ),
+                    ):ImageBox(imgSrc:item.base64Image==null?"":item.base64Image ,defaultImg:"images/logo.png" ,boxFit: BoxFit.fill,),
+                      
                   ),state,
               /*    FlatButton(
 

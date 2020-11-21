@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:olx/data/bloc/add_post_bloc.dart';
@@ -8,15 +9,22 @@ import 'package:olx/generated/i18n.dart';
 import 'package:olx/model/FieldproprtieyReposne.dart';
 import 'package:olx/model/StateEnum.dart';
 import 'package:olx/model/ads_post_entity.dart';
+import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/cateogry_entity.dart';
 import 'package:olx/model/field_proprtires_entity.dart';
 import 'package:olx/model/upload_image_entity.dart';
 import 'package:olx/pages/ImageUploaderListPage.dart';
 import 'package:olx/pages/cateogry_dialog_page.dart';
 import 'package:olx/utils/Theme.dart';
+import 'package:olx/utils/dailogs.dart';
+import 'package:olx/utils/global_locale.dart';
+import 'package:olx/utils/loading_dialog.dart';
 import 'package:olx/widget/check_box_withlabel.dart';
 import 'package:olx/widget/map_widget.dart';
 import 'package:google_map_location_picker/google_map_location_picker.dart';
+import 'package:olx/widget/multi_select_dialog.dart';
+import 'package:olx/widget/multi_select_form.dart';
+import 'package:olx/widget/mutli_select_chip_dialog.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 import '../data/bloc/bloc_provider.dart';
@@ -42,15 +50,20 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   final TextEditingController _pricetextController = TextEditingController();
   final TextEditingController _phonetextController = TextEditingController();
   final TextEditingController _emailtextController = TextEditingController();
+  final TextEditingController _desctextController = TextEditingController();
   Color adNameColor,descColor,priceColor,emailColor,phoneColor,categoryColor=Colors.grey;
   GoogleMapController _mapController;
   final Set<Marker> _markers = {};
-
+  List<TextEditingController>contollers=List();
   CateogryEntity _selectedcataogry;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   UploadImageBloc uploadBloc;
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+
 
   ProgressDialog progressDialog;
+
+  List<List> _multiselectedFieldValue=List<List<FieldProprtiresSpecificationoption>>();
 
 @override
   void dispose() {
@@ -64,12 +77,70 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
     WidgetsBinding.instance.addPostFrameCallback((_){_showDialog();});
    bloc=AddPostBloc();
    uploadBloc =UploadImageBloc();
+
+    bloc.addStream.listen((data) {
+      // Redirect to another view, given your condition
+      switch (data.status) {
+        case Status.LOADING:
+          Future.delayed(Duration.zero, () {
+            DialogBuilder(context).showLoadingIndicator('loading');
+
+          });
+          break;
+        case Status.COMPLETED:
+          DialogBuilder(context).hideOpenDialog();
+
+
+
+          var isLogged=data as ApiResponse<bool>;
+          var isss=isLogged.data;
+          if(isss){
+
+            Fluttertoast.showToast(
+                msg: "Sucessfully Added'",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 16.0
+            );
+            Navigator.pop(context);
+
+          }
+
+          break;
+        case Status.ERROR:
+          DialogBuilder(context).hideOpenDialog();
+
+          Fluttertoast.showToast(
+              msg: "Something went Wrong'",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+          break;
+      }
+    });
+
+
+
    _nametextController.addListener((){
      bool isvalid=_titleAdsValidate(_nametextController.value.text)==null;
      setState(() {
        adNameColor=isvalid?AppColors.validValueColor:AppColors.errorValueColor;
      });
    });
+
+    _desctextController.addListener((){
+      bool isvalid=_descAdsValidate(_desctextController.value.text)==null;
+      setState(() {
+        descColor=isvalid?AppColors.validValueColor:AppColors.errorValueColor;
+      });
+    });
 
     _cattextController.addListener((){
       bool isvalid=_emptyValidate(_cattextController.value.text)==null;
@@ -104,7 +175,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   _showDialog() async{
     await  SelectDialog.showModal<CateogryEntity>(
       context,
-      label: "choose Cateogry",
+      label: allTranslations.text('choose_category'),
       selectedValue: CateogryEntity(),
       items: List(),
       onChange: (CateogryEntity selected) {
@@ -113,6 +184,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
         _colorFieldValue=[];
         bloc.getAddFieldsByCatID(selected.id);
           _selectedcataogry=selected;
+          adsPostEntity.categoryId=selected.id;
 
       },);
   }
@@ -124,7 +196,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
       key: scaffoldKey,
       appBar: AppBar(
         title: Center(
-          child: Text('اضافه اعلان',textAlign: TextAlign.center,style: TextStyle(
+          child: Text(allTranslations.text('ads_add'),textAlign: TextAlign.center,style: TextStyle(
               color:
           Colors.black38
 
@@ -138,7 +210,10 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.arrow_forward_ios,color: Colors.black38,),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pop(context);
+
+            },
             tooltip: 'back',
           ),
         ],
@@ -157,7 +232,7 @@ body: Padding(
 
        Padding(
          padding: const EdgeInsets.only(left:8.0),
-         child: Text("اضف صور للاعلان"),
+         child: Text(allTranslations.text('add_image')),
        ),
       BlocProvider(
       bloc: uploadBloc,child:ImageInput()),//add image list
@@ -171,40 +246,47 @@ body: Padding(
             LengthLimitingTextInputFormatter(200)
           ],
           onSaved: (val){
-          adsPostEntity.Title=val;
+          adsPostEntity.title=val;
           },
           decoration: InputDecoration(
 
            prefixIcon: Icon(Icons.check_circle,color: adNameColor,),
             filled: true,
             fillColor: Colors.white,
-            labelText: "اسم الاعلان",
-            hintText: "اسم الاعلان",
+            labelText: allTranslations.text('ads_title'),
+            hintText:  allTranslations.text('ads_title'),
 
             border: new OutlineInputBorder(
                 borderRadius: new BorderRadius.circular(10.0)),
           )
       ),
         SizedBox(height: 8,),
-        _BuildRoundedTextField(labelText: "التصنيف",hintText: "التصنيف",controller: _cattextController,
+
+
+        _BuildRoundedTextField(labelText: allTranslations.text('cateogry'),
+            hintText: allTranslations.text('cateogry'),
+            controller: _cattextController,
             iswithArrowIcon: true,onClickAction: (){
           _showDialog();
         }),
             SizedBox(height: 8,),
 
             TextFormField(
+
+              controller: _desctextController,
+              validator: _descAdsValidate,
+              autovalidate: descColor==AppColors.validValueColor||descColor==AppColors.errorValueColor,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.check_circle,color: descColor,),
-
                   filled: true,
                   fillColor: Colors.white,
-                  labelText: "تفاصيل الاعلان",
-                  hintText: "تفاصيل الاعلان",
+                  labelText: allTranslations.text('description'),
+                  hintText: allTranslations.text('description'),
                   border: new OutlineInputBorder(
                       borderRadius: new BorderRadius.circular(10.0)),
                 ),
               onSaved: (val){
-                adsPostEntity.EnglishDescription=val;
+                adsPostEntity.englishDescription=val;
               },
             ),
 
@@ -219,14 +301,14 @@ body: Padding(
         inputFormatters: [WhitelistingTextInputFormatter.digitsOnly,LengthLimitingTextInputFormatter((20))],
          validator: _emptyValidate,
       onSaved: (val){
-        adsPostEntity.Price=int.tryParse(val)??0;
+        adsPostEntity.price=int.tryParse(val)??0;
       },
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.check_circle,color: priceColor,),
           filled: true,
           fillColor: Colors.white,
-          labelText: "السعر",
-          hintText: "السعر",
+          labelText: allTranslations.text('price'),
+          hintText: allTranslations.text('price'),
           border: new OutlineInputBorder(
               borderRadius: new BorderRadius.circular(10.0)),
         )
@@ -244,6 +326,11 @@ body: Padding(
               var fields=snapshot.data.data;
              if(_selectedFieldValue.isEmpty) _selectedFieldValue=List(snapshot.data.data.length);
               if(_colorFieldValue.isEmpty) _colorFieldValue=List(snapshot.data.data.length);
+              if(_multiselectedFieldValue.isEmpty) _multiselectedFieldValue=List(snapshot.data.data.length);
+              if(contollers.isEmpty) contollers=List(snapshot.data.data.length);
+              if(adsPostEntity.advertismentSpecification==null){
+                adsPostEntity.advertismentSpecification=List(snapshot.data.data.length);
+              }
               return ListView.builder(
 
                 shrinkWrap: true,
@@ -252,23 +339,20 @@ body: Padding(
                 itemBuilder: (context, index) {
                   var item = fields[index];
 
-                  if(item.IsCustomValue==null)
-
+                  //if(item.CustomValue==null)
+                  if(item.MuliSelect==null||!item.MuliSelect)
                     return Padding(
                       padding: const EdgeInsets.only(bottom:8.0),
                       child: FormField<String>(
 
-                        autovalidate: true,
-                          validator:_emptyValidate,
+                        autovalidate: item.Required,
+                          validator:item.Required?_emptyValidate:null,
                           onSaved: (val){
-                          if(adsPostEntity.AdvertismentSpecification==null){
-                            adsPostEntity.AdvertismentSpecification=List<Advertisment_SpecificationBean>();
-                          }
                           var vv=Advertisment_SpecificationBean();
-                          vv.Id=item.Id;
-                          int itemval=item.Value as int ?? 0;
-                          vv.AdvertismentSpecificatioOptions=[itemval];
-                          adsPostEntity.AdvertismentSpecification[index]=vv;
+                          vv.id=item.Id;
+                          int itemval=int.tryParse(val) ?? 0;
+                          vv.advertismentSpecificatioOptions=[itemval];
+                          adsPostEntity.advertismentSpecification[index]=vv;
 
                           },
                           builder: (FormFieldState<String> state) {
@@ -292,13 +376,13 @@ body: Padding(
                             child:DropdownButtonHideUnderline(
                               child: DropdownButton(
 
-                                hint: Text('اختر ${item.ArabicName}'),
+                                hint: Text('${allTranslations.text('choose')} ${allTranslations.isEnglish?item.EnglishName:item.ArabicName}'),
                                 value:_selectedFieldValue[index],
                                 isDense: true,
                                 items: item.SpecificationOptions.map((FieldProprtiresSpecificationoption value){
                                   return DropdownMenuItem(
                                     value: value.Id,
-                                    child: Text(value.ArabicName),
+                                    child: Text(allTranslations.isEnglish?value.EnglishName:value.ArabicName),
                                   );
                                 }).toList(),
 
@@ -320,27 +404,124 @@ body: Padding(
                     );
 
 
+                  else if(item.CustomValue==null)
+                       //if(item.MuliSelect!=null&&item.MuliSelect)
+                    /*return Padding(
+                      padding: const EdgeInsets.only(bottom:8.0),
+                      child: FormField<String>(
+
+                          autovalidate: true,
+                          validator:_emptyValidate,
+                          onSaved: (val){
+                            if(adsPostEntity.AdvertismentSpecification==null){
+                              adsPostEntity.AdvertismentSpecification=List<Advertisment_SpecificationBean>();
+                            }
+                            var vv=Advertisment_SpecificationBean();
+                            vv.Id=item.Id;
+                            int itemval=item.Value as int ?? 0;
+                            vv.AdvertismentSpecificatioOptions=[itemval];
+                            adsPostEntity.AdvertismentSpecification[index]=vv;
+
+                          },
+                          builder: (FormFieldState<String> state) {
+                            return InputDecorator(
+
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                labelText: item.ArabicName,
+                                errorText: state.hasError?state.errorText:null,
+                                prefixIcon: Icon(Icons.check_circle,color: _colorFieldValue[index],),
+                                border: new OutlineInputBorder(
+                                    borderRadius: new BorderRadius.circular(10.0)),
+                              ),
+                              child: MultiSelectFormField(
+
+                                hintText: '${allTranslations.text('choose')} ${allTranslations.isEnglish?item.EnglishName:item.ArabicName}',
+                                titleText: '${allTranslations.text('choose')} ${allTranslations.isEnglish?item.EnglishName:item.ArabicName}',
+                                value:_multiselectedFieldValue[index],
+                                dataSource: item.SpecificationOptions.map((FieldProprtiresSpecificationoption value){
+                                  return {
+                                    "value": value.Id,
+                                    "display":
+                                        allTranslations.isEnglish ? value
+                                            .EnglishName : value.ArabicName,
+                                  };
+                                }).toList(),
+
+                                  textField: 'display',
+                                  valueField: 'value',
+                                cancelButtonLabel: "Cancel",
+                                okButtonLabel: "Ok",
+                                  onSaved: (value) {
+                                    if (value == null) return;
+                                    setState(() {
+                                      _multiselectedFieldValue[index] = value;
+                                    });
+                                  },
+                              ),
+                            );}
+
+                      ),
+                    );*/
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom:8.0),
+                      child: TextFormField(
+                        controller: contollers[index],
+                          onTap:() {
+                            WidgetsBinding.instance.addPostFrameCallback((_){_showReportDialog(index, item.EnglishName, item.SpecificationOptions);});
+                            },
+                          readOnly: true,
+                          autovalidate: item.Required,
+                          validator: item.Required?_emptyValidate:null,
+                          onSaved: (val){
+
+                            var vv=Advertisment_SpecificationBean();
+                            vv.id=item.Id;
+                            //int itemval=item.Value as int ?? 0;
+                            vv.customValue=val;
+                            adsPostEntity.advertismentSpecification[index]=vv;
+                            },
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+
+                            labelText: allTranslations.isEnglish?item.EnglishName:item.ArabicName,
+                            hintText:allTranslations.isEnglish?item.EnglishName:item.ArabicName,
+                            prefixIcon: item.Required?Icon(Icons.check_circle,color: _colorFieldValue[index],):null,
+                            suffixIcon:  Icon(Icons.arrow_drop_down),
+                            border: new OutlineInputBorder(
+                                borderRadius: new BorderRadius.circular(10.0)),
+                          )
+                      ),
+                    );
+
+
+
                   else{
                        return Padding(
                          padding: const EdgeInsets.only(bottom:8.0),
                          child: TextFormField(
+                             controller: contollers[index],
+                           autovalidate: true,
                            validator: _emptyValidate,
                              onSaved: (val){
-                               if(adsPostEntity.AdvertismentSpecification==null){
-                                 adsPostEntity.AdvertismentSpecification=List<Advertisment_SpecificationBean>();
-                               }
+
                                var vv=Advertisment_SpecificationBean();
-                               vv.Id=item.Id;
-                               int itemval=item.Value as int ?? 0;
-                               vv.AdvertismentSpecificatioOptions=[itemval];
-                               adsPostEntity.AdvertismentSpecification[index]=vv;
+                               vv.id=item.Id;
+                               vv.customValue=val;
+                               //int itemval=item.Value as int ?? 0;
+                               //vv.AdvertismentSpecificatioOptions=[val];
+                               adsPostEntity.advertismentSpecification[index]=vv;
 
                              },
                              decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.white,
-                              labelText: item.ArabicName,
-                              hintText: item.ArabicName,
+                              labelText: allTranslations.isEnglish?item.EnglishName:item.ArabicName,
+                              hintText:allTranslations.isEnglish?item.EnglishName:item.ArabicName,
+                               prefixIcon: item.Required?Icon(Icons.check_circle,color: _colorFieldValue[index],):null,
 
 
                               border: new OutlineInputBorder(
@@ -374,15 +555,15 @@ body: Padding(
                 autovalidate: emailColor==AppColors.validValueColor||emailColor==AppColors.errorValueColor,
                 validator: _emailValidate,
                 onSaved: (val){
-                  adsPostEntity.Email=val;
+                  adsPostEntity.email=val;
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.check_circle,color: emailColor,),
 
                   filled: true,
                   fillColor: Colors.white,
-                  labelText: "الايميل",
-                  hintText: "الايميل",
+                  labelText: allTranslations.text('email'),
+                  hintText:  allTranslations.text('email'),
                   border: new OutlineInputBorder(
                       borderRadius: new BorderRadius.circular(10.0)),
                 )
@@ -393,15 +574,15 @@ body: Padding(
                 validator: _phoneValidate,
                 autovalidate: phoneColor==AppColors.validValueColor||phoneColor==AppColors.errorValueColor,
                 onSaved: (val){
-                  adsPostEntity.Phone=val;
+                  adsPostEntity.phone=val;
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.check_circle,color: phoneColor,),
 
                   filled: true,
                   fillColor: Colors.white,
-                  labelText: "الهاتف",
-                  hintText: "الهاتف",
+                  labelText:  allTranslations.text('phone'),
+                  hintText:  allTranslations.text('phone'),
                   border: new OutlineInputBorder(
                       borderRadius: new BorderRadius.circular(10.0)),
                 )
@@ -417,7 +598,7 @@ body: Padding(
                   onMapCreated: _onMapCreated,
                   markers: _markers,
                 onTap: (lat) async {
-                  LocationResult result = await LocationPicker.pickLocation(context, "AIzaSyC57DQKo0jhnTJtdZX1Lp7LAIFmAFhZiNQ",
+                  LocationResult result = await showLocationPicker(context, "AIzaSyC57DQKo0jhnTJtdZX1Lp7LAIFmAFhZiNQ",
                   );
                   print("result = $result");
                   setState(() {
@@ -445,12 +626,12 @@ body: Padding(
             SizedBox(height: 8,),
             Center(
               child: CheckboxLabel(
-                  label: "السعر قابل للتفاوض",
+                  label: allTranslations.text('negtoable'),
                   value: isNeogtiable,
                   onChanged: (newValue) {
                     setState(() {
                       isNeogtiable=newValue;
-                      adsPostEntity.IsNogitable=newValue;
+                      adsPostEntity.isNogitable=newValue;
                     });
                   },
                 ),
@@ -467,59 +648,39 @@ body: Padding(
                     int count=0;
                     var images=<PhotosBean>[];
                     bool isuploaded=true;
-                    for(var image in uploadBloc.getUploadImageList){
+                    List<ImageListItem>uploadedimges=uploadBloc.getUploadImageList;
+                    for(var image in uploadedimges){
 
-                      if(image is UploadedImage&& image.state == StateEnum.LOADING){
+                      if(image is UploadedImage&& image.state != StateEnum.LOADING){
                         if(image.remoteUrl!=null&& image.remoteUrl.isNotEmpty){
                         PhotosBean photo=new PhotosBean(image.remoteUrl.toString(),count);
                         images.add(photo);
                         count++;
                         }
-                      }else{
+                      }else if(image is UploadedImage&& image.state == StateEnum.LOADING){
                         isuploaded==false;
                         break;
                       }
                     }
                     if(isuploaded){
-                      adsPostEntity.Photos=List<PhotosBean>();
-                      adsPostEntity.Photos.addAll(images);
+                      adsPostEntity.photos=List<PhotosBean>();
+                      adsPostEntity.photos.addAll(images);
                     }else{
                       scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('images not all uploaded')));
                       return;
                     }
-                    progressDialog = new ProgressDialog(context,ProgressDialogType.Normal);
+                    adsPostEntity.locationLatitude=0 /*_markers.elementAt(0).position.latitude as int*/;
+                    adsPostEntity.locationLongtude=0 /*_markers.elementAt(0).position.longitude as int*/;
 
-
-                    progressDialog.setMessage("Loading..");
-                    progressDialog.show();
-                    adsPostEntity.LocationLatitude=0 /*_markers.elementAt(0).position.latitude as int*/;
-                    adsPostEntity.LocationLongtude=0 /*_markers.elementAt(0).position.longitude as int*/;
                     bloc.postAds(adsPostEntity);
 
 
                   }
 
                 },
-                child: Center(child: Text("اضافه الاعلان")),textColor: Colors.white,),)
+                child: Center(child: Text(allTranslations.text('ads_add'))),textColor: Colors.white,),)
 ,
-            StreamBuilder<bool>(
-              stream:bloc.addStream,
-              builder: (context,snapshot){
-                progressDialog?.hide();
-                 if (snapshot.hasData)
-                   {
-                     snapshot.data?scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("sucess")))
-                         :
-                     scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("error")));
-                   }
-                 else if(snapshot.hasError){
-                   scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(" eccecption error")));
 
-                 }
-             return Container();
-
-              }
-              ,)
 
 
           ]
@@ -592,13 +753,23 @@ body: Padding(
   }
   String _titleAdsValidate(String value){
      if(value.isEmpty){
-       return "الحقل فارغ";
+       return allTranslations.text('empty_field');
      }
      else if(value.length<3){
-       return"الاسم قصير";
+       return allTranslations.text('err_short');
      }else{
        return null;
      }
+  }
+  String _descAdsValidate(String value){
+    if(value.isEmpty){
+      return allTranslations.text('empty_field');
+    }
+    else if(value.length<30){
+      return allTranslations.text('err_short');
+    }else{
+      return null;
+    }
   }
 
   String _phoneValidate(String value){
@@ -606,11 +777,11 @@ body: Padding(
     String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
     RegExp regExp=RegExp(patttern);
     if(value.isEmpty){
-      return "الحقل فارغ";
+      return allTranslations.text('empty_field');
     }
 
     else if(!regExp.hasMatch(value)){
-      return"{قم الهاتف غير صحيح";
+      return allTranslations.text('err_phone');
     }else{
       return null;
     }
@@ -620,11 +791,11 @@ body: Padding(
     String patttern = r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
     RegExp regExp=RegExp(patttern);
     if(value.isEmpty){
-      return "الحقل فارغ";
+      return allTranslations.text('empty_field');
     }
 
     else if(!regExp.hasMatch(value)){
-      return"الايميل  غير صحيح";
+      return allTranslations.text('err_email');
     }else{
       return null;
     }
@@ -632,13 +803,56 @@ body: Padding(
   String _emptyValidate(String value){
 
     if(value==null||value.isEmpty){
-      return "الحقل فارغ";
+      return allTranslations.text('empty_field');
     }
   else{
       return null;
     }
   }
 
+  _showReportDialog(int index,String title,List<FieldProprtiresSpecificationoption> list) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          //Here we will build the content of the dialog
+          return AlertDialog(
+            title: Text(title),
+            content: MultiSelectChip(
+              list,
+              onSelectionChanged: (selectedList) {
+                if(contollers[index]==null){
+                  contollers[index]=TextEditingController();}
+                String text="";
+                selectedList.forEach((val)=>text+="${val.EnglishName} ,");
+                contollers[index].text=text;
+                setState(() {
+
+                  _multiselectedFieldValue[index] = selectedList;
+                  _colorFieldValue[index]=AppColors.validValueColor;
+
+                });
+              },
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Ok"),
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            ],
+          );
+        });
+  }
+
+
+  Future<void> showSnackBar(BuildContext context,String message)async{
+
+    final snackBar = SnackBar(
+      content: Text(message),
+      duration: Duration(milliseconds: 1000),
+
+    );
+    Scaffold.of(context).showSnackBar(snackBar);
+  }
 
 
 }

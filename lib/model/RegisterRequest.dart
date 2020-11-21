@@ -5,6 +5,10 @@ part 'RegisterRequest.g.dart';
 
 @JsonSerializable()
 class RegisterRequest{
+ @JsonKey(name: "FirstName")
+ String firstName;
+ @JsonKey(name: "SecondName")
+ String secondName;
 @JsonKey(name: "Phone")
 String phone;
 @JsonKey(name: "Password")
@@ -19,7 +23,7 @@ int languageId;
 int cityId;
 
 RegisterRequest(
-    {this.phone,
+    {this.firstName,this.secondName,this.phone,
       this.password,
       this.confirmPassword,
       this.countryId,

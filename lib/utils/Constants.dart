@@ -26,7 +26,43 @@ class APIConstants {
   static const String CATEOGRY_ADS="${API_BASE_ENDPOINT}api/CommercialAdCategory/GetAllCountryCategory";
   static const String SEARCH_WITH_PARAM="${API_BASE_ENDPOINT}api/Ads/SearchWithParams";
   static const String IMAGE_UPLOAD="${API_BASE_ENDPOINT}Api/ImageUpload/AddAdvertismentImage";
+  static const String SLIDER_ADS="${API_BASE_ENDPOINT}api/CommercialAd/GetMainSliderAds/";
+  static const String FILTER_FIELDS_API="${API_BASE_ENDPOINT}api/Ads/SearchAdsForm/";
+  static const String EDIT_FIELD="${API_BASE_ENDPOINT}api/Ads/EditAdvertismentForm/";
+  static const String DETAIL_API="${API_BASE_ENDPOINT}api/Ads/AdDetails";
+  static const String EDIT_ADS="${API_BASE_ENDPOINT}api/Ads/EditAdvertisment";
+  static const String SEARCH_KEY="${API_BASE_ENDPOINT}api/Ads/SearchWithKeys";
+  static const String OFFER_ADS="${API_BASE_ENDPOINT}api/CommercialAd/GetOfferAds/";
+  static const String FAVROITE_ADS="${API_BASE_ENDPOINT}Api/Favorite/GetFavoriteAds";
+   static const String GET_IMAGE="${API_BASE_ENDPOINT}Api/ImageUpload/GetAdImage";
+  static const String GET_COMMERCIAL_ADD="${API_BASE_ENDPOINT}api/CommercialAd/ViewAd/";
+  static const String VIEW_ADS_API="${API_BASE_ENDPOINT}api/CommercialAd/ViewAd/";
+  static const String LIKE_ADS_API="${API_BASE_ENDPOINT}api/CommercialAd/LikeAd/";
+  static const String CHECK_VERIFY="${API_BASE_ENDPOINT}api/Auth/isVerified";
 
+  static const String VERFIY_PHONE_API="${API_BASE_ENDPOINT}api/Auth/Verify";
+
+  static const String POPUP_ADS="${API_BASE_ENDPOINT}api/CommercialAd/GetPopUpAds/";
+
+  static const String MAIN_SLIDER_ADS="${API_BASE_ENDPOINT}api/CommercialAd/GetMainSliderAds/";
+  static const ADD_FAVROITE="${API_BASE_ENDPOINT}Api/Favorite/AddToFavorite";
+  static const UNFAROITE="${API_BASE_ENDPOINT}Api/Favorite/RemoveFromFavorite";
+
+  static const String MY_ADS="${API_BASE_ENDPOINT}api/Ads/GetMyAds";
+
+  static const String USER_PROFILE_API="${API_BASE_ENDPOINT}api/Auth/GetUserFullData";
+
+  static const String COUNTRY_API="${API_BASE_ENDPOINT}api/country/CountriesList";
+  static String getFullImageUrl(String url,int type){
+    return  'http://api.taswiq4u.com/Api/ImageUpload/i?url=$url&type=$type';
+  }
+}
+
+class ImageType {
+  static const int COMMAD=1;
+  static const int ADS= 2;
+  static const int CATE= 3;
+  static const int COUNTRY= 4;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,11 +1,21 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/services.dart';
 import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/cateogry_bloc.dart';
+import 'package:olx/data/bloc/offer_bloc.dart';
+import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/cateogry_entity.dart';
+import 'package:olx/model/popup_ads_entity_entity.dart';
+import 'package:olx/pages/popup_ads_page.dart';
 import 'package:olx/pages/search_page.dart';
+import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/Theme.dart';
+import 'package:olx/utils/global_locale.dart';
+
+import 'offer_detail_slider_page.dart';
 
 class CategoryListFragment extends StatefulWidget {
   CategoryListFragment() : super();
@@ -17,19 +27,14 @@ class CategoryListFragment extends StatefulWidget {
 }
 
 class CarouselDemoState extends State<CategoryListFragment> {
-  var  _bloc;
+  CategoryBloc  _bloc;
   List<CateogryEntity>totalCateogryList;
 
   //
   CarouselSlider carouselSlider;
-  int _current = 0;
-  List imgList = [
-    'https://images.unsplash.com/photo-1502117859338-fd9daa518a9a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
-    'https://images.unsplash.com/photo-1554321586-92083ba0a115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
-    'https://images.unsplash.com/photo-1536679545597-c2e5e1946495?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
-    'https://images.unsplash.com/photo-1543922596-b3bbaba80649?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
-    'https://images.unsplash.com/photo-1502943693086-33b5b1cfdf2f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80'
-  ];
+  List imgList = [];
+
+  int ImageIndex=0;
 
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];
@@ -41,16 +46,42 @@ class CarouselDemoState extends State<CategoryListFragment> {
 @override
   void initState() {
     // TODO: implement initState
-    super.initState();
-    _bloc = BlocProvider.of<CategoryBloc>(context);
-    _bloc.submitQuery("");
+
+  _bloc = new CategoryBloc();
+  _bloc.submitQuery("");
+
+  _bloc.popupStream..listen((data){
+    switch (data.status) {
+      case Status.LOADING:
+
+        break;
+
+
+
+      case Status.ERROR:
+
+        break;
+      case Status.COMPLETED:
+        var response=data.data;
+        if(response!=null)
+        _openAddEntryDialog(data.data[0]);
+
+
+        break;
+
+  }});
+
+  _bloc.getPopupAds();
+
+  super.initState();
+
   }
   @override
   Widget build(BuildContext context) {
     return  WillPopScope(
       onWillPop: (){
         if(_bloc.isStackIsEmpty()){
-          Navigator.pop(context);
+          SystemNavigator.pop();
 
         }else {
           _bloc.removeCateogryFromStack();
@@ -62,54 +93,29 @@ class CarouselDemoState extends State<CategoryListFragment> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              carouselSlider = CarouselSlider(
-
-                height: MediaQuery.of(context).size.height*.25,
-                initialPage: 0,
-                enlargeCenterPage: true,
-                autoPlay: true,
-                reverse: false,
-                enableInfiniteScroll: true,
-                autoPlayInterval: Duration(seconds: 2),
-                autoPlayAnimationDuration: Duration(milliseconds: 2000),
-                pauseAutoPlayOnTouch: Duration(seconds: 10),
-                scrollDirection: Axis.horizontal,
-                onPageChanged: (index) {
-                  setState(() {
-                    _current = index;
-                  });
-                },
-                items: imgList.map((imgUrl) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.symmetric(horizontal: 5.0,vertical: 5),
-                        decoration: BoxDecoration(
-                          color: AppColors.appBackground,
-                        ),
-                        child: Image.network(
-                          imgUrl,
-                          fit: BoxFit.fill,
-                        ),
-                      );
-                    },
-                  );
-                }).toList(),
-              ),
+             _buildMainSlider(_bloc),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: map<Widget>(imgList, (index, url) {
-                  return Container(
-                    width: 7.0,
-                    height: 7.0,
-                    margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _current == index ?Theme.of(context).accentColor: Colors.black26 ,
-                    ),
-                  );
+                  return StreamBuilder<int>(
+                    initialData: 0,
+                    stream: _bloc.imageNumberStream,
+                    builder: (context,snap) {
+                      return Container(
+                        width: 7.0,
+                        height: 7.0,
+                        margin: EdgeInsets.symmetric(
+                            vertical: 5.0, horizontal: 2.0),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: snap.data == index ? Theme
+                              .of(context)
+                              .accentColor : Colors.black26,
+                        ),
+                      );
+
+                    });
                 }),
               ),
 
@@ -117,10 +123,13 @@ class CarouselDemoState extends State<CategoryListFragment> {
                 child: StreamBuilder<List<CateogryEntity>>(
                   stream: _bloc.stream,
                   builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return Text('Loading...');
-                    }
 
+                    if (!snapshot.hasData) {
+                      return Text(allTranslations.text('loading'));
+                    }
+                    if(imgList.isEmpty){
+                      _bloc.getMainSliderAds();
+                    }
                     return _buildCategoryList(snapshot.data);
                   }
                 ),
@@ -134,6 +143,88 @@ class CarouselDemoState extends State<CategoryListFragment> {
 
       ),
     );
+  }
+
+  Widget _buildMainSlider(CategoryBloc bloc){
+   return StreamBuilder<ApiResponse<List<PopupAdsEntityList>>>(
+        stream: _bloc.mainSliderStreaam,
+        builder: (context, snapshot) {
+          if(snapshot.hasData)
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              break;
+
+
+            case Status.ERROR:
+              break;
+            case Status.COMPLETED:
+              var response = snapshot.data;
+              if (response != null)
+              for(int i=0;i<response.data.length;i++){
+                if(response.data[i].systemDataFile!=null){
+                  imgList.add(response.data[i].systemDataFile.url);
+                }
+              }
+
+              carouselSlider = CarouselSlider(
+
+                height: MediaQuery.of(context).size.height*.25,
+                initialPage: 0,
+                enlargeCenterPage: true,
+                autoPlay: true,
+                reverse: false,
+                enableInfiniteScroll: true,
+                autoPlayInterval: Duration(seconds: 2),
+                autoPlayAnimationDuration: Duration(milliseconds: 2000),
+                pauseAutoPlayOnTouch: Duration(seconds: 2),
+                scrollDirection: Axis.horizontal,
+                onPageChanged: (index) {
+                  ImageIndex=index;
+
+                  _bloc.updateImageSliderNumber(index);
+                },
+                items: imgList.map((imgUrl) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: EdgeInsets.symmetric(horizontal: 5.0,vertical: 5),
+                        decoration: BoxDecoration(
+                          color: AppColors.appBackground,
+                        ),
+                        child:   GestureDetector(
+                          onTap: (){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => BlocProvider(bloc: new OfferBloc(),child: OfferSliderPage())
+                                    ,settings: RouteSettings(arguments:{"list":response.data,"index":ImageIndex})));
+
+                          },
+                          child: CachedNetworkImage(
+                            fit: BoxFit.fill,
+                              placeholder: (context, url) => Image.asset("images/logo.png"),
+                              errorWidget: (context, url,error) => Image.asset("images/logo.png"),
+                              imageUrl: APIConstants.getFullImageUrl(imgUrl, ImageType.COMMAD)
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }).toList(),
+              );
+          return carouselSlider;
+
+              break;
+          }
+          return Container(
+            height: 250.0,
+            child:Center(child: Icon(Icons.image,size: 100,)),
+          );
+        }
+        );
+
+
   }
 
   Widget _buildCategoryList(List<CateogryEntity> category){
@@ -151,38 +242,46 @@ class CarouselDemoState extends State<CategoryListFragment> {
               }else{
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => BlocProvider(bloc: AdsBloc(),child:SearchAnnounceListScreen(),)),
+                MaterialPageRoute(builder: (context) => BlocProvider(bloc: AdsBloc(),child:SearchAnnounceListScreen(category[index]),),
+                settings: RouteSettings(arguments:category[index] )
+
+                ),
               );
               }
 
             },
             child: new Card(
               child: new SizedBox(
-                height: 60.0,
+                height: 70.0,
                 child: new Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     new Expanded(
                       child: new ListTile(
                         title: new Text(category[index].name,textAlign:TextAlign.end),
-                        subtitle: Text(category[index].arabicDescription,textAlign: TextAlign.end,),
-                        leading: Icon(Icons.keyboard_arrow_left,color: Colors.black,),
+                        subtitle: Text(allTranslations.isEnglish?category[index].englishDescription:category[index].arabicDescription,textAlign: TextAlign.end,),
+                        leading: Icon(allTranslations.isEnglish?Icons.keyboard_arrow_left:Icons.keyboard_arrow_right,color: Colors.black,),
                       ),
                     ),
                     new Container(
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).accentColor,
+                     /* decoration: BoxDecoration(
+                          color: Colors.white,
 
 
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey,
                               blurRadius: 5.0,)
-                          ]),
+                          ]),*/
                       margin: EdgeInsets.symmetric(vertical: 10),
                       alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Icon(Icons.directions_car,color: Colors.white,),
+                      child:
+                      CachedNetworkImage(
+                          fit: BoxFit.fill,
+                          placeholder: (context, url) => Image.asset("images/logo.png"),
+                        errorWidget: (context, url,error) => Image.asset("images/logo.png"),
+                        imageUrl: APIConstants.getFullImageUrl(category[index].categoryLogo, ImageType.CATE)
+                      ),
                     ),
                   ],
                 ),
@@ -207,5 +306,14 @@ class CarouselDemoState extends State<CategoryListFragment> {
   goToNext() {
     carouselSlider.nextPage(
         duration: Duration(milliseconds: 300), curve: Curves.decelerate);
+  }
+
+  void _openAddEntryDialog(PopupAdsEntityList data) {
+    Navigator.of(context).push(new MaterialPageRoute(
+        builder: (BuildContext context) {
+          return  PopUpAdsPage();
+        },settings: RouteSettings(arguments:data),
+        fullscreenDialog: true
+    ));
   }
 }

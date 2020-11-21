@@ -6,6 +6,7 @@ import 'package:olx/data/bloc/cateogry_bloc.dart';
 import 'package:olx/model/cateogry_entity.dart';
 import 'package:olx/pages/search_page.dart';
 import 'package:olx/utils/Theme.dart';
+import 'package:olx/utils/global_locale.dart';
 
 class CategoryListDialog extends StatefulWidget {
   CategoryListDialog() : super();
@@ -84,7 +85,6 @@ class CarouselDemoState extends State<CategoryListDialog> {
       itemCount: category.length,
       itemBuilder: (BuildContext context,int index){
 
-
         return Container(
           margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
           child: new InkWell(
@@ -92,10 +92,10 @@ class CarouselDemoState extends State<CategoryListDialog> {
               if(category[index].hasSub){
                 _bloc.addCateogryToStack(category[index].subCategories);
               }else{
-                Navigator.push(
+             /*   Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => BlocProvider(bloc: AdsBloc(),child:SearchAnnounceListScreen(),)),
-                );
+                );*/
               }
 
             },
@@ -108,8 +108,8 @@ class CarouselDemoState extends State<CategoryListDialog> {
                     new Expanded(
                       child: new ListTile(
                         title: new Text(category[index].name,textAlign:TextAlign.end),
-                        subtitle: Text(category[index].arabicDescription,textAlign: TextAlign.end,),
-                        leading: Icon(Icons.keyboard_arrow_left,color: Colors.black,),
+                        subtitle: Text(allTranslations.isEnglish?category[index].englishDescription:category[index].arabicDescription,textAlign: TextAlign.end,),
+                        leading: Icon(allTranslations.isEnglish?Icons.keyboard_arrow_right:Icons.keyboard_arrow_left,color: Colors.black,),
                       ),
                     ),
                     new Container(
@@ -125,7 +125,7 @@ class CarouselDemoState extends State<CategoryListDialog> {
                       margin: EdgeInsets.symmetric(vertical: 10),
                       alignment: Alignment.center,
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Icon(Icons.directions_car,color: Colors.white,),
+                      child: Icon(Icons.image,color: Colors.white,),
                     ),
                   ],
                 ),

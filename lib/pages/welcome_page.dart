@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:olx/generated/i18n.dart';
 import 'package:olx/pages/parentAuthPage.dart';
+import 'package:olx/utils/global_locale.dart';
 
 import 'Walkthrouth_page.dart';
 import 'language_page.dart';
@@ -48,7 +49,7 @@ class _WelocmeScreenState extends State<WelocmeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children:<Widget>[
 
-                 FlatButton(child: new Text('التالي',style: TextStyle(fontWeight: FontWeight.bold)),onPressed:(){
+                 FlatButton(child: new Text(allTranslations.text('next'),style: TextStyle(fontWeight: FontWeight.bold)),onPressed:(){
                    setState(() {
                      if(currentIndexPage==2){
                        currentIndexPage=0;
@@ -65,7 +66,7 @@ class _WelocmeScreenState extends State<WelocmeScreen> {
              position: currentIndexPage,
                   decorator: DotsDecorator(activeColor: Colors.green),),
 
-                    FlatButton(child: new Text("skip",style: TextStyle(fontWeight: FontWeight.bold),),onPressed: (){
+                    FlatButton(child: new Text(allTranslations.text('skip'),style: TextStyle(fontWeight: FontWeight.bold),),onPressed: (){
                       Navigator.push(context,MaterialPageRoute(builder: (context) => ChooseLanguagePage()));
                     },),
 

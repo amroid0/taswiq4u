@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:olx/data/remote/AdsCateogryClient.dart';
 import 'package:olx/data/bloc/bloc.dart';
 import 'package:olx/model/StateEnum.dart';
+import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/cateogry_entity.dart';
 import 'package:olx/model/upload_image_entity.dart';
 
@@ -33,6 +34,31 @@ class UploadImageBloc implements Bloc {
     _controller.sink.add(_ImageList);
     }
   }
+
+  void GetImage(int index,String imageId) async {
+    try {
+      final results = await _client.getImageAds(imageId);
+      (_ImageList[index] as UploadedImage).base64Image = results;
+      _controller.sink.add(_ImageList);
+    }catch(e) {
+
+
+
+    }}
+
+  void addListImage(List<AdvertismentImage> images) async {
+    for(var adsPhoto in images) {
+      var image = UploadedImage();
+      image.id = _ImageList.length;
+      image.remoteUrl = adsPhoto.Url;
+      image.state = StateEnum.NORMAL;
+      _ImageList.add(image);
+    }
+      _controller.sink.add(_ImageList);
+
+  }
+
+
   void removeImage(int  removeditemIndex){
     _ImageList.removeAt(removeditemIndex);
     _controller.sink.add(_ImageList);
