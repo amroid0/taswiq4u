@@ -58,6 +58,7 @@ class AdsEntity {
   String StateNameArabic;
   String StateNameEnglish;
   bool IsFeatured;
+  bool IsFavorite;
   List<AdvertismentImage> AdvertismentImages;
 
   AdsModel(this.Id, this.Title, this.ArabicDescription,
@@ -68,7 +69,7 @@ class AdsEntity {
       this.CountryNameArabic, this.LocationLatitude, this.LocationLongtude,
       this.IsDisplayed, this.IsDeleted, this.CreationTime, this.ViewCount,
       this.CityId, this.CityNameEnglish, this.CityNameArabic, this.StateId,
-      this.StateNameArabic, this.StateNameEnglish, this.IsFeatured,
+      this.StateNameArabic, this.StateNameEnglish, this.IsFeatured,this.IsFavorite,
       this.AdvertismentImages);
 
   factory AdsModel.fromJson(Map<String, dynamic> json) => _$AdsModelFromJson(json);

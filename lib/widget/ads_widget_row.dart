@@ -43,7 +43,7 @@ class AdsRowWidget extends StatelessWidget {
                       child: FavroiteWidget(
                           onFavChange:(val){
                             BlocProvider.of<FavroiteBloc>(context).changeFavoriteState(val,model.Id);
-                          },value: true
+                          },value: model.IsFavorite
                       )
 
                   ),

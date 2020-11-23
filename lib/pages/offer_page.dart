@@ -163,13 +163,9 @@ class _OfferPageState extends State<OfferPage> {
 
         return Container(
           margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
-          child: new InkWell(
-            child: new Card(
-              child: new SizedBox(
-                height: 60.0,
-                child: _buildSubCategoryList(index,category[index]),
-              ),
-            ),
+          child: new SizedBox(
+            height: 60.0,
+            child: _buildSubCategoryList(index,category[index]),
           ),
         );
 
@@ -199,10 +195,7 @@ class _OfferPageState extends State<OfferPage> {
                 item.isSelected=false;
               });
               category[index].isSelected=true;
-              if(category[index].hasSub){
 
-                _bloc.addSubCateogry(parent,category[index].subCategories);
-              }else {
 
 setState(() {
 
@@ -212,7 +205,7 @@ setState(() {
   category[index].isSelected=true;
   offerBloc.getOfferLsit(category[index].id.toString());
 });
-              }
+
 
             },
 

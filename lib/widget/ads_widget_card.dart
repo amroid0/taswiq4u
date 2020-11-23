@@ -28,6 +28,7 @@ class AdsCardWidget extends StatelessWidget {
         child: new Card(
           elevation: 4,
           child: new SizedBox(
+            height: 280,
             child: new Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -104,7 +105,8 @@ class AdsCardWidget extends StatelessWidget {
                       child: FavroiteWidget(
                           onFavChange:(val){
                             BlocProvider.of<FavroiteBloc>(context).changeFavoriteState(val,model.Id);
-                          },value: true
+                          },
+                          value: model.IsFavorite
                       )
                   ),
                 ),
@@ -118,7 +120,7 @@ class AdsCardWidget extends StatelessWidget {
   }
 
   Widget _BuildImageWidget(){
-    if(model.AdvertismentImages.isNotEmpty)
+    if(model.AdvertismentImages.isNotEmpty&&model.AdvertismentImages[0].Url!=null&&model.AdvertismentImages[0].Url.isNotEmpty)
       return  CachedNetworkImage(
         fit: BoxFit.cover,
         placeholder: (context, url) => Image.asset("images/logo.png"),

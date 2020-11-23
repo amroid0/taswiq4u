@@ -145,7 +145,7 @@ class _MainScreenState extends State<MainScreen> {
           )
         },
         child: Container(
-          height: 90,
+          height: 60,
             width: 70,
             decoration:  BoxDecoration(
 
@@ -165,7 +165,6 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
       bottomNavigationBar: FABBottomAppBar(
-        centerItemText: 'A',
         color: Colors.grey,
         selectedColor: Theme.of(context).accentColor,
          onTabSelected:_selectedTab,

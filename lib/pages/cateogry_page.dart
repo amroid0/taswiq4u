@@ -48,7 +48,6 @@ class CarouselDemoState extends State<CategoryListFragment> {
     // TODO: implement initState
 
   _bloc = new CategoryBloc();
-  _bloc.submitQuery("");
 
   _bloc.popupStream..listen((data){
     switch (data.status) {
@@ -71,13 +70,13 @@ class CarouselDemoState extends State<CategoryListFragment> {
 
   }});
 
-  _bloc.getPopupAds();
 
   super.initState();
 
   }
   @override
   Widget build(BuildContext context) {
+    _bloc.submitQuery("");
     return  WillPopScope(
       onWillPop: (){
         if(_bloc.isStackIsEmpty()){
@@ -158,13 +157,16 @@ class CarouselDemoState extends State<CategoryListFragment> {
             case Status.ERROR:
               break;
             case Status.COMPLETED:
+              _bloc.getPopupAds();
               var response = snapshot.data;
-              if (response != null)
-              for(int i=0;i<response.data.length;i++){
+              if (response != null) {
+                imgList.clear();
+                for(int i=0;i<response.data.length;i++){
                 if(response.data[i].systemDataFile!=null){
                   imgList.add(response.data[i].systemDataFile.url);
                 }
               }
+                }
 
               carouselSlider = CarouselSlider(
 
@@ -264,6 +266,8 @@ class CarouselDemoState extends State<CategoryListFragment> {
                       ),
                     ),
                     new Container(
+                      width: 60,
+                     height: 60,
                      /* decoration: BoxDecoration(
                           color: Colors.white,
 

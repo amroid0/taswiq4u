@@ -63,6 +63,7 @@ AdsModel _$AdsModelFromJson(Map<String, dynamic> json) {
     json['StateNameArabic'] as String,
     json['StateNameEnglish'] as String,
     json['IsFeatured'] as bool,
+    json['IsFavorite'] as bool,
     (json['AdvertismentImages'] as List)
         ?.map((e) => e == null
             ? null
@@ -103,6 +104,7 @@ Map<String, dynamic> _$AdsModelToJson(AdsModel instance) => <String, dynamic>{
       'StateNameArabic': instance.StateNameArabic,
       'StateNameEnglish': instance.StateNameEnglish,
       'IsFeatured': instance.IsFeatured,
+      'IsFavorite': instance.IsFavorite,
       'AdvertismentImages': instance.AdvertismentImages,
     };
 
