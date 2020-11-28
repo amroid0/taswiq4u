@@ -10,6 +10,8 @@ import 'package:olx/model/popup_ads_entity_entity.dart';
 import 'package:olx/model/cateogry_entity.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../shared_prefs.dart';
+
 
 class CategoryBloc implements Bloc {
   final _client = AdsCategoryClient();
@@ -32,11 +34,15 @@ class CategoryBloc implements Bloc {
 
   void submitQuery(String query) async {
     List<CateogryEntity> results = null ;//await preferences.getCateogryList();
-     if(results==null||results.isEmpty)
-      results = await _client.getCateogryList();
-    _cateogryStack.add(results);
-    _controller.sink.add(results);
-    _subcontroller.sink.add(_cateogryStack);
+    Stream.fromFuture(preferences.getCateogryList())
+        .onErrorResumeNext(Stream.fromFuture(_client.getCateogryList()))
+        .doOnData((event) { preferences.saveCateogryList(event);}).listen((event) {
+      _cateogryStack.add(event);
+      _controller.sink.add(event);
+      _subcontroller.sink.add(_cateogryStack);
+    },onError: (){});
+
+
 
   }
  void updateImageSliderNumber(int inedx){

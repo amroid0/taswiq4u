@@ -18,6 +18,7 @@ static final String KEY_CATEGORY="key_cat";
 static final String KEY_LIKED="key_liked";
 static final String KEY_VIEWD="key_viewed";
 static final String KEY_COUNTRY="country_key";
+ static final String KEY_COUNTRY_LIST="count_list_key";
 
   Future<bool> isLoggedIn() async {
     SharedPreferences instance = await _prefs;
@@ -162,6 +163,23 @@ factory SharedPreferencesHelper(){
   return _preferences;
 }
 SharedPreferencesHelper._internal();
+
+  void saveAllCountry(List<CountryEntity> countryList) async{
+
+    SharedPreferences instance = await _prefs;
+    instance.setString(KEY_COUNTRY_LIST, json.encode(countryList));
+  }
+
+  Future<List<CountryEntity>> getCountryList() async{
+    SharedPreferences instance = await _prefs;
+    String stringJson=instance.getString(KEY_COUNTRY_LIST);
+    if(stringJson.isEmpty) return null;
+    var list= json.decode(stringJson);
+    List<CountryEntity> catList= list
+        .map<CountryEntity>((json) => CountryEntity.fromJson(json))
+        .toList(growable: false);
+    return catList;
+  }
 
 
 

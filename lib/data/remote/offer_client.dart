@@ -1,4 +1,5 @@
 
+import 'package:olx/model/cateogry_entity.dart';
 import 'package:olx/model/offfer_entity.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/model/popup_ads_entity_entity.dart';
@@ -50,6 +51,24 @@ class OfferClient{
     );
     if (results.statusCode == 200) {
       return  results.data.toString().split(',')[1];
+    }
+  }
+
+  Future<List<CateogryEntity>> getCateogryList( ) async {
+    final results = await NetworkCommon()
+        .dio
+        .get(
+        APIConstants.CATEOGRY_ADS,
+        queryParameters: {"countryId": await preferences.getCountryID(),"iscom":true});
+    if(results.statusCode==200){
+      final suggestions = results.data;
+      List<CateogryEntity> list= suggestions
+          .map<CateogryEntity>((json) => CateogryEntity.fromJson(json))
+          .toList(growable: false);
+      preferences.saveCateogryList(list);
+      return list;
+    }else{
+      new CateogryEntity(name: "");
     }
   }
 

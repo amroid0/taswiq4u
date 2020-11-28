@@ -1,14 +1,16 @@
 import 'dart:async';
 
 import 'package:olx/data/remote/country_client.dart';
+import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/country_entity.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'bloc.dart';
 
 class CountryBloc implements Bloc {
   final _client = CountryClient();
-  final _controller = StreamController<ApiResponse<List<CountryEntity>>>();
+  final _controller = BehaviorSubject<ApiResponse<List<CountryEntity>>>();
 
   Stream<ApiResponse<List<CountryEntity>>> get stream => _controller.stream;
   CountryBloc();
@@ -16,14 +18,16 @@ class CountryBloc implements Bloc {
 
 
   void getCountryList() async {
-    _controller.sink.add(ApiResponse<List<CountryEntity>>.loading("loading"));
-    try{
-      final result=await _client.getCountryList();
-      _controller.sink.add(ApiResponse<List<CountryEntity>>.completed(result));
 
-    }catch(e){
-      _controller.sink.add(ApiResponse<List<CountryEntity>>.error(e.toString()));
-    }
+     Stream.fromFuture(preferences.getCountryList())
+         .onErrorResumeNext(Stream.fromFuture(_client.getCountryList())
+         .doOnData((event) {preferences.saveAllCountry(event);}))
+         .doOnListen(() {_controller.sink.add(ApiResponse<List<CountryEntity>>.loading("loading"));
+     }).listen((event) {  _controller.sink.add(ApiResponse<List<CountryEntity>>.completed(event));
+     },onError: (e){      _controller.sink.add(ApiResponse<List<CountryEntity>>.error(e.toString()));
+     });
+
+
 
 
 

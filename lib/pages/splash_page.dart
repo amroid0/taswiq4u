@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _bloc=SplashBloc();
-    _bloc.checkIsLogged();
+    _bloc.getDefaultData();
      }
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           if(val.data){
                             Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context) => MainScreen())
+                                MaterialPageRoute(builder: (context) => WelocmeScreen())
                             );
                           }else{//
                             Navigator.pushReplacement(

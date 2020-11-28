@@ -36,9 +36,9 @@ class _OfferPageState extends State<OfferPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _bloc = BlocProvider.of<CategoryBloc>(context);
-    _bloc.submitQuery("");
+
     offerBloc=OfferBloc();
+    offerBloc.getOfferCategory("");
 
 
   }
@@ -50,30 +50,25 @@ class _OfferPageState extends State<OfferPage> {
 
     return Scaffold(
 
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical:8,horizontal:4),
-        child: StreamBuilder<List<List<CateogryEntity>>>(
-           stream: _bloc.subCatstream,
+      body: Container(
+        child: StreamBuilder<List<CateogryEntity>>(
+           stream: offerBloc.categoryStream,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(child: CircularProgressIndicator());
             }
 
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  _buildCategoryList(snapshot.data),
-                 //Text('hello')
-                 _buildOfferList()
-                ],
-              ),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _buildCategoryList(snapshot.data),
+               //Text('hello')
+               Expanded(child: _buildOfferList())
+              ],
             );
           }
+        ),
       ),
-
-
-    ),
 
 
 
@@ -152,68 +147,50 @@ class _OfferPageState extends State<OfferPage> {
 
   }
 
-  Widget _buildCategoryList(List<List<CateogryEntity>> category){
-    return ListView.builder(
+  Widget _buildCategoryList(List<CateogryEntity> category){
+    return Container(
+      height: 80,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        itemCount: category.length,
+        itemBuilder: (BuildContext context,int index){
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+            child: new SizedBox(
+              height: 60.0,
+              child:     Container(
+            margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+            child: ChoiceChip(
+              label: Text(category[index].name),
+              selected:category[index].isSelected==null?false:category[index].isSelected,
+              onSelected: (select){
 
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: category.length,
-      itemBuilder: (BuildContext context,int index){
+                category.forEach((item){
+                  item.isSelected=false;
+                });
+                category[index].isSelected=true;
+                setState(() {
+
+                  category.forEach((item){
+                    item.isSelected=false;
+                  });
+                  category[index].isSelected=true;
+                  offerBloc.getOfferLsit(category[index].id.toString());
+                });
 
 
-        return Container(
-          margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
-          child: new SizedBox(
-            height: 60.0,
-            child: _buildSubCategoryList(index,category[index]),
+              },
+
+            ),
+          )
+
           ),
-        );
+          );
 
 
-      },
-    );
-
-
-  }
-  Widget _buildSubCategoryList(int parent,List<CateogryEntity> category){
-
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: category.length,
-      scrollDirection: Axis.horizontal,
-      itemBuilder: (BuildContext context,int index){
-
-
-        return Container(
-          margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
-          child: ChoiceChip(
-            label: Text(category[index].name),
-            selected:category[index].isSelected==null?false:category[index].isSelected,
-            onSelected: (select){
-
-              category.forEach((item){
-                item.isSelected=false;
-              });
-              category[index].isSelected=true;
-
-
-setState(() {
-
-  category.forEach((item){
-    item.isSelected=false;
-  });
-  category[index].isSelected=true;
-  offerBloc.getOfferLsit(category[index].id.toString());
-});
-
-
-            },
-
-        ),
-        );
-
-
-      },
+        },
+      ),
     );
 
 

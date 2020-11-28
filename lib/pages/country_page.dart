@@ -6,6 +6,7 @@ import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/country_entity.dart';
 import 'package:olx/pages/login_page.dart';
+import 'package:olx/pages/main_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/fracation_sized_box.dart';
@@ -71,7 +72,7 @@ class _CountryPageState extends State<CountryPage> {
                                     preferences.saveCountryID(list[index].countryId.toString());
                                     preferences.saveCountry(list[index]);
                                     Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) => ParentAuthPage()));},
+                                        MaterialPageRoute(builder: (context) => MainScreen()));},
                                   child: new Container(
                                     margin:  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
                                     height: 60.0,

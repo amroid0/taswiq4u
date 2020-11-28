@@ -6,6 +6,7 @@ import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/model/Counter.dart';
 import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
+import 'package:olx/model/cateogry_entity.dart';
 import 'package:olx/model/offfer_entity.dart';
 import 'package:olx/model/popup_ads_entity_entity.dart';
 
@@ -13,6 +14,7 @@ import 'package:olx/model/popup_ads_entity_entity.dart';
 class OfferBloc extends Bloc{
   final _client = OfferClient();
   final _controller = StreamController<ApiResponse<List<PopupAdsEntityList>>>.broadcast();
+  final _cateogryController = StreamController<List<CateogryEntity>>.broadcast();
   final _likeController = StreamController<Counter>.broadcast();
   final _viewController = StreamController<Counter>.broadcast();
   final _imageController = StreamController<String>.broadcast();
@@ -21,6 +23,17 @@ class OfferBloc extends Bloc{
   Stream<Counter> get Likestream => _likeController.stream;
   Stream<Counter> get viewstream => _viewController.stream;
   Stream<String> get Imagestream => _imageController.stream;
+  Stream<List<CateogryEntity>> get categoryStream => _cateogryController.stream;
+
+
+
+  void getOfferCategory(String query) async {
+    List<CateogryEntity> results = null ;//await preferences.getCateogryList();
+    if(results==null||results.isEmpty)
+      results = await _client.getCateogryList();
+    _cateogryController.sink.add(results);
+  }
+
 
   /*void GetImage(String imageId,int index) async {
     if(commercialAds.list[index].base64Image!=null) {
