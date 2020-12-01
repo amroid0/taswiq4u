@@ -1,7 +1,9 @@
 
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/country_bloc.dart';
+import 'package:olx/data/bloc/login_bloc.dart';
 import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/country_entity.dart';
@@ -72,7 +74,7 @@ class _CountryPageState extends State<CountryPage> {
                                     preferences.saveCountryID(list[index].countryId.toString());
                                     preferences.saveCountry(list[index]);
                                     Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) => MainScreen()));},
+                                        MaterialPageRoute(builder: (context) => BlocProvider(bloc:LoginBloc(),child: MainScreen())));},
                                   child: new Container(
                                     margin:  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
                                     height: 60.0,

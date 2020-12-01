@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:olx/data/bloc/bloc.dart';
 import 'package:olx/data/remote/AuthClient.dart';
+import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/data/validator.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/login_api_response.dart';
@@ -14,16 +15,30 @@ class LoginBloc extends Validators implements Bloc {
 final _client = AuthClient();
 
 final _controller = BehaviorSubject<LoginApiResponse<bool>>();
+final _logincontroller = BehaviorSubject<bool>();
+
 final _emailController = BehaviorSubject<String>();
 final _passwordController = BehaviorSubject<String>();
+
+  bool isLogged;
 Stream<LoginApiResponse<bool>> get stream => _controller.stream;
+Stream<bool> get Sessionstream => _logincontroller.stream;
+
 Stream<String> get email => _emailController.stream.transform(validateEmpty);
 Stream<String> get password => _passwordController.stream.transform(validateEmpty);
 Stream<bool> get submitValid => CombineLatestStream.combine2(email, password, (e, p) => true);
 Function(String) get changeEmail => _emailController.sink.add;
 Function(String) get changePassword => _passwordController.sink.add;
 
-  LoginBloc();
+  LoginBloc(){
+    checkAuth();
+  }
+
+  void checkAuth() async{
+      isLogged=await preferences.isLoggedIn();
+    _logincontroller.sink.add(isLogged);
+
+  }
 
   submit() async{
     final validEmail = _emailController.value;
@@ -38,9 +53,11 @@ Function(String) get changePassword => _passwordController.sink.add;
      final results = await _client.login(UserCredit(validEmail,validPassword));
      if(results){
      final verifyResults = await _client.checkVerfiyPhone();
-      if(verifyResults)
-       _controller.sink.add(LoginApiResponse.authenticate("err"));
-        else
+      if(verifyResults) {
+        _controller.sink.add(LoginApiResponse.authenticate("err"));
+        _logincontroller.sink.add(true);
+        isLogged=true;
+      }else
         _controller.sink.add(LoginApiResponse.unverified("err"));
       }else{
        _controller.sink.add(LoginApiResponse.unAuthenticate("err"));

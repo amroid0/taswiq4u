@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:olx/data/bloc/bloc_provider.dart';
+import 'package:olx/data/bloc/login_bloc.dart';
 import 'package:olx/data/bloc/splash_bloc.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/pages/parentAuthPage.dart';
@@ -60,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           if(val.data){
                             Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context) => WelocmeScreen())
+                                MaterialPageRoute(builder: (context) => BlocProvider(bloc:LoginBloc(),child: MainScreen()))
                             );
                           }else{//
                             Navigator.pushReplacement(

@@ -5,6 +5,7 @@ import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/cateogry_bloc.dart';
 import 'package:olx/data/bloc/favroite_bloc.dart';
+import 'package:olx/data/bloc/login_bloc.dart';
 import 'package:olx/data/bloc/profile_bloc.dart';
 import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/pages/add_ads_page.dart';
@@ -49,9 +50,7 @@ class _MainScreenState extends State<MainScreen> {
   NaviagtionBloc bloc;
   List<NavItem>NavItemList=[
     NavItem(name: allTranslations.text('home'),navIcon:Icons.home ),
-/*
-    NavItem(name: allTranslations.text('sections'),navIcon:Icons.apps,isExpanded: true),
-*/
+    NavItem(name: "تسجيل دخول",navIcon:Icons.login),
     NavItem(name: allTranslations.text('account'),navIcon:Icons.person ),
     NavItem(name: allTranslations.text('my_ads'),navIcon:Icons.announcement),
     NavItem(name:allTranslations.text('favroite'),navIcon:Icons.favorite),
@@ -210,10 +209,24 @@ class _MainScreenState extends State<MainScreen> {
             ),
 
             Expanded(
-              child: ListView(children:
-              drawerOptions
+              child: StreamBuilder<bool>(
+                initialData:BlocProvider.of<LoginBloc>(context).isLogged ,
+                stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
+                builder: (context, snapshot) {
+                  if(snapshot.hasData&&snapshot.data)
+                  return ListView(children:
+                  drawerOptions
 
-                ,),
+                    ,);
+                  else{
+                  drawerOptions.removeAt(1);
+                      return ListView(children:
+                  drawerOptions
+
+                    ,);
+                  }
+                }
+              ),
             ),//listview
 
           GestureDetector(
@@ -262,11 +275,19 @@ class _MainScreenState extends State<MainScreen> {
 
 
             },
-            child: Container(
-              alignment: Alignment.center,
-              height: 60,
-              color: Theme.of(context).accentColor,
-              child: Text(allTranslations.text('logout'),style: TextStyle(color: Colors.white),),
+            child: StreamBuilder<bool>(
+              initialData:BlocProvider.of<LoginBloc>(context).isLogged ,
+              stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
+              builder: (context, snapshot) {
+                if(snapshot.hasData&&snapshot.data)
+                return Container(
+                  alignment: Alignment.center,
+                  height: 60,
+                  color: Theme.of(context).accentColor,
+                  child: Text(allTranslations.text('logout'),style: TextStyle(color: Colors.white),),
+                );
+                else return Container();
+              }
             ),
           )
 
