@@ -372,7 +372,11 @@ class _MainScreenState extends State<MainScreen> {
         return  CategoryListFragment();
 
         case NavigationScreen.FAVROITE:
+          if(BlocProvider.of<LoginBloc>(context).isLogged)
         return new FavroitePage();
+          else
+            return
+                Navigator.push(context, MaterialPageRoute(builder:(context) => ParentAuthPage()));
 
         case NavigationScreen.OFFER:
         return BlocProvider(bloc:CategoryBloc(),child: new OfferPage());
