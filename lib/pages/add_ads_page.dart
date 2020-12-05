@@ -293,6 +293,7 @@ body: Padding(
           _showDialog();
         }),
             SizedBox(height: 8,),
+            SizedBox(height: 8,),
 
             _BuildRoundedTextField(labelText: allTranslations.text('city'),
                 hintText: allTranslations.text('city'),
