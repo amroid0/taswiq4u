@@ -22,6 +22,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
   String _code="";
 
+  var count=0;
+
   
   @override
   void initState() {
@@ -55,10 +57,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 fontSize: 16.0
             );
 
-            WidgetsBinding.instance.addPostFrameCallback((_) =>  Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => MainScreen())
-            ));
+            WidgetsBinding.instance.addPostFrameCallback((_) =>  Navigator.popUntil(context, (route) {
+              return count++ == 2;
+            }));
             
             
           }

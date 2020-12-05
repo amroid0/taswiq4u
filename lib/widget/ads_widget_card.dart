@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/favroite_bloc.dart';
+import 'package:olx/data/bloc/login_bloc.dart';
 import 'package:olx/model/ads_entity.dart';
 import 'package:olx/pages/detail_page.dart';
+import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/utils.dart';
 import 'package:olx/widget/favroite_widget.dart';
@@ -104,7 +106,11 @@ class AdsCardWidget extends StatelessWidget {
                       color: Colors.white,
                       child: FavroiteWidget(
                           onFavChange:(val){
-                            BlocProvider.of<FavroiteBloc>(context).changeFavoriteState(val,model.Id);
+                            if(BlocProvider.of<LoginBloc>(context).isLogged())
+                              BlocProvider.of<FavroiteBloc>(context).changeFavoriteState(val,model.Id);
+                            else
+                              Navigator.push(
+                                  context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
                           },
                           value: model.IsFavorite
                       )

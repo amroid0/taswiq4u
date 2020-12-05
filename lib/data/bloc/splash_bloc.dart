@@ -26,7 +26,7 @@ getCountryist().flatMap((value) => getCategoryList())
     .doOnListen(() {
   _controller.add(ApiResponse.loading('loading'));})
     .listen((event) {_controller.add(ApiResponse.completed(true));}
-    ,onError:(e){_controller.add(ApiResponse.error(e));} );
+    ,onError:(e){_controller.add(ApiResponse.error(e.toString()));} );
  }
  Stream<List<CateogryEntity>> getCategoryList(){
    return Stream.fromFuture(_client.getCateogryList()).doOnData((event) {preferences.saveCateogryList(event);});

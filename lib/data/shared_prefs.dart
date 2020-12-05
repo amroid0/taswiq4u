@@ -20,6 +20,8 @@ static final String KEY_VIEWD="key_viewed";
 static final String KEY_COUNTRY="country_key";
  static final String KEY_COUNTRY_LIST="count_list_key";
 
+  static final String KEY_CITY_LIST="key_city_list";
+
   Future<bool> isLoggedIn() async {
     SharedPreferences instance = await _prefs;
     return instance.getBool(KEY_IS_LOGGED);
@@ -155,7 +157,6 @@ Future<String> getCountryID()async{
     SharedPreferences instance =await _prefs;
     instance.remove(KEY_IS_LOGGED);
     instance.remove(KEY_SESSION);
-    instance.remove(KEY_CATEGORY);
   }
 
 static final SharedPreferencesHelper _preferences = SharedPreferencesHelper._internal();
@@ -181,6 +182,21 @@ SharedPreferencesHelper._internal();
     return catList;
   }
 
+Future<List<CountryEntity>> getCityList() async{
+  SharedPreferences instance = await _prefs;
+  String stringJson=instance.getString(KEY_CITY_LIST);
+  if(stringJson.isEmpty) return null;
+  var list= json.decode(stringJson);
+  List<CountryEntity> catList= list
+      .map<CountryEntity>((json) => CountryEntity.fromJson(json))
+      .toList(growable: false);
+  return catList;
+}
 
+  Future saveCities(List<CountryEntity> cities)async {
+
+    SharedPreferences instance = await _prefs;
+    instance.setString(KEY_CITY_LIST, json.encode(cities));
+  }
 
 }

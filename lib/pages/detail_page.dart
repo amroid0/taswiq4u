@@ -7,11 +7,13 @@ import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/detail_bloc.dart';
 import 'package:olx/data/bloc/favroite_bloc.dart';
+import 'package:olx/data/bloc/login_bloc.dart';
 import 'package:olx/model/Counter.dart';
 import 'package:olx/model/ads_detail.dart';
 import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/pages/edit_page.dart';
+import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/pages/slider_full+image_viewer.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/global_locale.dart';
@@ -145,7 +147,11 @@ class _DetailPageState extends State<DetailPage> {
                                     color: Color(0xffECECEC).withOpacity(0.6),
                                     borderRadius: BorderRadius.circular(4)),
                                 child:FavroiteWidget(onFavChange:(val){
-            favbloc.changeFavoriteState(val,detail.Id);
+                                  if(BlocProvider.of<LoginBloc>(context).isLogged())
+                                  favbloc.changeFavoriteState(val,detail.Id);
+                                  else
+                                    Navigator.push(
+                                        context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
             },value: true,)),
 
 

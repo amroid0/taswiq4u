@@ -12,7 +12,6 @@ import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
-import 'main_page.dart';
 
 class LoginPage extends StatefulWidget {
   TabController tabController ;// +added
@@ -27,14 +26,13 @@ class _LoginPageState extends State<LoginPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final formKey = GlobalKey<FormState>();
   ProgressDialog pr;
-  var bloc;
+
 
 
   @override
   void initState() {
     // TODO: implement initState
-  bloc=LoginBloc();
-  bloc.stream.listen((snap) {
+  BlocProvider.of<LoginBloc>(context).stream.listen((snap) {
 
     switch (snap.status) {
       case Status.LOADING:
@@ -48,10 +46,10 @@ class _LoginPageState extends State<LoginPage> {
         break;
       case Status.AUTHNTICATED:
         Navigator.of(context).pop();
-          WidgetsBinding.instance.addPostFrameCallback((_) =>  Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => MainScreen())
-          ));
+          WidgetsBinding.instance.addPostFrameCallback((_) =>
+              Navigator.of(context).pop()
+
+          );
 
 
         break;
@@ -107,14 +105,13 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    bloc.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<LoginBloc>(
-      bloc: bloc,
+      bloc: BlocProvider.of<LoginBloc>(context),
       child: Scaffold(
         key: scaffoldKey,
 
@@ -129,11 +126,11 @@ class _LoginPageState extends State<LoginPage> {
                   shrinkWrap: true,
                   children: [
                     Image.asset('images/logo.png'),
-                    emailField(bloc),
+                    emailField(BlocProvider.of<LoginBloc>(context)),
                     SizedBox(height: 10,),
-                     passwordField(bloc) ,
+                     passwordField(BlocProvider.of<LoginBloc>(context)) ,
                     SizedBox(height: 10,),
-                    submitButton(bloc),
+                    submitButton(BlocProvider.of<LoginBloc>(context)),
 
 
                     InkWell(

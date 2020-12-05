@@ -50,12 +50,12 @@ class _MainScreenState extends State<MainScreen> {
   NaviagtionBloc bloc;
   List<NavItem>NavItemList=[
     NavItem(name: allTranslations.text('home'),navIcon:Icons.home ),
-    NavItem(name: "تسجيل دخول",navIcon:Icons.login),
     NavItem(name: allTranslations.text('account'),navIcon:Icons.person ),
     NavItem(name: allTranslations.text('my_ads'),navIcon:Icons.announcement),
     NavItem(name:allTranslations.text('favroite'),navIcon:Icons.favorite),
   NavItem(name:allTranslations.text('settings'),navIcon:Icons.settings)
   ];
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 /*
   List<NavItem>depratmentNavList=[
     NavItem(name: 'اجهزه الكترونيه',navIcon:Icons.settings ),
@@ -66,23 +66,7 @@ class _MainScreenState extends State<MainScreen> {
 */
 
   void _selectedTab(int index) {
-    if(allTranslations.isEnglish){
-      if(index==2){
 
-        bloc.navigateToScreen(NavigationScreen.OFFER);
-
-      }else if(index==3){
-
-
-        bloc.navigateToScreen(NavigationScreen.PRFOILE);
-
-      }else if(index==1){
-        bloc.navigateToScreen(NavigationScreen.FAVROITE);
-      }
-      else if(index==0){
-        bloc.navigateToScreen(NavigationScreen.HOME);
-      }
-    }else{
     if(index==1){
 
       bloc.navigateToScreen(NavigationScreen.OFFER);
@@ -105,7 +89,7 @@ class _MainScreenState extends State<MainScreen> {
 
     }
 
-    }
+
   }
   int _navSelectedIndex=0;
   Widget appBarTitle =  Text(allTranslations.text('home'),style:TextStyles.appBarTitle ,);
@@ -120,11 +104,23 @@ class _MainScreenState extends State<MainScreen> {
    if(allTranslations.isEnglish){
      bottomItems.reversed.toList();
    }
+
+  bloc.stream.listen((data) {
+
+    if (data==NavigationScreen.FAVROITE||data==NavigationScreen.PRFOILE||data==NavigationScreen.MYADS) {
+      if (!BlocProvider.of<LoginBloc>(context).isLogged())
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
+    }
+
+
+
+  });
+
   super.initState();
   }
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
     List<Widget> drawerOptions = [];
 
     for (var i = 0; i < NavItemList.length; i++) {
@@ -138,10 +134,15 @@ class _MainScreenState extends State<MainScreen> {
 
       floatingActionButton:   InkWell(
         onTap: ()=>{
+
+        if(BlocProvider.of<LoginBloc>(context).isLogged())
+        Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AddAdvertisment()),)
+        else
           Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddAdvertisment()),
-          )
+          context, MaterialPageRoute(builder: (context) => ParentAuthPage()))
+
         },
         child: Container(
           height: 60,
@@ -208,24 +209,37 @@ class _MainScreenState extends State<MainScreen> {
               decoration: BoxDecoration(color: AppColors.appBackground),
             ),
 
+        StreamBuilder<bool>(
+            initialData:BlocProvider.of<LoginBloc>(context).isLogged(),
+            stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
+            builder: (context, snapshot) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+                  child: Visibility(
+
+                    visible:snapshot.hasData? !snapshot.data:true,
+                    child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.green)),
+                    onPressed: () {
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
+                    },
+                    color: Colors.green,
+                    textColor: Colors.white,
+                    child: Text(allTranslations.text('sign_in_up').toUpperCase(),
+                        style: TextStyle(fontSize: 14)),
+                  ),),
+                );
+            }),
+
+
+
             Expanded(
-              child: StreamBuilder<bool>(
-                initialData:BlocProvider.of<LoginBloc>(context).isLogged ,
-                stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
-                builder: (context, snapshot) {
-                  if(snapshot.hasData&&snapshot.data)
-                  return ListView(children:
+              child:  ListView(children:
                   drawerOptions
 
-                    ,);
-                  else{
-                  drawerOptions.removeAt(1);
-                      return ListView(children:
-                  drawerOptions
-
-                    ,);
-                  }
-                }
               ),
             ),//listview
 
@@ -242,12 +256,12 @@ class _MainScreenState extends State<MainScreen> {
                    style: TextStyle(color: Colors.white, fontSize: 20),
                  ),
                  onPressed: () {
-                   preferences.logout();
+                   BlocProvider.of<LoginBloc>(context).logout();
                    Navigator.pushAndRemoveUntil(
                        context,
                        PageRouteBuilder(pageBuilder: (BuildContext context, Animation animation,
                            Animation secondaryAnimation) {
-                         return ParentAuthPage();
+                         return MainScreen();
                        }, transitionsBuilder: (BuildContext context, Animation<double> animation,
                            Animation<double> secondaryAnimation, Widget child) {
                          return new SlideTransition(
@@ -276,7 +290,7 @@ class _MainScreenState extends State<MainScreen> {
 
             },
             child: StreamBuilder<bool>(
-              initialData:BlocProvider.of<LoginBloc>(context).isLogged ,
+              initialData:BlocProvider.of<LoginBloc>(context).isLogged() ,
               stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
               builder: (context, snapshot) {
                 if(snapshot.hasData&&snapshot.data)
@@ -332,7 +346,7 @@ class _MainScreenState extends State<MainScreen> {
       bloc.navigateToScreen(NavigationScreen.HOME);
 
     }
-
+    Navigator.pop(context);
 
   }
 
@@ -366,30 +380,37 @@ class _MainScreenState extends State<MainScreen> {
 
 
   _getDrawerItemWidget(NavigationScreen screen) {
+    if (_scaffoldKey.currentState.isDrawerOpen) {
+      Navigator.of(context).pop();
+    }
     switch (screen) {
       case NavigationScreen.HOME:
 
         return  CategoryListFragment();
 
         case NavigationScreen.FAVROITE:
-          if(BlocProvider.of<LoginBloc>(context).isLogged)
-        return new FavroitePage();
-          else
-            return
-                Navigator.push(context, MaterialPageRoute(builder:(context) => ParentAuthPage()));
+          if(BlocProvider.of<LoginBloc>(context).isLogged())
+             return new FavroitePage();
+            break;
 
         case NavigationScreen.OFFER:
         return BlocProvider(bloc:CategoryBloc(),child: new OfferPage());
 
       case NavigationScreen.PRFOILE:
-        return new ProfilePage();
+        if(BlocProvider.of<LoginBloc>(context).isLogged())
+          return new ProfilePage();
+        break;
 
       case NavigationScreen.MYADS:
-        return new MyAdsPage();
+        if(BlocProvider.of<LoginBloc>(context).isLogged())
+          return new MyAdsPage();
+        break;
 
       default:
         return new Text("Error");
     }
+    return  CategoryListFragment();
+
   }
 
 }

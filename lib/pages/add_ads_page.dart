@@ -11,6 +11,7 @@ import 'package:olx/model/StateEnum.dart';
 import 'package:olx/model/ads_post_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/cateogry_entity.dart';
+import 'package:olx/model/country_entity.dart';
 import 'package:olx/model/field_proprtires_entity.dart';
 import 'package:olx/model/upload_image_entity.dart';
 import 'package:olx/pages/ImageUploaderListPage.dart';
@@ -20,6 +21,7 @@ import 'package:olx/utils/dailogs.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/loading_dialog.dart';
 import 'package:olx/widget/check_box_withlabel.dart';
+import 'package:olx/widget/city_list_dialog.dart';
 import 'package:olx/widget/map_widget.dart';
 import 'package:google_map_location_picker/google_map_location_picker.dart';
 import 'package:olx/widget/multi_select_dialog.dart';
@@ -46,12 +48,13 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   List<String> adsStateList=["جديد","مستعمل"];
   String selectedAdsStates="جديد";
    final TextEditingController _cattextController = TextEditingController();
-   final TextEditingController _nametextController = TextEditingController();
+  final TextEditingController _citytextController = TextEditingController();
+  final TextEditingController _nametextController = TextEditingController();
   final TextEditingController _pricetextController = TextEditingController();
   final TextEditingController _phonetextController = TextEditingController();
   final TextEditingController _emailtextController = TextEditingController();
   final TextEditingController _desctextController = TextEditingController();
-  Color adNameColor,descColor,priceColor,emailColor,phoneColor,categoryColor=Colors.grey;
+  Color adNameColor,descColor,priceColor,emailColor,phoneColor,categoryColor,cityColor=Colors.grey;
   GoogleMapController _mapController;
   final Set<Marker> _markers = {};
   List<TextEditingController>contollers=List();
@@ -64,6 +67,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   ProgressDialog progressDialog;
 
   List<List> _multiselectedFieldValue=List<List<FieldProprtiresSpecificationoption>>();
+
 
 @override
   void dispose() {
@@ -148,6 +152,12 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
         categoryColor=isvalid?AppColors.validValueColor:AppColors.errorValueColor;
       });
     });
+    _citytextController.addListener((){
+      bool isvalid=_emptyValidate(_citytextController.value.text)==null;
+      setState(() {
+        cityColor=isvalid?AppColors.validValueColor:AppColors.errorValueColor;
+      });
+    });
 
 
     _pricetextController.addListener((){
@@ -185,6 +195,19 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
         bloc.getAddFieldsByCatID(selected.id);
           _selectedcataogry=selected;
           adsPostEntity.categoryId=selected.id;
+
+      },);
+  }
+
+  _showCityDialog() async{
+    await  CityListDialog.showModal<CountryEntity>(
+      context,
+      label: allTranslations.text('choose_city'),
+      selectedValue: CountryEntity(),
+      items: List(),
+      onChange: (CountryEntity selected) {
+        _citytextController.text=selected.name.toString();
+        adsPostEntity.stateId=int.parse(selected.id);
 
       },);
   }
@@ -269,6 +292,14 @@ body: Padding(
             iswithArrowIcon: true,onClickAction: (){
           _showDialog();
         }),
+            SizedBox(height: 8,),
+
+            _BuildRoundedTextField(labelText: allTranslations.text('city'),
+                hintText: allTranslations.text('city'),
+                controller: _citytextController,
+                iswithArrowIcon: true,onClickAction: (){
+                  _showCityDialog();
+                }),
             SizedBox(height: 8,),
 
             TextFormField(

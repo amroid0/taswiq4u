@@ -3,11 +3,14 @@ import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:olx/data/bloc/ads_bloc.dart';
+import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/favroite_bloc.dart';
+import 'package:olx/data/bloc/login_bloc.dart';
 import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/favroite_entity.dart';
 import 'package:olx/pages/detail_page.dart';
+import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/utils.dart';
@@ -299,7 +302,11 @@ class _MyAdsPageState extends State<MyAdsPage> {
                       alignment: Alignment.center,
                       color: Colors.white,
                       child: FavroiteWidget(onFavChange:(val){
-                        bloc.changeFavoriteState(val,ads[adsIndex].Id);
+                        if(BlocProvider.of<LoginBloc>(context).isLogged())
+                          bloc.changeFavoriteState(val,ads[adsIndex].Id);
+                        else
+                          Navigator.push(
+                              context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
                       },value: true,)),
                 ),
 

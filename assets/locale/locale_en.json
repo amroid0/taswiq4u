@@ -72,7 +72,9 @@
   "current_pass": "Current Password",
   "new_pass":"New Password",
   "confirm_pass":"Confirm new Password",
-  "verify": "verify"
+  "verify": "verify",
+  "sign_in_up": "Sign in / Register"
+
 
 
 

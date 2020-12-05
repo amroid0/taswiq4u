@@ -64,17 +64,15 @@ class _CountryPageState extends State<CountryPage> {
                             List<CountryEntity> list=snapshot.data.data;
                             return ListView.builder(
                               itemCount: list.length,
-
                                 itemBuilder: (BuildContext context,int index){
-
                               return
                                 InkWell(
                                   onTap: () {
                                     /*Navigator.push(context,MaterialPageRoute(builder: (context) => CountryPage()))*/
                                     preferences.saveCountryID(list[index].countryId.toString());
                                     preferences.saveCountry(list[index]);
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) => BlocProvider(bloc:LoginBloc(),child: MainScreen())));},
+                                    Navigator.pushReplacement(context,
+                                        MaterialPageRoute(builder: (context) =>  MainScreen()));},
                                   child: new Container(
                                     margin:  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
                                     height: 60.0,

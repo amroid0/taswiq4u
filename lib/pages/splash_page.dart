@@ -8,6 +8,7 @@ import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/pages/welcome_page.dart';
 
+import 'language_page.dart';
 import 'main_page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -62,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           if(val.data){
                             Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context) => BlocProvider(bloc:LoginBloc(),child: MainScreen()))
+                                MaterialPageRoute(builder: (context) =>  ChooseLanguagePage())
                             );
                           }else{//
                             Navigator.pushReplacement(

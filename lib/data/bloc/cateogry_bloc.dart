@@ -37,6 +37,7 @@ class CategoryBloc implements Bloc {
     Stream.fromFuture(preferences.getCateogryList())
         .onErrorResumeNext(Stream.fromFuture(_client.getCateogryList()))
         .doOnData((event) { preferences.saveCateogryList(event);}).listen((event) {
+          _cateogryStack.clear();
       _cateogryStack.add(event);
       _controller.sink.add(event);
       _subcontroller.sink.add(_cateogryStack);

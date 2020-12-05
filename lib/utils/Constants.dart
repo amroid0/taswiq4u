@@ -53,6 +53,8 @@ class APIConstants {
   static const String USER_PROFILE_API="${API_BASE_ENDPOINT}api/Auth/GetUserFullData";
 
   static const String COUNTRY_API="${API_BASE_ENDPOINT}api/country/CountriesList";
+
+  static final String CITY_API="${API_BASE_ENDPOINT}api/country/CitiesList";
   static String getFullImageUrl(String url,int type){
     return  'http://api.taswiq4u.com/Api/ImageUpload/i?url=$url&type=$type';
   }

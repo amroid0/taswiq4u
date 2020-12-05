@@ -1,6 +1,7 @@
 import 'package:bmprogresshud/progresshud.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:olx/data/bloc/login_bloc.dart';
 import 'package:olx/generated/i18n.dart';
 import 'package:olx/pages/login_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
@@ -41,31 +42,34 @@ class ApplicationState extends State<Application> {
   Widget build(BuildContext context) {
     return BlocProvider<TranslationsBloc>(
       bloc: translationsBloc,
-      child: StreamBuilder<Locale>(
-          stream: translationsBloc.currentLocale,
-          initialData: allTranslations.locale,
-          builder: (BuildContext context, AsyncSnapshot<Locale> snapshot) {
+      child: BlocProvider<LoginBloc>(
+        bloc: new LoginBloc(),
+        child: StreamBuilder<Locale>(
+            stream: translationsBloc.currentLocale,
+            initialData: allTranslations.locale,
+            builder: (BuildContext context, AsyncSnapshot<Locale> snapshot) {
 
-            return MaterialApp(
-              title: 'Application Title',
-              theme: ThemeData(
+              return MaterialApp(
+                title: 'Application Title',
+                theme: ThemeData(
 
-                  primarySwatch: Colors.green,
-                  accentColor: Color(0xff53B553)
-              ),
-              ///
-              /// Multi lingual
-              ///
-              locale: snapshot.data ?? allTranslations.locale,
-              localizationsDelegates: [
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-              ],
-              supportedLocales: allTranslations.supportedLocales(),
+                    primarySwatch: Colors.green,
+                    accentColor: Color(0xff53B553)
+                ),
+                ///
+                /// Multi lingual
+                ///
+                locale: snapshot.data ?? allTranslations.locale,
+                localizationsDelegates: [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                ],
+                supportedLocales: allTranslations.supportedLocales(),
 
-              home: SplashScreen(),
-            );
-          }
+                home: SplashScreen(),
+              );
+            }
+        ),
       ),
     );
   }

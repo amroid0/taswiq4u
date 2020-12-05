@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/cateogry_bloc.dart';
+import 'package:olx/data/bloc/login_bloc.dart';
 import 'package:olx/data/bloc/offer_bloc.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/cateogry_entity.dart';
@@ -157,7 +158,10 @@ class CarouselDemoState extends State<CategoryListFragment> {
             case Status.ERROR:
               break;
             case Status.COMPLETED:
+              if(BlocProvider.of<LoginBloc>(context).isfirstPopupAd){
               _bloc.getPopupAds();
+              BlocProvider.of<LoginBloc>(context).isfirstPopupAd=false;
+              }
               var response = snapshot.data;
               if (response != null) {
                 imgList.clear();
@@ -220,8 +224,11 @@ class CarouselDemoState extends State<CategoryListFragment> {
               break;
           }
           return Container(
-            height: 250.0,
-            child:Center(child: Icon(Icons.image,size: 100,)),
+            margin: EdgeInsets.all(8),
+            height: MediaQuery.of(context).size.height*.25,
+            color: AppColors.appBackground,
+            child:Center(child: Icon(Icons.image,color:Colors.grey,size: 60,)
+            ),
           );
         }
         );

@@ -20,7 +20,8 @@ final _logincontroller = BehaviorSubject<bool>();
 final _emailController = BehaviorSubject<String>();
 final _passwordController = BehaviorSubject<String>();
 
-  bool isLogged;
+  bool mIsLogged=false;
+  bool isfirstPopupAd=true;
 Stream<LoginApiResponse<bool>> get stream => _controller.stream;
 Stream<bool> get Sessionstream => _logincontroller.stream;
 
@@ -29,14 +30,16 @@ Stream<String> get password => _passwordController.stream.transform(validateEmpt
 Stream<bool> get submitValid => CombineLatestStream.combine2(email, password, (e, p) => true);
 Function(String) get changeEmail => _emailController.sink.add;
 Function(String) get changePassword => _passwordController.sink.add;
+bool isLogged() => mIsLogged==null?false:mIsLogged;
+
 
   LoginBloc(){
     checkAuth();
   }
 
   void checkAuth() async{
-      isLogged=await preferences.isLoggedIn();
-    _logincontroller.sink.add(isLogged);
+    mIsLogged=await preferences.isLoggedIn();
+    _logincontroller.sink.add(mIsLogged);
 
   }
 
@@ -56,7 +59,7 @@ Function(String) get changePassword => _passwordController.sink.add;
       if(verifyResults) {
         _controller.sink.add(LoginApiResponse.authenticate("err"));
         _logincontroller.sink.add(true);
-        isLogged=true;
+        mIsLogged=true;
       }else
         _controller.sink.add(LoginApiResponse.unverified("err"));
       }else{
@@ -76,5 +79,11 @@ _emailController.close();
 _passwordController.close();
 _controller.close();
 
+  }
+
+  void logout() async{
+    preferences.logout();
+    mIsLogged=false;
+    _logincontroller.sink.add(false);
   }
 }
