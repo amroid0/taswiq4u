@@ -51,5 +51,18 @@ class RegisterValidators {
           sink.addError(allTranslations.text('err_lname'));
         }
       });
+  final validateCountry = StreamTransformer<String, String>.fromHandlers(
+      handleData: (secondName, sink) {
+        if (secondName.length >= 3) {
+          sink.add(secondName);
+        }else if(secondName.length==0){
+          sink.addError(allTranslations.text('empty_field'));
+        }
+
+
+        else {
+          sink.addError(allTranslations.text('err_lname'));
+        }
+      });
 
 }

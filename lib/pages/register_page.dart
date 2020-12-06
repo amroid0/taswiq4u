@@ -5,6 +5,7 @@ import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/resgister_bloc.dart';
 import 'package:olx/data/validator.dart';
 import 'package:olx/model/EventObject.dart';
+import 'package:olx/model/country_entity.dart';
 import 'package:olx/model/login_api_response.dart';
 import 'package:olx/pages/login_page.dart';
 import 'package:olx/pages/verification_page.dart';
@@ -12,6 +13,7 @@ import 'package:olx/remote/client_api.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/loading_dialog.dart';
+import 'package:olx/widget/city_list_dialog.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -34,15 +36,20 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController lastController = TextEditingController();
   TextEditingController phoneContorller = TextEditingController();
   TextEditingController passwordContoller = TextEditingController();
+  final TextEditingController _countrytextController = TextEditingController();
+
   ProgressDialog progressDialog ;
   String _email;
   String _password;
   RegisterBloc bloc;
 
+  int countryId;
+
   @override
   void initState() {
     // TODO: implement initState
     bloc=RegisterBloc();
+
 
     bloc.stream.listen((data) {
       // Redirect to another view, given your condition
@@ -125,6 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     password(bloc),
                     SizedBox(height: 10,),
                   //  confrimPassword(bloc),
+                    country(bloc),
                     SizedBox(height: 10,),
                     submitButton(bloc),
                  //  registerState(bloc)
@@ -239,6 +247,44 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               onChanged: bloc.changeEmail,
               controller: phoneContorller,
+            ),
+          );
+
+        });
+
+  }
+
+  Widget country(RegisterBloc bloc ){
+    return StreamBuilder(
+        stream: bloc.country,
+        builder: (context, snapshot) {
+
+          return Container(
+
+            decoration: BoxDecoration(color:Colors.black12,border: Border.all(
+              width: 1.0,
+              color: Colors.green,
+
+
+            ),
+              borderRadius: BorderRadius.all(
+                  Radius.circular(5.0) //         <--- border radius here
+              ),
+            ),
+            child: TextFormField(
+              controller: _countrytextController,
+              onTap: (){
+                _showCountryDialog();
+              },
+              decoration: InputDecoration(labelText: allTranslations.text('phone'),filled: true,
+                fillColor: Colors.black12,
+                border: InputBorder.none,
+                errorText: snapshot.error,
+                suffixIcon:  Icon(Icons.arrow_drop_down),
+
+
+              ),
+              onChanged: bloc.chnageCountry,
             ),
           );
 
@@ -363,10 +409,11 @@ class _RegisterPageState extends State<RegisterPage> {
             bloc.changeSecondName(lastController.text);
             bloc.changeEmail(phoneContorller.text);
             bloc.changePassword(passwordContoller.text);
+            bloc.chnageCountry(_countrytextController.text);
             if(firstController.text.isNotEmpty &&lastController.text.isNotEmpty
             &&
             phoneContorller.text.isNotEmpty&& passwordContoller.text.isNotEmpty)
-            snapshot.hasError?null:bloc.submit();
+            snapshot.hasError?null:bloc.submit(countryId);
           },
             child: Container(
               height: 60.0,
@@ -393,7 +440,21 @@ class _RegisterPageState extends State<RegisterPage> {
 
   }
 
-  showAlertDialog(BuildContext context) {
+
+
+
+  _showCountryDialog() async{
+    await  CityListDialog.showModal<CountryEntity>(
+        context,
+        label: allTranslations.text('choose_country'),
+    selectedValue: CountryEntity(),
+    items: List(),
+    onChange: (CountryEntity selected) {
+    _countrytextController.text=selected.name.toString();
+   countryId=selected.countryId;});
+  }
+
+    showAlertDialog(BuildContext context) {
   return  Alert(
       context: context,
       title: allTranslations.text('success'),
