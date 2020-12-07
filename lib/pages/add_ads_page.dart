@@ -207,7 +207,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
       items: List(),
       onChange: (CountryEntity selected) {
         _citytextController.text=selected.name.toString();
-        adsPostEntity.stateId=int.parse(selected.id);
+        adsPostEntity.stateId=selected.id;
 
       },);
   }

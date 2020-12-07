@@ -8,7 +8,7 @@ part of 'country_entity.dart';
 
 CountryEntity _$CountryEntityFromJson(Map<String, dynamic> json) {
   return CountryEntity(
-    id: json['Id'] as String,
+    id: json['Id'] as int,
     countryId: json['CountryId'] as int,
     arabicDescription: json['ArabicDescription'] as String,
     englishDescription: json['EnglishDescription'] as String,

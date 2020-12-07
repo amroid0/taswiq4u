@@ -99,7 +99,7 @@ class _SelectDialogState<T> extends State<CityListDialog<T>> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * .9,
-      height: MediaQuery.of(context).size.height * .7,
+      height: MediaQuery.of(context).size.height * .5,
       child: Column(
         children: <Widget>[
 
@@ -108,38 +108,61 @@ class _SelectDialogState<T> extends State<CityListDialog<T>> {
               child: StreamBuilder<ApiResponse<List<CountryEntity>>>(
                 stream: bloc.stream,
                 builder: (context, snapshot) {
-                  if (snapshot.hasError)
-                    return Center(child: Text("Oops"));
-                  else if (!snapshot.hasData)
-                    return Center(child: CircularProgressIndicator());
-                  else if (snapshot.data.data.isEmpty)
-                    return Center(child: Text("No data found"));
-                  return ListView.builder(
-                    itemCount: snapshot.data.data.length,
-                    itemBuilder: (context, index) {
-                      var item = snapshot.data.data[index];
-                      if (widget.itemBuilder != null)
-                        return InkWell(
-                          child: widget.itemBuilder(
-                              context, item, item == widget.selectedValue),
-                          onTap: () {
+                  if(snapshot.data!=null){
+                    switch(snapshot.data.status){
+                      case Status.LOADING:
+                        return Center(child: CircularProgressIndicator());
+                        break;
+                      case Status.COMPLETED:
+                      // TODO: Handle this case.
+                        List<CountryEntity> list=snapshot.data.data;
+                        return ListView.builder(
+                          itemCount: list.length,
+                          itemBuilder: (context, index) {
+                            var item = list[index];
+                            if (widget.itemBuilder != null)
+                              return InkWell(
+                                child: widget.itemBuilder(
+                                    context, item, item == widget.selectedValue),
+                                onTap: () {
 
-                              onChange(item);
-                              Navigator.pop(context);
+                                  onChange(item);
+                                  Navigator.pop(context);
 
+                                },
+                              );
+                            else
+                              return ListTile(
+                                title: Text(item.name.toString()),
+                                selected: item == widget.selectedValue,
+                                onTap: () {
+                                  onChange(item);
+                                  Navigator.pop(context);
+                                },
+                              );
                           },
                         );
-                      else
-                        return ListTile(
-                          title: Text(item.name.toString()),
-                          selected: item == widget.selectedValue,
-                          onTap: () {
-                              onChange(item);
-                              Navigator.pop(context);
-                          },
-                        );
-                    },
-                  );
+
+
+
+
+
+
+
+
+
+
+                        break;
+                      case Status.ERROR:
+                        return Center(child: Text("Oops"));
+                        break;
+                    }
+                  }
+                  return Container();
+
+
+
+
                 },
               ),
             ),

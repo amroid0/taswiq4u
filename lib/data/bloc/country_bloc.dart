@@ -33,8 +33,8 @@ class CountryBloc implements Bloc {
 
   void getCityList() async {
     Stream.fromFuture(preferences.getCityList()).
-    onErrorResume((error) => Stream.fromFuture(preferences.getCountryID()).
-    flatMap((value) => Stream.fromFuture(_client.getCityList(int.parse(value))))
+    onErrorResume((error) => Stream.fromFuture(preferences.getUserInfo()).
+    flatMap((value) => Stream.fromFuture(_client.getCityList(value.countryId)))
         .doOnData((event) {Stream.fromFuture(preferences.saveCities(event));}))
         .doOnListen(() {_controller.sink.add(ApiResponse<List<CountryEntity>>.loading("loading") );})
         .listen((event) {_controller.sink.add(ApiResponse<List<CountryEntity>>.completed(event));

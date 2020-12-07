@@ -14,6 +14,7 @@ import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/loading_dialog.dart';
 import 'package:olx/widget/city_list_dialog.dart';
+import 'package:olx/widget/country_list_dialog.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -272,11 +273,12 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
             child: TextFormField(
+              readOnly: true,
               controller: _countrytextController,
               onTap: (){
                 _showCountryDialog();
               },
-              decoration: InputDecoration(labelText: allTranslations.text('phone'),filled: true,
+              decoration: InputDecoration(labelText: allTranslations.text('country'),filled: true,
                 fillColor: Colors.black12,
                 border: InputBorder.none,
                 errorText: snapshot.error,
@@ -444,7 +446,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
 
   _showCountryDialog() async{
-    await  CityListDialog.showModal<CountryEntity>(
+    await  CountryListDialog.showModal<CountryEntity>(
         context,
         label: allTranslations.text('choose_country'),
     selectedValue: CountryEntity(),

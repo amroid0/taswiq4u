@@ -7,7 +7,7 @@ import 'cateogry_entity.dart';
 
 class CountryEntity{
    @JsonKey(name: "Id")
-   String id;
+   int id;
    @JsonKey(name: "CountryId")
    int countryId;
    @JsonKey(name: "ArabicDescription")

@@ -4,6 +4,7 @@ import 'package:olx/model/LoginResponse.dart';
 import 'package:olx/model/cateogry_entity.dart';
 import 'package:olx/model/country_entity.dart';
 import 'package:olx/model/userCredit.dart';
+import 'package:olx/model/user_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 SharedPreferencesHelper preferences = SharedPreferencesHelper();
 Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
@@ -21,6 +22,8 @@ static final String KEY_COUNTRY="country_key";
  static final String KEY_COUNTRY_LIST="count_list_key";
 
   static final String KEY_CITY_LIST="key_city_list";
+
+ static final String KEY_USER_INFO="key_user_info";
 
   Future<bool> isLoggedIn() async {
     SharedPreferences instance = await _prefs;
@@ -198,5 +201,18 @@ Future<List<CountryEntity>> getCityList() async{
     SharedPreferences instance = await _prefs;
     instance.setString(KEY_CITY_LIST, json.encode(cities));
   }
+
+  void saveUserData(UserInfo event) async {
+
+    SharedPreferences instance = await _prefs;
+    instance.setString(KEY_USER_INFO, json.encode(event.toJson()));
+
+  }
+Future<UserInfo> getUserInfo() async {
+  SharedPreferences instance = await _prefs;
+  String stringJson=instance.getString(KEY_USER_INFO);
+  return UserInfo.fromJson(json.decode(stringJson));
+
+}
 
 }
