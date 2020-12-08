@@ -6,6 +6,7 @@ import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/model/FieldproprtieyReposne.dart';
 import 'package:olx/model/ads_post_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
+import 'package:olx/model/user_info.dart';
 
 class AddPostBloc implements Bloc{
 
@@ -28,27 +29,18 @@ class AddPostBloc implements Bloc{
   void postAds(AdsPostEntity obj) async {
     _addController.sink.add(ApiResponse.loading('loading'));
     try {
-      String countryID = await preferences.getCountryID();
-      obj.countryId = int.tryParse(countryID);
-      obj.cityId = 1;
-      obj.stateId = 1;
+      UserInfo userInfo = await preferences.getUserInfo();
+      obj.countryId = userInfo.countryId;
+      obj.phone=userInfo.phone;
+      obj.email=userInfo.email!=null?userInfo.email:"a@gmail.com";
+      obj.userId=userInfo.id;
       obj.contactMe = 1;
       obj.isNew = true;
       obj.isFree = false;
       obj.userId = "";
       obj.arabicDescription = obj.englishDescription;
-      AdsPostEntity entity=obj;
-      if(obj.advertismentSpecification!=null) {
-        entity.advertismentSpecification =[];
-        for(var item in obj.advertismentSpecification){
-          if(item!=null){
-            entity.advertismentSpecification.add(item);
-          }
-        }
-      }
 
-
-      final results = await _client.PostNewAds(entity);
+      final results = await _client.PostNewAds(obj);
       _addController.sink.add(ApiResponse.completed(results));
     }catch(e){
       _addController.sink.add(ApiResponse.error(e));

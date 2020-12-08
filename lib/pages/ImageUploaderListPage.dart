@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -5,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'dart:convert';
 import 'package:http_parser/http_parser.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/upload_image_bloc.dart';
 import 'package:olx/model/StateEnum.dart';
@@ -116,8 +119,29 @@ var _bloc;
 
                   child: Image.asset('images/add_image.png',                    fit: BoxFit.fill,
                   ),
-                  ),onTap:(){
-                _openImagePickerModal(context);
+                  ),onTap:() async{
+              //  _openImagePickerModal(context);
+                List<Asset> resultList;
+                String error;
+
+                try {
+                  resultList = await MultiImagePicker.pickImages(
+                    maxImages: 8,
+                    enableCamera: true
+                  );
+                } on Exception catch (e) {
+                  error = e.toString();
+                }
+                for(Asset asset in resultList){
+                  ByteData byteData = await asset.getByteData();
+                  List<int> imageData = byteData.buffer.asUint8List();
+                  _bloc.uploadImage(imageData);
+                }
+
+
+
+
+
               }
               ),]
             );
@@ -158,8 +182,8 @@ var _bloc;
                     decoration: BoxDecoration(
                       color: AppColors.appBackground,
                     ),
-                    child:item.localPath!=null? Image.file(
-                      File(item.localPath),
+                    child:item.localPath!=null? Image.memory(
+                    item.localPath,
                       fit: BoxFit.fill,
                     ):ImageBox(imgSrc:item.base64Image==null?"":item.base64Image ,defaultImg:"images/logo.png" ,boxFit: BoxFit.fill,),
                       

@@ -85,25 +85,6 @@ bool isLogged() => mIsLogged==null?false:mIsLogged;
       }
     });
 
-    _controller.add(LoginApiResponse.loading('loading'));
-      try {
-     final results = await _client.login(UserCredit(validEmail,validPassword));
-     if(results){
-     final verifyResults = await _client.checkVerfiyPhone();
-      if(verifyResults) {
-        _controller.sink.add(LoginApiResponse.authenticate("err"));
-        _logincontroller.sink.add(true);
-        mIsLogged=true;
-      }else
-        _controller.sink.add(LoginApiResponse.unverified("err"));
-      }else{
-       _controller.sink.add(LoginApiResponse.unAuthenticate("err"));
-     }
-      }
-      catch(e){
-    _controller.sink.add(LoginApiResponse.error(e.toString()));
-
-    }
   }
 
 

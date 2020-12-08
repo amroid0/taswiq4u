@@ -51,10 +51,8 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   final TextEditingController _citytextController = TextEditingController();
   final TextEditingController _nametextController = TextEditingController();
   final TextEditingController _pricetextController = TextEditingController();
-  final TextEditingController _phonetextController = TextEditingController();
-  final TextEditingController _emailtextController = TextEditingController();
   final TextEditingController _desctextController = TextEditingController();
-  Color adNameColor,descColor,priceColor,emailColor,phoneColor,categoryColor,cityColor=Colors.grey;
+  Color adNameColor,descColor,priceColor,categoryColor,cityColor=Colors.grey;
   GoogleMapController _mapController;
   final Set<Marker> _markers = {};
   List<TextEditingController>contollers=List();
@@ -83,7 +81,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
    uploadBloc =UploadImageBloc();
 
     bloc.addStream.listen((data) {
-      // Redirect to another view, given your condition
+      // Redirect to another view, given your conditi on
       switch (data.status) {
         case Status.LOADING:
           Future.delayed(Duration.zero, () {
@@ -166,18 +164,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
         priceColor=isvalid?AppColors.validValueColor:AppColors.errorValueColor;
       });
     });
-    _emailtextController.addListener((){
-      bool isvalid=_emailValidate(_emailtextController.value.text)==null;
-      setState(() {
-        emailColor=isvalid?AppColors.validValueColor:AppColors.errorValueColor;
-      });
-    });
-    _phonetextController.addListener((){
-      bool isvalid=_phoneValidate(_phonetextController.value.text)==null;
-      setState(() {
-        phoneColor=isvalid?AppColors.validValueColor:AppColors.errorValueColor;
-      });
-    });
+
 
 
 
@@ -208,6 +195,8 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
       onChange: (CountryEntity selected) {
         _citytextController.text=selected.name.toString();
         adsPostEntity.stateId=selected.id;
+        adsPostEntity.cityId=selected.id;
+
 
       },);
   }
@@ -295,7 +284,7 @@ body: Padding(
             SizedBox(height: 8,),
             SizedBox(height: 8,),
 
-            _BuildRoundedTextField(labelText: allTranslations.text('city'),
+            _BuildCityRoundedTextField(labelText: allTranslations.text('city'),
                 hintText: allTranslations.text('city'),
                 controller: _citytextController,
                 iswithArrowIcon: true,onClickAction: (){
@@ -581,44 +570,7 @@ body: Padding(
               );
             },
           ),
-            TextFormField(
-                controller: _emailtextController,
-
-                autovalidate: emailColor==AppColors.validValueColor||emailColor==AppColors.errorValueColor,
-                validator: _emailValidate,
-                onSaved: (val){
-                  adsPostEntity.email=val;
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.check_circle,color: emailColor,),
-
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelText: allTranslations.text('email'),
-                  hintText:  allTranslations.text('email'),
-                  border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(10.0)),
-                )
-            ),
             SizedBox(height: 8,),
-            TextFormField(
-                controller: _phonetextController,
-                validator: _phoneValidate,
-                autovalidate: phoneColor==AppColors.validValueColor||phoneColor==AppColors.errorValueColor,
-                onSaved: (val){
-                  adsPostEntity.phone=val;
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.check_circle,color: phoneColor,),
-
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelText:  allTranslations.text('phone'),
-                  hintText:  allTranslations.text('phone'),
-                  border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(10.0)),
-                )
-            ),
             SizedBox(height: 8,),
           Center(
             child: InkWell(
@@ -703,7 +655,6 @@ body: Padding(
                     }
                     adsPostEntity.locationLatitude=0 /*_markers.elementAt(0).position.latitude as int*/;
                     adsPostEntity.locationLongtude=0 /*_markers.elementAt(0).position.longitude as int*/;
-
                     bloc.postAds(adsPostEntity);
 
 
@@ -745,6 +696,31 @@ body: Padding(
         decoration: InputDecoration(
           suffixIcon: iswithArrowIcon? Icon(Icons.arrow_drop_down):null,
           prefixIcon: Icon(Icons.check_circle,color: categoryColor,),
+
+
+          filled: true,
+          fillColor: Colors.white,
+          labelText: labelText,
+          hintText: hintText,
+          border: new OutlineInputBorder(
+              borderRadius: new BorderRadius.circular(10.0)),
+        )
+    );
+
+  }
+
+  Widget _BuildCityRoundedTextField({ String labelText,TextEditingController controller=null,String hintText,iswithArrowIcon=false,
+    Function onClickAction}){
+    return TextFormField(
+        validator: _emptyValidate,
+        autovalidate: cityColor==AppColors.validValueColor||cityColor==AppColors.errorValueColor,
+        controller: controller,
+        onTap: (){
+          onClickAction();
+        },
+        decoration: InputDecoration(
+          suffixIcon: iswithArrowIcon? Icon(Icons.arrow_drop_down):null,
+          prefixIcon: Icon(Icons.check_circle,color: cityColor,),
 
 
           filled: true,
@@ -804,34 +780,6 @@ body: Padding(
     }
   }
 
-  String _phoneValidate(String value){
-
-    String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-    RegExp regExp=RegExp(patttern);
-    if(value.isEmpty){
-      return allTranslations.text('empty_field');
-    }
-
-    else if(!regExp.hasMatch(value)){
-      return allTranslations.text('err_phone');
-    }else{
-      return null;
-    }
-  }
-  String _emailValidate(String value){
-
-    String patttern = r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
-    RegExp regExp=RegExp(patttern);
-    if(value.isEmpty){
-      return allTranslations.text('empty_field');
-    }
-
-    else if(!regExp.hasMatch(value)){
-      return allTranslations.text('err_email');
-    }else{
-      return null;
-    }
-  }
   String _emptyValidate(String value){
 
     if(value==null||value.isEmpty){

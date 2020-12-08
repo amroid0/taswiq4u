@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:olx/data/remote/AdsCateogryClient.dart';
 import 'package:olx/data/bloc/bloc.dart';
 import 'package:olx/model/StateEnum.dart';
@@ -21,7 +22,7 @@ class UploadImageBloc implements Bloc {
     _ImageList.add(AddImage());
     _controller.sink.add(_ImageList);
   }
-  void uploadImage(String path) async {
+  void uploadImage(List<int> path) async {
     var image=UploadedImage();
     image.id=_ImageList.length;
     image.localPath=path;
