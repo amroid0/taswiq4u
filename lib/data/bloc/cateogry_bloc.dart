@@ -103,6 +103,9 @@ class CategoryBloc implements Bloc {
 
 
   }
+  List<CateogryEntity>getCurrentCategory(){
+ return   _cateogryStack.last;
+  }
   bool isStackIsEmpty(){
     return _cateogryStack.isEmpty;
   }

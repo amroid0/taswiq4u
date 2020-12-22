@@ -25,6 +25,7 @@ CateogryEntity _$CateogryEntityFromJson(Map<String, dynamic> json) {
     name: json['Name'] as String,
     hasSub: json['HasSub'] as bool,
     isSelected: json['isSelected'] as bool,
+    hasHorizontal: json['hasHorizontal'] as bool,
   )..imageId = json['imageId'] as String;
 }
 
@@ -43,5 +44,6 @@ Map<String, dynamic> _$CateogryEntityToJson(CateogryEntity instance) =>
       'SubCategories': instance.subCategories,
       'Name': instance.name,
       'HasSub': instance.hasSub,
+      'hasHorizontal': instance.hasHorizontal,
       'isSelected': instance.isSelected,
     };

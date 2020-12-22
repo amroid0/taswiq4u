@@ -11,7 +11,7 @@ import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/cateogry_entity.dart';
 import 'package:olx/model/popup_ads_entity_entity.dart';
 import 'package:olx/pages/popup_ads_page.dart';
-import 'package:olx/pages/search_page.dart';
+import 'package:olx/pages/ads_list_page.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/global_locale.dart';
@@ -251,7 +251,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
               }else{
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => BlocProvider(bloc: AdsBloc(),child:SearchAnnounceListScreen(category[index]),),
+                MaterialPageRoute(builder: (context) => BlocProvider(bloc:_bloc,child: BlocProvider(bloc: AdsBloc(),child:SearchAnnounceListScreen(category[index]),)),
                 settings: RouteSettings(arguments:category[index] )
 
                 ),

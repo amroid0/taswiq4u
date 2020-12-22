@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -13,6 +14,7 @@ import 'package:olx/data/bloc/upload_image_bloc.dart';
 import 'package:olx/model/StateEnum.dart';
 import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/upload_image_entity.dart';
+import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/widget/base64_image.dart';
 import 'package:olx/widget/circle_button.dart';
@@ -185,7 +187,13 @@ var _bloc;
                     child:item.localPath!=null? Image.memory(
                     item.localPath,
                       fit: BoxFit.fill,
-                    ):ImageBox(imgSrc:item.base64Image==null?"":item.base64Image ,defaultImg:"images/logo.png" ,boxFit: BoxFit.fill,),
+                    ):CachedNetworkImage(
+                      fit: BoxFit.fill,
+
+                      placeholder: (context, url) => Image.asset("images/logo.png"),
+                      errorWidget: (context, url,error) => Image.asset("images/logo.png"),
+                      imageUrl: APIConstants.getFullImageUrl(item.remoteUrl.isEmpty?"":item.remoteUrl,ImageType.ADS),
+                    ),
                       
                   ),state,
               /*    FlatButton(

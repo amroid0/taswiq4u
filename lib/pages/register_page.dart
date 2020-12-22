@@ -126,8 +126,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     Image.asset('images/logo.png'),
                     firstName(bloc),
                     SizedBox(height: 10,),
-                    secondName(bloc),
-                    SizedBox(height: 10,),
+                  //  secondName(bloc),
                     phone(bloc),
                     SizedBox(height: 10,),
                     password(bloc),
@@ -408,11 +407,10 @@ class _RegisterPageState extends State<RegisterPage> {
           return GestureDetector(onTap: (){
 
             bloc.changeFirstName(firstController.text);
-            bloc.changeSecondName(lastController.text);
             bloc.changeEmail(phoneContorller.text);
             bloc.changePassword(passwordContoller.text);
             bloc.chnageCountry(_countrytextController.text);
-            if(firstController.text.isNotEmpty &&lastController.text.isNotEmpty
+            if(firstController.text.isNotEmpty
             &&
             phoneContorller.text.isNotEmpty&& passwordContoller.text.isNotEmpty)
             snapshot.hasError?null:bloc.submit(countryId);

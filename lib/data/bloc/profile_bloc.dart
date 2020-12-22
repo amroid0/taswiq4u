@@ -6,6 +6,8 @@ import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/user_info.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../shared_prefs.dart';
+
 class ProfileBloc  implements Bloc {
 
   final _client = ProfileClient();
@@ -17,14 +19,24 @@ class ProfileBloc  implements Bloc {
   ProfileBloc();
 
   void getUserProfileInfo() async {
-    _controller.sink.add(ApiResponse.loading('loading'));
-    try {
-      final results = await _client.getUserData();
-      _controller.sink.add(ApiResponse.completed(results));
 
-    }catch(e) {
+
+    Stream.fromFuture(preferences.getUserInfo())
+        .onErrorResume((error) => Stream.fromFuture(_client.getUserData()) .doOnData((event) {preferences.saveUserData(event);}))
+
+        .doOnListen(() {        _controller.sink.add(ApiResponse.loading('loading'));
+    }).listen((event) {
+      _controller.sink.add(ApiResponse.completed(event));
+
+
+    },onError: (e){
       _controller.sink.add(ApiResponse.error(e.toString()));
-    }}
+
+    });
+
+
+
+    }
 
   @override
   void dispose() {

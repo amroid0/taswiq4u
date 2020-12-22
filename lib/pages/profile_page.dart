@@ -21,6 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     // TODO: implement initState
+    _bloc.getUserProfileInfo();
     super.initState();
   }
   @override
@@ -30,31 +31,6 @@ class _ProfilePageState extends State<ProfilePage> {
 */
     //BlocProvider.of<ProfileBloc>(context).getFavroite(1);
     return Scaffold(
-      backgroundColor: AppColors.appBackground,
-        appBar: AppBar(
-          title: Center(
-            child: Text(allTranslations.text('profile'),textAlign: TextAlign.center,style: TextStyle(
-                color:
-                Colors.black38
-
-            ),),
-          ),
-
-          backgroundColor: Colors.transparent,
-          bottomOpacity: 0.0,
-          elevation: 0.0,
-          automaticallyImplyLeading: false,
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.arrow_forward_ios,color: Colors.black38,),
-              onPressed: () {
-                Navigator.pop(context);
-
-              },
-              tooltip: 'back',
-            ),
-          ],
-        ),
       body: /*Column(
         children: <Widget>[
 
@@ -96,7 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
       StreamBuilder<ApiResponse<UserInfo>>(
         stream: _bloc.stream,
         builder: (context, snap) {
-
+          if(snap.data!=null)
           switch(snap.data.status) {
             case Status.LOADING:
                 return new Center(

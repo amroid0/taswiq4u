@@ -57,11 +57,17 @@ class _OfferPageState extends State<OfferPage> {
             if (!snapshot.hasData) {
               return Center(child: CircularProgressIndicator());
             }
+            List<CateogryEntity>categories=snapshot.data;
+            if(categories.isNotEmpty){
+              categories[0].isSelected=true;
+              offerBloc.getOfferLsit(categories[0].id.toString());
+
+            }
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _buildCategoryList(snapshot.data),
+                _buildCategoryList(categories),
                //Text('hello')
                Expanded(child: _buildOfferList())
               ],

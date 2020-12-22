@@ -176,7 +176,7 @@ class _DetailPageState extends State<DetailPage> {
 
                                   Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => BlocProvider(bloc: AdsBloc(),child:EditPage(),),
+                                      MaterialPageRoute(builder: (context) => BlocProvider(bloc: AdsBloc(),child:EditPage(detail),),
                                           settings: RouteSettings(arguments:detail)
 
                                       ));

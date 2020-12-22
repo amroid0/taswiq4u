@@ -29,7 +29,7 @@ class RegisterBloc extends Bloc with RegisterValidators{
   Stream<String> get seocndName => _secondNameController.stream.transform(validateSeocndName);
   Stream<String> get country => _countryController.stream.transform(validateCountry);
 
-  Stream<bool> get submitValid => CombineLatestStream.combine5(email,firstName,seocndName, password,country, (e, p,q,c,z) => true);
+  Stream<bool> get submitValid => CombineLatestStream.combine4(email,firstName, password,country, (e, p,c,z) => true);
   Function(String) get changeEmail => _phoneController.sink.add;
   Function(String) get changePassword => _passwordController.sink.add;
   Function(String) get changeFirstName => _firstNameController.sink.add;
@@ -43,7 +43,7 @@ class RegisterBloc extends Bloc with RegisterValidators{
     final validEmail = _phoneController.value;
     final validPassword = _passwordController.value;
     final validFirstName = _firstNameController.value;
-    final validSecondName = _secondNameController.value;
+    List<String>namePattern=validFirstName.split(" ");
     String lang=await preferences.getLang();
     String country=await preferences.getCountryID();
     int langID=lang==null ||lang=='en'?1:2;
@@ -55,8 +55,8 @@ class RegisterBloc extends Bloc with RegisterValidators{
         languageId: langID,
         cityId: 1,
         countryId:countryId,
-          firstName:validFirstName,
-          secondName: validSecondName
+          firstName:namePattern[0],
+          secondName: namePattern.length<=1?"":namePattern[1]
       ));
       if(results){
         _getToken(validEmail, validPassword);

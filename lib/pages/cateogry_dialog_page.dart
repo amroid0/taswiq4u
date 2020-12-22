@@ -4,7 +4,7 @@ import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/cateogry_bloc.dart';
 import 'package:olx/model/cateogry_entity.dart';
-import 'package:olx/pages/search_page.dart';
+import 'package:olx/pages/ads_list_page.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/global_locale.dart';
 

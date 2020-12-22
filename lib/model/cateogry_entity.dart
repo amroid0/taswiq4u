@@ -30,9 +30,12 @@ class CateogryEntity {
 	String name;
 	@JsonKey(name:"HasSub")
 	bool hasSub;
+	@JsonKey(name:"hasHorizontal")
+	bool hasHorizontal;
+
 	bool isSelected=false;
 
-	CateogryEntity({this.countryId, this.arabicDescription, this.englishDescription, this.isActive, this.categoryLevel, this.categoryLogo, this.imageUrl, this.id, this.subCats, this.subCategories, this.name, this.hasSub,this.isSelected=false});
+	CateogryEntity({this.countryId, this.arabicDescription, this.englishDescription, this.isActive, this.categoryLevel, this.categoryLogo, this.imageUrl, this.id, this.subCats, this.subCategories, this.name, this.hasSub,this.isSelected=false,this.hasHorizontal});
 	factory CateogryEntity.fromJson(Map<String, dynamic> json) => _$CateogryEntityFromJson(json);
 	Map<String, dynamic> toJson() => _$CateogryEntityToJson(this);
 

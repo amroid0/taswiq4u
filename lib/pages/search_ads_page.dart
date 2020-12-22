@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
@@ -203,79 +204,51 @@ class DummyDelegate extends SearchDelegate<String> {
 
     else
     if(_gridItemCount==2)
-      return GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: _gridItemCount,          childAspectRatio: 0.80,),
-        controller: _scrollController,
-        shrinkWrap: true,
-        itemCount: ads.advertisementList.length +(ads.advertisementList.length/6).toInt(),
-        itemBuilder: (BuildContext context,int index){
+      return
+        StaggeredGridView.countBuilder(
+          controller: _scrollController,
+          shrinkWrap: true,
+          crossAxisCount:_gridItemCount , //as per your requirement
+          itemCount: ads.advertisementList.length +(ads.advertisementList.length/6).toInt(),
+          itemBuilder: (BuildContext context, int index) {
+            if (index % 7 == 0) { //for even row
+              int comIndex=(index/7-1).toInt();
+              return GestureDetector(
+                onTap: (){
+                  if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FullComerialScreen()
+                          ,settings: RouteSettings(arguments: ads.commercialAdsList[comIndex])),
+                    );
 
-          if(index!=0&& index%6==0){
-            int comIndex=(index/6-1).toInt();
-            String commercialAdsItem="";
-            if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
-              commercialAdsItem=ads.commercialAdsList[comIndex].Link;
-/*
-                      if( ads.commercialAdsList[comIndex].base64Image==null&& ads.commercialAdsList[comIndex].isLoading==null)
-                        BlocProvider.of<AdsBloc>(context).GetImage(commercialAdsItem,comIndex,true);*/
-            }
-            return GestureDetector(
-              onTap: (){
-                if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => FullComerialScreen()
-                        ,settings: RouteSettings(arguments: ads.commercialAdsList[comIndex])),
-                  );
+                  }
 
-                }
-
-              },
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 100,
-                margin: EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color:Colors.black12,
-                ),
-                child:
-                CachedNetworkImage(
-                  fit: BoxFit.fill,
-                  placeholder: (context, url) => Image.asset("images/logo.png"),
-                  errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                  imageUrl: APIConstants.getFullImageUrl(ads.commercialAdsList.isEmpty||comIndex>=ads.commercialAdsList.length?"":
-                  ads.commercialAdsList[comIndex].systemDataFile.Url,ImageType.COMMAD
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 100,
+                  margin: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color:Colors.black12,
                   ),
-                )
+                  child: _BuildImageWidget(ads.commercialAdsList,comIndex)
 
-                ,
-              ),
-            );
-
-          }else {
-            int adsIndex=index-(index/6).toInt();
-
-            if(ads.advertisementList[adsIndex]==null){
-              return _buildLoaderListItem();
-
-            }else {
-              List<AdvertismentImage> imageList = ads.advertisementList
-              [adsIndex]
-                  .AdvertismentImages;
-              /*if (imageList.isNotEmpty && imageList[0].base64Image == null &&
-                 imageList[0].isLoading == null)
-               BlocProvider.of<AdsBloc>(context).GetImage(
-                   imageList[0].Url, adsIndex, false);*/
-
+                  ,
+                ),
+              );
+            } else { //for odd row
+              int adsIndex=index-(index/7).toInt();
               return AdsCardWidget(ads.advertisementList[adsIndex]);
 
 
             }
-          }
-
-        },
-      );
+          },
+          staggeredTileBuilder: (int index) => index % 7 == 0
+              ? new StaggeredTile.fit(2)
+              : new StaggeredTile.fit(1),
+        );
     else
       return ListView.builder(
         controller: _scrollController,
@@ -313,7 +286,7 @@ class DummyDelegate extends SearchDelegate<String> {
                     color:Colors.black12,
                   ),
                   child:  CachedNetworkImage(
-                    fit: BoxFit.fill,
+                    fit: BoxFit.cover,
                     placeholder: (context, url) => Image.asset("images/logo.png"),
                     errorWidget: (context, url,error) => Image.asset("images/logo.png"),
                     imageUrl: APIConstants.getFullImageUrl(ads.commercialAdsList.isEmpty||comIndex>=ads.commercialAdsList.length?"":
@@ -330,14 +303,6 @@ class DummyDelegate extends SearchDelegate<String> {
               return _buildLoaderListItem();
 
             }else {
-              List<AdvertismentImage> imageList = ads.advertisementList
-              [adsIndex]
-                  .AdvertismentImages;
-              /*     if (imageList.isNotEmpty && imageList[0].base64Image == null &&
-                    imageList[0].isLoading == null)
-                  BlocProvider.of<AdsBloc>(context).GetImage(
-                      imageList[0].Url, adsIndex, false);*/
-
               return AdsRowWidget(ads.advertisementList[adsIndex]);
 
 
@@ -349,7 +314,6 @@ class DummyDelegate extends SearchDelegate<String> {
 
 
   }
-
 
   void _OnSelectSort(int val,BuildContext context){
     _sortSelectedValue=val;
@@ -421,4 +385,16 @@ class DummyDelegate extends SearchDelegate<String> {
     );
   }
 
+  Widget _BuildImageWidget(List<CommercialAdsList> list,int index){
+    if(list.isNotEmpty&&list[0].systemDataFile.Url!=null&&list[0].systemDataFile.Url.isNotEmpty)
+      return  CachedNetworkImage(
+        fit: BoxFit.cover,
+        placeholder: (context, url) => Image.asset("images/logo.png"),
+        errorWidget: (context, url,error) => Image.asset("images/logo.png"),
+        imageUrl: APIConstants.getFullImageUrl(list[0].systemDataFile.Url,ImageType.ADS),
+      );
+    else
+      return  Image.asset("images/logo.png",fit: BoxFit.cover,);
+
+  }
 }

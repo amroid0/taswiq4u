@@ -8,6 +8,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
+import 'package:olx/data/bloc/cateogry_bloc.dart';
 import 'package:olx/data/bloc/favroite_bloc.dart';
 import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
@@ -210,6 +211,8 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
 
 
           ],),
+
+            _buildCategoryList(BlocProvider.of<CategoryBloc>(context).getCurrentCategory()),
 
 
 
@@ -471,4 +474,63 @@ void _OnSelectSort(int val){
       return  Image.asset("images/logo.png",fit: BoxFit.cover,);
 
   }
+
+  Widget _buildCategoryList(List<CateogryEntity> category){
+    return Visibility(
+      visible: category[0].hasHorizontal,
+      child: Container(
+        height: 80,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          shrinkWrap: true,
+          itemCount: category.length,
+          itemBuilder: (BuildContext context,int index){
+            return Container(
+              margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+              child: new SizedBox(
+                  height: 60.0,
+                  child:     Container(
+                    margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                    child: ChoiceChip(
+                      label: Text(category[index].name),
+                      selected:category[index].isSelected==null?false:category[index].isSelected||category[index].id==widget.category.id,
+                      onSelected: (select){
+
+                        category.forEach((item){
+                          item.isSelected=false;
+                        });
+                        category[index].isSelected=true;
+                        setState(() {
+
+                          category.forEach((item){
+                            item.isSelected=false;
+                          });
+                          category[index].isSelected=true;
+                          widget.category=category[index];
+                          params.categoryId=widget.category.id;
+                          params.cateName=widget.category.name;
+                          BlocProvider.of<AdsBloc>(context).submitQuery(params,_sortSelectedValue,1);
+
+                        });
+
+
+                      },
+
+                    ),
+                  )
+
+              ),
+            );
+
+
+          },
+        ),
+      ),
+    );
+
+
+  }
+
+
+
 }

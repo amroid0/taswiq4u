@@ -14,6 +14,7 @@ import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/ads_post_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/cateogry_entity.dart';
+import 'package:olx/model/edit_field_property.dart';
 import 'package:olx/model/field_proprtires_entity.dart';
 import 'package:olx/model/upload_image_entity.dart';
 import 'package:olx/utils/Theme.dart';
@@ -29,6 +30,9 @@ import 'ImageUploaderListPage.dart';
 import 'cateogry_dailog.dart';
 
 class EditPage extends StatefulWidget {
+  AdsDetail detail;
+  EditPage(this.detail);
+
   @override
   _EditPageState createState() => _EditPageState();
 }
@@ -60,6 +64,8 @@ class _EditPageState extends State<EditPage> {
 
   List<List> _multiselectedFieldValue=List<List<FieldProprtiresSpecificationoption>>();
 
+  AdsDetail adsObj;
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -69,7 +75,6 @@ class _EditPageState extends State<EditPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_){_showDialog();});
     bloc=EditBloc();
     uploadBloc =UploadImageBloc();
     bloc.addStream.listen((data) {
@@ -119,18 +124,7 @@ class _EditPageState extends State<EditPage> {
           break;
       }
     });
-    _nametextController.addListener((){
-      bool isvalid=_titleAdsValidate(_nametextController.value.text)==null;
-      setState(() {
-        adNameColor=isvalid?AppColors.validValueColor:AppColors.errorValueColor;
-      });
-    });
-    _desctextController.addListener((){
-      bool isvalid=_descAdsValidate(_desctextController.value.text)==null;
-      setState(() {
-        descColor=isvalid?AppColors.validValueColor:AppColors.errorValueColor;
-      });
-    });
+
     _cattextController.addListener((){
       bool isvalid=_emptyValidate(_cattextController.value.text)==null;
       setState(() {
@@ -145,20 +139,27 @@ class _EditPageState extends State<EditPage> {
         priceColor=isvalid?AppColors.validValueColor:AppColors.errorValueColor;
       });
     });
-    _emailtextController.addListener((){
-      bool isvalid=_emailValidate(_emailtextController.value.text)==null;
-      setState(() {
-        emailColor=isvalid?AppColors.validValueColor:AppColors.errorValueColor;
-      });
-    });
+
     _phonetextController.addListener((){
       bool isvalid=_phoneValidate(_phonetextController.value.text)==null;
       setState(() {
         phoneColor=isvalid?AppColors.validValueColor:AppColors.errorValueColor;
       });
     });
+    adsObj=widget.detail;
+
+    _nametextController.text=allTranslations.isEnglish?adsObj.EnglishTitle:adsObj.ArabicTitle;
+    _desctextController.text=    allTranslations.isEnglish?adsObj.EnglishDescription:adsObj.ArabicDescription;
+    _pricetextController.text=    adsObj.Price==0?"":adsObj.Price.toString();
+    _phonetextController.text=adsObj.UserPhone!=null&&adsObj.UserPhone.isNotEmpty?adsObj.UserPhone:"";
 
 
+
+    //bloc.getAddFieldsByCatID(adsObj.CategoryId);
+    bloc.getEditFieldsByCatID(adsObj.Id.toString());
+    _cattextController.text=adsObj.CategoryName.toString();
+    isNeogtiable=adsObj.IsNogitable;
+    uploadBloc.addListImage(adsObj.AdvertismentImages);
 
   }
 
@@ -183,11 +184,6 @@ class _EditPageState extends State<EditPage> {
 
   @override
   Widget build(BuildContext context) {
-    AdsDetail adsObj=ModalRoute.of(context).settings.arguments;
-    bloc.getAddFieldsByCatID(adsObj.CategoryId);
-    _cattextController.text=adsObj.CategoryName.toString();
-    isNeogtiable=adsObj.IsNogitable;
-    uploadBloc.addListImage(adsObj.AdvertismentImages);
 
     return Scaffold(
       key: scaffoldKey,
@@ -232,12 +228,9 @@ class _EditPageState extends State<EditPage> {
                     child: Text(allTranslations.text('add_image')),
                   ),
                   BlocProvider(
-                      bloc: uploadBloc,child:ImageBox()),//add image list
+                      bloc: uploadBloc,child:ImageInput()),//add image list
 
                   TextFormField(
-                     initialValue: allTranslations.isEnglish?adsObj.EnglishTitle:adsObj.ArabicTitle,
-                      validator:_titleAdsValidate,
-                      autovalidate: adNameColor==AppColors.validValueColor||adNameColor==AppColors.errorValueColor,
                       controller: _nametextController,
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(200)
@@ -247,7 +240,7 @@ class _EditPageState extends State<EditPage> {
                       },
                       decoration: InputDecoration(
 
-                        prefixIcon: Icon(Icons.check_circle,color: adNameColor,),
+                        prefixIcon: Icon(Icons.check_circle,color: AppColors.validValueColor,),
                         filled: true,
                         fillColor: Colors.white,
                         labelText: allTranslations.text('ads_title'),
@@ -271,10 +264,8 @@ class _EditPageState extends State<EditPage> {
                   TextFormField(
 
                     controller: _desctextController,
-                    validator: _descAdsValidate,
-                    initialValue: allTranslations.isEnglish?adsObj.EnglishDescription:adsObj.ArabicDescription,
                     decoration: InputDecoration(
-                       prefixIcon: Icon(Icons.check_circle,color: descColor,),
+                      prefixIcon: Icon(Icons.check_circle,color: AppColors.validValueColor,),
                       filled: true,
                       fillColor: Colors.white,
                       labelText: allTranslations.text('description'),
@@ -292,16 +283,13 @@ class _EditPageState extends State<EditPage> {
 
                   TextFormField(
                       controller: _pricetextController,
-                      initialValue: adsObj.Price==0?"":adsObj.Price.toString(),
-                      autovalidate: priceColor==AppColors.validValueColor||priceColor==AppColors.errorValueColor,
                       keyboardType: TextInputType.numberWithOptions(decimal: true),
                       inputFormatters: [WhitelistingTextInputFormatter.digitsOnly,LengthLimitingTextInputFormatter((20))],
-                      validator: _emptyValidate,
                       onSaved: (val){
                         adsPostEntity.price=int.tryParse(val)??0;
                       },
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.check_circle,color: priceColor,),
+                        prefixIcon: Icon(Icons.check_circle,color: AppColors.validValueColor,),
                         filled: true,
                         fillColor: Colors.white,
                         labelText: allTranslations.text('price'),
@@ -313,20 +301,20 @@ class _EditPageState extends State<EditPage> {
 
                   SizedBox(height: 8,),
 
-                  StreamBuilder<FieldPropReponse>(
+                  StreamBuilder<EditFieldProperty>(
                     stream: bloc.stream,
                     builder: (context, snapshot) {
-                      if (snapshot.data!=null &&snapshot.data.isSucess==false)
+                      if (snapshot.data==null)
                         return Visibility(child: Text(""),visible: false,);
                       else if (!snapshot.hasData)
                         return  SizedBox.shrink();
-                      var fields=snapshot.data.data;
-                      if(_selectedFieldValue.isEmpty) _selectedFieldValue=List(snapshot.data.data.length);
-                      if(_colorFieldValue.isEmpty) _colorFieldValue=List(snapshot.data.data.length);
-                      if(_multiselectedFieldValue.isEmpty) _multiselectedFieldValue=List(snapshot.data.data.length);
-                      if(contollers.isEmpty) contollers=List(snapshot.data.data.length);
+                      var fields=snapshot.data.CategorySpecification;
+                      if(_selectedFieldValue.isEmpty) _selectedFieldValue=List(snapshot.data.CategorySpecification.length);
+                      if(_colorFieldValue.isEmpty) _colorFieldValue=List(snapshot.data.CategorySpecification.length);
+                      if(_multiselectedFieldValue.isEmpty) _multiselectedFieldValue=List(snapshot.data.CategorySpecification.length);
+                      if(contollers.isEmpty) contollers=List(snapshot.data.CategorySpecification.length);
                       if(adsPostEntity.advertismentSpecification==null){
-                        adsPostEntity.advertismentSpecification=List(snapshot.data.data.length);
+                        adsPostEntity.advertismentSpecification=List(snapshot.data.CategorySpecification.length);
                       }
                       return ListView.builder(
 
@@ -335,30 +323,30 @@ class _EditPageState extends State<EditPage> {
                         itemCount: fields.length,
                         itemBuilder: (context, index) {
                           var item = fields[index];
-                          for (var spec in adsObj.Advertisment_Specification) {
-                           if(spec.Id==item.Id){
-                             if(item.MuliSelect==null||!item.MuliSelect) {
-                               if (spec.AdvertismentSpecificatioOptions
-                                   .length == 1)
-                                 _selectedFieldValue[index] =
-                                     spec.AdvertismentSpecificatioOptions[0]
-                                         .SpecificationOptionId;
-                             }else if(item.CustomValue==null){
-                               _multiselectedFieldValue[index] = spec.AdvertismentSpecificatioOptions;
-                               String text="";
-                               spec.AdvertismentSpecificatioOptions.forEach((val)=>text+="${val.NameEnglish} ,");
-                               contollers[index].text=text;
+                          for (var spec in snapshot.data.AdData.Advertisment_Specification) {
+                            if(spec.Id==item.Id){
+                              if(item.MuliSelect==null||!item.MuliSelect) {
+                                if (spec.AdvertismentSpecificatioOptions
+                                    .length == 1)
+                                  _selectedFieldValue[index] =
+                                      spec.AdvertismentSpecificatioOptions[0]
+                                          .SpecificationOptionId;
+                              }else if(item.CustomValue==null){
+                                _multiselectedFieldValue[index] = spec.AdvertismentSpecificatioOptions;
+                                String text="";
+                                spec.AdvertismentSpecificatioOptions.forEach((val)=>text+="${val.NameEnglish} ,");
+                                contollers[index].text=text;
 
-                             }else{
+                              }else{
 
-                               contollers[index].text=spec.CustomValue;
+                                contollers[index].text=spec.CustomValue;
 
-                             }
-                             break;
-                           }
+                              }
+                              break;
+                            }
                           }
 
-                            //if(item.CustomValue==null)
+                          //if(item.CustomValue==null)
                           if(item.MuliSelect==null||!item.MuliSelect)
                             return Padding(
                               padding: const EdgeInsets.only(bottom:8.0),
@@ -366,7 +354,7 @@ class _EditPageState extends State<EditPage> {
                                   autovalidate: item.Required,
                                   validator:item.Required?_emptyValidate:null,
                                   onSaved: (val){
-                                    
+
                                     var vv=Advertisment_SpecificationBean();
                                     vv.id=item.Id;
                                     int itemval=int.tryParse(val) ?? 0;
@@ -464,7 +452,7 @@ class _EditPageState extends State<EditPage> {
                             return Padding(
                               padding: const EdgeInsets.only(bottom:8.0),
                               child: TextFormField(
-                                controller: contollers[index],
+                                  controller: contollers[index],
                                   autovalidate: true,
                                   validator: _emptyValidate,
                                   onSaved: (val){
@@ -510,29 +498,9 @@ class _EditPageState extends State<EditPage> {
                       );
                     },
                   ),
-                  TextFormField(
-                      controller: _emailtextController,
-
-                      autovalidate: emailColor==AppColors.validValueColor||emailColor==AppColors.errorValueColor,
-                      validator: _emailValidate,
-                      onSaved: (val){
-                        adsPostEntity.email=val;
-                      },
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.check_circle,color: emailColor,),
-
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: allTranslations.text('email'),
-                        hintText:  allTranslations.text('email'),
-                        border: new OutlineInputBorder(
-                            borderRadius: new BorderRadius.circular(10.0)),
-                      )
-                  ),
                   SizedBox(height: 8,),
                   TextFormField(
                       controller: _phonetextController,
-                      initialValue: adsObj.UserPhone!=null&&adsObj.UserPhone.isNotEmpty?adsObj.UserPhone:"",
                       validator: _phoneValidate,
                       autovalidate: phoneColor==AppColors.validValueColor||phoneColor==AppColors.errorValueColor,
                       onSaved: (val){

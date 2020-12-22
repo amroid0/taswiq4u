@@ -48,11 +48,12 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   List<String> adsStateList=["جديد","مستعمل"];
   String selectedAdsStates="جديد";
    final TextEditingController _cattextController = TextEditingController();
+  final TextEditingController _phonetextController = TextEditingController();
   final TextEditingController _citytextController = TextEditingController();
   final TextEditingController _nametextController = TextEditingController();
   final TextEditingController _pricetextController = TextEditingController();
   final TextEditingController _desctextController = TextEditingController();
-  Color adNameColor,descColor,priceColor,categoryColor,cityColor=Colors.grey;
+  Color adNameColor,descColor,priceColor,categoryColor,cityColor,phoneColor=Colors.grey;
   GoogleMapController _mapController;
   final Set<Marker> _markers = {};
   List<TextEditingController>contollers=List();
@@ -129,7 +130,12 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
     });
 
 
-
+    _phonetextController.addListener((){
+      bool isvalid=_phoneValidate(_phonetextController.value.text)==null;
+      setState(() {
+        phoneColor=isvalid?AppColors.validValueColor:AppColors.errorValueColor;
+      });
+    });
    _nametextController.addListener((){
      bool isvalid=_titleAdsValidate(_nametextController.value.text)==null;
      setState(() {
@@ -252,7 +258,6 @@ body: Padding(
       TextFormField(
 
         validator:_titleAdsValidate,
-          autovalidate: adNameColor==AppColors.validValueColor||adNameColor==AppColors.errorValueColor,
           controller: _nametextController,
           inputFormatters: [
             LengthLimitingTextInputFormatter(200)
@@ -262,7 +267,7 @@ body: Padding(
           },
           decoration: InputDecoration(
 
-           prefixIcon: Icon(Icons.check_circle,color: adNameColor,),
+           prefixIcon: Icon(Icons.check_circle,color: AppColors.validValueColor,),
             filled: true,
             fillColor: Colors.white,
             labelText: allTranslations.text('ads_title'),
@@ -295,10 +300,8 @@ body: Padding(
             TextFormField(
 
               controller: _desctextController,
-              validator: _descAdsValidate,
-              autovalidate: descColor==AppColors.validValueColor||descColor==AppColors.errorValueColor,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.check_circle,color: descColor,),
+                  prefixIcon: Icon(Icons.check_circle,color: AppColors.validValueColor,),
                   filled: true,
                   fillColor: Colors.white,
                   labelText: allTranslations.text('description'),
@@ -317,15 +320,13 @@ body: Padding(
   TextFormField(
       controller: _pricetextController,
 
-      autovalidate: priceColor==AppColors.validValueColor||priceColor==AppColors.errorValueColor,
         keyboardType: TextInputType.numberWithOptions(decimal: true),
         inputFormatters: [WhitelistingTextInputFormatter.digitsOnly,LengthLimitingTextInputFormatter((20))],
-         validator: _emptyValidate,
       onSaved: (val){
         adsPostEntity.price=int.tryParse(val)??0;
       },
         decoration: InputDecoration(
-          prefixIcon: Icon(Icons.check_circle,color: priceColor,),
+          prefixIcon: Icon(Icons.check_circle,color: AppColors.validValueColor,),
           filled: true,
           fillColor: Colors.white,
           labelText: allTranslations.text('price'),
@@ -571,6 +572,24 @@ body: Padding(
             },
           ),
             SizedBox(height: 8,),
+            TextFormField(
+                controller: _phonetextController,
+                validator: _phoneValidate,
+                autovalidate: phoneColor==AppColors.validValueColor||phoneColor==AppColors.errorValueColor,
+                onSaved: (val){
+                  adsPostEntity.phone=val;
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.check_circle,color: phoneColor,),
+
+                  filled: true,
+                  fillColor: Colors.white,
+                  labelText:  allTranslations.text('phone'),
+                  hintText:  allTranslations.text('phone'),
+                  border: new OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(10.0)),
+                )
+            ),
             SizedBox(height: 8,),
           Center(
             child: InkWell(
@@ -835,6 +854,20 @@ body: Padding(
   }
 
 
+  String _phoneValidate(String value){
+
+    String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    RegExp regExp=RegExp(patttern);
+    if(value.isEmpty){
+      return allTranslations.text('empty_field');
+    }
+
+    else if(!regExp.hasMatch(value)){
+      return allTranslations.text('err_phone');
+    }else{
+      return null;
+    }
+  }
 }
 
 

@@ -31,7 +31,6 @@ class AddPostBloc implements Bloc{
     try {
       UserInfo userInfo = await preferences.getUserInfo();
       obj.countryId = userInfo.countryId;
-      obj.phone=userInfo.phone;
       obj.email=userInfo.email!=null?userInfo.email:"a@gmail.com";
       obj.userId=userInfo.id;
       obj.contactMe = 1;
