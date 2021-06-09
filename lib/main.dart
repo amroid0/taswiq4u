@@ -1,7 +1,10 @@
 import 'package:bmprogresshud/progresshud.dart';
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:olx/data/bloc/login_bloc.dart';
+import 'package:olx/data/bloc/profile_bloc.dart';
 import 'package:olx/generated/i18n.dart';
 import 'package:olx/pages/login_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
@@ -15,7 +18,10 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await allTranslations.init();
 
-  runApp(Application());}
+  runApp(
+      DevicePreview(
+        enabled: false,
+        builder: (context) => Application()));}
 
 
 class Application extends StatefulWidget {
@@ -44,31 +50,57 @@ class ApplicationState extends State<Application> {
       bloc: translationsBloc,
       child: BlocProvider<LoginBloc>(
         bloc: new LoginBloc(),
-        child: StreamBuilder<Locale>(
-            stream: translationsBloc.currentLocale,
-            initialData: allTranslations.locale,
-            builder: (BuildContext context, AsyncSnapshot<Locale> snapshot) {
+        child: BlocProvider<ProfileBloc>(
+          bloc: new ProfileBloc(),
+          child: StreamBuilder<Locale>(
+              stream: translationsBloc.currentLocale,
+              initialData: allTranslations.locale,
+              builder: (BuildContext context, AsyncSnapshot<Locale> snapshot) {
 
-              return MaterialApp(
-                title: 'Application Title',
-                theme: ThemeData(
+                return MaterialApp(
+                  title: 'Taswiq4U',
+                  builder: DevicePreview.appBuilder, // Add the builder here
+                   debugShowCheckedModeBanner: false,
+                  theme: ThemeData(
 
-                    primarySwatch: Colors.green,
-                    accentColor: Color(0xff53B553)
-                ),
-                ///
-                /// Multi lingual
-                ///
-                locale: snapshot.data ?? allTranslations.locale,
-                localizationsDelegates: [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                ],
-                supportedLocales: allTranslations.supportedLocales(),
+                      primarySwatch: Colors.green,
+                      accentColor: Color(0xff53B553),
+                    fontFamily: 'cairo',
+                    textTheme: TextTheme(
+                      headline5: TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      bodyText2: TextStyle(
+                        fontSize: 15.0,
+                        fontStyle: FontStyle.normal,
+                      ),
+                      headline6: TextStyle(
+                        fontSize: 18.0,
+                        fontStyle: FontStyle.normal,
+                      ),
+                      subtitle2: TextStyle(
+                        fontSize: 11.0,
+                        fontStyle: FontStyle.normal,
+                      ),
+                      headline4: TextStyle(fontSize: 13.0, fontStyle: FontStyle.normal, color: Color.fromRGBO(81, 81, 81, 1)),
+                      button: TextStyle(fontSize: 16.0, fontStyle: FontStyle.normal, color: Colors.white),
+                    ),
+                  ),
+                  ///
+                  /// Multi lingual
+                  ///
+                  locale: snapshot.data ?? allTranslations.locale,
+                  localizationsDelegates: [
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                  ],
+                  supportedLocales: allTranslations.supportedLocales(),
 
-                home: SplashScreen(),
-              );
-            }
+                  home: SplashScreen(),
+                );
+              }
+          ),
         ),
       ),
     );

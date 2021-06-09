@@ -5,18 +5,23 @@ import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/cateogry_bloc.dart';
 import 'package:olx/data/bloc/favroite_bloc.dart';
+import 'package:olx/data/bloc/languge_bloc.dart';
 import 'package:olx/data/bloc/login_bloc.dart';
 import 'package:olx/data/bloc/profile_bloc.dart';
 import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/pages/add_ads_page.dart';
 import 'package:olx/pages/favroite_page.dart';
+import 'package:olx/pages/general_settings.dart';
 import 'package:olx/pages/login_page.dart';
 import 'package:olx/pages/offer_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/pages/profile_page.dart';
 import 'package:olx/pages/search_ads_page.dart';
+import 'package:olx/pages/settings_page.dart';
+import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/global_locale.dart';
+import 'package:olx/widget/custom_web_view.dart';
 import 'package:olx/widget/tab_item.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,26 +40,17 @@ class NavItem{
   NavItem({this.name,this.navIcon,this.isExpanded=false}){}
 }
 
-List<FABBottomAppBarItem> bottomItems= [
-  FABBottomAppBarItem(iconData: Icons.person, text:allTranslations.text('account')),
-  FABBottomAppBarItem(iconData: Icons.announcement, text: allTranslations.text('offers')),
-  FABBottomAppBarItem(iconData: Icons.favorite, text: allTranslations.text('favroite')),
-  FABBottomAppBarItem(iconData: Icons.home, text: allTranslations.text('home')),
-];
+
 
 
 
 class _MainScreenState extends State<MainScreen> {
   SharedPreferences sharedPreferences;
   NaviagtionBloc bloc;
-  List<NavItem>NavItemList=[
-    NavItem(name: allTranslations.text('home'),navIcon:Icons.home ),
-    NavItem(name: allTranslations.text('account'),navIcon:Icons.person ),
-    NavItem(name: allTranslations.text('my_ads'),navIcon:Icons.announcement),
-    NavItem(name:allTranslations.text('favroite'),navIcon:Icons.favorite),
-  NavItem(name:allTranslations.text('settings'),navIcon:Icons.settings)
-  ];
+
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+  CategoryBloc _cateogyBloc;
 /*
   List<NavItem>depratmentNavList=[
     NavItem(name: 'اجهزه الكترونيه',navIcon:Icons.settings ),
@@ -63,13 +59,17 @@ class _MainScreenState extends State<MainScreen> {
     NavItem(name: 'الاعدادات',navIcon:Icons.settings ),
   ];
 */
+@override
+  void dispose() {
+    // TODO: implement dispose
 
+  super.dispose();
+  }
   void _selectedTab(int index) {
 
     if(index==1){
 
       bloc.navigateToScreen(NavigationScreen.OFFER);
-
 
     }else if(index==2){
 
@@ -78,7 +78,6 @@ class _MainScreenState extends State<MainScreen> {
     }else if(index==0){
 
       bloc.navigateToScreen(NavigationScreen.PRFOILE);
-
 
     }
     else if(index==3){
@@ -99,18 +98,42 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     // TODO: implement initState
   bloc=new NaviagtionBloc();
+  _cateogyBloc=CategoryBloc();
    searchController = new TextEditingController();
-   if(allTranslations.isEnglish){
-     bottomItems.reversed.toList();
-   }
 
-  bloc.stream.listen((data) {
+
+  bloc.stream.listen((data) async {
+
 
     if (data==NavigationScreen.FAVROITE||data==NavigationScreen.PRFOILE||data==NavigationScreen.MYADS) {
       if (!BlocProvider.of<LoginBloc>(context).isLogged())
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
+    }else if(data==NavigationScreen.CONTACT_US){
+     String url=await APIConstants.getContactUrl();
+    Navigator.of(context).push(MaterialPageRoute(builder: (_)=>MyWebView(
+    title: allTranslations.text('contact_us'),
+    selectedUrl: url,
+    )));
     }
+
+    else if(data==NavigationScreen.POLICY){
+      String url=await APIConstants.getPolicyUrl();
+
+      Navigator.of(context).push(MaterialPageRoute(builder: (_)=> MyWebView(
+    title: allTranslations.text('policy'),
+    selectedUrl:url,
+    )));
+    }
+    else if(data==NavigationScreen.RuLES){
+      String url=await APIConstants.getRuleUrl();
+
+      Navigator.of(context).push(MaterialPageRoute(builder: (_)=> MyWebView(
+    title: allTranslations.text('rules'),
+    selectedUrl:url,
+    )));
+    }
+
 
 
 
@@ -120,208 +143,377 @@ class _MainScreenState extends State<MainScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    List<FABBottomAppBarItem> bottomItems= [
+      FABBottomAppBarItem(iconData: Icons.person, text:allTranslations.text('account')),
+      FABBottomAppBarItem(iconData: Icons.announcement, text: allTranslations.text('offers')),
+      FABBottomAppBarItem(iconData: Icons.favorite, text: allTranslations.text('favroite')),
+      FABBottomAppBarItem(iconData: Icons.home, text: allTranslations.text('home')),
+    ];
+    if(allTranslations.isEnglish){
+      bottomItems.reversed.toList();
+    }
     List<Widget> drawerOptions = [];
 
+    List<NavItem>NavItemList=[
+      NavItem(name: allTranslations.text('home'),navIcon:Icons.home ),
+      NavItem(name: allTranslations.text('account'),navIcon:Icons.person ),
+      NavItem(name: allTranslations.text('my_ads'),navIcon:Icons.announcement),
+      NavItem(name:allTranslations.text('favroite'),navIcon:Icons.favorite),
+      NavItem(name:allTranslations.text('settings'),navIcon:Icons.settings),
+      NavItem(name:allTranslations.text('policy'),navIcon:Icons.info),
+      NavItem(name:allTranslations.text('rules'),navIcon:Icons.book),
+      NavItem(name:allTranslations.text('contact_us'),navIcon:Icons.call)
+    ];
     for (var i = 0; i < NavItemList.length; i++) {
       var d = NavItemList[i];
       drawerOptions.add(
           createNavItem(d, i)
       );
     }
-    return Scaffold(
-      key: _scaffoldKey,
-
-      floatingActionButton:   InkWell(
-        onTap: ()=>{
-
-        if(BlocProvider.of<LoginBloc>(context).isLogged())
-        Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => AddAdvertisment()),)
-        else
-          Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ParentAuthPage()))
-
-        },
-        child: Container(
-          height: 60,
-            width: 70,
-            decoration:  BoxDecoration(
-
-                color: Colors.green,
-                borderRadius: new BorderRadius.only(
-                    topLeft: const Radius.circular(40.0),
-                    topRight: const Radius.circular(40.0))),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-
-              Expanded(child: Icon(Icons.add,color: Colors.white,))
-             ,
-             Text(allTranslations.text('ads_add'),style: TextStyle(color: Colors.white),)
-            ],)
-            ,
-        ),
-      ),
-      bottomNavigationBar: FABBottomAppBar(
-        color: Colors.grey,
-        selectedColor: Theme.of(context).accentColor,
-         onTabSelected:_selectedTab,
-        items:bottomItems,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
-
-      appBar: AppBar(
-        backgroundColor: AppColors.appBackground,
-        title: appBarTitle,
-        centerTitle: true,
-          leading: IconButton(icon: actionIcon,color: Colors.black,
-            onPressed:
-                  () => showSearch(
-                context: context,
-                delegate: DummyDelegate(),
-              )
-           ,),
-
-          actions: <Widget>[
-
-            IconButton(icon: Icon(Icons.menu,color: Colors.black,),
-                onPressed: () => _scaffoldKey.currentState.openEndDrawer()),
-            ]
-
-
-      ),//appbar
-      endDrawer: Drawer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            DrawerHeader(
-              child: Container(
-                alignment: Alignment.topLeft,
-                child: Icon(Icons.notifications_paused),
-                decoration: BoxDecoration(
-                    image:DecorationImage(
-                        image: AssetImage('images/logo.png'),fit: BoxFit.cover)),
-
-              ),//container
-              decoration: BoxDecoration(color: AppColors.appBackground),
-            ),
-
-        StreamBuilder<bool>(
-            initialData:BlocProvider.of<LoginBloc>(context).isLogged(),
-            stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
-            builder: (context, snapshot) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 0,horizontal: 16),
-                  child: Visibility(
-
-                    visible:snapshot.hasData? !snapshot.data:true,
-                    child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.green)),
-                    onPressed: () {
-                      Navigator.push(
-                          context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
-                    },
-                    color: Colors.green,
-                    textColor: Colors.white,
-                    child: Text(allTranslations.text('sign_in_up').toUpperCase(),
-                        style: TextStyle(fontSize: 14)),
-                  ),),
-                );
-            }),
-
-
-
-            Expanded(
-              child:  ListView(children:
-                  drawerOptions
-
-              ),
-            ),//listview
-
-          GestureDetector(
-            onTap: (){
-
-           Alert(context: context,title: allTranslations.text('logout')
-           ,desc: allTranslations.text('logout_msg')
-               ,type: AlertType.warning,
-             buttons: [
-               DialogButton(
-                 child: Text(
-                   allTranslations.text('ok'),
-                   style: TextStyle(color: Colors.white, fontSize: 20),
-                 ),
-                 onPressed: () {
-                   BlocProvider.of<LoginBloc>(context).logout();
-                   Navigator.pushAndRemoveUntil(
-                       context,
-                       PageRouteBuilder(pageBuilder: (BuildContext context, Animation animation,
-                           Animation secondaryAnimation) {
-                         return MainScreen();
-                       }, transitionsBuilder: (BuildContext context, Animation<double> animation,
-                           Animation<double> secondaryAnimation, Widget child) {
-                         return new SlideTransition(
-                           position: new Tween<Offset>(
-                             begin: const Offset(1.0, 0.0),
-                             end: Offset.zero,
-                           ).animate(animation),
-                           child: child,
-                         );
-                       }),
-                           (Route route) => false);
-                 },
-                 width: 120,
-               )
-               ,               DialogButton(
-                 child: Text(
-                   allTranslations.text('cancel'),
-                   style: TextStyle(color: Colors.white, fontSize: 20),
-                 ),
-                 onPressed: () => Navigator.pop(context),
-                 width: 120,
-               )
-             ],
-           ).show();
-
-
-            },
-            child: StreamBuilder<bool>(
-              initialData:BlocProvider.of<LoginBloc>(context).isLogged() ,
-              stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
-              builder: (context, snapshot) {
-                if(snapshot.hasData&&snapshot.data)
-                return Container(
-                  alignment: Alignment.center,
-                  height: 60,
-                  color: Theme.of(context).accentColor,
-                  child: Text(allTranslations.text('logout'),style: TextStyle(color: Colors.white),),
-                );
-                else return Container();
-              }
-            ),
-          )
-
-          ],
-
-        ),//coulmn
-
-
-
-      ),
-
-      body:StreamBuilder<NavigationScreen>(
-        initialData: NavigationScreen.HOME,
-        stream: bloc.stream,
+    return BlocProvider(
+      bloc: _cateogyBloc,
+      child: StreamBuilder(
+        stream: BlocProvider.of<TranslationsBloc>(context).currentLanguage,
         builder: (context,snap){
-          return  _getDrawerItemWidget(snap.data);
+          return
+            Scaffold(
+                key: _scaffoldKey,
 
+                bottomNavigationBar: Stack(
+                    alignment: new FractionalOffset(.5, 1.0),
+
+                    children:[ FABBottomAppBar(
+                    color: Colors.grey,
+                    selectedColor: Theme.of(context).accentColor,
+                    onTabSelected:_selectedTab,
+                    items:bottomItems,
+                  ),
+                      InkWell(
+                        onTap: ()=>{
+
+                          if(BlocProvider.of<LoginBloc>(context).isLogged())
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => AddAdvertisment()),)
+                          else
+                            Navigator.push(
+                                context, MaterialPageRoute(builder: (context) => ParentAuthPage()))
+
+                        },
+                        child: Container(
+                          height: 70,
+                          width: 70,
+                          decoration:  BoxDecoration(
+
+                              color: Colors.green,
+                              borderRadius: new BorderRadius.only(
+                                  topLeft: const Radius.circular(40.0),
+                                  topRight: const Radius.circular(40.0))),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+
+                              Expanded(child: Icon(Icons.add,color: Colors.white,size: 36,)),
+                              Text(allTranslations.text('ads_add'),style: TextStyle(fontSize: 13,color: Colors.white),)
+                            ],)
+                          ,
+                        ),
+                      ),
+                  ]
+                ),
+
+
+                appBar: AppBar(
+                    backgroundColor: AppColors.appBackground,
+                    title: StreamBuilder<NavigationScreen>(
+                  stream: bloc.stream,
+               builder: (context,snap){
+                    String title=allTranslations.text('home');
+                    switch(snap.data){
+          case NavigationScreen.HOME:
+
+          title=allTranslations.text('home');
+          break;
+
+          case NavigationScreen.FAVROITE:
+            if(BlocProvider.of<LoginBloc>(context).isLogged())
+          title=allTranslations.text('favroite');
+          break;
+
+          case NavigationScreen.OFFER:
+              title=allTranslations.text('offers');
+          break;
+          case NavigationScreen.PRFOILE:
+            if(BlocProvider.of<LoginBloc>(context).isLogged())
+              title=allTranslations.text('account');
+          break;
+
+          case NavigationScreen.MYADS:
+            if(BlocProvider.of<LoginBloc>(context).isLogged())
+              title=allTranslations.text('my_ads');
+          break;
+                      case NavigationScreen.SETTINGS:
+                          title=allTranslations.text('settings');
+                        break;
+
+          default:
+          title=allTranslations.text('home');
+          }
+        return  Text(title,style:TextStyles.appBarTitle ,);
+          }
+
+
+                    ),
+                    centerTitle: true,
+                    leading:
+
+                    IconButton(icon: Icon(Icons.menu,color: Colors.black,),
+                        onPressed: () {
+
+                            _scaffoldKey.currentState.openDrawer();
+
+                        }),
+
+                    actions: <Widget>[
+                      IconButton(icon: actionIcon,color: Colors.black,
+                        onPressed:
+                            () => showSearch(
+                          context: context,
+                          delegate: DummyDelegate(),
+                        )
+                        ,),
+
+                          ]
+
+
+                ),//appbar
+                endDrawer: Drawer(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      DrawerHeader(
+                        child: Container(
+                          alignment: Alignment.topLeft,
+                          child: Icon(Icons.notifications_paused),
+                          decoration: BoxDecoration(
+                              image:DecorationImage(
+                                  image: AssetImage('images/logo.png'),fit: BoxFit.cover)),
+
+                        ),//container
+                        decoration: BoxDecoration(color: AppColors.appBackground),
+                      ),
+
+                      StreamBuilder<bool>(
+                          initialData:BlocProvider.of<LoginBloc>(context).isLogged(),
+                          stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
+                          builder: (context, snapshot) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+                              child: Visibility(
+
+                                visible:snapshot.hasData? !snapshot.data:true,
+                                child: RaisedButton(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.green)),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
+                                  },
+                                  color: Colors.green,
+                                  textColor: Colors.white,
+                                  child: Text(allTranslations.text('sign_in_up').toUpperCase(),
+                                      style: TextStyle(fontSize: 14)),
+                                ),),
+                            );
+                          }),
+
+
+
+                      Expanded(
+                        child:  ListView(children:
+                        drawerOptions
+
+                        ),
+                      ),//listview
+
+                      GestureDetector(
+                        onTap: (){
+
+                          Alert(context: context,title: allTranslations.text('logout')
+                            ,desc: allTranslations.text('logout_msg')
+                            ,type: AlertType.warning,
+                            buttons: [
+                              DialogButton(
+                                child: Text(
+                                  allTranslations.text('ok'),
+                                  style: TextStyle(color: Colors.white, fontSize: 20),
+                                ),
+                                onPressed: () {
+                                  BlocProvider.of<LoginBloc>(context).logout();
+                                  bloc.navigateToScreen(NavigationScreen.HOME);
+                                  Navigator.pop(context);
+
+                                },
+                                width: 120,
+                              )
+                              ,               DialogButton(
+                                child: Text(
+                                  allTranslations.text('cancel'),
+                                  style: TextStyle(color: Colors.white, fontSize: 20),
+                                ),
+                                onPressed: () => Navigator.pop(context),
+                                width: 120,
+                              )
+                            ],
+                          ).show();
+
+
+                        },
+                        child: StreamBuilder<bool>(
+                            initialData:BlocProvider.of<LoginBloc>(context).isLogged() ,
+                            stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
+                            builder: (context, snapshot) {
+                              if(snapshot.hasData&&snapshot.data)
+                                return Container(
+                                  alignment: Alignment.center,
+                                  height: 60,
+                                  color: Theme.of(context).accentColor,
+                                  child: Text(allTranslations.text('logout'),style: TextStyle(color: Colors.white),),
+                                );
+                              else return Container();
+                            }
+                        ),
+                      )
+
+                    ],
+
+                  ),//coulmn
+
+
+
+                ),
+                drawer: Drawer(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      DrawerHeader(
+                        child: Container(
+                          alignment: Alignment.topLeft,
+                          child: Icon(Icons.notifications_paused),
+                          decoration: BoxDecoration(
+                              image:DecorationImage(
+                                  image: AssetImage('images/logo.png'),fit: BoxFit.cover)),
+
+                        ),//container
+                        decoration: BoxDecoration(color: AppColors.appBackground),
+                      ),
+
+                      StreamBuilder<bool>(
+                          initialData:BlocProvider.of<LoginBloc>(context).isLogged(),
+                          stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
+                          builder: (context, snapshot) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+                              child: Visibility(
+
+                                visible:snapshot.hasData? !snapshot.data:true,
+                                child: RaisedButton(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.green)),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
+                                  },
+                                  color: Colors.green,
+                                  textColor: Colors.white,
+                                  child: Text(allTranslations.text('sign_in_up').toUpperCase(),
+                                      style: TextStyle(fontSize: 14)),
+                                ),),
+                            );
+                          }),
+
+
+
+                      Expanded(
+                        child:  ListView(children:
+                        drawerOptions
+
+                        ),
+                      ),//listview
+
+                      GestureDetector(
+                        onTap: (){
+
+                          Alert(context: context,title: allTranslations.text('logout')
+                            ,desc: allTranslations.text('logout_msg')
+                            ,type: AlertType.warning,
+                            buttons: [
+                              DialogButton(
+                                child: Text(
+                                  allTranslations.text('agree'),
+                                  style: TextStyle(color: Colors.white, fontSize: 20),
+                                ),
+                                onPressed: () {
+                                  BlocProvider.of<LoginBloc>(context).logout();
+                                  bloc.navigateToScreen(NavigationScreen.HOME);
+                                  Navigator.pop(context);
+
+                                },
+                                width: 120,
+                              )
+                              ,               DialogButton(
+                                child: Text(
+                                  allTranslations.text('cancel'),
+                                  style: TextStyle(color: Colors.white, fontSize: 20),
+                                ),
+                                onPressed: () => Navigator.pop(context),
+                                width: 120,
+                              )
+                            ],
+                          ).show();
+
+
+                        },
+                        child: StreamBuilder<bool>(
+                            initialData:BlocProvider.of<LoginBloc>(context).isLogged() ,
+                            stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
+                            builder: (context, snapshot) {
+                              if(snapshot.hasData&&snapshot.data)
+                                return Container(
+                                  alignment: Alignment.center,
+                                  height: 60,
+                                  color: Theme.of(context).accentColor,
+                                  child: Text(allTranslations.text('logout'),style: TextStyle(color: Colors.white),),
+                                );
+                              else return Container();
+                            }
+                        ),
+                      )
+
+                    ],
+
+                  ),//coulmn
+
+
+
+                ),
+
+                body:StreamBuilder<NavigationScreen>(
+                  initialData: NavigationScreen.HOME,
+                  stream: bloc.stream,
+                  builder: (context,snap){
+                    return  _getDrawerItemWidget(snap.data);
+
+                  },
+                )
+
+
+            );
         },
-      )
 
-
+      ),
     );//scaffold
   }
 
@@ -343,6 +535,22 @@ class _MainScreenState extends State<MainScreen> {
     }
     else if(index==0){
       bloc.navigateToScreen(NavigationScreen.HOME);
+
+    }
+    else if(index==4){
+      bloc.navigateToScreen(NavigationScreen.SETTINGS);
+
+    }
+    else if(index==5){
+      bloc.navigateToScreen(NavigationScreen.POLICY);
+
+    }
+    else if(index==6){
+      bloc.navigateToScreen(NavigationScreen.RuLES);
+
+    }
+    else {
+      bloc.navigateToScreen(NavigationScreen.CONTACT_US);
 
     }
     Navigator.pop(context);
@@ -367,8 +575,8 @@ class _MainScreenState extends State<MainScreen> {
       );*/
 
     }else {
-      return ListTile(trailing: Icon(nav.navIcon),
-        title: Text(nav.name, textAlign: TextAlign.end,),
+      return ListTile(leading: Icon(nav.navIcon),
+        title: Text(nav.name),
         selected: index==_navSelectedIndex,
         onTap:()=> _onSelectItem(index),
 
@@ -404,9 +612,14 @@ class _MainScreenState extends State<MainScreen> {
         if(BlocProvider.of<LoginBloc>(context).isLogged())
           return new MyAdsPage();
         break;
+      case NavigationScreen.SETTINGS:
+          return new GeneralSettingsPage();
+        break;
+
+
 
       default:
-        return new Text("Error");
+        return CategoryListFragment();
     }
     return  CategoryListFragment();
 

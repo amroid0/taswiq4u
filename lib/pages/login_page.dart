@@ -1,5 +1,7 @@
+import 'package:ars_progress_dialog/ars_progress_dialog.dart';
 import 'package:bmprogresshud/progresshud.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/login_bloc.dart';
 import 'package:olx/model/EventObject.dart';
@@ -10,6 +12,7 @@ import 'package:olx/pages/verification_page.dart';
 import 'package:olx/remote/client_api.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/global_locale.dart';
+import 'package:olx/widget/auth_input_widget.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 
@@ -25,74 +28,53 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final formKey = GlobalKey<FormState>();
-  ProgressDialog pr;
-
-
+  ArsProgressDialog progressDialog;
+  final FocusNode _emailFocus = FocusNode();
+  final FocusNode _passwordFocus = FocusNode();
 
   @override
   void initState() {
-    // TODO: implement initState
-  BlocProvider.of<LoginBloc>(context).stream.listen((snap) {
 
+    progressDialog = ArsProgressDialog(
+        context,
+        blur: 2,
+        backgroundColor: Color(0x33000000),
+        animationDuration: Duration(milliseconds: 500));
+  BlocProvider.of<LoginBloc>(context).stream.listen((snap) {
+    if(progressDialog.isShowing){
+      progressDialog.dismiss();
+    }
     switch (snap.status) {
       case Status.LOADING:
-        WidgetsBinding.instance.addPostFrameCallback((_) =>
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return Center(child: CircularProgressIndicator(),);
-                }));
-        return  Container();
+        progressDialog.show();
         break;
       case Status.AUTHNTICATED:
-        Navigator.of(context).pop();
-          WidgetsBinding.instance.addPostFrameCallback((_) =>
-              Navigator.of(context).pop()
-
-          );
+              Navigator.of(context).pop();
 
 
         break;
 
       case Status.UNVERFIED:
-        Navigator.of(context).pop();
-        WidgetsBinding.instance.addPostFrameCallback((_) =>  Navigator.pushReplacement(
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => VerificationScreen())
-        ));
-
-
+        );
 
         break;
 
 
       case Status.ERROR:
-        WidgetsBinding.instance.addPostFrameCallback((_)  async {
-          //pr.hide();
-          // pr.hide();
 
-          showSnackBar(context,'User Name Or Password is Wrong');
+          showSnackBar(context,allTranslations.text('login_err'));
 
 
 
-
-        });
-        Navigator.of(context).pop();
 
         break;
 
       case Status.UNAUTHINTICATED:
-        WidgetsBinding.instance.addPostFrameCallback((_)  async {
-          //pr.hide();
-          // pr.hide();
+        showSnackBar(context,allTranslations.text('login_err'));
 
-          showSnackBar(context,'User Name Or Password is Wrong');
-
-
-
-
-        });
-        Navigator.of(context).pop();
 
         break;
     }
@@ -113,40 +95,46 @@ class _LoginPageState extends State<LoginPage> {
     return BlocProvider<LoginBloc>(
       bloc: BlocProvider.of<LoginBloc>(context),
       child: Scaffold(
+        backgroundColor: Colors.white,
         key: scaffoldKey,
 
         body: ProgressHud(
-          child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: formKey,
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  Align(alignment:Alignment.center,child: Text(allTranslations.text('login'),
+                    style: Theme.of(context).textTheme.headline5.copyWith(fontWeight: FontWeight.bold),)),
+                  SizedBox(height: 10,),
+                  emailField(BlocProvider.of<LoginBloc>(context)),
+                  SizedBox(height: 16,),
+                   passwordField(BlocProvider.of<LoginBloc>(context)) ,
+                  SizedBox(height: 16,),
+                  submitButton(BlocProvider.of<LoginBloc>(context)),
 
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: formKey,
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    Image.asset('images/logo.png'),
-                    emailField(BlocProvider.of<LoginBloc>(context)),
-                    SizedBox(height: 10,),
-                     passwordField(BlocProvider.of<LoginBloc>(context)) ,
-                    SizedBox(height: 10,),
-                    submitButton(BlocProvider.of<LoginBloc>(context)),
 
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: (){
+                        //  Navigator.push(context, MaterialPageRoute( builder: (context) => RegisterPage()));
+                          widget.tabController.animateTo(1);
+                        },
+                        child: Padding(padding: EdgeInsets.all(10),
+                        child: Text(allTranslations.text('register')),
+                        ),
 
-                    InkWell(
-                      onTap: (){
-                      //  Navigator.push(context, MaterialPageRoute( builder: (context) => RegisterPage()));
-                        widget.tabController.animateTo(1);
-                      },
-                      child: Padding(padding: EdgeInsets.all(10),
-                      child: Text(allTranslations.text('register')),
                       ),
+                      Text(allTranslations.text('forget_pass'))
+                    ],
+                  )
 
-                    )
 
-
-                  ],
-                ),
+                ],
               ),
             ),
           ),
@@ -162,28 +150,22 @@ class _LoginPageState extends State<LoginPage> {
       stream: bloc.email,
       builder: (context, snapshot) {
 
-      return  Container(
-          decoration: BoxDecoration(color:Colors.black12,border: Border.all(
-            width: 1.0,
-            color: Colors.green,
+      return AuthInputWidget(
+        focusNode: _emailFocus,
+        labelText: allTranslations.text('phone'),
+
+        keyboardType:TextInputType.numberWithOptions(),
+          errorText: snapshot.error,
 
 
-          ),
-            borderRadius: BorderRadius.all(
-                Radius.circular(5.0) //         <--- border radius here
-            ),
-          ),
-          child: TextFormField(
-            keyboardType:TextInputType.numberWithOptions(),
-            decoration: InputDecoration(labelText: allTranslations.text('phone'),filled: true,
-              border: InputBorder.none,
-              errorText: snapshot.error,
+        textInputAction: TextInputAction.next,
+        onFieldSubmitted: (val){
+          _fieldFocuseChange(context,_emailFocus,_passwordFocus);
 
-            ),
-            onChanged: bloc.changeEmail,
+        },
+        onChange: bloc.changeEmail,
 
-          ),
-        );
+      );
 
       },
     );
@@ -195,7 +177,8 @@ class _LoginPageState extends State<LoginPage> {
         builder: (context, snapshot) {
 
       return GestureDetector(onTap: (){
-      snapshot.hasError?null:bloc.submit();
+        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        snapshot.hasError?null:bloc.submit();
 
       },
       child: Container(
@@ -233,7 +216,20 @@ class _LoginPageState extends State<LoginPage> {
     return StreamBuilder(
         stream: bloc.password,
         builder: (context, snapshot) {
+           return AuthInputWidget(
+             focusNode: _passwordFocus,
+            invisbleText: true,
+            labelText: allTranslations.text('password'),
 
+               errorText: snapshot.error,
+
+             onChange: bloc.changePassword,
+             onFieldSubmitted: (val){
+               _passwordFocus.unfocus();
+
+
+             },
+           );
           return Container(
 
             decoration: BoxDecoration(color:Colors.black12,border: Border.all(
@@ -247,6 +243,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             child: TextFormField(
+              focusNode: _passwordFocus,
               decoration: InputDecoration(labelText: allTranslations.text('password'),filled: true,
                 fillColor: Colors.black12,
                 border: InputBorder.none,
@@ -257,7 +254,11 @@ class _LoginPageState extends State<LoginPage> {
               val.length < 6 ? allTranslations.text('err_short') : null,
               obscureText: true,
               onChanged: bloc.changePassword,
+              onFieldSubmitted: (val){
+                _passwordFocus.unfocus();
 
+
+              },
             ),
           );
 
@@ -275,6 +276,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
+  _fieldFocuseChange(BuildContext context,FocusNode currentNode,FocusNode nextNode){
+
+    currentNode.unfocus();
+    FocusScope.of(context).requestFocus(nextNode);
+
+  }
 
 
 }

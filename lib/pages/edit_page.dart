@@ -324,22 +324,25 @@ class _EditPageState extends State<EditPage> {
                         itemBuilder: (context, index) {
                           var item = fields[index];
                           for (var spec in snapshot.data.AdData.Advertisment_Specification) {
-                            if(spec.Id==item.Id){
+                            if(spec.CategorySpecificationId==item.Id){
                               if(item.MuliSelect==null||!item.MuliSelect) {
                                 if (spec.AdvertismentSpecificatioOptions
-                                    .length == 1)
+                                    .length == 1){
                                   _selectedFieldValue[index] =
                                       spec.AdvertismentSpecificatioOptions[0]
                                           .SpecificationOptionId;
+                                  _colorFieldValue[index]=AppColors.validValueColor;
+                                }
                               }else if(item.CustomValue==null){
                                 _multiselectedFieldValue[index] = spec.AdvertismentSpecificatioOptions;
                                 String text="";
                                 spec.AdvertismentSpecificatioOptions.forEach((val)=>text+="${val.NameEnglish} ,");
                                 contollers[index].text=text;
-
+                                _colorFieldValue[index]=AppColors.validValueColor;
                               }else{
 
                                 contollers[index].text=spec.CustomValue;
+                                _colorFieldValue[index]=AppColors.validValueColor;
 
                               }
                               break;
@@ -351,8 +354,8 @@ class _EditPageState extends State<EditPage> {
                             return Padding(
                               padding: const EdgeInsets.only(bottom:8.0),
                               child: FormField<String>(
-                                  autovalidate: item.Required,
-                                  validator:item.Required?_emptyValidate:null,
+                                  autovalidate: item.Required&&_selectedFieldValue[index]==null,
+                                  validator:item.Required&&_selectedFieldValue[index]==null?_emptyValidate:null,
                                   onSaved: (val){
 
                                     var vv=Advertisment_SpecificationBean();

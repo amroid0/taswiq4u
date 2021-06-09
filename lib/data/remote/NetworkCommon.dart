@@ -50,7 +50,23 @@ class NetworkCommon {
       case 500:
       default:
         throw FetchDataException(
-            'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
+            'خطأ من السيرفر يرجي المحاوله مره اخري : ${response.statusCode}');
+    }
+  }
+
+  dynamic _returnError(DioError error) {
+    int status=error.response.statusCode;
+    switch (status) {
+
+      case 400:
+        throw BadRequestException();
+      case 401:
+      case 403:
+        throw UnauthorisedException();
+      case 500:
+      default:
+        throw FetchDataException(
+            'خطأ من السيرفر يرجي المحاوله مره اخري : ');
     }
   }
 

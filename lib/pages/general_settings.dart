@@ -2,7 +2,6 @@ import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
-import 'package:olx/data/bloc/cateogry_bloc.dart';
 import 'package:olx/data/bloc/languge_bloc.dart';
 import 'package:olx/data/bloc/profile_bloc.dart';
 import 'package:olx/data/shared_prefs.dart';
@@ -15,12 +14,12 @@ import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/country_list_dialog.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class SettingsPage extends StatefulWidget {
+class GeneralSettingsPage extends StatefulWidget {
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends State<GeneralSettingsPage> {
   bool isSwitched = false;
 
   var _langSelectedValue=1;
@@ -31,30 +30,6 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.appBackground,
-        appBar: AppBar(
-          title: Center(
-            child: Text(allTranslations.text('settings'),textAlign: TextAlign.center,style: TextStyle(
-                color:
-                Colors.black38
-
-            ),),
-          ),
-
-          backgroundColor: Colors.transparent,
-          bottomOpacity: 0.0,
-          elevation: 0.0,
-          automaticallyImplyLeading: false,
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.arrow_forward_ios,color: Colors.black38,),
-              onPressed: () {
-                Navigator.pop(context);
-
-              },
-              tooltip: 'back',
-            ),
-          ],
-        ),
         body:
         _buildSettings()
 
@@ -68,50 +43,30 @@ class _SettingsPageState extends State<SettingsPage> {
 
 
         child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start
-        ,
+          ,
           children: [
             SizedBox(height: 24,),
-            Text(allTranslations.text('account_setting'),style: TextStyle(color: Colors.green,fontSize: 24),),
-            ListTile(leading: Icon(Icons.person),
-              title: Text(allTranslations.text('personal_info')),
-                trailing: Icon(Icons.arrow_forward_ios),
-
-            onTap: (){
-              Navigator.push(context,MaterialPageRoute(builder: (context) => EditProfileScreen() ,));
-
-            },
-            ),
-            ListTile(leading: Icon(Icons.vpn_key),
-              title: Text(allTranslations.text('change_pass')),
-                trailing: Icon(Icons.arrow_forward_ios),
-
-                onTap: (){
-                  Navigator.push(context,MaterialPageRoute(builder: (context) => ChnagePassScreen() ,));
-
-                }),
-            SizedBox(height: 16,),
-            Text(allTranslations.text('other'),style: TextStyle(color: Colors.green,fontSize: 24),),
             ListTile(leading: Icon(Icons.notifications),title: Text(allTranslations.text('notification')),
               trailing: CupertinoSwitch(
-              value: isSwitched,
-              onChanged: (value){
-                setState(() {
-                  isSwitched=value;
-                  print(isSwitched);
-                });
-              },
-              trackColor: Colors.grey,
-              activeColor: Colors.green,
-            ),),
+                value: isSwitched,
+                onChanged: (value){
+                  setState(() {
+                    isSwitched=value;
+                    print(isSwitched);
+                  });
+                },
+                trackColor: Colors.grey,
+                activeColor: Colors.green,
+              ),),
             ListTile(leading: Icon(Icons.language),
               title: Text(allTranslations.text('lang')),
               trailing: Icon(Icons.arrow_forward_ios),
-            onTap: ()async{
-              String lan=await preferences.getLang();
-              _langSelectedValue=lan=='en'?1:2;
-              Alert(
+              onTap: ()async{
+                String lan=await preferences.getLang();
+                _langSelectedValue=lan=='en'?1:2;
+                Alert(
                   context: context,
                   title: "",
                   buttons: [],
@@ -144,8 +99,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           onChanged: (val) {
                             BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
                                 "ar");
-                              _langSelectedValue=val;
-                              Navigator.of(context).pop();
+                            _langSelectedValue=val;
+                            Navigator.of(context).pop();
                           },
 
                           selected: true,
@@ -154,16 +109,16 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ],
                   ),
-                 ).show();
-            },
+                ).show();
+              },
             ),
             ListTile(leading: Icon(Icons.language),
               title: Text(allTranslations.text('country')),
               trailing: Icon(Icons.arrow_forward_ios),
-            onTap: (){
-              _showCountryDialog();
+              onTap: (){
+                _showCountryDialog();
 
-            },)
+              },)
 
 
           ],
@@ -184,8 +139,6 @@ class _SettingsPageState extends State<SettingsPage> {
         onChange: (CountryEntity selected) {
           preferences.saveCountryID(selected.countryId.toString());
           preferences.saveCountry(selected);
-          preferences.clearCateogry();
-          BlocProvider.of<CategoryBloc>(context).submitQuery("");
           _countrySelectedValue = selected.countryId;
         });
   }

@@ -29,6 +29,9 @@ class AdsCardWidget extends StatelessWidget {
         },
         child: new Card(
           elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20)
+          ),
           child: new SizedBox(
             height: 280,
             child: new Column(
@@ -37,27 +40,33 @@ class AdsCardWidget extends StatelessWidget {
               children: <Widget>[
 
                 new Container(
-                    height: 100,
+                    height: 120,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(4),
-                          bottomRight: Radius.circular(4)),
+                        borderRadius: BorderRadius.circular(20),
+
+                        color: Colors.grey.shade300
 
                     ),
                     child:
-                   _BuildImageWidget()
+                   ClipRRect(
+                       borderRadius: BorderRadius.circular(20),
+                       child: _BuildImageWidget())
                 ),
 
                 new Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 4),
                       child: Column(
 
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(model
-                              .EnglishTitle),
+                              .EnglishTitle,style: TextStyle(
+                            fontSize: 15,
+                            height: 1.2
+                          ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,),
                           Text("${model.Price} م.ج",
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -65,25 +74,24 @@ class AdsCardWidget extends StatelessWidget {
                             style: TextStyle(color: Theme
                                 .of(context)
                                 .accentColor),),
-                          Divider(height: 1,),
+                          Divider(height: 1,color: Colors.grey.shade300,thickness: 1,),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
 
                             children: <Widget>[
+                              Icon(Icons.pin_drop_outlined, size: 20,),
+
                               Text(model
-                                  .CityNameEnglish, style: TextStyle(color: Colors.grey)),
-                              Icon(Icons.pin_drop, size: 16,color: Colors.grey,),
+                                  .CityNameEnglish,),
 
                             ],),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
+                              Icon(Icons.update_outlined,size: 20,),
 
-                              Flexible(
+                              FittedBox(
                                 child: Text( DateFormatter.FormateDate(model
-                                    .CreationTime.toIso8601String()), style: TextStyle(color: Colors.grey)),
+                                    .CreationTime.toIso8601String()),style: TextStyle(fontSize: 13), ),
                               ),
-                              Icon(Icons.update, size: 16,color: Colors.grey,),
 
                             ],),
 
@@ -96,25 +104,28 @@ class AdsCardWidget extends StatelessWidget {
 
 
                 ),
-                InkWell(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children:[ InkWell(
 
-                  onTap: () {},
-                  child: Container(
-                      margin: EdgeInsets.only(left: 4),
+                    onTap: () {},
+                    child: Container(
+                        margin: EdgeInsets.only(left: 4),
 
-                      alignment: Alignment.center,
-                      color: Colors.white,
-                      child: FavroiteWidget(
-                          onFavChange:(val){
-                            if(BlocProvider.of<LoginBloc>(context).isLogged())
-                              BlocProvider.of<FavroiteBloc>(context).changeFavoriteState(val,model.Id);
-                            else
-                              Navigator.push(
-                                  context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
-                          },
-                          value: model.IsFavorite
-                      )
-                  ),
+                        alignment: Alignment.center,
+                        color: Colors.white,
+                        child: FavroiteWidget(
+                            onFavChange:(val){
+                              if(BlocProvider.of<LoginBloc>(context).isLogged())
+                                BlocProvider.of<FavroiteBloc>(context).changeFavoriteState(val,model.Id);
+                              else
+                                Navigator.push(
+                                    context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
+                            },
+                            value: model.IsFavorite
+                        )
+                    ),
+                  ),]
                 ),
 
               ],
@@ -128,13 +139,13 @@ class AdsCardWidget extends StatelessWidget {
   Widget _BuildImageWidget(){
     if(model.AdvertismentImages.isNotEmpty&&model.AdvertismentImages[0].Url!=null&&model.AdvertismentImages[0].Url.isNotEmpty)
       return  CachedNetworkImage(
-        fit: BoxFit.cover,
+        fit: BoxFit.fill,
         placeholder: (context, url) => Image.asset("images/logo.png"),
         errorWidget: (context, url,error) => Image.asset("images/logo.png"),
         imageUrl: APIConstants.getFullImageUrl(model.AdvertismentImages[0].Url,ImageType.ADS),
       );
     else
-    return  Image.asset("images/logo.png",fit: BoxFit.cover,);
+    return  Image.asset("images/logo.png",fit: BoxFit.fill,);
 
 
 

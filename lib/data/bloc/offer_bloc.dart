@@ -31,7 +31,9 @@ class OfferBloc extends Bloc{
     List<CateogryEntity> results = null ;//await preferences.getCateogryList();
     if(results==null||results.isEmpty)
       results = await _client.getCateogryList();
-    _cateogryController.sink.add(results);
+    var res= results.where((element) => element.isActive).toList();
+
+    _cateogryController.sink.add(res);
   }
 
 
@@ -90,14 +92,14 @@ void getOfferLsit(String categoryID) async {
 
   void viewAds(int index) async {
     try {
-      List<String> ids=await preferences.getViewedCommericalList();
+  /*    List<String> ids=await preferences.getViewedCommericalList();
       if(ids!=null)
         for(String id in ids){
           if(id==commercialAds[index].id.toString()){
             _viewController.sink.add(Counter(commercialAds[index].viewsCount,false));
             return;
           }
-        }
+        }*/
       final results = await _client.viewAds(commercialAds[index].id.toString());
       if(results) {
         await preferences.saveViewCommericalList(commercialAds[index].id.toString());

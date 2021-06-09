@@ -4,17 +4,18 @@ import 'package:olx/data/bloc/cateogry_bloc.dart';
 import 'package:olx/data/bloc/country_bloc.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/cateogry_entity.dart';
+import 'package:olx/model/cityModel.dart';
 import 'package:olx/model/country_entity.dart';
 import 'package:olx/utils/global_locale.dart';
 
 typedef Widget SelectOneItemBuilderType<T>(
-    BuildContext context, CountryEntity item, bool isSelected);
+    BuildContext context, CityModel item, bool isSelected);
 
 class CityListDialog<T> extends StatefulWidget {
   final T selectedValue;
   final List<T> itemsList;
   final bool showSearchBox;
-  final void Function(CountryEntity) onChange;
+  final void Function(CityModel) onChange;
   final Future<List<T>> Function(String text) onFind;
   final SelectOneItemBuilderType<T> itemBuilder;
   final InputDecoration searchBoxDecoration;
@@ -38,7 +39,7 @@ class CityListDialog<T> extends StatefulWidget {
         bool showSearchBox,
         Future<List<T>> Function(String text) onFind,
         SelectOneItemBuilderType<T> itemBuilder,
-        void Function(CountryEntity) onChange,
+        void Function(CityModel) onChange,
         InputDecoration searchBoxDecoration,
       }) {
     return showDialog(
@@ -72,7 +73,7 @@ class CityListDialog<T> extends StatefulWidget {
 
 class _SelectDialogState<T> extends State<CityListDialog<T>> {
   CountryBloc bloc;
-  void Function(CountryEntity) onChange;
+  void Function(CityModel) onChange;
 
   _SelectDialogState(
       List<T> itemsList,
@@ -105,8 +106,8 @@ class _SelectDialogState<T> extends State<CityListDialog<T>> {
 
           Expanded(
             child: Scrollbar(
-              child: StreamBuilder<ApiResponse<List<CountryEntity>>>(
-                stream: bloc.stream,
+              child: StreamBuilder<ApiResponse<List<CityModel>>>(
+                stream: bloc.cityStream,
                 builder: (context, snapshot) {
                   if(snapshot.data!=null){
                     switch(snapshot.data.status){
@@ -115,7 +116,7 @@ class _SelectDialogState<T> extends State<CityListDialog<T>> {
                         break;
                       case Status.COMPLETED:
                       // TODO: Handle this case.
-                        List<CountryEntity> list=snapshot.data.data;
+                        List<CityModel> list=snapshot.data.data;
                         return ListView.builder(
                           itemCount: list.length,
                           itemBuilder: (context, index) {
@@ -133,7 +134,7 @@ class _SelectDialogState<T> extends State<CityListDialog<T>> {
                               );
                             else
                               return ListTile(
-                                title: Text(item.name.toString()),
+                                title: Text(allTranslations.isEnglish?item.englishDescription??item.name:item.arabicDescription??item.name),
                                 selected: item == widget.selectedValue,
                                 onTap: () {
                                   onChange(item);

@@ -16,8 +16,8 @@ import '../shared_prefs.dart';
 class CategoryBloc implements Bloc {
   final _client = AdsCategoryClient();
   final _AdsCleint= AdsClient();
-  final _controller = StreamController<List<CateogryEntity>>();
-  final _subcontroller = StreamController<List<List<CateogryEntity>>>();
+  final _controller = BehaviorSubject<List<CateogryEntity>>();
+  final _subcontroller = BehaviorSubject<List<List<CateogryEntity>>>();
   final _cateogryStack =List<List<CateogryEntity>>();
   final _popupSubject=BehaviorSubject<ApiResponse<List<PopupAdsEntityList>>>();
 
@@ -37,9 +37,11 @@ class CategoryBloc implements Bloc {
     Stream.fromFuture(preferences.getCateogryList())
         .onErrorResumeNext(Stream.fromFuture(_client.getCateogryList()))
         .doOnData((event) { preferences.saveCateogryList(event);}).listen((event) {
+        var res= event.where((element) => element.isActive).toList();
           _cateogryStack.clear();
-      _cateogryStack.add(event);
-      _controller.sink.add(event);
+
+      _cateogryStack.add(res);
+      _controller.sink.add(res);
       _subcontroller.sink.add(_cateogryStack);
     },onError: (){});
 
@@ -85,14 +87,17 @@ class CategoryBloc implements Bloc {
 
 
   void addCateogryToStack(List<CateogryEntity> cateogry)  {
-    _cateogryStack.add(cateogry);
-    _controller.sink.add(cateogry);
+var res=    cateogry.where((element) => element.isActive).toList();
+
+    _cateogryStack.add(res);
+    _controller.sink.add(res);
     _subcontroller.sink.add(_cateogryStack);
 
   }
   void addSubCateogry(int level ,List<CateogryEntity> cateogry)  {
-     _cateogryStack.removeRange(level+1, _cateogryStack.length);
-    _cateogryStack.add(cateogry);
+  var res=  cateogry.where((element) => element.isActive).toList();
+    _cateogryStack.removeRange(level+1, _cateogryStack.length);
+    _cateogryStack.add(res);
     _subcontroller.sink.add(_cateogryStack);
 
   }
@@ -112,8 +117,8 @@ class CategoryBloc implements Bloc {
 
   @override
   void dispose() {
-    _controller.close();
+  /*  _controller.close();
     _subcontroller.close();
     _popupSubject.close();
-  }
+  */}
 }

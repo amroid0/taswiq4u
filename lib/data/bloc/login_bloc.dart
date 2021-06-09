@@ -69,9 +69,11 @@ bool isLogged() => mIsLogged==null?false:mIsLogged;
         .doOnData((event) {preferences.saveUserData(event);})
         .doOnListen(() {    _controller.add(LoginApiResponse.loading('loading'));
     }).listen((event) {
+       preferences.setAccountAcivation(true);
       _controller.sink.add(LoginApiResponse.authenticate(""));
       _logincontroller.sink.add(true);
       mIsLogged=true;
+       _controller.sink.add(null);
 
     },onError: (e){
       if(e is UnVerfiedException){
@@ -81,18 +83,24 @@ bool isLogged() => mIsLogged==null?false:mIsLogged;
         _controller.sink.add(LoginApiResponse.unAuthenticate("err"));
 
       }else {
-        _controller.sink.add(LoginApiResponse.error(e.toString()));
+        _controller.sink.add(LoginApiResponse.error("خطأ ف السيرفر"));
       }
+      _controller.sink.add(null);
+
     });
 
   }
 
+reset(){
+  _controller.sink.add(null);
+}
 
 @override
 void dispose() {
 _emailController.close();
 _passwordController.close();
-_controller.close();
+//_controller.close();
+_logincontroller.close();
 
   }
 
@@ -100,5 +108,6 @@ _controller.close();
     preferences.logout();
     mIsLogged=false;
     _logincontroller.sink.add(false);
+    _controller.sink.add(null);
   }
 }

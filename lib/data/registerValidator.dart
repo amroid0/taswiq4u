@@ -6,11 +6,13 @@ class RegisterValidators {
 
   final validateEmail =
   StreamTransformer<String, String>.fromHandlers(handleData: (email, sink) {
-    String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    String pattern = r"\b([\-]?\d[\-]?){11}\b";
     RegExp regExp = new RegExp(pattern);
-    if (email.length>0) {
+    if (email.length>10) {
       sink.add(email);
-    } else if (!regExp.hasMatch(email)) {
+    }
+
+    else if (!regExp.hasMatch(email)) {
       sink.addError(allTranslations.text('err_email'));
 
     }else {
@@ -27,6 +29,17 @@ class RegisterValidators {
           sink.addError(allTranslations.text('err_pass'));
         }
       });
+
+  final validateConfirmPassword = StreamTransformer<String, String>.fromHandlers(
+      handleData: (password, sink) {
+        if (password.length == 5) {
+          sink.add(password);
+        } else {
+          sink.addError(allTranslations.text('err_pass_confirm'));
+        }
+      });
+
+
   final validateFirstName = StreamTransformer<String, String>.fromHandlers(
       handleData: (firstName, sink) {
         if (firstName.length >= 3) {

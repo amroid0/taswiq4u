@@ -12,7 +12,9 @@ class NaviagtionBloc extends Bloc{
 
 
   @override
-  void dispose() {/*
+  void dispose() {
+_contoller.close();
+    /*
     _controller.close();
     _viewController.close();
     _likeController.close();
@@ -20,5 +22,5 @@ class NaviagtionBloc extends Bloc{
   }}
 
   enum NavigationScreen{
-  HOME,FAVROITE,OFFER,MYADS,PRFOILE
+  HOME,FAVROITE,OFFER,MYADS,PRFOILE,SETTINGS,CONTACT_US,POLICY,RuLES
   }

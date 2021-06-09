@@ -15,6 +15,8 @@ class FilterParamsEntity {
 	@JsonKey(ignore: true)
 	String cateName;
 	List<Params> params;
+	@JsonKey(ignore: true)
+  String cityName;
 
 	FilterParamsEntity(
 			{this.priceMin,
@@ -25,7 +27,7 @@ class FilterParamsEntity {
 				this.stateId,
 				this.categoryId,
 				this.key,
-				this.params,this.cateName});
+				this.params,this.cateName,this.cityName});
 	factory FilterParamsEntity.fromJson(Map<String, dynamic> json) => _$FilterParamsEntityFromJson(json);
 	Map<String, dynamic> toJson() => _$FilterParamsEntityToJson(this);
 

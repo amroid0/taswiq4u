@@ -11,6 +11,7 @@ import 'package:olx/model/StateEnum.dart';
 import 'package:olx/model/ads_post_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/cateogry_entity.dart';
+import 'package:olx/model/cityModel.dart';
 import 'package:olx/model/country_entity.dart';
 import 'package:olx/model/field_proprtires_entity.dart';
 import 'package:olx/model/upload_image_entity.dart';
@@ -193,12 +194,12 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   }
 
   _showCityDialog() async{
-    await  CityListDialog.showModal<CountryEntity>(
+    await  CityListDialog.showModal<CityModel>(
       context,
       label: allTranslations.text('choose_city'),
-      selectedValue: CountryEntity(),
+      selectedValue: CityModel(),
       items: List(),
-      onChange: (CountryEntity selected) {
+      onChange: (CityModel selected) {
         _citytextController.text=selected.name.toString();
         adsPostEntity.stateId=selected.id;
         adsPostEntity.cityId=selected.id;

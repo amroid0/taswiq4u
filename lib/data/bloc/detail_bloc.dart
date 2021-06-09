@@ -97,6 +97,7 @@ class DetailBloc extends Bloc{
             results;
 
       }
+
       _sliderController.sink.add(images);
 
     }catch(e) {

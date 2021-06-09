@@ -33,12 +33,14 @@ class AdsBloc implements Bloc {
       String countryId=await preferences.getCountryID();
 //      AdsParams params=AdsParams( CategoryId:int.parse(catId),CityId: 1,CountryId: int.tryParse(countryId) );
       FilterParamsEntity entity=new FilterParamsEntity();
-      entity.stateId=1;
+      entity.stateId=paramsEntity.cityId;
       entity.countryId=int.tryParse(countryId) ;
-      entity.cityId=1;
+      entity.cityId=paramsEntity.cityId;
+      entity.isNew=paramsEntity.isNew;
       entity.priceMax=paramsEntity.priceMax;
       entity.priceMin=paramsEntity.priceMin;
-      entity.countryId=paramsEntity.categoryId;
+      entity.categoryId=paramsEntity.categoryId;
+
       if(paramsEntity.params!=null) {
         entity.params =[];
         for(var item in paramsEntity.params){

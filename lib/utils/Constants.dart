@@ -15,6 +15,9 @@
  *
  */
 
+import 'package:olx/data/shared_prefs.dart';
+import 'package:olx/utils/global_locale.dart';
+
 ///////////////////////////////////////////////////////////////////////////////
 class APIConstants {
   static const String API_BASE_ENDPOINT = "http://api.taswiq4u.com/";
@@ -23,7 +26,8 @@ class APIConstants {
   static const String REGISTER_BASE_URL = '${API_BASE_ENDPOINT}api/Auth/Register';
   static const String FIELDS_ADD_ADS="${API_BASE_ENDPOINT}api/Ads/AddAdvertismentForm/";
   static const String ADD_ADS="${API_BASE_ENDPOINT}api/Ads/AddNewAdvertisment";
-  static const String CATEOGRY_ADS="${API_BASE_ENDPOINT}api/CommercialAdCategory/GetAllCountryCategory";
+  static const String CATEOGRY_ADS="${API_BASE_ENDPOINT}api/category/MainCategories";
+ static const String COMM_CATEOGRY_ADS= "${API_BASE_ENDPOINT}api/CommercialAdCategory/GetAllCountryCategory";
   static const String SEARCH_WITH_PARAM="${API_BASE_ENDPOINT}api/Ads/SearchWithParams";
   static const String IMAGE_UPLOAD="${API_BASE_ENDPOINT}Api/ImageUpload/AddAdvertismentImage";
   static const String SLIDER_ADS="${API_BASE_ENDPOINT}api/CommercialAd/GetMainSliderAds/";
@@ -57,9 +61,26 @@ class APIConstants {
   static final String CITY_API="${API_BASE_ENDPOINT}api/country/CitiesList";
 
   static final String FIELDS_EDIT_ADS="${API_BASE_ENDPOINT}api/Ads/EditAdvertismentForm/";
+
+  static final String USER_UPDATE_API="${API_BASE_ENDPOINT}/api/Auth/UpdateUserData";
+
+  static final String PASSWORD_UPDATE_API="${API_BASE_ENDPOINT}/api/Auth/ChangePassword";
+
   static String getFullImageUrl(String url,int type){
-    return  'http://api.taswiq4u.com/Api/ImageUpload/i?url=$url&type=$type';
+    return  url!=null&&url.isNotEmpty?'http://api.taswiq4u.com/Api/ImageUpload/i?url=$url&type=$type':"";
+
   }
+
+  static Future<String> getPolicyUrl()async{
+    return  "http://beta.taswiq4u.com/Privacy?appcountryid=${await preferences.getCountryID()}&applangid=${allTranslations.isEnglish?"en":"ar"}#step-1";
+  }
+  static Future<String> getRuleUrl()async{
+    return  "http://beta.taswiq4u.com/TermsOfUse?appcountryid=${await preferences.getCountryID()}&applangid=${allTranslations.isEnglish?"en":"ar"}#step-1";
+  }
+  static Future<String> getContactUrl()async{
+    return  "http://beta.taswiq4u.com/ContactUs?appcountryid=${await preferences.getCountryID()}&applangid=${allTranslations.isEnglish?"en":"ar"}#step-1";
+  }
+
 }
 
 class ImageType {

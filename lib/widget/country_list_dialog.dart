@@ -43,8 +43,10 @@ class CountryListDialog<T> extends StatefulWidget {
       }) {
     return showDialog(
       context: context,
+
       builder: (context) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: Text(label ?? ""),
           actions: <Widget>[
             FlatButton(child:Text(allTranslations.text('cancel')), onPressed: () {
@@ -131,10 +133,12 @@ class _SelectDialogState<T> extends State<CountryListDialog<T>> {
                                 },
                               );
                             else
-                              return ListTile(
-                                title: Text(item.name.toString()),
+                              return RadioListTile(
+                                value: item.countryId,
+                                groupValue: 1,
+                                title: Text(allTranslations.isEnglish?item.englishDescription.toString():item.arabicDescription),
                                 selected: item == widget.selectedValue,
-                                onTap: () {
+                                onChanged: (val) {
                                   onChange(item);
                                   Navigator.pop(context);
                                 },

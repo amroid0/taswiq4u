@@ -1,4 +1,6 @@
 
+import 'package:animate_do/animate_do.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
@@ -10,6 +12,7 @@ import 'package:olx/model/country_entity.dart';
 import 'package:olx/pages/login_page.dart';
 import 'package:olx/pages/main_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
+import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/fracation_sized_box.dart';
 
@@ -35,6 +38,7 @@ class _CountryPageState extends State<CountryPage> {
     @override
     Widget build(BuildContext context) {
       return Scaffold(
+        backgroundColor: Colors.white,
         body: Stack(
             children:<Widget>[ FractionallyAlignedSizedBox(
               bottomFactor: .6,
@@ -62,28 +66,49 @@ class _CountryPageState extends State<CountryPage> {
                             case Status.COMPLETED:
                             // TODO: Handle this case.
                             List<CountryEntity> list=snapshot.data.data;
-                            return ListView.builder(
-                              itemCount: list.length,
-                                itemBuilder: (BuildContext context,int index){
-                              return
-                                InkWell(
-                                  onTap: () {
-                                    /*Navigator.push(context,MaterialPageRoute(builder: (context) => CountryPage()))*/
-                                    preferences.saveCountryID(list[index].countryId.toString());
-                                    preferences.saveCountry(list[index]);
-                                    Navigator.pushReplacement(context,
-                                        MaterialPageRoute(builder: (context) =>  MainScreen()));},
-                                  child: new Container(
-                                    margin:  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                                    height: 60.0,
-                                    decoration: new BoxDecoration(
-                                      color: Colors.green,
-                                      borderRadius: new BorderRadius.circular(10.0),
-                                    ),
-                                    child: new Center(child: new Text(list[index].name, style: new TextStyle(fontSize: 18.0, color: Colors.white),),),
+                            return SlideInUp(
+                              child: ListView.separated(
+                                itemCount: list.length,
+                                  separatorBuilder: (ctx,inde)=>SizedBox(height: 16,),
+                                  itemBuilder: (BuildContext context,int index){
+                                return
+                                  InkWell(
+                                    onTap: () {
+                                      /*Navigator.push(context,MaterialPageRoute(builder: (context) => CountryPage()))*/
+                                      preferences.saveCountryID(list[index].countryId.toString());
+                                      preferences.saveCountry(list[index]);
+                                      Navigator.pushReplacement(context,
+                                          MaterialPageRoute(builder: (context) =>  MainScreen()));},
+                                    child:
+                                     Stack(
+                                          children:[
+                                     Container(
+                                     margin:  const EdgeInsets.symmetric(vertical: 0, horizontal: 25.0),
+                                      height: 60.0,
+                                      decoration: new BoxDecoration(
+                                        color: Color(0xffF2F4F6),
+                                        borderRadius: new BorderRadius.circular(10.0),
+                                      ),),
+                                        Positioned.directional(
+                                          textDirection: allTranslations.isEnglish?TextDirection.ltr:TextDirection.rtl,
+                                          start:0,
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 4,vertical: 0),
+                                            child: Image.asset(
+                                              list[index].countryId==1?'images/egyptflag.png':'images/kuwaitflag.png',
+                                                width: 60,
+                                                height: 60,
+                                                fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        ),
+                                         Align(alignment: Alignment.bottomCenter,child: Text(allTranslations.isEnglish?list[index].englishDescription.toString():list[index].arabicDescription, style: new TextStyle(fontSize: 20.0,),))
+                                  ]
                                   ),
-                                );
-                            });
+
+                                  );
+                              }),
+                            );
 
 
 

@@ -38,7 +38,7 @@ var _bloc;
     _bloc = BlocProvider.of<UploadImageBloc>(context);
   }
   void _getImage(BuildContext context, ImageSource source) async {
-    File image = await ImagePicker.pickImage(source: source,imageQuality: 50);
+    File image = await ImagePicker.pickImage(source: source,imageQuality: 50,);
     _bloc.uploadImage(image.path);
     // Closes the bottom sheet
     Navigator.pop(context);
@@ -128,7 +128,7 @@ var _bloc;
 
                 try {
                   resultList = await MultiImagePicker.pickImages(
-                    maxImages: 8,
+                    maxImages: 8- _bloc.getUploadImageList.length,
                     enableCamera: true
                   );
                 } on Exception catch (e) {

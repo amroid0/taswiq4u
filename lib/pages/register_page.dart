@@ -1,3 +1,4 @@
+import 'package:ars_progress_dialog/ars_progress_dialog.dart';
 import 'package:bmprogresshud/progresshud.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,6 +14,7 @@ import 'package:olx/remote/client_api.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/loading_dialog.dart';
+import 'package:olx/widget/auth_input_widget.dart';
 import 'package:olx/widget/city_list_dialog.dart';
 import 'package:olx/widget/country_list_dialog.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -39,7 +41,7 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController passwordContoller = TextEditingController();
   final TextEditingController _countrytextController = TextEditingController();
 
-  ProgressDialog progressDialog ;
+  ArsProgressDialog progressDialog;
   String _email;
   String _password;
   RegisterBloc bloc;
@@ -51,27 +53,30 @@ class _RegisterPageState extends State<RegisterPage> {
     // TODO: implement initState
     bloc=RegisterBloc();
 
+    progressDialog = ArsProgressDialog(
+        context,
+        blur: 2,
+        backgroundColor: Color(0x33000000),
+        animationDuration: Duration(milliseconds: 500));
 
     bloc.stream.listen((data) {
       // Redirect to another view, given your condition
-
+      if(progressDialog.isShowing){
+        progressDialog.dismiss();
+      }
       switch (data.status) {
         case Status.LOADING:
-          Future.delayed(Duration.zero, () {
-            DialogBuilder(context).showLoadingIndicator('loading');
-
-          });
+          progressDialog.show();
           break;
 
 
 
         case Status.ERROR:
-          DialogBuilder(context).hideOpenDialog();
 
           Fluttertoast.showToast(
-              msg: "Something went Wrong'",
+              msg: data.message,
               toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
+              gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 1,
               backgroundColor: Colors.red,
               textColor: Colors.white,
@@ -114,6 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return BlocProvider<RegisterBloc>(
       bloc: bloc,
       child: Scaffold(
+        backgroundColor: Colors.white,
         key: scaffoldKey,
         body: Center(
           child: Padding(
@@ -123,17 +129,20 @@ class _RegisterPageState extends State<RegisterPage> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Image.asset('images/logo.png'),
-                    firstName(bloc),
+                    Align(alignment:Alignment.center,child: Text(allTranslations.text('register'),
+                      style: Theme.of(context).textTheme.headline5.copyWith(fontWeight: FontWeight.bold),)),
                     SizedBox(height: 10,),
+                    firstName(bloc),
+                    SizedBox(height: 16,),
                   //  secondName(bloc),
                     phone(bloc),
-                    SizedBox(height: 10,),
+                    SizedBox(height: 16,),
                     password(bloc),
-                    SizedBox(height: 10,),
-                  //  confrimPassword(bloc),
+                    SizedBox(height: 16,),
+                    confrimPassword(bloc),
+                    SizedBox(height: 16,),
                     country(bloc),
-                    SizedBox(height: 10,),
+                    SizedBox(height: 16,),
                     submitButton(bloc),
                  //  registerState(bloc)
 
@@ -194,28 +203,14 @@ class _RegisterPageState extends State<RegisterPage> {
 
         builder: (context, snapshot) {
 
-          return Container(
-
-            decoration: BoxDecoration(color:Colors.black12,border: Border.all(
-              width: 1.0,
-              color: Colors.green,
+          return AuthInputWidget(
 
 
-            ),
-              borderRadius: BorderRadius.all(
-                  Radius.circular(5.0) //         <--- border radius here
-              ),
-            ),
-            child: TextFormField(
-              decoration: InputDecoration(labelText: allTranslations.text('first_name'),filled: true,
-                fillColor: Colors.black12,
-                border: InputBorder.none,
-                errorText: snapshot.error,
+             labelText: allTranslations.text('first_name'),
+                    errorText: snapshot.error,
+              onChange: bloc.changeFirstName,
+              contoller: firstController,
 
-              ),
-              onChanged: bloc.changeFirstName,
-              controller: firstController,
-            ),
           );
 
         });
@@ -226,28 +221,16 @@ class _RegisterPageState extends State<RegisterPage> {
         stream: bloc.email,
         builder: (context, snapshot) {
 
-          return Container(
-
-            decoration: BoxDecoration(color:Colors.black12,border: Border.all(
-              width: 1.0,
-              color: Colors.green,
+          return AuthInputWidget(
 
 
-            ),
-              borderRadius: BorderRadius.all(
-                  Radius.circular(5.0) //         <--- border radius here
-              ),
-            ),
-            child: TextFormField(
-              decoration: InputDecoration(labelText: allTranslations.text('phone'),filled: true,
-                fillColor: Colors.black12,
-                border: InputBorder.none,
+             labelText: allTranslations.text('phone'),
+
                 errorText: snapshot.error,
 
-              ),
-              onChanged: bloc.changeEmail,
-              controller: phoneContorller,
-            ),
+              onChange: bloc.changeEmail,
+              contoller: phoneContorller,
+
           );
 
         });
@@ -259,34 +242,21 @@ class _RegisterPageState extends State<RegisterPage> {
         stream: bloc.country,
         builder: (context, snapshot) {
 
-          return Container(
-
-            decoration: BoxDecoration(color:Colors.black12,border: Border.all(
-              width: 1.0,
-              color: Colors.green,
+          return AuthInputWidget(
 
 
-            ),
-              borderRadius: BorderRadius.all(
-                  Radius.circular(5.0) //         <--- border radius here
-              ),
-            ),
-            child: TextFormField(
               readOnly: true,
-              controller: _countrytextController,
+              contoller: _countrytextController,
               onTap: (){
                 _showCountryDialog();
               },
-              decoration: InputDecoration(labelText: allTranslations.text('country'),filled: true,
-                fillColor: Colors.black12,
-                border: InputBorder.none,
+              labelText: allTranslations.text('country'),
                 errorText: snapshot.error,
                 suffixIcon:  Icon(Icons.arrow_drop_down),
 
 
-              ),
-              onChanged: bloc.chnageCountry,
-            ),
+              onChange: bloc.chnageCountry,
+
           );
 
         });
@@ -297,72 +267,42 @@ class _RegisterPageState extends State<RegisterPage> {
         stream: bloc.password,
         builder: (context, snapshot) {
 
-          return Container(
-
-            decoration: BoxDecoration(color:Colors.black12,border: Border.all(
-              width: 1.0,
-              color: Colors.green,
-
-
-            ),
-              borderRadius: BorderRadius.all(
-                  Radius.circular(5.0) //         <--- border radius here
-              ),
-            ),
-            child: TextFormField(
-              decoration: InputDecoration(labelText: allTranslations.text('password'),filled: true,
-                fillColor: Colors.black12,
-                border: InputBorder.none,
+          return AuthInputWidget(
+         labelText: allTranslations.text('password'),
                 errorText: snapshot.error,
 
-              ),
-              obscureText: true,
-              onChanged: bloc.changePassword,
-              controller: passwordContoller,
-            ),
+              invisbleText: true,
+              onChange: bloc.changePassword,
+              contoller: passwordContoller,
+
           );
 
         });
 
   }
-/*
+
   Widget confrimPassword(RegisterBloc bloc){
     return StreamBuilder(
-        stream: bloc.password,
+        stream: bloc.confrimPassword,
         builder: (context, snapshot) {
 
-          return Container(
+          return AuthInputWidget(
 
-            decoration: BoxDecoration(color:Colors.black12,border: Border.all(
-              width: 1.0,
-              color: Colors.green,
-
-
-            ),
-              borderRadius: BorderRadius.all(
-                  Radius.circular(5.0) //         <--- border radius here
-              ),
-            ),
-            child: TextFormField(
-              decoration: InputDecoration(labelText: 'Confirm Password',filled: true,
-                fillColor: Colors.black12,
-                border: InputBorder.none,
+       labelText: allTranslations.text('pass_confirm'),
                 errorText: snapshot.error,
 
-              ),
-              validator: (val) =>
-              val.length < 6 ? 'Password too short.' : null,
-              onSaved: (val) => _password = val,
-              obscureText: true,
-              onChanged: bloc.changePassword,
 
-            ),
+              onSaved: (val) => _password = val,
+              invisbleText: true,
+              onChange: bloc.chnageConfrimPassword,
+
+
           );
 
         });
 
   }
-*/
+
 
 
   Widget secondName(RegisterBloc bloc) {
@@ -450,7 +390,7 @@ class _RegisterPageState extends State<RegisterPage> {
     selectedValue: CountryEntity(),
     items: List(),
     onChange: (CountryEntity selected) {
-    _countrytextController.text=selected.name.toString();
+    _countrytextController.text=allTranslations.isEnglish?selected.englishDescription.toString():selected.arabicDescription;
    countryId=selected.countryId;});
   }
 

@@ -5,7 +5,7 @@ import 'package:olx/utils/global_locale.dart';
 class Validators {
   final validateEmail =
   StreamTransformer<String, String>.fromHandlers(handleData: (email, sink) {
-    if (email.length>0) {
+    if (email.length>10) {
       sink.add(email);
     } else {
       sink.addError(allTranslations.text('err_email'));
@@ -22,7 +22,7 @@ class Validators {
 
   final validatePassword = StreamTransformer<String, String>.fromHandlers(
       handleData: (password, sink) {
-        if (password.length > 4) {
+        if (password.length > 5) {
           sink.add(password);
         } else {
           sink.addError(allTranslations.text('err_pass'));
@@ -34,6 +34,9 @@ class Validators {
           sink.add(firstName);
         }else if(firstName.length==0) {
           sink.addError(allTranslations.text('err_fname'));
+        }else if(firstName.split(" ").length<=1){
+          sink.addError(allTranslations.text('err_secondname'));
+
         }
 
 

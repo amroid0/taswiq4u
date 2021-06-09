@@ -1,3 +1,4 @@
+import 'package:olx/model/cityModel.dart';
 import 'package:olx/model/country_entity.dart';
 import 'package:olx/utils/Constants.dart';
 
@@ -20,7 +21,7 @@ class CountryClient{
       new CountryEntity(name: "");
     }
   }
-  Future<List<CountryEntity>> getCityList( int countryID) async {
+  Future<List<CityModel>> getCityList( int countryID) async {
     final results = await NetworkCommon()
         .dio
         .get(
@@ -28,10 +29,10 @@ class CountryClient{
     if(results.statusCode==200){
       final suggestions = results.data;
       return suggestions
-          .map<CountryEntity>((json) => CountryEntity.fromJson(json))
+          .map<CityModel>((json) => CityModel.fromJson(json))
           .toList(growable: false);
     }else{
-      new CountryEntity(name: "");
+      new CityModel(name: "");
     }
   }
 

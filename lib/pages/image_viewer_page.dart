@@ -18,6 +18,6 @@ Widget build(BuildContext context) {
 return Scaffold(
 appBar: AppBar(
 ),
-body: Image.network(url, width: double.infinity));
+body: Image.network(url, fit: BoxFit.fill,));
 }
 }

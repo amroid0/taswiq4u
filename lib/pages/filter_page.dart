@@ -7,11 +7,14 @@ import 'package:olx/model/FieldproprtieyReposne.dart';
 import 'package:olx/model/ads_post_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/cateogry_entity.dart';
+import 'package:olx/model/cityModel.dart';
+import 'package:olx/model/country_entity.dart';
 import 'package:olx/model/field_proprtires_entity.dart';
 import 'package:olx/model/filter_response.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/check_box_withlabel.dart';
+import 'package:olx/widget/city_list_dialog.dart';
 import 'package:olx/widget/mutli_select_chip_dialog.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -31,7 +34,7 @@ class FilterPage extends StatefulWidget {
    List<int> _selectedFieldValue=[];
 
 
-   AddPostBloc bloc=null;
+   AddPostBloc bloc;
    List<Color> _colorFieldValue=[];
    FilterParamsEntity filterParamsEntity=FilterParamsEntity();
    bool isNeogtiable=false;
@@ -40,13 +43,15 @@ class FilterPage extends StatefulWidget {
    final TextEditingController _cattextController = TextEditingController();
    final TextEditingController _nametextController = TextEditingController();
    final TextEditingController _pricetextController = TextEditingController();
+   final TextEditingController _citytextController = TextEditingController();
    Color adNameColor,descColor,priceColor,emailColor,phoneColor,categoryColor=Colors.grey;
    List<TextEditingController>contollers=List();
    final scaffoldKey = GlobalKey<ScaffoldState>();
+   Color cityColor;
 
    ProgressDialog progressDialog;
 
-   List<List> _multiselectedFieldValue=List<List<FieldProprtiresSpecificationoption>>();
+   List<List<FieldProprtiresSpecificationoption>> _multiselectedFieldValue=List<List<FieldProprtiresSpecificationoption>>();
 
    TextEditingController _fromController=TextEditingController();
    TextEditingController _toController=TextEditingController();
@@ -75,7 +80,12 @@ class FilterPage extends StatefulWidget {
          categoryColor=isvalid?AppColors.validValueColor:Colors.grey;
        });
      });
-
+   /*  _citytextController.addListener((){
+       bool isvalid=_emptyValidate(_citytextController.value.text)==null;
+       setState(() {
+         cityColor=isvalid?AppColors.validValueColor:AppColors.errorValueColor;
+       });
+     });*/
 
      _pricetextController.addListener((){
        bool isvalid=_emptyValidate(_pricetextController.value.text)==null;
@@ -89,7 +99,8 @@ class FilterPage extends StatefulWidget {
            .of(context)
            .settings
            .arguments;
-       _cattextController.text = filterParamsEntity.cateName.toString();
+       _cattextController.text = filterParamsEntity.cateName!=null?filterParamsEntity.cateName:"";
+       _citytextController.text=filterParamsEntity.cityName!=null?filterParamsEntity.cityName:"";
        if (filterParamsEntity.priceMin != null &&
            filterParamsEntity.priceMax != null) {
          if (filterParamsEntity.priceMin != 0 &&
@@ -111,28 +122,27 @@ class FilterPage extends StatefulWidget {
      return Scaffold(
        key: _filterscaffoldKey,
        appBar: AppBar(
+         centerTitle: true,
          title: Center(
-           child: Text("filter",textAlign: TextAlign.center,style: TextStyle(
+           child: Text(allTranslations.text('filter'),textAlign: TextAlign.center,style: TextStyle(
                color:
                Colors.black38
 
            ),),
          ),
 
-         backgroundColor: Colors.transparent,
+         backgroundColor: Colors.white,
          bottomOpacity: 0.0,
-         elevation: 0.0,
+         elevation: 1.0,
          automaticallyImplyLeading: false,
-         actions: <Widget>[
-           IconButton(
-             icon: Icon(Icons.arrow_forward_ios,color: Colors.black38,),
-             onPressed: () {
-               Navigator.pop(context);
+         leading:  IconButton(
+           icon: Icon(Icons.arrow_back_ios,color: Colors.black38,size: 30,),
+           onPressed: () {
+             Navigator.pop(context,null);
 
-             },
-             tooltip: 'back',
-           ),
-         ],
+           },
+           tooltip: 'back',
+         ),
        ),
        body: Padding(
          padding: const EdgeInsets.all(8.0),
@@ -218,6 +228,13 @@ class FilterPage extends StatefulWidget {
                    ),
 
                    SizedBox(height: 8,),
+                   _BuildCityRoundedTextField(labelText: allTranslations.text('city'),
+                       hintText: allTranslations.text('city'),
+                       controller: _citytextController,
+                       iswithArrowIcon: true,onClickAction: (){
+                         _showCityDialog();
+                       }),
+                   SizedBox(height: 8,),
 
                    StreamBuilder<FieldPropReponse>(
                      stream: bloc.stream,
@@ -253,13 +270,17 @@ class FilterPage extends StatefulWidget {
                                    _selectedFieldValue[index] =
                                        spec.options[0];
                                }else if(item.CustomValue==null){
-                                 _multiselectedFieldValue[index] = spec.options;
-                                 /*String text="";
-                                 spec..forEach((val)=>text+="${val.NameEnglish} ,");
-                                 contollers[index].text=text;*/
+                                 //_multiselectedFieldValue[index] = spec.options;
+                                 String text="";
+                                 var selectedList= item.SpecificationOptions.where((element) =>spec.options.contains(element.Id) );
+                                 selectedList.forEach((element) {text+="${allTranslations.isEnglish?element.EnglishName:element.ArabicName??element.EnglishName},";});
+                                 _multiselectedFieldValue[index] = selectedList;
+
+                                 if(contollers[index]==null)contollers[index]=new TextEditingController();
+                                 contollers[index].text=text;
 
                                }else{
-
+                                 if(contollers[index]==null)contollers[index]=new TextEditingController();
                                  contollers[index].text=spec.value;
 
                                }
@@ -276,8 +297,8 @@ class FilterPage extends StatefulWidget {
                                      if(val!=null) {
                                        var vv = Params();
                                        vv.specificationId = item.Id;
-                                       vv.hasOptions=true;
-                                       vv.hasRange=false;
+                                    //   vv.hasOptions=true;
+                                       //vv.hasRange=false;
                                        int itemval = int.tryParse(val) ?? 0;
                                        vv.options = [itemval];
                                        filterParamsEntity.params[index] = vv;
@@ -291,7 +312,7 @@ class FilterPage extends StatefulWidget {
 
                                          filled: true,
                                          fillColor: Colors.white,
-                                         labelText: item.ArabicName,
+                                         labelText:allTranslations.isEnglish? item.EnglishName: item.ArabicName,
                                          errorText: state.hasError?state.errorText:null,
 
                                          prefixIcon: Icon(Icons.check_circle,color: _colorFieldValue[index],),
@@ -345,11 +366,14 @@ class FilterPage extends StatefulWidget {
                                    },
                                     readOnly: true,
                                     onSaved: (val){
-                                     var vv=Params();
+                           if(val.isNotEmpty) {
+
+                                      var vv=Params();
                                      vv.specificationId=item.Id;
                                      //int itemval=item.Value as int ?? 0;
-                                     vv.options=_multiselectedFieldValue[index];
+                                     vv.options=_multiselectedFieldValue[index].map((e) => e.Id).toList();
                                      filterParamsEntity.params[index]=vv;
+                           }
                                    },
                                    decoration: InputDecoration(
                                      filled: true,
@@ -406,11 +430,14 @@ class FilterPage extends StatefulWidget {
 
                    SizedBox(width: double.infinity,height: 60
                      ,child: RaisedButton(
+                       shape: RoundedRectangleBorder(
+                         borderRadius: BorderRadius.circular(20)
+                       ),
                        color:  Colors.green,
                        onPressed: (){
 
                              _filterformKey.currentState.save();
-                             Navigator.pop(context,filterParamsEntity); // <--- add message
+                             Navigator.pop(context,filterParamsEntity);
 
                        },
                        child: Center(child: Text(allTranslations.text('ads_filter'))),textColor: Colors.white,),)
@@ -482,7 +509,7 @@ class FilterPage extends StatefulWidget {
                  if(contollers[index]==null){
                    contollers[index]=TextEditingController();}
                  String text="";
-                 selectedList.forEach((val)=>text+="${val.EnglishName} ,");
+                 selectedList.forEach((val)=>text+="${allTranslations.isEnglish?val.EnglishName:val.ArabicName??val.EnglishName} ,");
                  contollers[index].text=text;
                  setState(() {
 
@@ -503,7 +530,47 @@ class FilterPage extends StatefulWidget {
    }
 
 
+   _showCityDialog() async{
+     await  CityListDialog.showModal<CityModel>(
+       context,
+       label: allTranslations.text('city'),
+       selectedValue: CityModel(),
+       items: List(),
+       onChange: (CityModel selected) {
+         _citytextController.text=allTranslations.isEnglish?selected.englishDescription.toString():selected.arabicDescription.toString();
+         filterParamsEntity.stateId=selected.id;
+         filterParamsEntity.cityId=selected.id;
+         filterParamsEntity.cityName=selected.name.toString();
 
+
+
+
+       },);
+   }
+   Widget _BuildCityRoundedTextField({ String labelText,TextEditingController controller=null,String hintText,iswithArrowIcon=false,
+     Function onClickAction}){
+     return TextFormField(
+         validator: _emptyValidate,
+         autovalidate: cityColor==AppColors.validValueColor,
+         controller: controller,
+         onTap: (){
+           onClickAction();
+         },
+         decoration: InputDecoration(
+           suffixIcon: iswithArrowIcon? Icon(Icons.arrow_drop_down):null,
+           prefixIcon: Icon(Icons.check_circle,color: cityColor,),
+
+
+           filled: true,
+           fillColor: Colors.white,
+           labelText: labelText,
+           hintText: hintText,
+           border: new OutlineInputBorder(
+               borderRadius: new BorderRadius.circular(10.0)),
+         )
+     );
+
+   }
 
  }
 

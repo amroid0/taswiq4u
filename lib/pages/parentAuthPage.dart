@@ -21,6 +21,7 @@ class _ParentAuthPageState extends State<ParentAuthPage>  with SingleTickerProvi
   Widget build(BuildContext context) {
 
     return Scaffold(
+      backgroundColor: Colors.white,
 
       body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -32,20 +33,49 @@ class _ParentAuthPageState extends State<ParentAuthPage>  with SingleTickerProvi
 
               child: Column(
                 children: <Widget>[
-                  SizedBox(
-                    width: 80,
-                    child: TabBar(
-                      tabs:  [
-                        new Container(
-                          width: 30.0,
-                          child: new Tab(text: ''),
+                  SizedBox(height: 16,),
+
+                  Container(
+              height: 70,
+                  width: 120,
+                  child: Image.asset('images/logo.png')),
+
+                  Stack(
+                    children: [
+                      Positioned.fill(child: Container(decoration:  BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.grey.shade200,
+                            width: 4.0,
+                          ),
                         ),
-                        new Container(
-                          width: 30.0,
-                          child: new Tab(text: ''),
+                      ),)),
+
+                      Container(
+                        width: 80,
+                        child: TabBar(
+                          indicatorColor: Colors.green,
+                          indicator:
+                          UnderlineTabIndicator(
+                            borderSide: BorderSide(
+                              color: Colors.green,
+                              width: 4.0,
+                            ))
+                          ,
+
+                          tabs:  [
+                            new Container(
+                              width: 30.0,
+                              child: new Tab(text: ''),
+                            ),
+                            new Container(
+                              width: 30.0,
+                              child: new Tab(text: ''),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   Expanded(
                     child: TabBarView(

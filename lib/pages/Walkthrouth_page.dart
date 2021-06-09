@@ -15,7 +15,7 @@ class Walkthrougth extends StatelessWidget {
         children:
       <Widget>[
         
-        Image.asset(imagePath),
+        Image.asset(imagePath,width: 100,height: 100,),
         SizedBox(height: 10,),
         Text(textContent,style: TextStyle(fontWeight: FontWeight.bold),),
         SizedBox(height: 10,),

@@ -1,6 +1,7 @@
 
 import 'dart:ui';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ import 'package:olx/widget/ads_widget_row.dart';
 
 import 'package:olx/widget/base64_image.dart';
 import 'package:olx/widget/favroite_widget.dart';
+import 'package:shimmer/shimmer.dart';
 
 import 'detail_page.dart';
 
@@ -37,7 +39,7 @@ class SearchAnnounceListScreen extends StatefulWidget {
 }
 
 class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
-  int _sortSelectedValue=1;
+  int _sortSelectedValue=2;
   ScrollController _scrollController = new ScrollController();
    int page=1;
   AdsEntity ads;
@@ -53,12 +55,14 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
     super.initState();
 
     params.categoryId=widget.category.id;
-    params.cateName=widget.category.name;
+    params.cateName=allTranslations.isEnglish?widget.category.englishDescription:widget.category.arabicDescription;
     BlocProvider.of<AdsBloc>(context).submitQuery(params,_sortSelectedValue,1);
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent&&ads.isLoadMore==null) {
+        page++;
+        BlocProvider.of<AdsBloc>(context).submitQuery(params,_sortSelectedValue,page);
 
 
       }
@@ -120,7 +124,7 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
   @override
   void dispose() {
     // TODO: implement dispose
-    BlocProvider.of<AdsBloc>(context).dispose();
+    //BlocProvider.of<AdsBloc>(context).dispose();
     _scrollController.dispose();
 
     super.dispose();
@@ -132,16 +136,16 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
       backgroundColor: AppColors.appBackground,
       appBar: AppBar(
         backgroundColor: AppColors.appBackground,
-        title: Text(widget.category.name,style: TextStyles.appBarTitle,),
+        title: Text(allTranslations.isEnglish?widget.category.englishDescription:widget.category.arabicDescription,style: TextStyles.appBarTitle,),
         centerTitle: true,
         actions: <Widget>[
-          IconButton(
+          Icon(Icons.search,color: Colors.black,size: 30,),
 
-              icon: Icon(Icons.arrow_forward,color: Colors.black,),
-              onPressed: () => Navigator.pop(context)
-              ),
         ],
-        leading: Icon(Icons.search,color: Colors.black,),
+        leading:  IconButton(
+            icon: Icon(Icons.arrow_back_ios,color: Colors.black,size: 30,),
+            onPressed: () => Navigator.pop(context)
+        ),
         elevation: 0,
 
       ),//appbar
@@ -155,16 +159,18 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
                 Text(allTranslations.text('filter_by')),
               InkWell(
                 onTap: () async {
-                 params= await Navigator.push(
+                 var retunObject= await Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => BlocProvider(bloc: AdsBloc(),child:FilterPage(),),
                   settings: RouteSettings(arguments:params)
 
                   ));
 
-
-                 BlocProvider.of<AdsBloc>(context).submitQuery(params,_sortSelectedValue,1);
-
+                  if(retunObject!=null) {
+                    params=retunObject;
+                    BlocProvider.of<AdsBloc>(context).submitQuery(
+                        params, _sortSelectedValue, 1);
+                  }
                 },
                 child: Container(
 
@@ -216,43 +222,94 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
 
 
 
-            Expanded(
-              child: StreamBuilder<ApiResponse<AdsEntity>>(
-                stream: BlocProvider.of<AdsBloc>(context).stream,
-                builder:(context,snap){
-                  switch(snap.data.status) {
-                    case Status.LOADING:
-                      if(page==1)
-                      return new Center(
-                        child: new CircularProgressIndicator(
-                          backgroundColor: Colors.deepOrangeAccent,
-                          strokeWidth: 5.0,
+            StreamBuilder<ApiResponse<AdsEntity>>(
+              stream: BlocProvider.of<AdsBloc>(context).stream,
+              builder:(context,snap){
+                switch(snap.data.status) {
+                  case Status.LOADING:
+                    if(page==1)
+                    return  Expanded(
+                      child: Shimmer.fromColors(
+                          baseColor: Colors.grey[300],
+                          highlightColor: Colors.grey[100],
+                          enabled: true,
+                        child: ListView.builder(
+                          itemBuilder: (_, __) => Container(
+                      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            width: 120.0,
+                            height: 100.0,
+                            color: Colors.white,
+
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  width: double.infinity,
+                                  height: 8.0,
+                                  color: Colors.white,
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 2.0),
+                                ),
+                                Container(
+                                  width: double.infinity,
+                                  height: 8.0,
+                                  color: Colors.white,
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 2.0),
+                                ),
+                                Container(
+                                  width: 40.0,
+                                  height: 8.0,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+
+                    ),
+
+
+                itemCount: 15,
                         ),
-                      );
+                      )
+                    );
 
-                      break;
+                    break;
 
-                    case Status.COMPLETED:
-                       ads=snap.data.data as AdsEntity;
-                      return _buildAdsList(ads);
-                      break;
-                    case Status.ERROR:
-                      return EmptyListWidget(
+                  case Status.COMPLETED:
+                     ads=snap.data.data as AdsEntity;
+                    return _buildAdsList(ads);
+                    break;
+                  case Status.ERROR:
+                    return EmptyListWidget(
 
-                          title: 'Error',
-                          subTitle: 'Something Went Wrong',
-                          image: 'images/error.png',
-                          titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
-                          subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
-                      );
-                      break;
-                  }
-                  return Container();
+                        title: 'Error',
+                        subTitle: 'Something Went Wrong',
+                        image: 'images/error.png',
+                        titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
+                        subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
+                    );
+                    break;
+                }
+                return Container();
 
 
 
-                },
-              ),
+              },
             )
 
           ],
@@ -278,112 +335,130 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
     else
       if(_gridItemCount==2)
     return
-      StaggeredGridView.countBuilder(
-        controller: _scrollController,
-        shrinkWrap: true,
-        crossAxisCount:_gridItemCount , //as per your requirement
-        itemCount: ads.advertisementList.length +(ads.advertisementList.length/6).toInt(),
-        itemBuilder: (BuildContext context, int index) {
-          if (index % 7 == 0) { //for even row
-            int comIndex=(index/7-1).toInt();
-            return GestureDetector(
-              onTap: (){
-                if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => FullComerialScreen()
-                        ,settings: RouteSettings(arguments: ads.commercialAdsList[comIndex])),
+      Expanded(
+        child: SlideInUp(
+          child: StaggeredGridView.countBuilder(
+            controller: _scrollController,
+            shrinkWrap: true,
+
+            crossAxisCount:_gridItemCount , //as per your requirement
+            itemCount: ads.advertisementList.length +(ads.advertisementList.length/7).toInt(),
+            itemBuilder: (BuildContext context, int index) {
+              if (index!=0&&index % 7 == 0) { //for even row
+                int comIndex=(index/7-1).toInt();
+                return GestureDetector(
+                  onTap: (){
+                    if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FullComerialScreen()
+                            ,settings: RouteSettings(arguments: ads.commercialAdsList[comIndex])),
+                      );
+
+                    }
+
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 120,
+                    margin: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color:Colors.black12,
+                    ),
+                    child: _BuildImageWidget(ads.commercialAdsList,comIndex)
+
+                    ,
+                  ),
+                );
+              } else { //for odd row
+                int adsIndex=index-(index/7).toInt();
+                if(ads.advertisementList[adsIndex]==null){
+                  return _buildLoaderListItem();
+
+                }
+                return AdsCardWidget(ads.advertisementList[adsIndex]);
+
+
+              }
+            },
+            staggeredTileBuilder: (int index) => index!=0&&index % 7 == 0
+                ? new StaggeredTile.fit(2)
+                : new StaggeredTile.fit(1),
+          ),
+        ),
+      );
+else {
+        return Expanded(
+          child: SlideInUp(
+            child: ListView.builder(
+              controller: _scrollController,
+              shrinkWrap: true,
+              itemCount: ads.advertisementList.length +(ads.advertisementList.length/7).toInt(),
+              itemBuilder: (BuildContext context,int index){
+
+                if(index!=0&& index%7==0){
+                  int comIndex=(index/7-1).toInt();
+                  String commercialAdsItem="";
+                  if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
+                    commercialAdsItem=ads.commercialAdsList[comIndex].Link;
+/*
+                    if( ads.commercialAdsList[comIndex].base74Image==null&& ads.commercialAdsList[comIndex].isLoading==null)
+                      BlocProvider.of<AdsBloc>(context).GetImage(commercialAdsItem,comIndex,true);*/
+                  }
+                  return GestureDetector(
+                    onTap: (){
+                      if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FullComerialScreen()
+                              ,settings: RouteSettings(arguments: ads.commercialAdsList[comIndex])),
+                        );
+
+                      }
+
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 120,
+                      margin: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color:Colors.black12,
+                        borderRadius:  BorderRadius.circular(20),
+
+                      ),
+                     child:  CachedNetworkImage(
+                       fit: BoxFit.fill,
+                       placeholder: (context, url) => Image.asset("images/logo.png"),
+                       errorWidget: (context, url,error) => Image.asset("images/logo.png"),
+                        imageUrl: APIConstants.getFullImageUrl(ads.commercialAdsList.isEmpty||comIndex>=ads.commercialAdsList.length?"":
+                        ads.commercialAdsList[comIndex].systemDataFile.Url,ImageType.COMMAD),
+                      )
+
+                    ),
                   );
 
+                }else {
+                  int adsIndex=index-(index/7).toInt();
+
+                  if(ads.advertisementList[adsIndex]==null){
+                    return _buildLoaderListItem();
+
+                  }else {
+
+                    return AdsRowWidget(ads.advertisementList[adsIndex]);
+
+
+                  }
                 }
 
               },
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 100,
-                margin: EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color:Colors.black12,
-                ),
-                child: _BuildImageWidget(ads.commercialAdsList,comIndex)
-
-                ,
-              ),
-            );
-          } else { //for odd row
-            int adsIndex=index-(index/7).toInt();
-            return AdsCardWidget(ads.advertisementList[adsIndex]);
-
-
-          }
-        },
-        staggeredTileBuilder: (int index) => index % 7 == 0
-            ? new StaggeredTile.fit(2)
-            : new StaggeredTile.fit(1),
-      );
-else
-        return ListView.builder(
-          controller: _scrollController,
-          shrinkWrap: true,
-          itemCount: ads.advertisementList.length +(ads.advertisementList.length/6).toInt(),
-          itemBuilder: (BuildContext context,int index){
-
-            if(index!=0&& index%6==0){
-              int comIndex=(index/6-1).toInt();
-              String commercialAdsItem="";
-              if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
-                commercialAdsItem=ads.commercialAdsList[comIndex].Link;
-/*
-                if( ads.commercialAdsList[comIndex].base64Image==null&& ads.commercialAdsList[comIndex].isLoading==null)
-                  BlocProvider.of<AdsBloc>(context).GetImage(commercialAdsItem,comIndex,true);*/
-              }
-              return GestureDetector(
-                onTap: (){
-                  if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => FullComerialScreen()
-                          ,settings: RouteSettings(arguments: ads.commercialAdsList[comIndex])),
-                    );
-
-                  }
-
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 100,
-                  margin: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color:Colors.black12,
-                  ),
-                 child:  CachedNetworkImage(
-                   fit: BoxFit.cover,
-                   placeholder: (context, url) => Image.asset("images/logo.png"),
-                   errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                    imageUrl: APIConstants.getFullImageUrl(ads.commercialAdsList.isEmpty||comIndex>=ads.commercialAdsList.length?"":
-                    ads.commercialAdsList[comIndex].systemDataFile.Url,ImageType.COMMAD),
-                  )
-
-                ),
-              );
-
-            }else {
-              int adsIndex=index-(index/6).toInt();
-
-              if(ads.advertisementList[adsIndex]==null){
-                return _buildLoaderListItem();
-
-              }else {
-                return AdsRowWidget(ads.advertisementList[adsIndex]);
-
-
-              }
-            }
-
-          },
+            ),
+          ),
         );
+      }
 
 
   }
@@ -411,7 +486,7 @@ void _OnSelectSort(int val){
                 Directionality(textDirection: TextDirection.rtl,
 
                   child: RadioListTile(
-                    value: 1,
+                    value: 2,
                     groupValue: _sortSelectedValue,
                     title: Text(allTranslations.text('hightest_price'),style: TextStyle(color: Colors.black),),
                     onChanged: (val) {
@@ -425,7 +500,7 @@ void _OnSelectSort(int val){
                 Directionality(textDirection: TextDirection.rtl,
 
                   child: RadioListTile(
-                    value: 2,
+                    value: 1,
                     groupValue: _sortSelectedValue,
                     title: Text(allTranslations.text('lowest_price'),style: TextStyle(color: Colors.black)),
                     onChanged: (val) {
@@ -465,19 +540,19 @@ void _OnSelectSort(int val){
   Widget _BuildImageWidget(List<CommercialAdsList> list,int index){
     if(list.isNotEmpty&&list[0].systemDataFile.Url!=null&&list[0].systemDataFile.Url.isNotEmpty)
       return  CachedNetworkImage(
-        fit: BoxFit.cover,
+        fit: BoxFit.fill,
         placeholder: (context, url) => Image.asset("images/logo.png"),
         errorWidget: (context, url,error) => Image.asset("images/logo.png"),
         imageUrl: APIConstants.getFullImageUrl(list[0].systemDataFile.Url,ImageType.ADS),
       );
     else
-      return  Image.asset("images/logo.png",fit: BoxFit.cover,);
+      return  Image.asset("images/logo.png",fit: BoxFit.fill,);
 
   }
 
   Widget _buildCategoryList(List<CateogryEntity> category){
     return Visibility(
-      visible: category[0].hasHorizontal,
+      visible: category[0].hasHorizontal!=null&&category[0].hasHorizontal,
       child: Container(
         height: 80,
         child: ListView.builder(

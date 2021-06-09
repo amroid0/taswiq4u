@@ -2,13 +2,13 @@
   "page": {
     "title": "olx",
     "changeLanguage": "Tap this button to select 'French'",
-    "lang": "english",
+    "lang": "English",
     "egypt": "Egypt",
     "kuwait": "Kuwait"
   },
   "login_loading": "Loading...",
-  "err_email": "Enter a valid email",
-  "err_pass": "Invalid password, please enter more than 5 characters",
+  "err_email": "invalid Phone Must be at least 11 numbers",
+  "err_pass": "Invalid password, please enter more than 6 characters",
   "err_fname": "short first name",
   "err_lname": "short last name ",
   "choose_category": "choose Cateogry",
@@ -64,8 +64,8 @@
   "personal_info": "personal info",
   "change_pass":"change Pasword",
   "other":"other",
-  "notification":"notification",
-  "lang":"lanaguage",
+  "notification":"Notifications",
+  "lang":"Language",
   "country":"Country",
   "change_profile": "change Image",
   "save_change": "SAVE CHANGE",
@@ -74,7 +74,36 @@
   "confirm_pass":"Confirm new Password",
   "verify": "verify",
   "sign_in_up": "Sign in / Register",
-  "choose_city": "Choose City"
+  "choose_city": "Choose City",
+  "not_match": "password not match!",
+  "choose_country": "choose Country",
+  "login_err": "Phone or Password is Wrong",
+  "general_err": "something went wrong please try again",
+  "server_err": "Server Error",
+  "account_exist": "phone Registered before",
+  "policy": "Privacy Policy",
+  "rules": "Rules & Laws",
+  "contact_us": "Contact us",
+  "city": "Select City",
+  "filter": "Filter By",
+  "ads":"Ads",
+  "err_secondname": "name Must contains First and second Name",
+  "welcome1": "Time Saving",
+  "welcome2": "Various payment methods",
+  "welcome3": "Discover",
+  "forget_pass": "Forget Password?",
+  "err_pass_confirm": "password does not match",
+  "pass_confirm": "Confirm Password",
+  "welcome1_desc":"Buy and sell everything in 30 seconds",
+  "welcome2_desc":"Choose the Preferable Option of Payment",
+  "welcome3_desc":"Explore Multi Categories of Ads",
+  "report": "Report Ad",
+  "map": "Map",
+  "agree": "Ok"
+
+
+
+
 
 
 

@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:olx/generated/i18n.dart';
@@ -34,10 +35,9 @@ class _WelocmeScreenState extends State<WelocmeScreen> {
             PageView(
               controller: _controller,
               children: <Widget>[
-                Walkthrougth(textContent: "Walkthrough one",
-                  imagePath: 'images/online_shop.png',textDetail: "hellowsdjlkdsklsdajkjsdajsad",),
-                Walkthrougth(textContent: "Walkthrough one",imagePath: 'images/wallet.png',textDetail: "hellowsdjlkdsklsdajkjsdajsad",),
-                Walkthrougth(textContent: "Walkthrough one",imagePath: 'images/wallet.png',textDetail: "hellowsdjlkdsklsdajkjsdajsad",),
+                SlideInUp(child: Walkthrougth(textContent: allTranslations.text('welcome1'), imagePath: 'images/online_shop.png',textDetail: allTranslations.text('welcome1_desc'),)),
+                SlideInUp(child: Walkthrougth(textContent: allTranslations.text('welcome2'),imagePath: 'images/wallet.png',textDetail: allTranslations.text('welcome2_desc'),)),
+                SlideInUp(child: Walkthrougth(textContent:  allTranslations.text('welcome3'),imagePath: 'images/discover.png',textDetail: allTranslations.text('welcome3_desc'),)),
               ],
               onPageChanged: (value) {
                 setState(() => currentIndexPage = value);
@@ -52,7 +52,7 @@ class _WelocmeScreenState extends State<WelocmeScreen> {
                  FlatButton(child: new Text(allTranslations.text('next'),style: TextStyle(fontWeight: FontWeight.bold)),onPressed:(){
                    setState(() {
                      if(currentIndexPage==2){
-                       currentIndexPage=0;
+                       Navigator.push(context,MaterialPageRoute(builder: (context) => ChooseLanguagePage()));
                      }else{
                        currentIndexPage++;
                      }

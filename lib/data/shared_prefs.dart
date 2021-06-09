@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:olx/model/LoginResponse.dart';
 import 'package:olx/model/cateogry_entity.dart';
+import 'package:olx/model/cityModel.dart';
 import 'package:olx/model/country_entity.dart';
 import 'package:olx/model/userCredit.dart';
 import 'package:olx/model/user_info.dart';
@@ -25,9 +26,11 @@ static final String KEY_COUNTRY="country_key";
 
  static final String KEY_USER_INFO="key_user_info";
 
+ static final String ACTIVE_STATE_KEY="key_active_state";
+
   Future<bool> isLoggedIn() async {
     SharedPreferences instance = await _prefs;
-    return instance.getBool(KEY_IS_LOGGED);
+    return instance.getBool(KEY_IS_LOGGED)&&instance.getBool(ACTIVE_STATE_KEY);
   }
 
   void setLoggedIn(LoginResponse user) async {
@@ -160,7 +163,13 @@ Future<String> getCountryID()async{
     SharedPreferences instance =await _prefs;
     instance.remove(KEY_IS_LOGGED);
     instance.remove(KEY_SESSION);
+    instance.remove(ACTIVE_STATE_KEY);
+    instance.remove(KEY_USER_INFO);
   }
+void clearCateogry() async{
+  SharedPreferences instance =await _prefs;
+  instance.remove(KEY_CATEGORY);
+}
 
 static final SharedPreferencesHelper _preferences = SharedPreferencesHelper._internal();
 factory SharedPreferencesHelper(){
@@ -185,18 +194,18 @@ SharedPreferencesHelper._internal();
     return catList;
   }
 
-Future<List<CountryEntity>> getCityList() async{
+Future<List<CityModel>> getCityList() async{
   SharedPreferences instance = await _prefs;
   String stringJson=instance.getString(KEY_CITY_LIST);
   if(stringJson.isEmpty) return null;
   var list= json.decode(stringJson);
-  List<CountryEntity> catList= list
-      .map<CountryEntity>((json) => CountryEntity.fromJson(json))
+  List<CityModel> catList= list
+      .map<CityModel>((json) => CityModel.fromJson(json))
       .toList(growable: false);
   return catList;
 }
 
-  Future saveCities(List<CountryEntity> cities)async {
+  Future saveCities(List<CityModel> cities)async {
 
     SharedPreferences instance = await _prefs;
     instance.setString(KEY_CITY_LIST, json.encode(cities));
@@ -214,5 +223,18 @@ Future<UserInfo> getUserInfo() async {
   return UserInfo.fromJson(json.decode(stringJson));
 
 }
+
+  void setAccountAcivation(bool bool) async{
+
+    SharedPreferences instance = await _prefs;
+    instance.setBool(ACTIVE_STATE_KEY, bool);
+  }
+Future<bool> isAccountActive() async {
+  SharedPreferences instance = await _prefs;
+  bool stringJson=instance.getBool(ACTIVE_STATE_KEY);
+  return stringJson;
+
+}
+
 
 }

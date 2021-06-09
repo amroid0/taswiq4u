@@ -4,14 +4,15 @@ import 'dart:ui';
 import 'package:http/http.dart';
 import 'package:olx/data/bloc/bloc.dart';
 import 'package:olx/utils/global_locale.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../shared_prefs.dart';
 
 class TranslationsBloc implements Bloc {
-  StreamController<String> _languageController = StreamController<String>();
+  BehaviorSubject<String> _languageController = BehaviorSubject<String>();
   Stream<String> get currentLanguage => _languageController.stream;
 
-  StreamController<Locale> _localeController = StreamController<Locale>();
+  BehaviorSubject<Locale> _localeController = BehaviorSubject<Locale>();
   Stream<Locale> get currentLocale => _localeController.stream;
 
   @override

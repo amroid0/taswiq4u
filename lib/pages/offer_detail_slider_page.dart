@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/offer_bloc.dart';
 import 'package:olx/model/Counter.dart';
@@ -8,6 +9,9 @@ import 'package:olx/model/offfer_entity.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/widget/base64_image.dart';
 import 'package:olx/model/popup_ads_entity_entity.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OfferSliderPage extends StatefulWidget {
   @override
@@ -17,103 +21,138 @@ class OfferSliderPage extends StatefulWidget {
 
 class _OfferSliderPageState extends State<OfferSliderPage> {
   PageController _pageController;
-  List< PopupAdsEntityList>  entity;
+  List< PopupAdsEntityList>  list;
    int currentPage=0;
+   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
 
 
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
     if (arguments != null) {
-      entity = arguments["list"] as List< PopupAdsEntityList> ;
+      list = arguments["list"] as List< PopupAdsEntityList> ;
       currentPage=arguments["index"]as int;
     }
     _pageController=PageController(initialPage: currentPage,viewportFraction: 1, keepPage: true);
+
    // _pageController.jumpToPage(currentPage);
          return Scaffold(
-           body: PageView.builder(
-             controller: _pageController,
-             itemBuilder: (context,pos){
-               PopupAdsEntityList item =entity[pos];
+           body:
+           Stack(
+             children: [
 
-             return Stack(
-               alignment: AlignmentDirectional.bottomStart,
-               children: <Widget>[
-             Container(
-             width: double.infinity,
-               height: double.infinity,
-               child:  FadeInImage.assetNetwork(
-                   placeholder: 'images/logo.png',
-                   image: APIConstants.getFullImageUrl(item.systemDataFile!=null ?item.systemDataFile.url:"", ImageType.COMMAD)
+               PhotoViewGallery.builder(
+                 itemCount: list.length,
+                 builder: (context, index) {
+                   var item=list[index];
+                   return PhotoViewGalleryPageOptions(
+
+                     imageProvider: NetworkImage(
+                         APIConstants.getFullImageUrl(item.systemDataFile!=null ?item.systemDataFile.url:"", ImageType.COMMAD)
+                     ),
+                     // Contained = the smallest possible size to fit one dimension of the screen
+                     minScale: PhotoViewComputedScale.contained * 0.8,
+                     // Covered = the smallest possible size to fit the whole screen
+                     maxScale: PhotoViewComputedScale.covered * 2,
+                   );
+                 },
+                 scrollPhysics: BouncingScrollPhysics(),
+                 // Set the background color to the "classic white"
+                 backgroundDecoration: BoxDecoration(
+                   color: Colors.black,
+                 ),
+                 pageController:_pageController,
+                 onPageChanged: (i){
+                   currentPage=i;
+                   setState(() {
+                   });
+                 },
+                 loadingBuilder: (context, event) => Center(
+                   child: Container(
+                     width: 20.0,
+                     height: 20.0,
+                     child: CircularProgressIndicator(
+                       value: event == null
+                           ? 0
+                           : event.cumulativeBytesLoaded / event.expectedTotalBytes,
+                     ),
+                   ),
+                 ),
                ),
 
-             ),
+
 
                Align(
-               alignment: Alignment.centerLeft,
-               child: FlatButton(
-             onPressed: (){
-                   _pageController.nextPage(duration: kTabScrollDuration, curve: Curves.ease);
 
-             },
-             padding: EdgeInsets.all(0.0),
-             child:Icon(Icons.arrow_forward_ios,color: Colors.white,size: 40,))
-             ),
-               Align(
-                     alignment: Alignment.centerRight,
-                     child: FlatButton(
-                         onPressed: (){
-                           _pageController.previousPage(duration: kTabScrollDuration, curve: Curves.ease);
+                 alignment:AlignmentDirectional.topStart ,
+                 child: Padding(
+                   padding: EdgeInsets.symmetric(vertical: 30,horizontal: 16),
+                   child: InkWell(
+                     onTap: () {
+                       Navigator.pop(context);
 
-                         },
-                         padding: EdgeInsets.all(0.0),
-                         child:Icon(Icons.arrow_back_ios,size:40,color: Colors.white,))
-                 ),
-                 Align(
-                alignment: Alignment.bottomLeft,
+                     },
+                     child: CircleAvatar(
+                       backgroundColor: Colors.black,
+                       radius: 18,
+                       child: Center(child: Icon(Icons.close,color: Colors.white,size: 30,)),
 
-                child: Container(
-
-                  color: Color(0xFF0E3311).withOpacity(0.7),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min
-                    ,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-
-                    SizedBox(height: 4,),
-                    Text(item.description==null?"":item.description,style: TextStyle(color: Colors.white),),
-                    SizedBox(height: 16,),
-
-                    Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      _buildLikeWidget(pos,item),
-
-                      _buildViewWidget(item)
-                  ],)
-
-                  ],
-                  ),
-                ),
-              ),
-
-                 Align(
-                   alignment: Alignment.bottomLeft,
-                   child: Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                       children:<Widget>[
-]
+                     ),
                    ),
-                 )],
-             );
-           },
-             itemCount: entity.length,
-           ),
+                 ),
+               ),
+
+
+               Align(
+                 alignment: Alignment.bottomLeft,
+
+                 child: Container(
+
+                   color: Color(0xFF0E3311).withOpacity(0.7),
+                   child: Column(
+                     mainAxisSize: MainAxisSize.min
+                     ,
+                     mainAxisAlignment: MainAxisAlignment.end,
+                     children: <Widget>[
+
+                       SizedBox(height: 4,),
+                       Text(list[currentPage].description==null?"":list[currentPage].description,style: TextStyle(color: Colors.white),),
+                       SizedBox(height: 16,),
+
+                       Row(
+                         mainAxisAlignment: MainAxisAlignment.center,
+                         children: <Widget>[
+                           _buildLikeWidget(currentPage,list[currentPage]),
+
+                           InkWell(
+                               onTap: ()async{
+                           var whatsappUrl ="whatsapp://send?phone=${201119726142}";
+                           await canLaunch(whatsappUrl)? launch(whatsappUrl):print("open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
+
+                           },
+                               child: Icon(MdiIcons.whatsapp,color: Colors.white,size: 40,)),
+
+                           _buildViewWidget(currentPage,list[currentPage])
+                         ],)
+
+                     ],
+                   ),
+                 ),
+               ),
+
+
+
+
+           ]
+           )
          );
   }
 
- Widget _buildViewWidget(PopupAdsEntityList item){
+ Widget _buildViewWidget(int pos,PopupAdsEntityList item){
 
  return   StreamBuilder<Counter>(
    initialData:Counter(item.viewsCount,true) ,
@@ -127,7 +166,10 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Text(viewCounter.count.toString(),style: TextStyle(color: Colors.white),),
-              FlatButton(onPressed:(){},child: Icon(Icons.remove_red_eye,color: Colors.white),),
+              FlatButton(onPressed:(){
+                BlocProvider.of<OfferBloc>(context).likeAds(pos,true);
+
+              },child: Icon(Icons.remove_red_eye,color: Colors.white),),
             ]
         );
       },

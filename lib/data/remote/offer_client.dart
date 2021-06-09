@@ -55,10 +55,11 @@ class OfferClient{
   }
 
   Future<List<CateogryEntity>> getCateogryList( ) async {
+
     final results = await NetworkCommon()
         .dio
         .get(
-        APIConstants.CATEOGRY_ADS,
+        APIConstants.COMM_CATEOGRY_ADS,
         queryParameters: {"countryId": await preferences.getCountryID(),"iscom":true});
     if(results.statusCode==200){
       final suggestions = results.data;
@@ -67,6 +68,7 @@ class OfferClient{
           .toList(growable: false);
       preferences.saveCateogryList(list);
       return list;
+
     }else{
       new CateogryEntity(name: "");
     }

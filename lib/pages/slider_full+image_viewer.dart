@@ -5,6 +5,8 @@ import 'package:olx/data/bloc/detail_bloc.dart';
 import 'package:olx/model/ads_entity.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/widget/base64_image.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 
 class SliderFullImageViewer extends StatefulWidget {
   @override
@@ -27,74 +29,59 @@ class _SliderFullImageViewerState extends State<SliderFullImageViewer> {
     _pageController=PageController(initialPage: currentPage,viewportFraction: 1, keepPage: true);
     // _pageController.jumpToPage(currentPage);
     return Scaffold(
+
       body: Stack(
         children: [
-
-          StreamBuilder(
-            initialData: list,
-            stream:BlocProvider.of<DetailBloc>(context).sliderStream,
-              builder: (BuildContext context, snapshot) {
-                List<AdvertismentImage>imageList=snapshot.data;
-
-
-                return PageView.builder(
-              controller: _pageController,
-              itemBuilder: (context,pos){
-                return Stack(
-                  children: <Widget>[
-              Container(
-
-                width: double.infinity,
-                height: double.infinity,
-                child: CachedNetworkImage(
-                    fit: BoxFit.cover,
-
-                    placeholder: (context, url) => Image.asset("images/logo.png"),
-                    errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                    imageUrl: APIConstants.getFullImageUrl(imageList.isEmpty?"":imageList[pos].Url,ImageType.ADS),
-                  ),
-              ),
-                Align(
-                alignment: Alignment.centerLeft,
-                child: FlatButton(
-                onPressed: (){
-                _pageController.nextPage(duration: kTabScrollDuration, curve: Curves.ease);
-
-                },
-                padding: EdgeInsets.all(0.0),
-                child:Icon(Icons.arrow_forward_ios,color: Colors.white,size: 40,))
-                ),
-                Align(
-                alignment: Alignment.centerRight,
-                child: FlatButton(
-                onPressed: (){
-                _pageController.previousPage(duration: kTabScrollDuration, curve: Curves.ease);
-
-                },
-                padding: EdgeInsets.all(0.0),
-                child:Icon(Icons.arrow_back_ios,size:40,color: Colors.white,))
-
-)]
-                );
-              },
-              itemCount: imageList.length,
-            );
-
-    }
+      PhotoViewGallery.builder(
+      itemCount: list.length,
+        builder: (context, index) {
+          return PhotoViewGalleryPageOptions(
+            imageProvider: NetworkImage(
+              APIConstants.getFullImageUrl(list.isEmpty?"":list[index].Url,ImageType.ADS),
+            ),
+            // Contained = the smallest possible size to fit one dimension of the screen
+            minScale: PhotoViewComputedScale.contained * 0.8,
+            // Covered = the smallest possible size to fit the whole screen
+            maxScale: PhotoViewComputedScale.covered * 2,
+          );
+        },
+        scrollPhysics: BouncingScrollPhysics(),
+        // Set the background color to the "classic white"
+        backgroundDecoration: BoxDecoration(
+          color: Colors.black,
+        ),
+          pageController:_pageController,
+        loadingBuilder: (context, event) => Center(
+          child: Container(
+            width: 20.0,
+            height: 20.0,
+            child: CircularProgressIndicator(
+              value: event == null
+                  ? 0
+                  : event.cumulativeBytesLoaded / event.expectedTotalBytes,
+            ),
           ),
+        ),
+      ),
+
+
 
           Align(
 
-            alignment:Alignment.topLeft ,
+            alignment:AlignmentDirectional.topStart ,
             child: Padding(
-              padding: EdgeInsets.only(top: 30),
-              child: IconButton(
-                icon: Icon(Icons.arrow_forward_ios,color: Colors.white,),
-                onPressed: () {
+              padding: EdgeInsets.symmetric(vertical: 30,horizontal: 16),
+              child: InkWell(
+                onTap: () {
                   Navigator.pop(context);
 
                 },
-                tooltip: 'back',
+                child: CircleAvatar(
+                  backgroundColor: Colors.black,
+                  radius: 20,
+                  child: Center(child: Icon(Icons.close,color: Colors.white,size: 36,)),
+
+                ),
               ),
             ),
           ),

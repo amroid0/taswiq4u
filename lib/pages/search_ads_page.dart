@@ -34,10 +34,11 @@ class DummyDelegate extends SearchDelegate<String> {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: Icon(Icons.search),
         onPressed: () {
-          query = '';
-        },
+          showResults(context);
+
+          },
       ),
     ];
   }

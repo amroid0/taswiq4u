@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:olx/data/bloc/bloc_provider.dart';
+import 'package:olx/data/bloc/login_bloc.dart';
 
 class FavroiteWidget extends StatefulWidget {
   bool value = true;
@@ -19,24 +21,28 @@ class _FavroiteWidgetState extends State<FavroiteWidget> {
     return  InkWell(
         onTap: () {
           setState(() {
-            widget.value = !widget.value;
+            if(BlocProvider.of<LoginBloc>(context).isLogged()){
+              widget.value = !widget.value;
+            }
             widget.onFavChange(widget.value);
+
 
 
 
           });
         },
         child: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), boxShadow:[ BoxShadow(blurRadius: 10,color: Colors.black26)], color: Colors.white),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
+              boxShadow:[ BoxShadow(blurRadius: 4,color: Colors.black26)], color: Colors.white),
           child: widget.value
-              ? Icon(
-            Icons.star_border,
+              ?
+               Icon(
+            Icons.favorite_rounded,
             size: 30.0,
-          )
-              : Icon(
-            Icons.star,
+            color: Colors.red,
+          ): Icon(
+            Icons.favorite_border,
             size: 30.0,
-            color: Colors.yellowAccent,
           ),
         ),
       );

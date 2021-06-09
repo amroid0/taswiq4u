@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/login_bloc.dart';
@@ -45,9 +46,14 @@ class _SplashScreenState extends State<SplashScreen> {
         )),
         child: Stack(
             children:<Widget>[
-              Align( child:Image.asset('images/logo.png'),
-                alignment: Alignment.center,),
-              Align( child:Container( padding: EdgeInsets.only(bottom: 10),child: LinearProgressIndicator(backgroundColor: Colors.green,)),
+              BounceInDown(
+                child: Align( child:Image.asset('images/logo.png'),
+                  alignment: Alignment.center,),
+              ),
+              Align( child:Container( padding: EdgeInsets.all(16),child:
+              LinearProgressIndicator(backgroundColor: Colors.grey.shade300,
+                valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
+              )),
                 alignment: Alignment.bottomCenter,),
               StreamBuilder<ApiResponse>(
                   stream: _bloc.stream,

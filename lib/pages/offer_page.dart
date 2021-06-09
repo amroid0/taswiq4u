@@ -32,6 +32,8 @@ class _OfferPageState extends State<OfferPage> {
 
   var chipselected=[];
 
+  bool first=true;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -51,6 +53,7 @@ class _OfferPageState extends State<OfferPage> {
     return Scaffold(
 
       body: Container(
+        padding: EdgeInsets.symmetric(vertical:0,horizontal:8),
         child: StreamBuilder<List<CateogryEntity>>(
            stream: offerBloc.categoryStream,
           builder: (context, snapshot) {
@@ -58,7 +61,8 @@ class _OfferPageState extends State<OfferPage> {
               return Center(child: CircularProgressIndicator());
             }
             List<CateogryEntity>categories=snapshot.data;
-            if(categories.isNotEmpty){
+            if(first&&categories.isNotEmpty){
+              first=false;
               categories[0].isSelected=true;
               offerBloc.getOfferLsit(categories[0].id.toString());
 
@@ -116,7 +120,7 @@ class _OfferPageState extends State<OfferPage> {
                   physics: NeverScrollableScrollPhysics(),
                   primary: true,
                   crossAxisCount: 2,
-                  childAspectRatio: 0.80,
+                  childAspectRatio: .9,
                   children: List.generate(offerObj.length, (index) {
                     return _getOfferGridCell(offerObj,index);
                   }),
@@ -168,8 +172,8 @@ class _OfferPageState extends State<OfferPage> {
               child:     Container(
             margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
             child: ChoiceChip(
-              label: Text(category[index].name),
-              selected:category[index].isSelected==null?false:category[index].isSelected,
+              label: Text(allTranslations.isEnglish?category[index].englishDescription:category[index].arabicDescription),
+              selected:category[index].isSelected!=null&&category[index].isSelected,
               onSelected: (select){
 
                 category.forEach((item){
@@ -178,10 +182,6 @@ class _OfferPageState extends State<OfferPage> {
                 category[index].isSelected=true;
                 setState(() {
 
-                  category.forEach((item){
-                    item.isSelected=false;
-                  });
-                  category[index].isSelected=true;
                   offerBloc.getOfferLsit(category[index].id.toString());
                 });
 
@@ -217,7 +217,10 @@ class _OfferPageState extends State<OfferPage> {
 
       },
       child: new Card(
-          elevation: 1.5,
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20)
+          ),
           child: new Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.max,
@@ -225,18 +228,32 @@ class _OfferPageState extends State<OfferPage> {
               new Container(
                 height: 100.0,
                 width: 100.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.grey.shade300
+                  ),
+
                   child:
-                  CachedNetworkImage(
-                      fit: BoxFit.fill,
-                      placeholder: (context, url) => Image.asset("images/logo.png"),
-                      errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                      imageUrl: APIConstants.getFullImageUrl(Item.systemDataFile.url, ImageType.COMMAD)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+
+                    child:
+                    CachedNetworkImage(
+                        fit: BoxFit.fill,
+                        placeholder: (context, url) => Image.asset("images/logo.png"),
+                        errorWidget: (context, url,error) => Image.asset("images/logo.png"),
+                        imageUrl: APIConstants.getFullImageUrl(Item.systemDataFile.url, ImageType.COMMAD)
+                    ),
                   )
               ),
+              SizedBox(height: 4,),
               new Padding(
                 padding: EdgeInsets.all(4.0),
                 child: Container(
-                    child: Text(Item.description!=null?Item.description:""),
+                  alignment: Alignment.center,
+                    child: Text(Item.description!=null?Item.description:"",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16,height: 1.2),maxLines: 2,overflow: TextOverflow.ellipsis,),
                 )
 
               )

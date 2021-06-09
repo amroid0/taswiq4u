@@ -61,16 +61,40 @@ class AdsEntity {
   bool IsFavorite;
   List<AdvertismentImage> AdvertismentImages;
 
-  AdsModel(this.Id, this.Title, this.ArabicDescription,
-      this.EnglishDescription, this.IsNogitable, this.Price, this.CategoryId,
-      this.CategoryName, this.UserId, this.UserName, this.UserPhone,
-      this.ArabicDescriptionUrl, this.EnglishDescriptionUrl, this.ArabicTitle,
-      this.EnglishTitle, this.CountryId, this.CountryNameEnglish,
-      this.CountryNameArabic, this.LocationLatitude, this.LocationLongtude,
-      this.IsDisplayed, this.IsDeleted, this.CreationTime, this.ViewCount,
-      this.CityId, this.CityNameEnglish, this.CityNameArabic, this.StateId,
-      this.StateNameArabic, this.StateNameEnglish, this.IsFeatured,this.IsFavorite,
-      this.AdvertismentImages);
+  AdsModel(
+      {this.Id,
+      this.Title,
+      this.ArabicDescription,
+      this.EnglishDescription,
+      this.IsNogitable,
+      this.Price,
+      this.CategoryId,
+      this.CategoryName,
+      this.UserId,
+      this.UserName,
+      this.UserPhone,
+      this.ArabicDescriptionUrl,
+      this.EnglishDescriptionUrl,
+      this.ArabicTitle,
+      this.EnglishTitle,
+      this.CountryId,
+      this.CountryNameEnglish,
+      this.CountryNameArabic,
+      this.LocationLatitude,
+      this.LocationLongtude,
+      this.IsDisplayed,
+      this.IsDeleted,
+      this.CreationTime,
+      this.ViewCount,
+      this.CityId,
+      this.CityNameEnglish,
+      this.CityNameArabic,
+      this.StateId,
+      this.StateNameArabic,
+      this.StateNameEnglish,
+      this.IsFeatured,
+      this.IsFavorite,
+      this.AdvertismentImages});
 
   factory AdsModel.fromJson(Map<String, dynamic> json) => _$AdsModelFromJson(json);
 

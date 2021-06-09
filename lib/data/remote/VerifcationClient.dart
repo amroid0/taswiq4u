@@ -5,11 +5,11 @@ import 'NetworkCommon.dart';
 
 class VerifcationClient{
 
-  Future<bool> verifyPhone(String code) async {
-    final userData = await preferences.getUserCredit();
+  Future<bool> verifyPhone(String code,String userPhone,String countryID) async {
+
 
     final results = await NetworkCommon().dio.post(APIConstants.VERFIY_PHONE_API,
-        data: {"VerificationCode":code,"Phone":userData.userName}
+        data: {"VerificationCode":code,"Phone":userPhone,"CountryId":countryID}
     );
     if (results.statusCode == 200) {
        return true;

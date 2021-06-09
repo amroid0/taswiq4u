@@ -1,5 +1,6 @@
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:olx/data/bloc/bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/profile_bloc.dart';
 import 'package:olx/model/api_response_entity.dart';
@@ -16,11 +17,12 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
- ProfileBloc _bloc=new ProfileBloc();
+ ProfileBloc _bloc;
 
   @override
   void initState() {
     // TODO: implement initState
+    _bloc=BlocProvider.of<ProfileBloc>(context);
     _bloc.getUserProfileInfo();
     super.initState();
   }

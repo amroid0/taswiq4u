@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -15,6 +16,7 @@ import 'package:olx/pages/ads_list_page.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/global_locale.dart';
+import 'package:shimmer/shimmer.dart';
 
 import 'offer_detail_slider_page.dart';
 
@@ -48,7 +50,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
   void initState() {
     // TODO: implement initState
 
-  _bloc = new CategoryBloc();
+  _bloc = BlocProvider.of<CategoryBloc>(context);
 
   _bloc.popupStream..listen((data){
     switch (data.status) {
@@ -81,11 +83,13 @@ class CarouselDemoState extends State<CategoryListFragment> {
     return  WillPopScope(
       onWillPop: (){
         if(_bloc.isStackIsEmpty()){
+          // ignore: missing_return
           SystemNavigator.pop();
-
         }else {
+          // ignore: missing_return
           _bloc.removeCateogryFromStack();
         }
+
       },
       child: Container(
           child: Column(
@@ -95,29 +99,6 @@ class CarouselDemoState extends State<CategoryListFragment> {
             children: <Widget>[
              _buildMainSlider(_bloc),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: map<Widget>(imgList, (index, url) {
-                  return StreamBuilder<int>(
-                    initialData: 0,
-                    stream: _bloc.imageNumberStream,
-                    builder: (context,snap) {
-                      return Container(
-                        width: 7.0,
-                        height: 7.0,
-                        margin: EdgeInsets.symmetric(
-                            vertical: 5.0, horizontal: 2.0),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: snap.data == index ? Theme
-                              .of(context)
-                              .accentColor : Colors.black26,
-                        ),
-                      );
-
-                    });
-                }),
-              ),
 
               Expanded(
                 child: StreamBuilder<List<CateogryEntity>>(
@@ -125,7 +106,60 @@ class CarouselDemoState extends State<CategoryListFragment> {
                   builder: (context, snapshot) {
 
                     if (!snapshot.hasData) {
-                      return Text(allTranslations.text('loading'));
+                      return  Shimmer.fromColors(
+                        baseColor: Colors.grey[300],
+                        highlightColor: Colors.grey[100],
+                        enabled: true,
+                        child: ListView.builder(
+                          itemBuilder: (_, __) => Container(
+                            margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    width: 48.0,
+                                    height: 48.0,
+                                    color: Colors.white,
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Container(
+                                          width: double.infinity,
+                                          height: 8.0,
+                                          color: Colors.white,
+                                        ),
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(vertical: 2.0),
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          height: 8.0,
+                                          color: Colors.white,
+                                        ),
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(vertical: 2.0),
+                                        ),
+                                        Container(
+                                          width: 40.0,
+                                          height: 8.0,
+                                          color: Colors.white,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+
+                          ),
+                          itemCount: 15,
+                        ));
+
                     }
                     if(imgList.isEmpty){
                       _bloc.getMainSliderAds();
@@ -174,11 +208,15 @@ class CarouselDemoState extends State<CategoryListFragment> {
 
               carouselSlider = CarouselSlider(
 
-                height: MediaQuery.of(context).size.height*.25,
+                height: MediaQuery.of(context).size.height*.27,
                 initialPage: 0,
                 enlargeCenterPage: true,
+                aspectRatio: 1,
                 autoPlay: true,
                 reverse: false,
+
+
+                viewportFraction: 1.0,
                 enableInfiniteScroll: true,
                 autoPlayInterval: Duration(seconds: 2),
                 autoPlayAnimationDuration: Duration(milliseconds: 2000),
@@ -237,72 +275,92 @@ class CarouselDemoState extends State<CategoryListFragment> {
   }
 
   Widget _buildCategoryList(List<CateogryEntity> category){
-    return ListView.builder(
-      itemCount: category.length,
-      itemBuilder: (BuildContext context,int index){
+    return SlideInUp(
+      child: ListView.builder(
+        itemCount: category.length,
+        itemBuilder: (BuildContext context,int index){
 
 
-        return Container(
-          margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-          child: new InkWell(
-            onTap: (){
-              if(category[index].hasSub){
-                _bloc.addCateogryToStack(category[index].subCategories);
-              }else{
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => BlocProvider(bloc:_bloc,child: BlocProvider(bloc: AdsBloc(),child:SearchAnnounceListScreen(category[index]),)),
-                settings: RouteSettings(arguments:category[index] )
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+            child: new InkWell(
+              onTap: (){
+                if(category[index].hasSub){
+                  _bloc.addCateogryToStack(category[index].subCategories);
+                }else{
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => BlocProvider(bloc:_bloc,child: BlocProvider(bloc: AdsBloc(),child:SearchAnnounceListScreen(category[index]),)),
+                  settings: RouteSettings(arguments:category[index] )
 
-                ),
-              );
-              }
+                  ),
+                );
+                }
 
-            },
-            child: new Card(
-              child: new SizedBox(
-                height: 70.0,
-                child: new Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    new Expanded(
-                      child: new ListTile(
-                        title: new Text(category[index].name,textAlign:TextAlign.end),
-                        subtitle: Text(allTranslations.isEnglish?category[index].englishDescription:category[index].arabicDescription,textAlign: TextAlign.end,),
-                        leading: Icon(allTranslations.isEnglish?Icons.keyboard_arrow_left:Icons.keyboard_arrow_right,color: Colors.black,),
+              },
+              child: Stack(
+                alignment: AlignmentDirectional.centerStart,
+                children: [
+
+                  Container(
+                    margin: EdgeInsetsDirectional.only(start: 30),
+                    child: new Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(width: 20,),
+                           Expanded(
+                             child: ListTile(
+
+
+                               title: new Text(allTranslations.isEnglish?category[index]
+                                   .englishDescription:category[index]
+                                   .arabicDescription,style: TextStyle(fontSize: 15),),
+                               subtitle:RichText(text: TextSpan(
+                               children: [
+                                 TextSpan(text: '20 ',style: TextStyle(color: Colors.grey)),
+                                 TextSpan(text: allTranslations.text('ads'),style: TextStyle(color: Colors.grey))
+                               ]
+                             ),),
+                              trailing: Icon(Icons.arrow_forward_ios,color: Colors.grey,size: 18,),
+                          ),
+                           ),
+                        ],
                       ),
                     ),
-                    new Container(
-                      width: 60,
-                     height: 60,
-                     /* decoration: BoxDecoration(
-                          color: Colors.white,
+                  ),
+                  Card(
+                    elevation: 2,
+                    shape: CircleBorder(),
+                    child: CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.grey.shade300,
 
-
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              blurRadius: 5.0,)
-                          ]),*/
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      alignment: Alignment.center,
-                      child:
-                      CachedNetworkImage(
-                          fit: BoxFit.fill,
-                          placeholder: (context, url) => Image.asset("images/logo.png"),
-                        errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                        imageUrl: APIConstants.getFullImageUrl(category[index].categoryLogo, ImageType.CATE)
+                      child: Container(
+                        height: 55,
+                        width: 55,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(55),
+                          child: CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Image.asset("images/logo.png"),
+                              errorWidget: (context, url,error) => Image.asset("images/logo.png"),
+                              imageUrl: APIConstants.getFullImageUrl(category[index].categoryLogo, ImageType.CATE)
+                          ),
+                        ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ),
-        );
+          );
 
 
-      },
+        },
+      ),
     );
 
 
