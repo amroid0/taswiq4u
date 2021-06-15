@@ -50,7 +50,6 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
                  builder: (context, index) {
                    var item=list[index];
                    return PhotoViewGalleryPageOptions(
-
                      imageProvider: NetworkImage(
                          APIConstants.getFullImageUrl(item.systemDataFile!=null ?item.systemDataFile.url:"", ImageType.COMMAD)
                      ),

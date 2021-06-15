@@ -27,17 +27,21 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
 
       body: Stack(
         children: <Widget>[
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            child:  FadeInImage.assetNetwork(
-                                    fit: BoxFit.fill,
+          Align(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height*0.6,
+              child:  FadeInImage.assetNetwork(
+                                      fit: BoxFit.fill,
 
-              placeholder: 'images/logo.png',
-              image: APIConstants.getFullImageUrl(result.systemDataFile!=null ?result.systemDataFile.url:"", ImageType.COMMAD)
-            ),
+                placeholder: 'images/logo.png',
+                image: APIConstants.getFullImageUrl(result.systemDataFile!=null ?result.systemDataFile.url:"", ImageType.COMMAD)
+              ),
+              margin:EdgeInsets.only(top:70,left:20,right: 20),
 
 ),
+            alignment:Alignment.topLeft,
+          ),
 
 
 
@@ -47,12 +51,12 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
 
             alignment:Alignment.topLeft ,
             child: Padding(
-              padding: EdgeInsets.only(top: 30),
+              padding: EdgeInsets.only(top: 4),
               child: Container(
-
+                margin:EdgeInsets.only(top:70,left: 20,right: 20),
                 color: Colors.grey.withOpacity(0.5), //set this opacity as per your requirement
                 child: IconButton(
-                  iconSize: 36,
+                  iconSize: 30,
 
                   icon: Icon(Icons.close,color: Colors.white,),
                   onPressed: () {

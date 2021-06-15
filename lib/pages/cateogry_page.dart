@@ -208,19 +208,18 @@ class CarouselDemoState extends State<CategoryListFragment> {
 
               carouselSlider = CarouselSlider(
 
-                height: MediaQuery.of(context).size.height*.27,
+                height: MediaQuery.of(context).size.height*.28,
                 initialPage: 0,
                 enlargeCenterPage: true,
                 aspectRatio: 1,
                 autoPlay: true,
                 reverse: false,
 
-
                 viewportFraction: 1.0,
                 enableInfiniteScroll: true,
-                autoPlayInterval: Duration(seconds: 2),
-                autoPlayAnimationDuration: Duration(milliseconds: 2000),
-                pauseAutoPlayOnTouch: Duration(seconds: 2),
+                autoPlayInterval: Duration(seconds: 3),
+                autoPlayAnimationDuration: Duration(milliseconds: 3000),
+                pauseAutoPlayOnTouch: Duration(seconds: 3),
                 scrollDirection: Axis.horizontal,
                 onPageChanged: (index) {
                   ImageIndex=index;
@@ -231,7 +230,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
                   return Builder(
                     builder: (BuildContext context) {
                       return Container(
-                        width: MediaQuery.of(context).size.width,
+                        width: MediaQuery.of(context).size.width-10,
                         margin: EdgeInsets.symmetric(horizontal: 5.0,vertical: 5),
                         decoration: BoxDecoration(
                           color: AppColors.appBackground,
