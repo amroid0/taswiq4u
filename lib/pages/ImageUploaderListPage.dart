@@ -128,7 +128,7 @@ var _bloc;
 
                 try {
                   resultList = await MultiImagePicker.pickImages(
-                    maxImages: 8- _bloc.getUploadImageList.length,
+                    maxImages: 9- _bloc.getUploadImageList.length,
                     enableCamera: true
                   );
                 } on Exception catch (e) {

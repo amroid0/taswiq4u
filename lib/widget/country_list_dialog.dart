@@ -76,6 +76,8 @@ class _SelectDialogState<T> extends State<CountryListDialog<T>> {
   CountryBloc bloc;
   void Function(CountryEntity) onChange;
 
+  var _slectedCountry=-1;
+
   _SelectDialogState(
       List<T> itemsList,
       this.onChange,
@@ -135,7 +137,7 @@ class _SelectDialogState<T> extends State<CountryListDialog<T>> {
                             else
                               return RadioListTile(
                                 value: item.countryId,
-                                groupValue: 1,
+                                groupValue: _slectedCountry,
                                 title: Text(allTranslations.isEnglish?item.englishDescription.toString():item.arabicDescription),
                                 selected: item == widget.selectedValue,
                                 onChanged: (val) {

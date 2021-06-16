@@ -42,6 +42,7 @@ class SelectDialog<T> extends StatefulWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           title: Text(label ?? ""),
           actions: <Widget>[
             FlatButton(child:Text(allTranslations.text('cancel')), onPressed: () {
@@ -106,13 +107,14 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
                 stream: bloc.stream,
                 builder: (context, snapshot) {
                   if (snapshot.hasError)
-                    return Center(child: Text("Oops"));
+                    return Center(child: Text("Something wrong"));
                   else if (!snapshot.hasData)
                     return Center(child: CircularProgressIndicator());
                   else if (snapshot.data.isEmpty)
                     return Center(child: Text("No data found"));
-                  return ListView.builder(
+                  return ListView.separated(
                     itemCount: snapshot.data.length,
+                    separatorBuilder: (c,index)=>Divider(height: 1,color: Colors.grey.shade500,),
                     itemBuilder: (context, index) {
                       var item = snapshot.data[index];
                       if (widget.itemBuilder != null)
@@ -130,7 +132,8 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
                         );
                       else
                         return ListTile(
-                          title: Text(item.name.toString()),
+                          title: Text(allTranslations.isEnglish?item.englishDescription.toString():
+                          item.arabicDescription.toString()),
                           selected: item == widget.selectedValue,
                           onTap: () {
                             if(item.hasSub){

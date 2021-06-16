@@ -350,9 +350,9 @@ class _MainScreenState extends State<MainScreen> {
                                   style: TextStyle(color: Colors.white, fontSize: 20),
                                 ),
                                 onPressed: () {
-                                  BlocProvider.of<LoginBloc>(context).logout();
-                                  bloc.navigateToScreen(NavigationScreen.HOME);
                                   Navigator.pop(context);
+                                  BlocProvider.of<LoginBloc>(context).logout();
+
 
                                 },
                                 width: 120,
@@ -413,6 +413,7 @@ class _MainScreenState extends State<MainScreen> {
                           initialData:BlocProvider.of<LoginBloc>(context).isLogged(),
                           stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
                           builder: (context, snapshot) {
+                            if(snapshot.hasData&&!snapshot.data){}
                             return Padding(
                               padding: EdgeInsets.symmetric(vertical: 0,horizontal: 16),
                               child: Visibility(
@@ -457,7 +458,6 @@ class _MainScreenState extends State<MainScreen> {
                                 ),
                                 onPressed: () {
                                   BlocProvider.of<LoginBloc>(context).logout();
-                                  bloc.navigateToScreen(NavigationScreen.HOME);
                                   Navigator.pop(context);
 
                                 },

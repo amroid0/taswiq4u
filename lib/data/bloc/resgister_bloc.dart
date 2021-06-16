@@ -29,12 +29,13 @@ class RegisterBloc extends Bloc with RegisterValidators{
   Stream<String> get email => _phoneController.stream.transform(validateEmail);
   Stream<String> get password => _passwordController.stream.transform(validatePassword);
   Stream<String> get confrimPassword => _ConfirmPassword.stream.transform(validateConfirmPassword).doOnData((String c){
-    // If the password is accepted (after validation of the rules)
-    // we need to ensure both password and retyped password match
-    if (0 != _passwordController.value.compareTo(c)){
+ if (0 != _passwordController.value.compareTo(c)){
       // If they do not match, add an error
-      _ConfirmPassword.addError(allTranslations.text('err_pass_confirm'));
-    }
+   _ConfirmPassword.addError(allTranslations.text('err_pass_confirm'));
+
+ }
+
+
   });
   Stream<String> get firstName => _firstNameController.stream.transform(validateFirstName);
   Stream<String> get seocndName => _secondNameController.stream.transform(validateSeocndName);
@@ -51,12 +52,11 @@ class RegisterBloc extends Bloc with RegisterValidators{
   RegisterBloc();
 
   submit(int countryId) async{
-    final validEmail = _phoneController.value;
-    final validPassword = _passwordController.value;
+    final validEmail = _phoneController.value.toString();
+    final validPassword = _passwordController.value.toString();
     final validFirstName = _firstNameController.value.trim();
     List<String>namePattern=validFirstName.split(" ");
     String lang=await preferences.getLang();
-    String country=await preferences.getCountryID();
     int langID=lang==null ||lang=='en'?1:2;
     _regiseterController.add(LoginApiResponse.loading('loading'));
     try {

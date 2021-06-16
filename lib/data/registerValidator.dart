@@ -8,6 +8,7 @@ class RegisterValidators {
   StreamTransformer<String, String>.fromHandlers(handleData: (email, sink) {
     String pattern = r"\b([\-]?\d[\-]?){11}\b";
     RegExp regExp = new RegExp(pattern);
+    print(email);
     if (email.length>10) {
       sink.add(email);
     }
@@ -32,7 +33,7 @@ class RegisterValidators {
 
   final validateConfirmPassword = StreamTransformer<String, String>.fromHandlers(
       handleData: (password, sink) {
-        if (password.length == 5) {
+        if (password.length > 5) {
           sink.add(password);
         } else {
           sink.addError(allTranslations.text('err_pass_confirm'));
@@ -42,12 +43,22 @@ class RegisterValidators {
 
   final validateFirstName = StreamTransformer<String, String>.fromHandlers(
       handleData: (firstName, sink) {
-        if (firstName.length >= 3) {
+        final nameRegExp = new RegExp(r"^\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$");
+        final String name = firstName.replaceAll(RegExp(r'\u{200e}', unicode: true), '');
+
+        if(firstName.isEmpty){
+          sink.addError(allTranslations.text('err_fname'));
+
+        }
+
+
+        if(nameRegExp.hasMatch(name.trim().toString())){
+          print("true");
           sink.add(firstName);
-        }else if(firstName.length==0){
-          sink.addError(allTranslations.text('empty_field'));
         }
         else {
+          print("false");
+
           sink.addError(allTranslations.text('err_fname'));
         }
       });

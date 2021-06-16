@@ -183,7 +183,9 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
       selectedValue: CateogryEntity(),
       items: List(),
       onChange: (CateogryEntity selected) {
-        _cattextController.text=selected.name.toString();
+        _cattextController.text=allTranslations.isEnglish?
+        selected.englishDescription.toString()
+            :selected.arabicDescription.toString();
         _selectedFieldValue=[];
         _colorFieldValue=[];
         bloc.getAddFieldsByCatID(selected.id);
@@ -863,7 +865,7 @@ body: Padding(
       return allTranslations.text('empty_field');
     }
 
-    else if(!regExp.hasMatch(value)){
+    else if(value.length<=10){
       return allTranslations.text('err_phone');
     }else{
       return null;

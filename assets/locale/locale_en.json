@@ -9,7 +9,7 @@
   "login_loading": "Loading...",
   "err_email": "invalid Phone Must be at least 11 numbers",
   "err_pass": "Invalid password, please enter more than 6 characters",
-  "err_fname": "short first name",
+  "err_fname": "Name Must consist from First name and Last name",
   "err_lname": "short last name ",
   "choose_category": "choose Cateogry",
   "ads_add": "Add Ad",
@@ -99,7 +99,8 @@
   "welcome3_desc":"Explore Multi Categories of Ads",
   "report": "Report Ad",
   "map": "Map",
-  "agree": "Ok"
+  "agree": "Ok",
+  "err_verify": "Wrong SMS Code"
 
 
 

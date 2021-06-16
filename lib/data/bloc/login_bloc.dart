@@ -97,10 +97,10 @@ reset(){
 
 @override
 void dispose() {
-_emailController.close();
+/*_emailController.close();
 _passwordController.close();
 //_controller.close();
-_logincontroller.close();
+_logincontroller.close();*/
 
   }
 
