@@ -464,7 +464,7 @@ class _DetailPageState extends State<DetailPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => BlocProvider(bloc:_bloc ,child: SliderFullImageViewer())
-                                ,settings: RouteSettings(arguments:{"list":items,"index":index})));
+                                ,settings: RouteSettings(arguments:{"list":items,"index":index,"length":items.length})));
 
 
 

@@ -101,8 +101,7 @@ class AdsRowWidget extends StatelessWidget {
                                 Icon(Icons.update_outlined, size: 20,),
 
                                 FittedBox(
-                                  child: Text( DateFormatter.FormateDate(model
-                                      .CreationTime.toIso8601String()),
+                                  child: Text( displayTimeAgoFromTimestamp(model.CreationTime),
                                     style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize: 13),maxLines: 1,overflow: TextOverflow.ellipsis,),
                                 ),
 
@@ -152,6 +151,34 @@ class AdsRowWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+  static String displayTimeAgoFromTimestamp(DateTime dateString, {bool numericDates = true}) {
+    final date2 = DateTime.now();
+    print(date2);
+    print(dateString);
+    final difference = date2.difference(dateString);
+    print(difference);
+
+    if (difference.inDays > 10) {
+
+      return '${(dateString.day)} / ${(dateString.month)} ' ;
+    }  else if (difference.inDays >= 2) {
+      return '${difference.inDays} days ago';
+    } else if (difference.inDays >= 1) {
+      return (numericDates) ? '1 day ago' : 'Yesterday';
+    } else if (difference.inHours >= 2) {
+      return '${difference.inHours} hours ago';
+    } else if (difference.inHours >= 1) {
+      return (numericDates) ? '1 hour ago' : 'An hour ago';
+    } else if (difference.inMinutes >= 2) {
+      return '${difference.inMinutes} minutes ago';
+    } else if (difference.inMinutes >= 1) {
+      return (numericDates) ? '1 minute ago' : 'A minute ago';
+    } else if (difference.inSeconds >= 3) {
+      return '${difference.inSeconds} seconds ago';
+    } else {
+      return 'Just now';
+    }
   }
 
 
