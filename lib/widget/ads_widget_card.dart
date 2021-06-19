@@ -7,6 +7,7 @@ import 'package:olx/model/ads_entity.dart';
 import 'package:olx/pages/detail_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/utils/Constants.dart';
+import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/utils.dart';
 import 'package:olx/widget/favroite_widget.dart';
 
@@ -71,7 +72,7 @@ class AdsCardWidget extends StatelessWidget {
                           ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,),
-                          Text("${model.Price} م.ج",
+                          Text("${model.Price}+${allTranslations.text('cuurency')} ",
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
 
@@ -109,32 +110,35 @@ class AdsCardWidget extends StatelessWidget {
                     )
 
                 ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [ InkWell(
+                Align(
+                  alignment:Alignment.topRight ,
+                  child: Row(
+                    //  mainAxisAlignment: MainAxisAlignment.end,
+                      children: [ InkWell(
 
-                      onTap: () {},
-                      child: Container(
-                          margin: EdgeInsets.only(left: 4),
+                        onTap: () {},
+                        child: Container(
+                            margin: EdgeInsets.only(left: 4),
 
-                          alignment: Alignment.center,
-                          color: Colors.white,
-                          child: FavroiteWidget(
-                              onFavChange: (val) {
-                                if (BlocProvider.of<LoginBloc>(context)
-                                    .isLogged())
-                                  BlocProvider.of<FavroiteBloc>(context)
-                                      .changeFavoriteState(val, model.Id);
-                                else
-                                  Navigator.push(
-                                      context, MaterialPageRoute(
-                                      builder: (context) => ParentAuthPage()));
-                              },
-                              value: model.IsFavorite
-                          )
+                            alignment: Alignment.topRight,
+                            color: Colors.white,
+                            child: FavroiteWidget(
+                                onFavChange: (val) {
+                                  if (BlocProvider.of<LoginBloc>(context)
+                                      .isLogged())
+                                    BlocProvider.of<FavroiteBloc>(context)
+                                        .changeFavoriteState(val, model.Id);
+                                  else
+                                    Navigator.push(
+                                        context, MaterialPageRoute(
+                                        builder: (context) => ParentAuthPage()));
+                                },
+                                value: model.IsFavorite
+                            )
+                        ),
                       ),
-                    ),
-                    ]
+                      ]
+                  ),
                 ),
 
               ],
@@ -160,23 +164,16 @@ class AdsCardWidget extends StatelessWidget {
       return Image.asset("images/logo.png", fit: BoxFit.fill,);
   }
   static String displayTimeAgoFromTimestamp(DateTime dateString, {bool numericDates = true}) {
-   // DateTime date = DateTime.parse(dateString);
     final date2 = DateTime.now();
+    print(date2);
+    print(dateString);
     final difference = date2.difference(dateString);
+    print(difference);
 
-    if ((difference.inDays / 365).floor() >= 2) {
-      return '${(difference.inDays / 365).floor()} years ago';
-    } else if ((difference.inDays / 365).floor() >= 1) {
-      return (numericDates) ? '1 year ago' : 'Last year';
-    } else if ((difference.inDays / 30).floor() >= 2) {
-      return '${(difference.inDays / 365).floor()} months ago';
-    } else if ((difference.inDays / 30).floor() >= 1) {
-      return (numericDates) ? '1 month ago' : 'Last month';
-    } else if ((difference.inDays / 7).floor() >= 2) {
-      return '${(difference.inDays / 7).floor()} weeks ago';
-    } else if ((difference.inDays / 7).floor() >= 1) {
-      return (numericDates) ? '1 week ago' : 'Last week';
-    } else if (difference.inDays >= 2) {
+    if (difference.inDays > 10) {
+
+      return '${(dateString.day)} / ${(dateString.month)} ' ;
+    }  else if (difference.inDays >= 2) {
       return '${difference.inDays} days ago';
     } else if (difference.inDays >= 1) {
       return (numericDates) ? '1 day ago' : 'Yesterday';
