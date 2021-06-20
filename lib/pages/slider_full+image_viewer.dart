@@ -17,16 +17,16 @@ class _SliderFullImageViewerState extends State<SliderFullImageViewer> {
   PageController _pageController;
   List<AdvertismentImage>list;
   int currentPage=0;
+  int page=0 ;
 
   @override
   Widget build(BuildContext context) {
-
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
     if (arguments != null) {
       list = arguments["list"] as List<AdvertismentImage>;
       currentPage=arguments["index"]as int;
     }
-    _pageController=PageController(initialPage: currentPage,viewportFraction: 1, keepPage: true);
+      _pageController=PageController(initialPage: currentPage,viewportFraction: 1, keepPage:true);
     // _pageController.jumpToPage(currentPage);
     return Scaffold(
 
@@ -44,6 +44,7 @@ class _SliderFullImageViewerState extends State<SliderFullImageViewer> {
             // Covered = the smallest possible size to fit the whole screen
             maxScale: PhotoViewComputedScale.covered * 2,
           );
+
         },
         scrollPhysics: BouncingScrollPhysics(),
         // Set the background color to the "classic white"
@@ -51,6 +52,14 @@ class _SliderFullImageViewerState extends State<SliderFullImageViewer> {
           color: Colors.black,
         ),
           pageController:_pageController,
+        onPageChanged:(int x){
+        setState(() {
+          x++;
+          page =x;
+          print(page.toString());
+        });
+
+      } ,
         loadingBuilder: (context, event) => Center(
           child: Container(
             width: 20.0,
@@ -85,6 +94,10 @@ class _SliderFullImageViewerState extends State<SliderFullImageViewer> {
               ),
             ),
           ),
+         Align(
+           alignment:Alignment.bottomCenter,
+           child:Container(margin:const EdgeInsets.only(bottom:24),child: Text('${page!=0?page:currentPage+1}/${list.length}',style:TextStyle(color:Colors.yellowAccent,fontSize:24),)),
+         )
 
         ]
 

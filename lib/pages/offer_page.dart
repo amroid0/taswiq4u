@@ -242,7 +242,7 @@ class _OfferPageState extends State<OfferPage> {
                         fit: BoxFit.fill,
                         placeholder: (context, url) => Image.asset("images/logo.png"),
                         errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                        imageUrl: APIConstants.getFullImageUrl(Item.systemDataFile.url, ImageType.COMMAD)
+                       imageUrl: APIConstants.getFullImageUrl(Item.categoryId==2795?"":Item.systemDataFile.url, ImageType.COMMAD)
                     ),
                   )
               ),

@@ -322,41 +322,11 @@ class _DetailPageState extends State<DetailPage> {
                                   ),
                                 ),
                               ),
-                              Container(
-                                  decoration: BoxDecoration(
-                                      color: Color(0xffECECEC).withOpacity(0.6),
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child:FavroiteWidget(onFavChange:(val){
-                                    if(BlocProvider.of<LoginBloc>(context).isLogged())
-                                    favbloc.changeFavoriteState(val,detail.Id);
-                                    else
-                                      Navigator.push(
-                                          context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
-            },value: detail.IsFavorite,)),
-
-
 
                               SizedBox(
                                 width: 10,
                               ),
-                              GestureDetector(
-                                onTap: () async {
-                                    await FlutterShare.share(
-                                        title: 'Taswiq share',
-                                        text: detail.ArabicDescription,
-                                        linkUrl: detail.ArabicDescriptionUrl,
-                                        chooserTitle: 'taswiq Chooser Title');
-                                  }                ,
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20)),
-                                    child: Icon(
-                                      Icons.share,
-                                      size: 30.0,
-                                      color: Colors.black,
-                                    )),
-                              ),
+
                               Visibility(
                                 visible: widget.isEditable,
                                 child: GestureDetector(
@@ -395,6 +365,50 @@ class _DetailPageState extends State<DetailPage> {
                           ),
                         ),
                       ),
+                      Align(
+                        child: Container(
+                          margin:EdgeInsets.only(top:305,left:12.0,right: 12.0),
+                          child: Row(
+                            mainAxisAlignment:MainAxisAlignment.end ,
+                            children: [
+                              Container(
+                                 // margin:EdgeInsets.only(top:300,left:12.0,right: 12.0),
+                                  decoration: BoxDecoration(
+                                      color: Color(0xffECECEC).withOpacity(0.6),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child:FavroiteWidget(onFavChange:(val){
+                                    if(BlocProvider.of<LoginBloc>(context).isLogged())
+                                      favbloc.changeFavoriteState(val,detail.Id);
+                                    else
+                                      Navigator.push(
+                                          context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
+                                  },value: detail.IsFavorite,)),
+                              SizedBox(width:20,),
+                              GestureDetector(
+                                onTap: () async {
+                                  await FlutterShare.share(
+                                      title: 'Taswiq share',
+                                      text: detail.ArabicDescription,
+                                      linkUrl: detail.ArabicDescriptionUrl,
+                                      chooserTitle: 'taswiq Chooser Title');
+                                }                ,
+                                child: Container(
+                                   // margin:EdgeInsets.only(top: 300 ,left:50,right: 50),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20)),
+                                    child: Icon(
+                                      Icons.share,
+                                      size: 30.0,
+                                      color: Colors.black,
+                                    )),
+                              ),
+                            ],
+
+                          ),
+                        ),
+                      ),
+
 
                     ]),
                     SizedBox(
@@ -464,7 +478,7 @@ class _DetailPageState extends State<DetailPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => BlocProvider(bloc:_bloc ,child: SliderFullImageViewer())
-                                ,settings: RouteSettings(arguments:{"list":items,"index":index})));
+                                ,settings: RouteSettings(arguments:{"list":items,"index":index,"length":items.length})));
 
 
 

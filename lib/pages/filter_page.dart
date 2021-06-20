@@ -179,6 +179,7 @@ class FilterPage extends StatefulWidget {
                                  TextField(
 
                                    controller: _fromController,
+                                   keyboardType:TextInputType.number,
                                    decoration: InputDecoration(
                                      labelText: 'Min Price',
 
@@ -186,6 +187,7 @@ class FilterPage extends StatefulWidget {
                                  ),
                                  TextField(
                                    controller: _toController,
+                                   keyboardType:TextInputType.number,
                                    decoration: InputDecoration(
                                      labelText: 'Max Price',
                                    ),
@@ -198,7 +200,9 @@ class FilterPage extends StatefulWidget {
                                    setState((){
                                      minValue=_fromController.text;
                                      maxValue=_toController.text;
-                                     _pricetextController.text ="${_fromController.text}-${_toController.text}";
+                                     _pricetextController.text =_fromController.text.isNotEmpty && _toController.text.isNotEmpty ?"from ${_fromController.text} to ${_toController.text}"
+                                     : _fromController.text.isNotEmpty && _toController.text.isEmpty ? "from ${_fromController.text} "
+                                         :_fromController.text.isEmpty && _toController.text.isNotEmpty ? "to ${_toController.text} ":"" ;
                                    });
                                    Navigator.pop(context);
                                  },                                 child: Text(
@@ -209,7 +213,7 @@ class FilterPage extends StatefulWidget {
                              ]).show();
 
                        },
-                       keyboardType: TextInputType.numberWithOptions(decimal: true),
+                       keyboardType: TextInputType.number,
                        inputFormatters: [WhitelistingTextInputFormatter.digitsOnly,LengthLimitingTextInputFormatter((20))],
                        onSaved: (val){
                          filterParamsEntity.priceMin=double.tryParse(minValue)??0;

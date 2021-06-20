@@ -100,7 +100,8 @@
   "report": "Report Ad",
   "map": "Map",
   "agree": "Ok",
-  "err_verify": "Wrong SMS Code"
+  "err_verify": "Wrong SMS Code",
+  "cuurency": "E.G"
 
 
 

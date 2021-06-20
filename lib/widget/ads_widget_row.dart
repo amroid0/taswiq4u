@@ -8,6 +8,7 @@ import 'package:olx/model/ads_entity.dart';
 import 'package:olx/pages/detail_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/utils/Constants.dart';
+import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/utils.dart';
 import 'package:olx/widget/favroite_widget.dart';
 
@@ -17,7 +18,7 @@ class AdsRowWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-
+      height:180,
       margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       child: new InkWell(
         onTap: () {
@@ -30,7 +31,7 @@ class AdsRowWidget extends StatelessWidget {
         },
         child: new Card(
           elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
           child: new Container(
 
 
@@ -76,7 +77,7 @@ class AdsRowWidget extends StatelessWidget {
                             Text(model.EnglishTitle,maxLines: 2,overflow: TextOverflow.ellipsis,style: TextStyle(
                               height: 1.2,
                             ),),
-                            Text("${model.Price} ج.م",
+                            Text("${model.Price}${allTranslations.text('cuurency')} ",
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
 
@@ -101,8 +102,7 @@ class AdsRowWidget extends StatelessWidget {
                                 Icon(Icons.update_outlined, size: 20,),
 
                                 FittedBox(
-                                  child: Text( DateFormatter.FormateDate(model
-                                      .CreationTime.toIso8601String()),
+                                  child: Text( displayTimeAgoFromTimestamp(model.CreationTime),
                                     style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize: 13),maxLines: 1,overflow: TextOverflow.ellipsis,),
                                 ),
 
@@ -118,15 +118,15 @@ class AdsRowWidget extends StatelessWidget {
 
                   ),
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  //  mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       InkWell(
 
                         onTap: () {},
                         child: Container(
-                            margin: EdgeInsets.only(left: 4),
+                            margin: EdgeInsets.all(8.0),
 
-                            alignment: Alignment.center,
+                            alignment: Alignment.topRight,
                             color: Colors.white,
                             child: FavroiteWidget(
                                 onFavChange:(val){
@@ -152,6 +152,34 @@ class AdsRowWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+  static String displayTimeAgoFromTimestamp(DateTime dateString, {bool numericDates = true}) {
+    final date2 = DateTime.now();
+    print(date2);
+    print(dateString);
+    final difference = date2.difference(dateString);
+    print(difference);
+
+    if (difference.inDays > 10) {
+
+      return '${(dateString.day)} / ${(dateString.month)} ' ;
+    }  else if (difference.inDays >= 2) {
+      return '${difference.inDays} days ago';
+    } else if (difference.inDays >= 1) {
+      return (numericDates) ? '1 day ago' : 'Yesterday';
+    } else if (difference.inHours >= 2) {
+      return '${difference.inHours} hours ago';
+    } else if (difference.inHours >= 1) {
+      return (numericDates) ? '1 hour ago' : 'An hour ago';
+    } else if (difference.inMinutes >= 2) {
+      return '${difference.inMinutes} minutes ago';
+    } else if (difference.inMinutes >= 1) {
+      return (numericDates) ? '1 minute ago' : 'A minute ago';
+    } else if (difference.inSeconds >= 3) {
+      return '${difference.inSeconds} seconds ago';
+    } else {
+      return 'Just now';
+    }
   }
 
 
