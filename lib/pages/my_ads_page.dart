@@ -319,8 +319,8 @@ class _MyAdsPageState extends State<MyAdsPage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Text(ads[adsIndex]
-                              .EnglishTitle),
+                          // Text(ads[adsIndex]
+                          //     .EnglishTitle),
                           Text(ads[adsIndex]
                               .ArabicTitle,
                             overflow: TextOverflow.fade,
@@ -404,99 +404,149 @@ class _MyAdsPageState extends State<MyAdsPage> {
                 ,settings: RouteSettings(arguments: ads[adsIndex])),
           );
         },
-        child: new Card(
-          elevation: 4,
-          child: new SizedBox(
-            child: new Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
+        child: Container(
+          height:250,
+          child: new Card(
+            elevation: 4,
+            child: new SizedBox(
+              child: new Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
 
-                new Container(
-                    width: 100,
-                    height: 85,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(4),
-                          bottomRight: Radius.circular(4)),
+                  new Container(
+                      width: 100,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(4),
+                            bottomRight: Radius.circular(4)),
 
-                    ),
-                    alignment: Alignment.center,
-                    child:
-                    FittedBox(
-                      child: CachedNetworkImage(
-                        fit: BoxFit.fill,
-
-                        placeholder: (context, url) => Image.asset("images/logo.png"),
-                        errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                        imageUrl: APIConstants.getFullImageUrl(imageList.isEmpty?"":imageList[0].Url,ImageType.ADS),
                       ),
-                    )
-                ),
+                      alignment: Alignment.center,
+                      child:
+                      FittedBox(
+                        child: CachedNetworkImage(
+                          fit: BoxFit.fill,
+                          height: 100,
+                          placeholder: (context, url) => Image.asset("images/logo.png"),
+                          errorWidget: (context, url,error) => Image.asset("images/logo.png"),
+                          imageUrl: APIConstants.getFullImageUrl(imageList.isEmpty?"":imageList[0].Url,ImageType.ADS),
+                        ),
+                      )
+                  ),
 
-                new Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Column(
-
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(ads[adsIndex]
-                              .EnglishTitle),
-                          Text(ads[adsIndex]
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 4),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        // Text(ads[adsIndex]
+                        //     .EnglishTitle),
+                        Container(
+                          height:30,
+                          child: Text(ads[adsIndex]
                               .ArabicDescription,
                             overflow: TextOverflow.fade,
                             maxLines: 1,
-
                             style: TextStyle(color: Theme
                                 .of(context)
                                 .accentColor),),
-                          Divider(height: 1,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                        ),
+                        Divider(height: 1,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
 
-                            children: <Widget>[
-                              Text(ads[adsIndex]
-                                  .CityNameEnglish),
-                              Icon(Icons.pin_drop, size: 16),
+                          children: <Widget>[
+                            Text(ads[adsIndex]
+                                .CityNameEnglish),
+                            Icon(Icons.pin_drop, size: 16),
 
-                            ],),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
+                          ],),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
 
-                              Flexible(
-                                child: Text( DateFormatter.FormateDate(ads[adsIndex]
-                                    .CreationTime.toString())),
-                              ),
-                              Icon(Icons.update, size: 16,),
+                            Expanded(
+                              child: Text( DateFormatter.FormateDate(ads[adsIndex]
+                                  .CreationTime.toString())),
+                            ),
+                            Icon(Icons.update, size: 15,),
 
-                            ],),
-
-
-                        ],
+                          ],),
 
 
-                      ),
-                    )
+                      ],
 
 
-                ),
-                InkWell(
+                    ),
+                  ),
 
-                  onTap: () {},
-                  child: Container(
-                      margin: EdgeInsets.only(left: 4),
+                  // new Expanded(
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.symmetric(horizontal: 4),
+                  //       child: Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.end,
+                  //         mainAxisAlignment: MainAxisAlignment.start,
+                  //         children: <Widget>[
+                  //           Text(ads[adsIndex]
+                  //               .EnglishTitle),
+                  //           Text(ads[adsIndex]
+                  //               .ArabicDescription,
+                  //             overflow: TextOverflow.fade,
+                  //             maxLines: 1,
+                  //
+                  //             style: TextStyle(color: Theme
+                  //                 .of(context)
+                  //                 .accentColor),),
+                  //           Divider(height: 1,),
+                  //           Row(
+                  //             mainAxisAlignment: MainAxisAlignment.end,
+                  //
+                  //             children: <Widget>[
+                  //               Text(ads[adsIndex]
+                  //                   .CityNameEnglish),
+                  //               Icon(Icons.pin_drop, size: 16),
+                  //
+                  //             ],),
+                  //           Row(
+                  //             mainAxisAlignment: MainAxisAlignment.end,
+                  //             children: <Widget>[
+                  //
+                  //               Expanded(
+                  //                 child: Text( DateFormatter.FormateDate(ads[adsIndex]
+                  //                     .CreationTime.toString())),
+                  //               ),
+                  //               Icon(Icons.update, size: 15,),
+                  //
+                  //             ],),
+                  //
+                  //
+                  //         ],
+                  //
+                  //
+                  //       ),
+                  //     )
+                  //
+                  //
+                  // ),
 
-                      alignment: Alignment.center,
-                      color: Colors.white,
-                      child: FavroiteWidget(onFavChange:(val){
-                        bloc.changeFavoriteState(val,ads[adsIndex].Id);
-                      },value: true,)),
-                ),
+                  InkWell(
 
-              ],
+                    onTap: () {},
+                    child: Container(
+                        margin: EdgeInsets.only(left: 4),
+
+                        alignment: Alignment.bottomCenter,
+                        color: Colors.white,
+                        child: FavroiteWidget(onFavChange:(val){
+                          bloc.changeFavoriteState(val,ads[adsIndex].Id);
+                        },value: true,)),
+                  ),
+
+                ],
+              ),
             ),
           ),
         ),

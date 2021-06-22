@@ -32,6 +32,7 @@ class _FavroiteWidgetState extends State<FavroiteWidget> {
           });
         },
         child: Container(
+          height:30,
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
               boxShadow:[ BoxShadow(blurRadius: 4,color: Colors.black26)], color: Colors.white),
           child: widget.value

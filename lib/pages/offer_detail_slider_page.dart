@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
@@ -7,6 +8,7 @@ import 'package:olx/model/Counter.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/offfer_entity.dart';
 import 'package:olx/utils/Constants.dart';
+import 'package:olx/utils/Theme.dart';
 import 'package:olx/widget/base64_image.dart';
 import 'package:olx/model/popup_ads_entity_entity.dart';
 import 'package:photo_view/photo_view.dart';
@@ -21,8 +23,9 @@ class OfferSliderPage extends StatefulWidget {
 
 class _OfferSliderPageState extends State<OfferSliderPage> {
   PageController _pageController;
-  List< PopupAdsEntityList>  list;
+  List< PopupAdsEntityList>  list ;
    int currentPage=0;
+   int ImageIndex=0 ;
    @override
   void initState() {
     // TODO: implement initState
@@ -37,7 +40,7 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
       list = arguments["list"] as List< PopupAdsEntityList> ;
       currentPage=arguments["index"]as int;
     }
-    _pageController=PageController(initialPage: currentPage,viewportFraction: 1, keepPage: true);
+    _pageController=PageController(initialPage: currentPage,viewportFraction:1, keepPage: true,);
 
    // _pageController.jumpToPage(currentPage);
          return Scaffold(
@@ -200,4 +203,5 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
 
 
   }
+
 }
