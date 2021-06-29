@@ -16,6 +16,8 @@ import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/model/popup_ads_entity_entity.dart';
 
+import 'offer_slider_page.dart';
+
 
 class OfferPage extends StatefulWidget {
   @override
@@ -105,7 +107,7 @@ class _OfferPageState extends State<OfferPage> {
                     child: new Center(
                       child: new CircularProgressIndicator(
                         backgroundColor: Colors.deepOrangeAccent,
-                        strokeWidth: 5.0,
+                        strokeWidth: 3.0,
                       ),
                     ),
                   );
@@ -212,53 +214,60 @@ class _OfferPageState extends State<OfferPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => BlocProvider(bloc: offerBloc,child: OfferSliderPage())
+              builder: (context) => BlocProvider(bloc: offerBloc,child: OfferSliderScreen())
               ,settings: RouteSettings(arguments:{"list":entity,"index":index})));
 
       },
-      child: new Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20)
-          ),
-          child: new Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              new Container(
-                height: 100.0,
-                width: 100.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.grey.shade300
+      child: Container(
+       // height:100,
+        child: new Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14)
+            ),
+            child: new Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: new Container(
+                    height: 175.0,
+                    width: 100.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        color: Colors.grey.shade300
+                      ),
+
+                      child:
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(14),
+
+                        child:
+                        CachedNetworkImage(
+                          height:50,
+                            fit: BoxFit.fill,
+                            placeholder: (context, url) => Image.asset("images/logo.png"),
+                            errorWidget: (context, url,error) => Image.asset("images/logo.png"),
+                           imageUrl: APIConstants.getFullImageUrl(Item.categoryId==2795?"":Item.systemDataFile.url, ImageType.COMMAD)
+                        ),
+                      )
                   ),
-
-                  child:
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-
-                    child:
-                    CachedNetworkImage(
-                        fit: BoxFit.fill,
-                        placeholder: (context, url) => Image.asset("images/logo.png"),
-                        errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                       imageUrl: APIConstants.getFullImageUrl(Item.categoryId==2795?"":Item.systemDataFile.url, ImageType.COMMAD)
-                    ),
-                  )
-              ),
-              SizedBox(height: 4,),
-              new Padding(
-                padding: EdgeInsets.all(4.0),
-                child: Container(
-                  alignment: Alignment.center,
-                    child: Text(Item.description!=null?Item.description:"",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16,height: 1.2),maxLines: 2,overflow: TextOverflow.ellipsis,),
-                )
-
-              )
-            ],
-          )),
+                ),
+                // SizedBox(height: 4,),
+                // new Padding(
+                //   padding: EdgeInsets.all(4.0),
+                //   child: Container(
+                //     alignment: Alignment.center,
+                //       child: Text(Item.description!=null?Item.description:"",
+                //       textAlign: TextAlign.center,
+                //       style: TextStyle(fontSize: 16,height: 1.2),maxLines: 2,overflow: TextOverflow.ellipsis,),
+                //   )
+                //
+                // )
+              ],
+            )),
+      ),
     );
   }
 

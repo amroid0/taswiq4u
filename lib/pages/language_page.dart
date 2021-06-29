@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/languge_bloc.dart';
 import 'package:olx/pages/parentAuthPage.dart';
+import 'package:olx/pages/welcome_page.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/fracation_sized_box.dart';
 
@@ -54,7 +55,7 @@ topFactor:.5,
                         "ar");
 
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => CountryPage()));
+                        MaterialPageRoute(builder: (context) => WelocmeScreen()));
                   }
                    ,
                   child: new Container(

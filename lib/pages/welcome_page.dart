@@ -6,6 +6,7 @@ import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/utils/global_locale.dart';
 
 import 'Walkthrouth_page.dart';
+import 'country_page.dart';
 import 'language_page.dart';
 
 class WelocmeScreen extends StatefulWidget {
@@ -52,7 +53,7 @@ class _WelocmeScreenState extends State<WelocmeScreen> {
                  FlatButton(child: new Text(allTranslations.text('next'),style: TextStyle(fontWeight: FontWeight.bold)),onPressed:(){
                    setState(() {
                      if(currentIndexPage==2){
-                       Navigator.push(context,MaterialPageRoute(builder: (context) => ChooseLanguagePage()));
+                       Navigator.push(context,MaterialPageRoute(builder: (context) => CountryPage()));
                      }else{
                        currentIndexPage++;
                      }
@@ -67,7 +68,7 @@ class _WelocmeScreenState extends State<WelocmeScreen> {
                   decorator: DotsDecorator(activeColor: Colors.green),),
 
                     FlatButton(child: new Text(allTranslations.text('skip'),style: TextStyle(fontWeight: FontWeight.bold),),onPressed: (){
-                      Navigator.push(context,MaterialPageRoute(builder: (context) => ChooseLanguagePage()));
+                      Navigator.push(context,MaterialPageRoute(builder: (context) => CountryPage()));
                     },),
 
 

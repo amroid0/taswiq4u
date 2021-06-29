@@ -86,7 +86,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (context) => WelocmeScreen()),
+                              MaterialPageRoute(builder: (context) => ChooseLanguagePage()),
                             );});                        break;
                       }
                     }
