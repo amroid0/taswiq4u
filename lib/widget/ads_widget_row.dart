@@ -18,7 +18,7 @@ class AdsRowWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height:180,
+
       margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       child: new InkWell(
         onTap: () {
@@ -31,7 +31,7 @@ class AdsRowWidget extends StatelessWidget {
         },
         child: new Card(
           elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: new Container(
 
 
@@ -69,7 +69,7 @@ class AdsRowWidget extends StatelessWidget {
 
                   new Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 18),
                         child: Column(
 
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,15 +118,15 @@ class AdsRowWidget extends StatelessWidget {
 
                   ),
                   Column(
-                  //  mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       InkWell(
 
                         onTap: () {},
                         child: Container(
-                            margin: EdgeInsets.all(8.0),
+                            margin: EdgeInsets.only(left: 4),
 
-                            alignment: Alignment.topRight,
+                            alignment: Alignment.center,
                             color: Colors.white,
                             child: FavroiteWidget(
                                 onFavChange:(val){

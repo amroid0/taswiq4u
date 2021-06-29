@@ -20,12 +20,13 @@ class CategoryBloc implements Bloc {
   final _subcontroller = BehaviorSubject<List<List<CateogryEntity>>>();
   final _cateogryStack =List<List<CateogryEntity>>();
   final _popupSubject=BehaviorSubject<ApiResponse<List<PopupAdsEntityList>>>();
-
+  List<CateogryEntity> cateogyTitle=[];
   final _mainSliderSubject=BehaviorSubject<ApiResponse<List<PopupAdsEntityList>>>();
 
   final _imageNumberSubject=BehaviorSubject<int>.seeded(0);
 
   Stream<List<CateogryEntity>> get stream => _controller.stream;
+  List<List<CateogryEntity>> get categoryStack =>_cateogryStack;
   Stream<List<List<CateogryEntity>>> get subCatstream => _subcontroller.stream;
   Stream<ApiResponse<List<PopupAdsEntityList>>> get popupStream => _popupSubject.stream;
   Stream<ApiResponse<List<PopupAdsEntityList>>> get mainSliderStreaam => _mainSliderSubject.stream;
@@ -33,6 +34,7 @@ class CategoryBloc implements Bloc {
   CategoryBloc();
 
   void submitQuery(String query) async {
+    cateogyTitle.clear();
     List<CateogryEntity> results = null ;//await preferences.getCateogryList();
     Stream.fromFuture(preferences.getCateogryList())
         .onErrorResumeNext(Stream.fromFuture(_client.getCateogryList()))
@@ -86,10 +88,10 @@ class CategoryBloc implements Bloc {
 
 
 
-  void addCateogryToStack(List<CateogryEntity> cateogry)  {
-var res=    cateogry.where((element) => element.isActive).toList();
-
-    _cateogryStack.add(res);
+  void addCateogryToStack(CateogryEntity cateogry)  {
+   var res=cateogry.subCategories.where((element) => element.isActive).toList();
+    cateogyTitle.add(cateogry);
+   _cateogryStack.add(res);
     _controller.sink.add(res);
     _subcontroller.sink.add(_cateogryStack);
 
@@ -102,6 +104,7 @@ var res=    cateogry.where((element) => element.isActive).toList();
 
   }
   void removeCateogryFromStack()  {
+    cateogyTitle.removeLast();
     _cateogryStack.removeLast();
     _controller.sink.add(_cateogryStack[_cateogryStack.length-1]);
     _subcontroller.sink.add(_cateogryStack);

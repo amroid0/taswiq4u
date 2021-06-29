@@ -198,6 +198,10 @@ class FavroitePage extends StatefulWidget {
 
    }
    Widget _buildAdsList(FavoriteModel ads){
+     for(int i=0;i<ads.list.length;i++){
+       ads.list[i].IsFavorite=true;
+     }
+
      if(ads.list.isEmpty)
 
        return EmptyListWidget(

@@ -37,7 +37,7 @@
   "home": "Home",
   "favroite": "Favroite",
   "account": "Account",
-  "offers": "Offers",
+  "offers": "commercial",
   "sections": "Sections",
   "my_ads": "My Ads",
   "settings": "Settings",
@@ -101,7 +101,9 @@
   "map": "Map",
   "agree": "Ok",
   "err_verify": "Wrong SMS Code",
-  "cuurency": "E.G"
+  "cuurency": "E.G",
+  "details": "Details",
+  "properties": "Properties"
 
 
 

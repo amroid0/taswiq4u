@@ -365,7 +365,7 @@ body: Padding(
                   var item = fields[index];
 
                   //if(item.CustomValue==null)
-                  if(item.MuliSelect==null||!item.MuliSelect)
+                  if((item.MuliSelect==null||!item.MuliSelect)&&item.SpecificationOptions.isNotEmpty)
                     return Padding(
                       padding: const EdgeInsets.only(bottom:8.0),
                       child: FormField<String>(
@@ -429,7 +429,7 @@ body: Padding(
                     );
 
 
-                  else if(item.CustomValue==null)
+                  else if(item.MuliSelect)
                        //if(item.MuliSelect!=null&&item.MuliSelect)
                     /*return Padding(
                       padding: const EdgeInsets.only(bottom:8.0),

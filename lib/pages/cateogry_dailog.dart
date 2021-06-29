@@ -123,7 +123,7 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
                               context, item, item == widget.selectedValue),
                           onTap: () {
                             if(item.hasSub){
-                              bloc.addCateogryToStack(item.subCategories);
+                              bloc.addCateogryToStack(item);
                             }else{
                               onChange(item);
                               Navigator.pop(context);
@@ -137,7 +137,7 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
                           selected: item == widget.selectedValue,
                           onTap: () {
                             if(item.hasSub){
-                              bloc.addCateogryToStack(item.subCategories);
+                              bloc.addCateogryToStack(item);
                             }else{
                               onChange(item);
                               Navigator.pop(context);

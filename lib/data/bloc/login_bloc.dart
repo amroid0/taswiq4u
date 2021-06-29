@@ -66,7 +66,9 @@ bool isLogged() => mIsLogged==null?false:mIsLogged;
       }
       return Stream.error(UnVerfiedException());
     })
-        .doOnData((event) {preferences.saveUserData(event);})
+        .doOnData((event) {
+
+          preferences.saveUserData(event);})
         .doOnListen(() {    _controller.add(LoginApiResponse.loading('loading'));
     }).listen((event) {
        preferences.setAccountAcivation(true);

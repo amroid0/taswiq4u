@@ -342,10 +342,10 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
             shrinkWrap: true,
 
             crossAxisCount:_gridItemCount , //as per your requirement
-            itemCount: ads.advertisementList.length +(ads.advertisementList.length/7).toInt(),
+            itemCount: ads.advertisementList.length +(ads.advertisementList.length/6).toInt(),
             itemBuilder: (BuildContext context, int index) {
-              if (index!=0&&index % 7 == 0) { //for even row
-                int comIndex=(index/7-1).toInt();
+              if (index!=0&&index % 6 == 0) { //for even row
+                int comIndex=(index/6-1).toInt();
                 return GestureDetector(
                   onTap: (){
                     if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
@@ -373,7 +373,7 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
                   ),
                 );
               } else { //for odd row
-                int adsIndex=index-(index/7).toInt();
+                int adsIndex=index-(index/6).toInt();
                 if(ads.advertisementList[adsIndex]==null){
                   return _buildLoaderListItem();
 
@@ -383,7 +383,7 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
 
               }
             },
-            staggeredTileBuilder: (int index) => index!=0&&index % 7 == 0
+            staggeredTileBuilder: (int index) => index!=0&&index % 6 == 0
                 ? new StaggeredTile.fit(2)
                 : new StaggeredTile.fit(1),
           ),
@@ -395,11 +395,11 @@ else {
             child: ListView.builder(
               controller: _scrollController,
               shrinkWrap: true,
-              itemCount: ads.advertisementList.length +(ads.advertisementList.length/7).toInt(),
+              itemCount: ads.advertisementList.length +(ads.advertisementList.length/6).toInt(),
               itemBuilder: (BuildContext context,int index){
 
-                if(index!=0&& index%7==0){
-                  int comIndex=(index/7-1).toInt();
+                if(index!=0&& index%6==0){
+                  int comIndex=(index/6-1).toInt();
                   String commercialAdsItem="";
                   if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
                     commercialAdsItem=ads.commercialAdsList[comIndex].Link;
@@ -441,7 +441,7 @@ else {
                   );
 
                 }else {
-                  int adsIndex=index-(index/7).toInt();
+                  int adsIndex=index-(index/6).toInt();
 
                   if(ads.advertisementList[adsIndex]==null){
                     return _buildLoaderListItem();

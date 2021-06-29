@@ -110,35 +110,32 @@ class AdsCardWidget extends StatelessWidget {
                     )
 
                 ),
-                Align(
-                  alignment:Alignment.topRight ,
-                  child: Row(
-                    //  mainAxisAlignment: MainAxisAlignment.end,
-                      children: [ InkWell(
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [ InkWell(
 
-                        onTap: () {},
-                        child: Container(
-                            margin: EdgeInsets.only(left: 4),
+                      onTap: () {},
+                      child: Container(
+                          margin: EdgeInsets.only(left: 4),
 
-                            alignment: Alignment.topRight,
-                            color: Colors.white,
-                            child: FavroiteWidget(
-                                onFavChange: (val) {
-                                  if (BlocProvider.of<LoginBloc>(context)
-                                      .isLogged())
-                                    BlocProvider.of<FavroiteBloc>(context)
-                                        .changeFavoriteState(val, model.Id);
-                                  else
-                                    Navigator.push(
-                                        context, MaterialPageRoute(
-                                        builder: (context) => ParentAuthPage()));
-                                },
-                                value: model.IsFavorite
-                            )
-                        ),
+                          alignment: Alignment.topRight,
+                          color: Colors.white,
+                          child: FavroiteWidget(
+                              onFavChange: (val) {
+                                if (BlocProvider.of<LoginBloc>(context)
+                                    .isLogged())
+                                  BlocProvider.of<FavroiteBloc>(context)
+                                      .changeFavoriteState(val, model.Id);
+                                else
+                                  Navigator.push(
+                                      context, MaterialPageRoute(
+                                      builder: (context) => ParentAuthPage()));
+                              },
+                              value: model.IsFavorite
+                          )
                       ),
-                      ]
-                  ),
+                    ),
+                    ]
                 ),
 
               ],

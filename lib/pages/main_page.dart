@@ -213,7 +213,7 @@ class _MainScreenState extends State<MainScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
 
-                              Expanded(child: Icon(Icons.add,color: Colors.white,size: 36,)),
+                              Icon(Icons.add,color: Colors.white,size: 36,),
                               Text(allTranslations.text('ads_add'),style: TextStyle(fontSize: 13,color: Colors.white),)
                             ],)
                           ,
