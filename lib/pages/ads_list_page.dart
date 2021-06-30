@@ -41,7 +41,7 @@ class SearchAnnounceListScreen extends StatefulWidget {
 class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
   int _sortSelectedValue=2;
   ScrollController _scrollController = new ScrollController();
-   int page=1;
+  int page=1;
   AdsEntity ads;
   FilterParamsEntity params=new FilterParamsEntity();
 
@@ -157,22 +157,22 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
               mainAxisAlignment:MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Text(allTranslations.text('filter_by')),
-              InkWell(
-                onTap: () async {
-                 var retunObject= await Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => BlocProvider(bloc: AdsBloc(),child:FilterPage(),),
-                  settings: RouteSettings(arguments:params)
+                InkWell(
+                  onTap: () async {
+                    var retunObject= await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => BlocProvider(bloc: AdsBloc(),child:FilterPage(),),
+                            settings: RouteSettings(arguments:params)
 
-                  ));
+                        ));
 
-                  if(retunObject!=null) {
-                    params=retunObject;
-                    BlocProvider.of<AdsBloc>(context).submitQuery(
-                        params, _sortSelectedValue, 1);
-                  }
-                },
-                child: Container(
+                    if(retunObject!=null) {
+                      params=retunObject;
+                      BlocProvider.of<AdsBloc>(context).submitQuery(
+                          params, _sortSelectedValue, 1);
+                    }
+                  },
+                  child: Container(
 
                     width: 36,
                     height: 36,
@@ -180,7 +180,7 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)
                         ,boxShadow:[ BoxShadow(color: Colors.black12,blurRadius: 10)],color: Colors.white),
                     child: Icon(Icons.filter),),
-              ),
+                ),
 
                 Text(allTranslations.text('sort')),
                 InkWell(
@@ -200,23 +200,23 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
                 IconButton(
                   iconSize: 36,
                   icon:Icon(Icons.view_list),
-                onPressed: (){
-                  setState(() {
-                    if(_gridItemCount==1){
-                      _gridItemCount=2;
-                    }else{
-                      _gridItemCount=1;
+                  onPressed: (){
+                    setState(() {
+                      if(_gridItemCount==1){
+                        _gridItemCount=2;
+                      }else{
+                        _gridItemCount=1;
 
-                    }
-                  });
+                      }
+                    });
 
 
-                },
+                  },
                 )
 
 
 
-          ],),
+              ],),
 
             _buildCategoryList(BlocProvider.of<CategoryBloc>(context).getCurrentCategory()),
 
@@ -228,70 +228,70 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
                 switch(snap.data.status) {
                   case Status.LOADING:
                     if(page==1)
-                    return  Expanded(
-                      child: Shimmer.fromColors(
-                          baseColor: Colors.grey[300],
-                          highlightColor: Colors.grey[100],
-                          enabled: true,
-                        child: ListView.builder(
-                          itemBuilder: (_, __) => Container(
-                      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            width: 120.0,
-                            height: 100.0,
-                            color: Colors.white,
+                      return  Expanded(
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.grey[300],
+                            highlightColor: Colors.grey[100],
+                            enabled: true,
+                            child: ListView.builder(
+                              itemBuilder: (_, __) => Container(
+                                margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      width: 120.0,
+                                      height: 100.0,
+                                      color: Colors.white,
 
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  width: double.infinity,
-                                  height: 8.0,
-                                  color: Colors.white,
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Container(
+                                            width: double.infinity,
+                                            height: 8.0,
+                                            color: Colors.white,
+                                          ),
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(vertical: 2.0),
+                                          ),
+                                          Container(
+                                            width: double.infinity,
+                                            height: 8.0,
+                                            color: Colors.white,
+                                          ),
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(vertical: 2.0),
+                                          ),
+                                          Container(
+                                            width: 40.0,
+                                            height: 8.0,
+                                            color: Colors.white,
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 2.0),
-                                ),
-                                Container(
-                                  width: double.infinity,
-                                  height: 8.0,
-                                  color: Colors.white,
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 2.0),
-                                ),
-                                Container(
-                                  width: 40.0,
-                                  height: 8.0,
-                                  color: Colors.white,
-                                ),
-                              ],
+
+                              ),
+
+
+                              itemCount: 15,
                             ),
                           )
-                        ],
-                      ),
-
-                    ),
-
-
-                itemCount: 15,
-                        ),
-                      )
-                    );
+                      );
 
                     break;
 
                   case Status.COMPLETED:
-                     ads=snap.data.data as AdsEntity;
+                    ads=snap.data.data as AdsEntity;
                     return _buildAdsList(ads);
                     break;
                   case Status.ERROR:
@@ -322,91 +322,30 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
   }
   Widget _buildAdsList(AdsEntity ads){
     if(ads.advertisementList.isEmpty)
+      return EmptyListWidget(
 
-    return EmptyListWidget(
-
-        title: 'Empty Ads',
-        subTitle: 'No  Ads available yet',
-        image: 'images/ads_empty.png',
-        titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
-        subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
-    );
+          title: 'Empty Ads',
+          subTitle: 'No  Ads available yet',
+          image: 'images/ads_empty.png',
+          titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
+          subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
+      );
 
     else
-      if(_gridItemCount==2)
-    return
-      Expanded(
-        child: SlideInUp(
-          child: StaggeredGridView.countBuilder(
-            controller: _scrollController,
-            shrinkWrap: true,
-
-            crossAxisCount:_gridItemCount , //as per your requirement
-            itemCount: ads.advertisementList.length +(ads.advertisementList.length/7).toInt(),
-            itemBuilder: (BuildContext context, int index) {
-              if (index!=0&&index % 7 == 0) { //for even row
-                int comIndex=(index/7-1).toInt();
-                return GestureDetector(
-                  onTap: (){
-                    if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => FullComerialScreen()
-                            ,settings: RouteSettings(arguments: ads.commercialAdsList[comIndex])),
-                      );
-
-                    }
-
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 120,
-                    margin: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color:Colors.black12,
-                    ),
-                    child: _BuildImageWidget(ads.commercialAdsList,comIndex)
-
-                    ,
-                  ),
-                );
-              } else { //for odd row
-                int adsIndex=index-(index/7).toInt();
-                if(ads.advertisementList[adsIndex]==null){
-                  return _buildLoaderListItem();
-
-                }
-                return AdsCardWidget(ads.advertisementList[adsIndex]);
-
-
-              }
-            },
-            staggeredTileBuilder: (int index) => index!=0&&index % 7 == 0
-                ? new StaggeredTile.fit(2)
-                : new StaggeredTile.fit(1),
-          ),
-        ),
-      );
-else {
-        return Expanded(
+    if(_gridItemCount==2)
+      return
+        Expanded(
           child: SlideInUp(
-            child: ListView.builder(
+            child: StaggeredGridView.countBuilder(
               controller: _scrollController,
               shrinkWrap: true,
-              itemCount: ads.advertisementList.length +(ads.advertisementList.length/7).toInt(),
-              itemBuilder: (BuildContext context,int index){
 
-                if(index!=0&& index%7==0){
+              crossAxisCount:_gridItemCount , //as per your requirement
+              itemCount: ads.advertisementList.length +(ads.advertisementList.length/7).toInt(),
+              itemBuilder: (BuildContext context, int index) {
+                if (index!=0&& index%7==0) {
+                  //for even row
                   int comIndex=(index/7-1).toInt();
-                  String commercialAdsItem="";
-                  if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
-                    commercialAdsItem=ads.commercialAdsList[comIndex].Link;
-/*
-                    if( ads.commercialAdsList[comIndex].base74Image==null&& ads.commercialAdsList[comIndex].isLoading==null)
-                      BlocProvider.of<AdsBloc>(context).GetImage(commercialAdsItem,comIndex,true);*/
-                  }
                   return GestureDetector(
                     onTap: (){
                       if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
@@ -425,40 +364,102 @@ else {
                       height: 120,
                       margin: EdgeInsets.all(8),
                       decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color:Colors.black12,
+                      ),
+                      child: _BuildImageWidget(ads.commercialAdsList,comIndex)
+
+                      ,
+                    ),
+                  );
+                } else { //for odd row
+                  int adsIndex=index-(index/7).toInt();
+                  if(ads.advertisementList[adsIndex]==null){
+                    return _buildLoaderListItem();
+
+                  }
+                  return AdsCardWidget(ads.advertisementList[adsIndex]);
+
+
+                }
+              },
+              staggeredTileBuilder: (int index) => index!=0&&index % 7 == 0
+                  ? new StaggeredTile.fit(2)
+                  : new StaggeredTile.fit(1),
+            ),
+          ),
+        );
+    else {
+      return Expanded(
+        child: SlideInUp(
+          child: ListView.builder(
+            controller: _scrollController,
+            shrinkWrap: true,
+            itemCount: ads.advertisementList.length +(ads.advertisementList.length/7).toInt(),
+            itemBuilder: (BuildContext context,int index){
+
+              if(index!=0&& index%7==0){
+                int comIndex=(index/7-1).toInt();
+                String commercialAdsItem="";
+                if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
+                  commercialAdsItem=ads.commercialAdsList[comIndex].Link;
+
+/*
+                    if( ads.commercialAdsList[comIndex].base74Image==null&& ads.commercialAdsList[comIndex].isLoading==null)
+                      BlocProvider.of<AdsBloc>(context).GetImage(commercialAdsItem,comIndex,true);*/
+                }
+                return GestureDetector(
+                  onTap: (){
+                    if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FullComerialScreen()
+                            ,settings: RouteSettings(arguments: ads.commercialAdsList[comIndex])),
+                      );
+
+                    }
+
+                  },
+                  child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 120,
+                      margin: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
                         color:Colors.black12,
                         borderRadius:  BorderRadius.circular(20),
 
                       ),
-                     child:  CachedNetworkImage(
-                       fit: BoxFit.fill,
-                       placeholder: (context, url) => Image.asset("images/logo.png"),
-                       errorWidget: (context, url,error) => Image.asset("images/logo.png"),
+                      child:  CachedNetworkImage(
+                        fit: BoxFit.fill,
+                        placeholder: (context, url) => Image.asset("images/logo.png"),
+                        errorWidget: (context, url,error) => Image.asset("images/logo.png"),
                         imageUrl: APIConstants.getFullImageUrl(ads.commercialAdsList.isEmpty||comIndex>=ads.commercialAdsList.length?"":
                         ads.commercialAdsList[comIndex].systemDataFile.Url,ImageType.COMMAD),
                       )
 
-                    ),
-                  );
+                  ),
+                );
+
+              }else {
+                int adsIndex=index-(index/7).toInt();
+
+                if(ads.advertisementList[adsIndex]==null){
+                  return _buildLoaderListItem();
 
                 }else {
-                  int adsIndex=index-(index/7).toInt();
 
-                  if(ads.advertisementList[adsIndex]==null){
-                    return _buildLoaderListItem();
-
-                  }else {
-
-                    return AdsRowWidget(ads.advertisementList[adsIndex]);
+                  return AdsRowWidget(ads.advertisementList[adsIndex]);
 
 
-                  }
                 }
+              }
 
-              },
-            ),
+            },
           ),
-        );
-      }
+        ),
+      );
+    }
 
 
   }
@@ -468,12 +469,12 @@ else {
 
 
 
-void _OnSelectSort(int val){
-  _sortSelectedValue=val;
-  page=1;
-  BlocProvider.of<AdsBloc>(context).submitQuery(params,val,page);
-  Navigator.of(context).pop();
-}
+  void _OnSelectSort(int val){
+    _sortSelectedValue=val;
+    page=1;
+    BlocProvider.of<AdsBloc>(context).submitQuery(params,val,page);
+    Navigator.of(context).pop();
+  }
   void _newSortModalBottomSheet(context){
     showModalBottomSheet(
         context: context,
@@ -539,14 +540,22 @@ void _OnSelectSort(int val){
   }
   Widget _BuildImageWidget(List<CommercialAdsList> list,int index){
     if(list.isNotEmpty&&list[0].systemDataFile.Url!=null&&list[0].systemDataFile.Url.isNotEmpty)
+    {
+      print("notnull");
       return  CachedNetworkImage(
         fit: BoxFit.fill,
         placeholder: (context, url) => Image.asset("images/logo.png"),
         errorWidget: (context, url,error) => Image.asset("images/logo.png"),
         imageUrl: APIConstants.getFullImageUrl(list[0].systemDataFile.Url,ImageType.ADS),
+
       );
-    else
+    }
+
+    else{
+      print("nullll");
       return  Image.asset("images/logo.png",fit: BoxFit.fill,);
+    }
+
 
   }
 
@@ -605,7 +614,5 @@ void _OnSelectSort(int val){
 
 
   }
-
-
 
 }

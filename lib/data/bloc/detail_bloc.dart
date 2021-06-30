@@ -6,15 +6,16 @@ import 'package:olx/model/Counter.dart';
 import 'package:olx/model/ads_detail.dart';
 import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
+import 'package:rxdart/subjects.dart';
 
 import '../shared_prefs.dart';
 
 class DetailBloc extends Bloc{
   final _client = DetailAdsClient();
-  final _controller = StreamController<ApiResponse<AdsDetail>>();
-  final _sliderController = StreamController<List<AdvertismentImage>>();
+  final _controller = PublishSubject<ApiResponse<AdsDetail>>();
+  final _sliderController = PublishSubject<List<AdvertismentImage>>();
   AdsDetail detail=null;
-  final _viewController = StreamController<Counter>();
+  final _viewController = PublishSubject<Counter>();
   Stream<Counter> get viewstream => _viewController.stream;
   Stream<List<AdvertismentImage>> get sliderStream => _sliderController.stream;
 

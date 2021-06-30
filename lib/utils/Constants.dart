@@ -66,6 +66,8 @@ class APIConstants {
 
   static final String PASSWORD_UPDATE_API="${API_BASE_ENDPOINT}/api/Auth/ChangePassword";
 
+  static final String Repoert_Ads_API="${API_BASE_ENDPOINT}/api/Ads/AddAbuseReport";
+
   static String getFullImageUrl(String url,int type){
     return  url!=null&&url.isNotEmpty?'http://api.taswiq4u.com/Api/ImageUpload/i?url=$url&type=$type':"";
 
