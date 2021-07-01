@@ -9,6 +9,7 @@ import 'package:olx/data/bloc/languge_bloc.dart';
 import 'package:olx/data/bloc/login_bloc.dart';
 import 'package:olx/data/bloc/profile_bloc.dart';
 import 'package:olx/data/shared_prefs.dart';
+import 'package:olx/model/user_info.dart';
 import 'package:olx/pages/add_ads_page.dart';
 import 'package:olx/pages/favroite_page.dart';
 import 'package:olx/pages/general_settings.dart';
@@ -47,6 +48,7 @@ class NavItem{
 class _MainScreenState extends State<MainScreen> {
   SharedPreferences sharedPreferences;
   NaviagtionBloc bloc;
+  String userName ='User';
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -100,6 +102,7 @@ class _MainScreenState extends State<MainScreen> {
   bloc=new NaviagtionBloc();
   _cateogyBloc=CategoryBloc();
    searchController = new TextEditingController();
+  getUserName();
 
 
   bloc.stream.listen((data) async {
@@ -292,14 +295,24 @@ class _MainScreenState extends State<MainScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       DrawerHeader(
-                        child: Container(
+                        child: BlocProvider.of<LoginBloc>(context).isLogged() ? Container(
                           alignment: Alignment.topLeft,
-                          child: Icon(Icons.notifications_paused),
-                          decoration: BoxDecoration(
-                              image:DecorationImage(
-                                  image: AssetImage('images/logo.png'),fit: BoxFit.cover)),
+                          child: Column(children: [
+                            Icon(Icons.notifications_paused),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
+                            ),
+                          ], ),
+                        ) : Container(
+                    alignment: Alignment.topLeft,
+                    child: Icon(Icons.notifications_paused),
+                    decoration: BoxDecoration(
+                        image:DecorationImage(
+                            image: AssetImage('images/logo.png'),fit: BoxFit.cover)),
 
-                        ),//container
+                  ),
+                  //container
                         decoration: BoxDecoration(color: AppColors.appBackground),
                       ),
 
@@ -398,14 +411,24 @@ class _MainScreenState extends State<MainScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       DrawerHeader(
-                        child: Container(
+                        child: BlocProvider.of<LoginBloc>(context).isLogged() ? Container(
+                          alignment: Alignment.topLeft,
+                          child: Column(children: [
+                            Icon(Icons.notifications_paused),
+                            Padding(
+                              padding: const EdgeInsets.only(right:24, top: 16,bottom: 8),
+                              child: Text(userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
+                            ),
+                          ], ),
+                        ) : Container(
                           alignment: Alignment.topLeft,
                           child: Icon(Icons.notifications_paused),
                           decoration: BoxDecoration(
                               image:DecorationImage(
                                   image: AssetImage('images/logo.png'),fit: BoxFit.cover)),
 
-                        ),//container
+                        ),
+                        //container
                         decoration: BoxDecoration(color: AppColors.appBackground),
                       ),
 
@@ -622,6 +645,11 @@ class _MainScreenState extends State<MainScreen> {
         return CategoryListFragment();
     }
     return  CategoryListFragment();
+
+  }
+  Future getUserName ()async{
+    UserInfo userInfo = await preferences.getUserInfo();
+    userName = userInfo.firstName;
 
   }
 

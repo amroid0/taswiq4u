@@ -9,6 +9,7 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:olx/data/bloc/Post_Report_bloc.dart';
 import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/detail_bloc.dart';
@@ -16,6 +17,7 @@ import 'package:olx/data/bloc/favroite_bloc.dart';
 import 'package:olx/data/bloc/login_bloc.dart';
 import 'package:olx/data/bloc/offer_bloc.dart';
 import 'package:olx/model/Counter.dart';
+import 'package:olx/model/Post_Report_entity.dart';
 import 'package:olx/model/ads_detail.dart';
 import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
@@ -26,6 +28,7 @@ import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/favroite_widget.dart';
 import 'package:olx/widget/map_widget.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -45,6 +48,7 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   DetailBloc _bloc;
   GoogleMapController _mapController;
+  AdsReportBloc _reportBloc ;
   final detailScaffoldMessengerKey = GlobalKey<ScaffoldState>();
 
 
@@ -54,11 +58,17 @@ class _DetailPageState extends State<DetailPage> {
   FavroiteBloc favbloc;
 
   AdsDetail detail;
+  PostReport _postReport ;
+  List <String> reportReasons =['Wrong Price/Picture/Category','Item Sold','Fraud or Scam','Indecent Seller','Other'];
+  String _select_Types ;
+  bool reportDiolag = false ;
+  TextEditingController message = TextEditingController();
 
   @override
   void initState() {
     // TODO: implement initState
     _bloc = DetailBloc();
+    _reportBloc = AdsReportBloc();
 
     favbloc=new FavroiteBloc();
 
@@ -553,13 +563,85 @@ class _DetailPageState extends State<DetailPage> {
       navigateTo(detail.LocationLatitude,detail.LocationLongtude);
 
     }, icon: Icon(Icons.map,color: Colors.green,), label: Text(allTranslations.text('map'))),
+        FlatButton.icon(onPressed:(){
+          // setState(() {
+          //   reportDiolag = true ;
+          // });
+          Alert(
+              context: context,
+              title: "Reason",
+              content: Column(
+                children: <Widget>[
+              DropdownButton<String>(
+                                  hint:  Text("Reason", style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),),
+                                  value: _select_Types,
+                                  onChanged: (String Value) {
+                                    setState(() {
+                                      // _departmentSelected.type="";
+                                      _select_Types = Value;
+                                    });
+                                  },
+                                  items: reportReasons.map((String types) {
+                                    return  DropdownMenuItem<String>(
+                                      value: types,
+                                      child: Row(
+                                        children: <Widget>[
+                                          reportReasons.length > 0  ? Text(
+                                            types,
+                                            style:  TextStyle(color: Colors.black),
+                                          )
+                                              : Text(
+                                            'no data',
+                                            style:  TextStyle(color: Colors.black),
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                                SizedBox(height: 20,),
 
+              ]
+              ),
+              buttons: [
+                DialogButton(
+                  onPressed: (){
+                    if(BlocProvider.of<LoginBloc>(context).isLogged())
+                                          BlocProvider.of<AdsReportBloc>(context).adsReport(
+                                            PostReport(
+                                              countryId:1,
+                                              adId: 3,
+                                              message:message.text,
+                                              reason:_select_Types
 
-    FlatButton.icon(onPressed: null, icon:  Icon(Icons.flag,color: Colors.red,), label: Text(allTranslations.text('report')))
+                                            )
+                                          );
+                                        else
+                                          Navigator.push(
+                                              context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
+
+                  },                                 child: Text(
+                  "Send",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                )
+              ]
+              ).show();
+
+        }, icon:  Icon(Icons.flag,color: Colors.red,), label: Text(allTranslations.text('report'))),
+
 
 
     ],
     );
+
+
+
+
     widgets.add(actions);
     widgets.add(SizedBox(
       height: 60,
@@ -611,4 +693,158 @@ class _DetailPageState extends State<DetailPage> {
       throw 'Could not launch ${uri.toString()}';
     }
   }
+  bool AddReport() {
+//     return Container(
+//       margin:EdgeInsets.only(top:100),
+//         child: Visibility(
+//             visible: reportDiolag,
+//             child: Card(
+//               color: Colors.white,
+//               elevation: 8,
+//               shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(10.0)), //this right here
+//               child: SingleChildScrollView(
+//                 child: Container(
+//                   height: MediaQuery.of(context).size.height*0.6,
+//                   width: MediaQuery.of(context).size.width*0.7,
+//                   child: Padding(
+//                     padding: const EdgeInsets.all(5.0),
+//                     child: Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: [
+//                         Row(
+//                           children: [
+//                             Padding(
+//                               padding: EdgeInsets.only(top: 0.0, left: 5.0),
+//                               child: Text(
+//                                 "Report Ads",
+//                                 style: TextStyle(
+//                                   color: Colors.black,
+//                                   fontSize: 15,
+//                                   fontWeight: FontWeight.bold,
+//                                 ),
+//                               ),
+//                             ),
+//                             SizedBox(
+//                               width: MediaQuery.of(context).size.width * 0.35,
+//                             ),
+//                             IconButton(
+//                               icon: Icon(
+//                                 Icons.clear,
+//                                 size: 25,
+//                                 color:Colors.green ,
+//                               ),
+//                               onPressed: () {
+//                                 setState(() {
+//                                   reportDiolag = false ;
+//                                 });
+//                               },
+//                             ),
+//                           ],
+//                         ),
+//                         SingleChildScrollView(
+//                           padding: EdgeInsetsDirectional.only(start: 5.0),
+//                           child: Column(
+//                               crossAxisAlignment:CrossAxisAlignment.center ,
+//                               mainAxisAlignment:MainAxisAlignment.center ,
+//                               children: [
+//                                 SizedBox(
+//                                   height: 10,
+//                                 ),
+//
+//                                 DropdownButton<String>(
+//                                   hint:  Text("Reason", style: TextStyle(
+//                                     color: Colors.black,
+//                                     fontSize: 15,
+//                                     fontWeight: FontWeight.bold,
+//                                   ),),
+//                                   value: _select_Types,
+//                                   onChanged: (String Value) {
+//                                     setState(() {
+//                                       // _departmentSelected.type="";
+//                                       _select_Types = Value;
+//                                     });
+//                                   },
+//                                   items: reportReasons.map((String types) {
+//                                     return  DropdownMenuItem<String>(
+//                                       value: types,
+//                                       child: Row(
+//                                         children: <Widget>[
+//                                           reportReasons.length > 0  ? Text(
+//                                             types,
+//                                             style:  TextStyle(color: Colors.black),
+//                                           )
+//                                               : Text(
+//                                             'no data',
+//                                             style:  TextStyle(color: Colors.black),
+//                                           )
+//                                         ],
+//                                       ),
+//                                     );
+//                                   }).toList(),
+//                                 ),
+//                                 SizedBox(height: 20,),
+//                                 Center(
+//                                  child: Container(
+//                                     decoration: BoxDecoration(
+//                                         borderRadius: BorderRadius.circular(8.0),
+//                                         color:Colors.white10.withOpacity(0.5)
+//                                     ),
+//                                     height: 100,
+//                                     //  color:Colors.black12,
+//                                     margin: EdgeInsets.all(20),
+//
+//                                     child: TextField(
+//                                       controller:message,
+//                                         decoration :  new InputDecoration(
+//                                           labelText: 'Message',
+//                                           labelStyle:TextStyle(color:Colors.black),
+//                                           border: new OutlineInputBorder(
+//                                             borderRadius: const BorderRadius.all(
+//                                               const Radius.circular(8.0),
+//                                             ),
+//                                           ),
+//                                         )),
+//                                   ),
+//                                 ),
+//
+//                                 SizedBox(
+//                                   height:15,
+//                                 ),
+//                                 SizedBox(
+//                                   height:MediaQuery.of(context).size.height*0.1 ,
+//                                 ),
+//                                 Align(
+//                                     child: ElevatedButton(
+//                                        child:Text('Send'),
+//                                       onPressed:(){
+//                                         if(BlocProvider.of<LoginBloc>(context).isLogged())
+//                                           BlocProvider.of<AdsReportBloc>(context).adsReport(
+//                                             PostReport(
+//                                               countryId:1,
+//                                               adId: 3,
+//                                               message:message.text,
+//                                               reason:_select_Types
+//
+//                                             )
+//                                           );
+//                                         else
+//                                           Navigator.push(
+//                                               context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
+//                                       },
+//                                     )),
+//
+//                               ]
+//                           ),
+//                         ),
+// //                              SizedBox(height: 20),
+//
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//             )));
+  }
+
 }

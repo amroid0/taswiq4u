@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:olx/data/bloc/add_post_bloc.dart';
 import 'package:olx/data/bloc/upload_image_bloc.dart';
+import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/generated/i18n.dart';
 import 'package:olx/model/FieldproprtieyReposne.dart';
 import 'package:olx/model/StateEnum.dart';
@@ -15,6 +16,7 @@ import 'package:olx/model/cityModel.dart';
 import 'package:olx/model/country_entity.dart';
 import 'package:olx/model/field_proprtires_entity.dart';
 import 'package:olx/model/upload_image_entity.dart';
+import 'package:olx/model/user_info.dart';
 import 'package:olx/pages/ImageUploaderListPage.dart';
 import 'package:olx/pages/cateogry_dialog_page.dart';
 import 'package:olx/utils/Theme.dart';
@@ -79,10 +81,12 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_){_showDialog();});
    bloc=AddPostBloc();
    uploadBloc =UploadImageBloc();
 
+    getUserNumber();
     bloc.addStream.listen((data) {
       // Redirect to another view, given your conditi on
       switch (data.status) {
@@ -862,6 +866,11 @@ body: Padding(
     }else{
       return null;
     }
+  }
+   Future getUserNumber ()async{
+     UserInfo userInfo = await preferences.getUserInfo();
+     _phonetextController.text = userInfo.phone;
+
   }
 }
 

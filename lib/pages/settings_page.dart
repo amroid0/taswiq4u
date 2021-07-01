@@ -160,10 +160,9 @@ class _SettingsPageState extends State<SettingsPage> {
             ListTile(leading: Icon(Icons.language),
               title: Text(allTranslations.text('country')),
               trailing: Icon(Icons.arrow_forward_ios),
-            onTap: (){
-              _showCountryDialog();
-
-            },)
+              onTap: (){
+                _showCountryDialog();
+              },)
 
 
           ],
