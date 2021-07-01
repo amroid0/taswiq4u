@@ -16,6 +16,9 @@ class DetailBloc extends Bloc{
   final _sliderController = PublishSubject<List<AdvertismentImage>>();
   AdsDetail detail=null;
   final _viewController = PublishSubject<Counter>();
+  final _translateController = BehaviorSubject<bool>();
+  Stream<bool> get translatestream => _translateController.stream;
+
   Stream<Counter> get viewstream => _viewController.stream;
   Stream<List<AdvertismentImage>> get sliderStream => _sliderController.stream;
 
@@ -109,6 +112,12 @@ class DetailBloc extends Bloc{
 
 
     }}
+
+  void translateAds() {
+    bool istranslate=_translateController.value??false;
+    _translateController.sink.add(!istranslate);
+
+  }
 
 
 

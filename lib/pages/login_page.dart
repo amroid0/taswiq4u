@@ -6,6 +6,7 @@ import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/login_bloc.dart';
 import 'package:olx/model/EventObject.dart';
 import 'package:olx/model/login_api_response.dart';
+import 'package:olx/pages/forget_password_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/pages/register_page.dart';
 import 'package:olx/pages/verification_page.dart';
@@ -129,7 +130,16 @@ class _LoginPageState extends State<LoginPage> {
                         ),
 
                       ),
-                      Text(allTranslations.text('forget_pass'))
+                      InkWell(
+                          onTap: (){
+
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder:
+                                (ctx)=>ForgetPasswordScreen()));
+
+                          },
+
+                          child: Text(allTranslations.text('forget_pass')))
                     ],
                   )
 

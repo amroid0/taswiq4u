@@ -62,7 +62,7 @@
   "profile": "Profile",
   "account_setting": "account Setting",
   "personal_info": "personal info",
-  "change_pass":"change Pasword",
+  "change_pass":"change Password",
   "other":"other",
   "notification":"Notifications",
   "lang":"Language",
@@ -103,8 +103,13 @@
   "err_verify": "Wrong SMS Code",
   "cuurency": "E.G",
   "details": "Details",
-  "properties": "Properties"
-
+  "properties": "Properties",
+  "password_recovery": "change Password",
+  "success_reset_pass": "Password Changed Successfully",
+  "new_password": "New Password",
+  "verify_label": "Enter 6 digits verification code sent to your number",
+"translate":"Translate Ad",
+  "edit_ads": "Edit Ad"
 
 
 

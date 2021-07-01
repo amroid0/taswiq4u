@@ -49,34 +49,6 @@ class FavroitePage extends StatefulWidget {
 
            break;
          case Status.COMPLETED:
-         // TODO: Handle this case.
-           var isLogged=data as ApiResponse<bool>;
-           var isss=isLogged.data;
-           if(isss) {
-             Fluttertoast.showToast(
-                 msg: "Favorite",
-                 toastLength: Toast.LENGTH_SHORT,
-                 gravity: ToastGravity.CENTER,
-                 timeInSecForIosWeb: 1,
-                 backgroundColor: Colors.green,
-                 textColor: Colors.white,
-                 fontSize: 16.0
-             );
-           }else{
-
-             Fluttertoast.showToast(
-                 msg: "UnFavorite",
-                 toastLength: Toast.LENGTH_SHORT,
-                 gravity: ToastGravity.CENTER,
-                 timeInSecForIosWeb: 1,
-                 backgroundColor: Colors.green,
-                 textColor: Colors.white,
-                 fontSize: 16.0
-             );
-
-
-
-           }
            bloc.getFavroite(1);
            break;
 
@@ -216,7 +188,8 @@ class FavroitePage extends StatefulWidget {
      else
      if(_gridItemCount==2)
        return GridView.builder(
-         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: _gridItemCount,          childAspectRatio: 0.80,),
+         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: _gridItemCount,
+           childAspectRatio: 0.70,),
          controller: _scrollController,
          shrinkWrap: true,
          itemCount: ads.list.length,

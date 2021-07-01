@@ -105,7 +105,19 @@
   "cuurency": "ج.م",
   "err_verify": "كود التفعيل غير صحيح",
   "details": "التفاصيل",
-  "properties": "خصائص الاعلان"
+  "properties": "خصائص الاعلان",
+  "password_recovery": "تغيير كلمه المرور",
+  "success_reset_pass": "تم تغيير كلمه المرور بنجاح",
+  "new_password": "كلمة المرور الجديده",
+  "verify_label": "ادخل كود التفعيل المرسل اللي هاتفك",
+  "translate":"ترجمة الاعلان",
+  "edit_ads": "تعديل الاعلان"
+
+
+
+
+
+
 
 
 

@@ -18,6 +18,7 @@ import 'package:olx/model/upload_image_entity.dart';
 import 'package:olx/pages/ImageUploaderListPage.dart';
 import 'package:olx/pages/cateogry_dialog_page.dart';
 import 'package:olx/utils/Theme.dart';
+import 'package:olx/utils/ToastUtils.dart';
 import 'package:olx/utils/dailogs.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/loading_dialog.dart';
@@ -116,16 +117,8 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
           break;
         case Status.ERROR:
           DialogBuilder(context).hideOpenDialog();
-
-          Fluttertoast.showToast(
-              msg: "Something went Wrong'",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0
-          );
+          ToastUtils.showErrorMessage(allTranslations.
+          text('err_wrong'));
           break;
       }
     });
@@ -202,7 +195,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
       selectedValue: CityModel(),
       items: List(),
       onChange: (CityModel selected) {
-        _citytextController.text=selected.name.toString();
+        _citytextController.text=allTranslations.isEnglish?selected.englishDescription.toString():selected.arabicDescription;
         adsPostEntity.stateId=selected.id;
         adsPostEntity.cityId=selected.id;
 
@@ -289,7 +282,6 @@ body: Padding(
             iswithArrowIcon: true,onClickAction: (){
           _showDialog();
         }),
-            SizedBox(height: 8,),
             SizedBox(height: 8,),
 
             _BuildCityRoundedTextField(labelText: allTranslations.text('city'),

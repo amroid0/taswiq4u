@@ -5,7 +5,7 @@ import 'NetworkCommon.dart';
 
 class VerifcationClient{
 
-  Future<bool> verifyPhone(String code,String userPhone,String countryID) async {
+  Future<bool> verifyPhone(String code,String userPhone,int countryID) async {
 
 
     final results = await NetworkCommon().dio.post(APIConstants.VERFIY_PHONE_API,

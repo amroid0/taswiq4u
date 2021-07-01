@@ -14,7 +14,8 @@ import 'package:olx/widget/favroite_widget.dart';
 
 class AdsRowWidget extends StatelessWidget {
   AdsModel model;
-  AdsRowWidget(this.model);
+  final bool editable;
+  AdsRowWidget(this.model, {this.editable = false});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,7 +26,7 @@ class AdsRowWidget extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DetailPage(false)
+                builder: (context) => DetailPage(editable)
                 ,settings: RouteSettings(arguments: model)),
           );
         },

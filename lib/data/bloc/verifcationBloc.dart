@@ -14,16 +14,20 @@ Stream<ApiResponse<bool>> get stream => _controller.stream;
 
 VerifcationBloc();
 
-verifyPhone(String code) async{
+verifyPhone(String code, String userPhone, int countryID) async{
 
   _controller.add(ApiResponse.loading('loading'));
   try {
-    final userData = await preferences.getUserCredit();
-    final countryId = await preferences.getCountryID();
+    final userData=await preferences.getUserCredit();
+    final requestPhone = userPhone??userData.userName;
+    final requestCountryId = countryID??1;
 
-    final results = await _client.verifyPhone(code,userData.userName,countryId);
+    final results = await _client.verifyPhone(code,requestPhone,requestCountryId);
     if(results){
-    preferences.setAccountAcivation(true);
+      // Not reset verification
+      if(userPhone==null){
+       preferences.setAccountAcivation(true);
+      }
       _controller.sink.add(ApiResponse.completed(results));
     }
   }catch(e){

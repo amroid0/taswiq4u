@@ -80,7 +80,7 @@ class _DetailPageState extends State<DetailPage> {
           var isLogged=data as ApiResponse<bool>;
           var isss=isLogged.data;
           if(isss) {
-            Fluttertoast.showToast(
+     /*       Fluttertoast.showToast(
                 msg: "Favorite",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
@@ -88,10 +88,10 @@ class _DetailPageState extends State<DetailPage> {
                 backgroundColor: Colors.green,
                 textColor: Colors.white,
                 fontSize: 16.0
-            );
+            );*/
           }else{
 
-            Fluttertoast.showToast(
+      /*      Fluttertoast.showToast(
                 msg: "UnFavorite",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
@@ -99,7 +99,7 @@ class _DetailPageState extends State<DetailPage> {
                 backgroundColor: Colors.green,
                 textColor: Colors.white,
                 fontSize: 16.0
-            );
+            );*/
 
 
 
@@ -511,12 +511,21 @@ class _DetailPageState extends State<DetailPage> {
     widgets.add(Row(
       children: [
         Expanded(
-          child: AutoDirection(
-            text: allTranslations.isEnglish ? detail.EnglishDescription : detail.ArabicDescription,
-            child: Text(
-                "${allTranslations.isEnglish ? detail.EnglishDescription : detail.ArabicDescription}",
+          child: StreamBuilder<bool>(
+            stream: _bloc.translatestream,
+            initialData: false,
+            builder:(ctx,snap){
+              String text=allTranslations.isEnglish ?
+              !snap.data? detail.EnglishDescription:detail.ArabicDescription
+                  :
+              !snap.data? detail.ArabicDescription:detail.EnglishDescription;
+              return AutoDirection(
+              text:text ,
+              child: Text(
+                  "$text",
 
-            ),
+              ),
+            );}
           ),
         ),
       ],
@@ -527,6 +536,15 @@ class _DetailPageState extends State<DetailPage> {
 
     widgets.add(Text(
         "${allTranslations.isEnglish ? detail.StateNameEnglish : detail.StateNameArabic}"));
+    widgets.add ( FlatButton.icon(onPressed: (){
+      _bloc.translateAds();
+
+
+
+    }, icon:
+    Icon(Icons.translate,color: Colors.blueAccent,), label: Text(allTranslations.text('translate')))
+    );
+
     final actions = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -535,7 +553,9 @@ class _DetailPageState extends State<DetailPage> {
       navigateTo(detail.LocationLatitude,detail.LocationLongtude);
 
     }, icon: Icon(Icons.map,color: Colors.green,), label: Text(allTranslations.text('map'))),
-        FlatButton.icon(onPressed: null, icon:  Icon(Icons.flag,color: Colors.red,), label: Text(allTranslations.text('report')))
+
+
+    FlatButton.icon(onPressed: null, icon:  Icon(Icons.flag,color: Colors.red,), label: Text(allTranslations.text('report')))
 
 
     ],

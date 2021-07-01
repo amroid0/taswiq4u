@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:olx/data/bloc/verifcationBloc.dart';
 import 'package:olx/model/api_response_entity.dart';
+import 'package:olx/pages/RestedPasswordPage.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/loading_dialog.dart';
@@ -11,6 +12,13 @@ import 'package:olx/widget/VerificationCodeInput.dart';
 import 'main_page.dart';
 
 class VerificationScreen extends StatefulWidget {
+  final bool naviagteToResetPassword;
+  final String phone;
+  final int countryId;
+
+  VerificationScreen(
+      {this.naviagteToResetPassword=false, this.phone, this.countryId});
+
   @override
   _VerificationScreenState createState() => _VerificationScreenState();
 }
@@ -59,7 +67,15 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 textColor: Colors.white,
                 fontSize: 16.0
             );
-
+            if(widget.naviagteToResetPassword){
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_)=>ResetPasswordScreen(
+                  widget.countryId,
+                  _code,
+                  widget.phone
+                )));
+            }
+            else
             WidgetsBinding.instance.addPostFrameCallback((_) =>  Navigator.popUntil(context, (route) {
               return count++ == 2;
             }));
@@ -105,7 +121,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 children: <Widget>[
             Container(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('Enter 6 digits verification code sent to your number',
+            child: Text(allTranslations.text('verify_label'),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.black, fontSize: 26, fontWeight: FontWeight.w500))
         ),
@@ -125,7 +141,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
          InkWell(
            onTap: (){
-             bloc.verifyPhone(_code);
+             bloc.verifyPhone(_code,widget.phone,widget.countryId);
            },
            child: Container(
              margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -135,7 +151,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                borderRadius: new BorderRadius.circular(8.0),
              ),
              child:  Stack(children:<Widget>[
-               Align( child: new Text("تفعيل", style: new TextStyle(fontSize: 18.0, color: Colors.white),)
+               Align( child: new Text(allTranslations.text('verify'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
                  ,alignment: Alignment.center,),
 
 
