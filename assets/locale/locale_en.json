@@ -100,13 +100,15 @@
   "report": "Report Ad",
   "map": "Map",
   "agree": "Ok",
-  "cuurency": "E.G"
-
-
-
-
-
-
-
+  "cuurency": "L.E",
+  "from" : "from",
+  "to" : "to",
+  "min": "Min Price" ,
+  "max" : "Max Price",
+  "report_ressons1" : "Wrong Price/Picture/Category",
+  "report_ressons2" : "Item Sold",
+  "report_ressons3" : "Fraud or Scam",
+  "report_ressons4" : "Indecent Seller",
+  "report_ressons5" : "Other"
 
 }

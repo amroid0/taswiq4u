@@ -59,7 +59,7 @@ class _DetailPageState extends State<DetailPage> {
 
   AdsDetail detail;
   PostReport _postReport ;
-  List <String> reportReasons =['Wrong Price/Picture/Category','Item Sold','Fraud or Scam','Indecent Seller','Other'];
+  List <String> reportReasons =[allTranslations.text('report_ressons1'),allTranslations.text('report_ressons2'),allTranslations.text('report_ressons3'),allTranslations.text('report_ressons4'),allTranslations.text('report_ressons5')];
   String _select_Types ;
   bool reportDiolag = false ;
   TextEditingController message = TextEditingController();
@@ -521,7 +521,7 @@ class _DetailPageState extends State<DetailPage> {
           ),
         ),
         Text(
-          detail.Price == null ? "" : '${detail.Price} ج.م',
+          detail.Price == null ? "" : '${detail.Price}${allTranslations.text('cuurency')}',
           style: TextStyle(fontSize: 20, color: Colors.green),
         )
       ],
@@ -629,7 +629,6 @@ class _DetailPageState extends State<DetailPage> {
                                   value: _select_Types,
                                   onChanged: (String Value) {
                                     setState(() {
-                                      // _departmentSelected.type="";
                                       _select_Types = Value;
                                     });
                                   },
@@ -639,7 +638,7 @@ class _DetailPageState extends State<DetailPage> {
                                       child: Row(
                                         children: <Widget>[
                                           reportReasons.length > 0  ? Text(
-                                            types,
+                                          types,
                                             style:  TextStyle(color: Colors.black),
                                           )
                                               : Text(
@@ -652,6 +651,27 @@ class _DetailPageState extends State<DetailPage> {
                                   }).toList(),
                                 ),
                                 SizedBox(height: 20,),
+                                Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                        color:Colors.white10.withOpacity(0.5)
+                                    ),
+                                    height: 100,
+                                    //  color:Colors.black12,
+                                    margin: EdgeInsets.all(20),
+
+                                    child: TextField(
+                                      controller:message,
+                                        decoration :  new InputDecoration(
+                                          labelText: 'Message',
+                                          labelStyle:TextStyle(color:Colors.black),
+                                          border: new OutlineInputBorder(
+                                            borderRadius: const BorderRadius.all(
+                                              const Radius.circular(8.0),
+                                            ),
+                                          ),
+                                        )),
+                                  ),
 
               ]
               ),
@@ -659,10 +679,10 @@ class _DetailPageState extends State<DetailPage> {
                 DialogButton(
                   onPressed: (){
                     if(BlocProvider.of<LoginBloc>(context).isLogged())
-                                          BlocProvider.of<AdsReportBloc>(context).adsReport(
+                                         _reportBloc.adsReport(
                                             PostReport(
                                               countryId:1,
-                                              adId: 3,
+                                              adId: detailArgs.Id,
                                               message:message.text,
                                               reason:_select_Types
 

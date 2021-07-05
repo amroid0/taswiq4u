@@ -2,6 +2,7 @@ import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
+import 'package:olx/data/bloc/cateogry_bloc.dart';
 import 'package:olx/data/bloc/languge_bloc.dart';
 import 'package:olx/data/bloc/profile_bloc.dart';
 import 'package:olx/data/shared_prefs.dart';
@@ -139,6 +140,8 @@ class _SettingsPageState extends State<GeneralSettingsPage> {
         onChange: (CountryEntity selected) {
           preferences.saveCountryID(selected.countryId.toString());
           preferences.saveCountry(selected);
+          preferences.clearCateogry();
+          BlocProvider.of<CategoryBloc>(context).submitQuery("");
           _countrySelectedValue = selected.countryId;
         });
   }

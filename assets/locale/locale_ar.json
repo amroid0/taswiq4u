@@ -102,7 +102,16 @@
   "report": "الابلاغ عن إساءه",
   "map": "الموقع",
   "agree": "نعم",
-  "cuurency": "ج.م"
+  "cuurency": "ج.م",
+  "from" : "من",
+  "to" : "الي",
+  "min": "ادني سعر" ,
+  "max" : "اقصي سعر",
+  "report_ressons1" : "خطأ في السعر/الصوره/الفئه",
+  "report_ressons2" : "المنتج مباع",
+  "report_ressons3" : "احتيال او غش",
+  "report_ressons4" : " بائع غير لائق",
+  "report_ressons5" : "اخري"
 
 
 

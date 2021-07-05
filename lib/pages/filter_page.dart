@@ -173,7 +173,7 @@ class FilterPage extends StatefulWidget {
 
                          Alert(
                              context: context,
-                             title: "Price",
+                             title: "${allTranslations.text('price')}",
                              content: Column(
                                children: <Widget>[
                                  TextField(
@@ -181,7 +181,7 @@ class FilterPage extends StatefulWidget {
                                    controller: _fromController,
                                    keyboardType:TextInputType.number,
                                    decoration: InputDecoration(
-                                     labelText: 'Min Price',
+                                     labelText: '${allTranslations.text('min')}',
 
                                    ),
                                  ),
@@ -189,7 +189,7 @@ class FilterPage extends StatefulWidget {
                                    controller: _toController,
                                    keyboardType:TextInputType.number,
                                    decoration: InputDecoration(
-                                     labelText: 'Max Price',
+                                     labelText: '${allTranslations.text('max')}',
                                    ),
                                  ),
                                ],
@@ -200,13 +200,13 @@ class FilterPage extends StatefulWidget {
                                    setState((){
                                      minValue=_fromController.text;
                                      maxValue=_toController.text;
-                                     _pricetextController.text =_fromController.text.isNotEmpty && _toController.text.isNotEmpty ?"from ${_fromController.text} to ${_toController.text}"
-                                     : _fromController.text.isNotEmpty && _toController.text.isEmpty ? "from ${_fromController.text} "
-                                         :_fromController.text.isEmpty && _toController.text.isNotEmpty ? "to ${_toController.text} ":"" ;
+                                     _pricetextController.text =_fromController.text.isNotEmpty && _toController.text.isNotEmpty ?"${allTranslations.text('from')} ${_fromController.text} ${allTranslations.text('to')} ${_toController.text}"
+                                     : _fromController.text.isNotEmpty && _toController.text.isEmpty ? "${allTranslations.text('from')} ${_fromController.text} "
+                                         :_fromController.text.isEmpty && _toController.text.isNotEmpty ? "${allTranslations.text('to')} ${_toController.text} ":"" ;
                                    });
                                    Navigator.pop(context);
                                  },                                 child: Text(
-                                   "Ok",
+                                   "${allTranslations.text('agree')}",
                                    style: TextStyle(color: Colors.white, fontSize: 20),
                                  ),
                                )
