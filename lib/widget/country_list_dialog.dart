@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/cateogry_bloc.dart';
 import 'package:olx/data/bloc/country_bloc.dart';
+import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/cateogry_entity.dart';
 import 'package:olx/model/country_entity.dart';
+import 'package:olx/pages/main_page.dart';
 import 'package:olx/utils/global_locale.dart';
 
 typedef Widget SelectOneItemBuilderType<T>(
@@ -75,6 +77,8 @@ class CountryListDialog<T> extends StatefulWidget {
 class _SelectDialogState<T> extends State<CountryListDialog<T>> {
   CountryBloc bloc;
   void Function(CountryEntity) onChange;
+  String cont ;
+  int  i ;
 
   var _slectedCountry=-1;
 
@@ -95,6 +99,7 @@ class _SelectDialogState<T> extends State<CountryListDialog<T>> {
     // TODO: implement initState
     super.initState();
     bloc = CountryBloc();
+    getGroupId();
     bloc.getCountryList();
   }
 
@@ -137,17 +142,17 @@ class _SelectDialogState<T> extends State<CountryListDialog<T>> {
                             else
                               return RadioListTile(
                                 value: item.countryId,
-                                groupValue: _slectedCountry,
+                                groupValue:i,
                                 title: Text(allTranslations.isEnglish?item.englishDescription.toString():item.arabicDescription),
                                 selected: item == widget.selectedValue,
                                 onChanged: (val) {
                                   onChange(item);
-                                  Navigator.pop(context);
+                                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                                      MainScreen()), (Route<dynamic> route) => false);
                                 },
                               );
                           },
                         );
-
 
 
 
@@ -171,5 +176,11 @@ class _SelectDialogState<T> extends State<CountryListDialog<T>> {
         ],
       ),
     );
+  }
+  void getGroupId() async{
+    cont = await preferences.getCountryID() ;
+    i = int.parse(cont);
+
+    print("group  value"+cont);
   }
 }

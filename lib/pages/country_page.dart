@@ -76,6 +76,7 @@ class _CountryPageState extends State<CountryPage> {
                                     onTap: () {
                                       /*Navigator.push(context,MaterialPageRoute(builder: (context) => CountryPage()))*/
                                       preferences.saveCountryID(list[index].countryId.toString());
+                                      print("counnn"+list[index].countryId.toString());
                                       preferences.saveCountry(list[index]);
                                       Navigator.pushReplacement(context,
                                           MaterialPageRoute(builder: (context) =>  MainScreen()));},

@@ -101,7 +101,7 @@
   "map": "Map",
   "agree": "Ok",
   "err_verify": "Wrong SMS Code",
-  "cuurency": "E.G",
+  "cuurency": "L.E",
   "details": "Details",
   "properties": "Properties",
   "password_recovery": "change Password",
@@ -109,7 +109,17 @@
   "new_password": "New Password",
   "verify_label": "Enter 6 digits verification code sent to your number",
 "translate":"Translate Ad",
-  "edit_ads": "Edit Ad"
+  "edit_ads": "Edit Ad",
+
+  "from" : "from",
+  "to" : "to",
+  "min": "Min Price" ,
+  "max" : "Max Price",
+  "report_ressons1" : "Wrong Price/Picture/Category",
+  "report_ressons2" : "Item Sold",
+  "report_ressons3" : "Fraud or Scam",
+  "report_ressons4" : "Indecent Seller",
+  "report_ressons5" : "Other"
 
 
 
