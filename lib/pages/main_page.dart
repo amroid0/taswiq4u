@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:olx/data/bloc/NavigationBloc.dart';
 import 'package:olx/data/bloc/ads_bloc.dart';
@@ -523,13 +524,29 @@ class _MainScreenState extends State<MainScreen> {
 
                 ),
 
-                body:StreamBuilder<NavigationScreen>(
-                  initialData: NavigationScreen.HOME,
-                  stream: bloc.stream,
-                  builder: (context,snap){
-                    return  _getDrawerItemWidget(snap.data);
+                body:WillPopScope(
+                  onWillPop: () async {
+                    if(bloc.currentScreen==NavigationScreen.HOME){
+                      if(_cateogyBloc.isStackIsEmpty()){
+                        // ignore: missing_return
+                        SystemNavigator.pop();
+                      }else {
+                        // ignore: missing_return
+                        _cateogyBloc.removeCateogryFromStack();
+                      }
+                    }
+                    else
 
+                    return false;
                   },
+                  child: StreamBuilder<NavigationScreen>(
+                    initialData: NavigationScreen.HOME,
+                    stream: bloc.stream,
+                    builder: (context,snap){
+                      return  _getDrawerItemWidget(snap.data);
+
+                    },
+                  ),
                 )
 
 

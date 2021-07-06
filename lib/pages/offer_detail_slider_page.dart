@@ -136,7 +136,19 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
                            await canLaunch(whatsappUrl)? launch(whatsappUrl):print("open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
 
                            },
-                               child: Icon(MdiIcons.whatsapp,color: Colors.white,size: 40,)),
+
+                               child: Icon(MdiIcons.whatsapp,color: Colors.white,size: 36,)),
+                           SizedBox(width: 12,),
+                           InkWell(
+                               onTap: ()async{
+                                 const url = "http://taswiq4u.com/";
+                                 if (await canLaunch(url))
+                                   await launch(url);
+                                 else
+                                   // can't launch url, there is some error
+                                   throw "Could not launch $url";
+                               },
+                               child: Icon(Icons.language_outlined,color: Colors.white,size: 36,)),
 
                            _buildViewWidget(currentPage,list[currentPage])
                          ],)

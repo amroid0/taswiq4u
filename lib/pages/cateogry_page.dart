@@ -80,102 +80,90 @@ class CarouselDemoState extends State<CategoryListFragment> {
   @override
   Widget build(BuildContext context) {
     _bloc.submitQuery("");
-    return  WillPopScope(
-      onWillPop: (){
-        if(_bloc.isStackIsEmpty()){
-          // ignore: missing_return
-          SystemNavigator.pop();
-        }else {
-          // ignore: missing_return
-          _bloc.removeCateogryFromStack();
-        }
+    return  Container(
+        child: Column(
 
-      },
-      child: Container(
-          child: Column(
-
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-             _buildMainSlider(_bloc),
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+           _buildMainSlider(_bloc),
 
 
-              Expanded(
-                child: StreamBuilder<List<CateogryEntity>>(
-                  stream: _bloc.stream,
-                  builder: (context, snapshot) {
+            Expanded(
+              child: StreamBuilder<List<CateogryEntity>>(
+                stream: _bloc.stream,
+                builder: (context, snapshot) {
 
-                    if (!snapshot.hasData) {
-                      return  Shimmer.fromColors(
-                        baseColor: Colors.grey[300],
-                        highlightColor: Colors.grey[100],
-                        enabled: true,
-                        child: ListView.builder(
-                          itemBuilder: (_, __) => Container(
-                            margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    width: 48.0,
-                                    height: 48.0,
-                                    color: Colors.white,
+                  if (!snapshot.hasData) {
+                    return  Shimmer.fromColors(
+                      baseColor: Colors.grey[300],
+                      highlightColor: Colors.grey[100],
+                      enabled: true,
+                      child: ListView.builder(
+                        itemBuilder: (_, __) => Container(
+                          margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  width: 48.0,
+                                  height: 48.0,
+                                  color: Colors.white,
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Container(
+                                        width: double.infinity,
+                                        height: 8.0,
+                                        color: Colors.white,
+                                      ),
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 2.0),
+                                      ),
+                                      Container(
+                                        width: double.infinity,
+                                        height: 8.0,
+                                        color: Colors.white,
+                                      ),
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 2.0),
+                                      ),
+                                      Container(
+                                        width: 40.0,
+                                        height: 8.0,
+                                        color: Colors.white,
+                                      ),
+                                    ],
                                   ),
-                                  const Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Container(
-                                          width: double.infinity,
-                                          height: 8.0,
-                                          color: Colors.white,
-                                        ),
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(vertical: 2.0),
-                                        ),
-                                        Container(
-                                          width: double.infinity,
-                                          height: 8.0,
-                                          color: Colors.white,
-                                        ),
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(vertical: 2.0),
-                                        ),
-                                        Container(
-                                          width: 40.0,
-                                          height: 8.0,
-                                          color: Colors.white,
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
+                                )
+                              ],
+                            ),
 
-                          ),
-                          itemCount: 15,
-                        ));
+                        ),
+                        itemCount: 15,
+                      ));
 
-                    }
-                    if(imgList.isEmpty){
-                      _bloc.getMainSliderAds();
-                    }
-                    return _buildCategoryList(snapshot.data);
                   }
-                ),
-              )
+                  if(imgList.isEmpty){
+                    _bloc.getMainSliderAds();
+                  }
+                  return _buildCategoryList(snapshot.data);
+                }
+              ),
+            )
 
 
 
 
-            ],
-          ),
+          ],
+        ),
 
-      ),
     );
   }
 
