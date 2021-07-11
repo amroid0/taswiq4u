@@ -72,7 +72,7 @@ class AdsCardWidget extends StatelessWidget {
                           ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,),
-                          Text("${model.Price}+${allTranslations.text('cuurency')} ",
+                          Text("${model.Price} ${allTranslations.text('cuurency')} ",
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
 
@@ -174,21 +174,21 @@ class AdsCardWidget extends StatelessWidget {
 
       return '${(dateString.day)} / ${(dateString.month)} ' ;
     }  else if (difference.inDays >= 2) {
-      return '${difference.inDays} days ago';
+      return '${difference.inDays} ${allTranslations.text('day_sago')}';
     } else if (difference.inDays >= 1) {
-      return (numericDates) ? '1 day ago' : 'Yesterday';
+      return (numericDates) ? ' 1 ${allTranslations.text('day_ago')}' : ' ${allTranslations.text('yestrday')}';
     } else if (difference.inHours >= 2) {
-      return '${difference.inHours} hours ago';
+      return '${difference.inHours}${allTranslations.text('hours_ago')}';
     } else if (difference.inHours >= 1) {
-      return (numericDates) ? '1 hour ago' : 'An hour ago';
+      return (numericDates) ? '${allTranslations.text('hour_ago')}' : '${allTranslations.text('hour_ago')}';
     } else if (difference.inMinutes >= 2) {
-      return '${difference.inMinutes} minutes ago';
+      return '${difference.inMinutes}${allTranslations.text('minutes_ago')}';
     } else if (difference.inMinutes >= 1) {
-      return (numericDates) ? '1 minute ago' : 'A minute ago';
+      return (numericDates) ? '1${allTranslations.text('minute_ago')}' : '${allTranslations.text('minute_ago')}';
     } else if (difference.inSeconds >= 3) {
-      return '${difference.inSeconds} seconds ago';
+      return '${difference.inSeconds} ${allTranslations.text('seconds_ago')}';
     } else {
-      return 'Just now';
+      return '${allTranslations.text('now')}';
     }
   }
 }

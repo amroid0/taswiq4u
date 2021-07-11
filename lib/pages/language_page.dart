@@ -38,7 +38,7 @@ topFactor:.5,
                     /*Navigator.push(context,MaterialPageRoute(builder: (context) => CountryPage()))*/
 
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => CountryPage()));},
+                        MaterialPageRoute(builder: (context) => WelocmeScreen()));},
                   child: new Container(
                     height: 60.0,
                     decoration: new BoxDecoration(

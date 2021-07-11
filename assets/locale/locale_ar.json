@@ -111,8 +111,15 @@
   "report_ressons2" : "المنتج مباع",
   "report_ressons3" : "احتيال او غش",
   "report_ressons4" : " بائع غير لائق",
-  "report_ressons5" : "اخري"
-
-
-
+  "report_ressons5" : "اخري",
+  "days_ago" : "منذ ايام",
+  "day_ago" : "منذ يوم",
+  "hours_ago" : "منذ ساعات",
+  "hour_ago" : "منذ ساعه",
+  "yestrday" : "الامس",
+  "minutes_ago" : "منذ دقائق",
+  "minute_ago" : "منذ دقيقه",
+  "seconds_ago" : "منذ ثواني",
+  "now" : "الان",
+  "cuurencyKd": "د.ك"
 }

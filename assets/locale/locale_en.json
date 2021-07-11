@@ -109,6 +109,15 @@
   "report_ressons2" : "Item Sold",
   "report_ressons3" : "Fraud or Scam",
   "report_ressons4" : "Indecent Seller",
-  "report_ressons5" : "Other"
-
+  "report_ressons5" : "Other",
+  "days_ago" : "days ago",
+  "day_ago" : "day ago",
+  "hours_ago" : "hours ago",
+  "hour_ago" : "hour ago",
+  "yestrday" : "Yesterday",
+  "minutes_ago" : "minutes ago",
+  "minute_ago" : "minute ago",
+  "seconds_ago" : "seconds ago",
+  "now" : "Just now",
+  "cuurencyKd": "K.D"
 }
