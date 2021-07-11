@@ -15,27 +15,25 @@ import 'package:olx/widget/favroite_widget.dart';
 
 class AdsRowWidget extends StatefulWidget {
   AdsModel model;
-  AdsRowWidget(this.model);
+  AdsRowWidget({this.model,this.language});
+  int language ;
   @override
   _AdsRowWidgetState createState() => _AdsRowWidgetState();
 
 }
 
 class _AdsRowWidgetState extends State<AdsRowWidget> {
-  String countryId ;
-  int c ;
   @override
   void initState() {
     // TODO: implement initState
 
     super.initState();
-    getGroupId();
 
   }
 
   @override
   Widget build(BuildContext context) {
-    print("groupppp"+c.toString());
+
     return Container(
       height:180,
       margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
@@ -96,7 +94,7 @@ class _AdsRowWidgetState extends State<AdsRowWidget> {
                             Text(widget.model.EnglishTitle,maxLines: 2,overflow: TextOverflow.ellipsis,style: TextStyle(
                               height: 1.2,
                             ),),
-                            Text(c==1 ? "${widget.model.Price}${allTranslations.text('cuurency')}" :"${widget.model.Price}${allTranslations.text('cuurencyKd')}" ,
+                            Text(widget.language==1 ? "${widget.model.Price}${allTranslations.text('cuurency')}" :"${widget.model.Price}${allTranslations.text('cuurencyKd')}" ,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
 
@@ -201,9 +199,5 @@ class _AdsRowWidgetState extends State<AdsRowWidget> {
     }
   }
 
-  Future getGroupId() async{
-    countryId = await preferences.getCountryID() ;
-    c = int.parse(countryId);
-    print("group  value"+c.toString());
-  }
+
 }

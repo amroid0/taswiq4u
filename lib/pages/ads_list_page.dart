@@ -11,6 +11,7 @@ import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/cateogry_bloc.dart';
 import 'package:olx/data/bloc/favroite_bloc.dart';
+import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/cateogry_entity.dart';
@@ -44,6 +45,8 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
   int page=1;
   AdsEntity ads;
   FilterParamsEntity params=new FilterParamsEntity();
+  int lang ;
+  String countryId;
 
   var _gridItemCount=1;
 
@@ -53,7 +56,7 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    getGroupId();
     params.categoryId=widget.category.id;
     params.cateName=allTranslations.isEnglish?widget.category.englishDescription:widget.category.arabicDescription;
     BlocProvider.of<AdsBloc>(context).submitQuery(params,_sortSelectedValue,1);
@@ -378,7 +381,7 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
                     return _buildLoaderListItem();
 
                   }
-                  return AdsCardWidget(ads.advertisementList[adsIndex]);
+                  return AdsCardWidget(model:ads.advertisementList[adsIndex],language:lang);
 
 
                 }
@@ -449,7 +452,7 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
 
                 }else {
 
-                  return AdsRowWidget(ads.advertisementList[adsIndex]);
+                  return AdsRowWidget(model:ads.advertisementList[adsIndex],language:lang);
 
 
                 }
@@ -614,5 +617,11 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
 
 
   }
+void getGroupId() async{
+  countryId = await preferences.getCountryID() ;
+  lang = int.parse(countryId);
+  print("group  value"+lang.toString());
+
+}
 
 }

@@ -14,8 +14,9 @@ import 'package:olx/widget/favroite_widget.dart';
 
 class AdsCardWidget extends StatelessWidget {
   AdsModel model;
+  int language ;
 
-  AdsCardWidget(this.model);
+  AdsCardWidget({this.model,this.language});
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +73,7 @@ class AdsCardWidget extends StatelessWidget {
                           ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,),
-                          Text("${model.Price} ${allTranslations.text('cuurency')} ",
+                          Text(language==1 ? "${model.Price}${allTranslations.text('cuurency')}" :"${model.Price}${allTranslations.text('cuurencyKd')}" ,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
 

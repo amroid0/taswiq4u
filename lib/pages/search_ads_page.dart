@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/favroite_bloc.dart';
+import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/utils/Constants.dart';
@@ -25,6 +26,8 @@ class DummyDelegate extends SearchDelegate<String> {
   int page=1;
   AdsEntity ads;
   ScrollController _scrollController = new ScrollController();
+  String countryId ;
+  int lang ;
 
   var _gridItemCount=1;
   var favbloc;
@@ -241,7 +244,7 @@ class DummyDelegate extends SearchDelegate<String> {
               );
             } else { //for odd row
               int adsIndex=index-(index/7).toInt();
-              return AdsCardWidget(ads.advertisementList[adsIndex]);
+              return AdsCardWidget(model:ads.advertisementList[adsIndex]);
 
 
             }
@@ -304,7 +307,7 @@ class DummyDelegate extends SearchDelegate<String> {
               return _buildLoaderListItem();
 
             }else {
-              return AdsRowWidget(ads.advertisementList[adsIndex]);
+              return AdsRowWidget(model:ads.advertisementList[adsIndex]);
 
 
             }
@@ -396,6 +399,12 @@ class DummyDelegate extends SearchDelegate<String> {
       );
     else
       return  Image.asset("images/logo.png",fit: BoxFit.cover,);
+
+  }
+  void getGroupId() async{
+    countryId = await preferences.getCountryID() ;
+    lang = int.parse(countryId);
+    print("group  value"+lang.toString());
 
   }
 }
