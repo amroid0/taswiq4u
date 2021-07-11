@@ -1,7 +1,9 @@
+import 'package:ars_progress_dialog/ars_progress_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:olx/data/bloc/verifcationBloc.dart';
 import 'package:olx/model/api_response_entity.dart';
+import 'package:olx/pages/RestedPasswordPage.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/loading_dialog.dart';
@@ -10,6 +12,13 @@ import 'package:olx/widget/VerificationCodeInput.dart';
 import 'main_page.dart';
 
 class VerificationScreen extends StatefulWidget {
+  final bool naviagteToResetPassword;
+  final String phone;
+  final int countryId;
+
+  VerificationScreen(
+      {this.naviagteToResetPassword=false, this.phone, this.countryId});
+
   @override
   _VerificationScreenState createState() => _VerificationScreenState();
 }
@@ -23,26 +32,28 @@ class _VerificationScreenState extends State<VerificationScreen> {
   String _code="";
 
   var count=0;
+  var progressDialog;
 
   
   @override
   void initState() {
-
+    progressDialog = ArsProgressDialog(
+        context,
+        blur: 2,
+        backgroundColor: Color(0x33000000),
+        animationDuration: Duration(milliseconds: 500));
     bloc =VerifcationBloc();
 
     bloc.stream.listen((data) {
+      if(progressDialog.isShowing){
+        progressDialog.dismiss();
+      }
       // Redirect to another view, given your condition
       switch (data.status) {
         case Status.LOADING:
-          Future.delayed(Duration.zero, () {
-            DialogBuilder(context).showLoadingIndicator('Verifying...');
-
-          });
+          progressDialog.show();
           break;
         case Status.COMPLETED:
-          DialogBuilder(context).hideOpenDialog();
-
-
 
           var isVerify=data as ApiResponse<bool>;
           if(isVerify.data){
@@ -56,7 +67,15 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 textColor: Colors.white,
                 fontSize: 16.0
             );
-
+            if(widget.naviagteToResetPassword){
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_)=>ResetPasswordScreen(
+                  widget.countryId,
+                  _code,
+                  widget.phone
+                )));
+            }
+            else
             WidgetsBinding.instance.addPostFrameCallback((_) =>  Navigator.popUntil(context, (route) {
               return count++ == 2;
             }));
@@ -66,10 +85,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
           break;
         case Status.ERROR:
-          DialogBuilder(context).hideOpenDialog();
-
           Fluttertoast.showToast(
-              msg: "Something went Wrong'",
+              msg: allTranslations.text('err_verify'),
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
@@ -103,8 +120,10 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
             Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text('Enter 6 digits verification code sent to your number', style: TextStyle(color: Colors.black, fontSize: 26, fontWeight: FontWeight.w500))
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(allTranslations.text('verify_label'),
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.black, fontSize: 26, fontWeight: FontWeight.w500))
         ),
      Column(
        children: <Widget>[
@@ -120,21 +139,26 @@ class _VerificationScreenState extends State<VerificationScreen> {
          SizedBox(height: 16,),
 
 
-         Container(
-           margin: const EdgeInsets.symmetric(horizontal: 20),
-           height: 70.0,
-           decoration: new BoxDecoration(
-             color: Colors.green,
-             borderRadius: new BorderRadius.circular(8.0),
-           ),
-           child:  Stack(children:<Widget>[
-             Align( child: new Text("تفعيل", style: new TextStyle(fontSize: 18.0, color: Colors.white),)
-               ,alignment: Alignment.center,),
+         InkWell(
+           onTap: (){
+             bloc.verifyPhone(_code,widget.phone,widget.countryId);
+           },
+           child: Container(
+             margin: const EdgeInsets.symmetric(horizontal: 20),
+             height: 65.0,
+             decoration: new BoxDecoration(
+               color: Colors.green,
+               borderRadius: new BorderRadius.circular(8.0),
+             ),
+             child:  Stack(children:<Widget>[
+               Align( child: new Text(allTranslations.text('verify'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
+                 ,alignment: Alignment.center,),
 
 
 
-           ]
+             ]
 
+             ),
            ),
          ),
 

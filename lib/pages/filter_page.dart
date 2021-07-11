@@ -267,13 +267,12 @@ class FilterPage extends StatefulWidget {
                            for (var spec in filterParamsEntity.params) {
                              if(spec!=null&&spec.specificationId!=null)
                                if(spec.specificationId==item.Id){
-                               if(item.MuliSelect==null||!item.MuliSelect) {
-                                 if (spec.options
-                                     .length == 1)
+                                 if((item.MuliSelect==null||!item.MuliSelect)&&item.SpecificationOptions.isNotEmpty){
+
                                    if(spec.options[0]!=0)
                                    _selectedFieldValue[index] =
                                        spec.options[0];
-                               }else if(item.CustomValue==null){
+                               } else if(item.MuliSelect) {
                                  //_multiselectedFieldValue[index] = spec.options;
                                  String text="";
                                  var selectedList= item.SpecificationOptions.where((element) =>spec.options.contains(element.Id) );
@@ -292,7 +291,7 @@ class FilterPage extends StatefulWidget {
                              }
                            }
                            //if(item.CustomValue==null)
-                           if(item.MuliSelect==null||!item.MuliSelect)
+                           if((item.MuliSelect==null||!item.MuliSelect)&&item.SpecificationOptions.isNotEmpty)
                              return Padding(
                                padding: const EdgeInsets.only(bottom:8.0),
                                child: FormField<String>(
@@ -358,7 +357,7 @@ class FilterPage extends StatefulWidget {
                              );
 
 
-                           else if(item.CustomValue==null)
+                           else if(item.MuliSelect)
 
 
                              return Padding(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:olx/data/bloc/NavigationBloc.dart';
 import 'package:olx/data/bloc/ads_bloc.dart';
@@ -216,7 +217,7 @@ class _MainScreenState extends State<MainScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
 
-                              Expanded(child: Icon(Icons.add,color: Colors.white,size: 36,)),
+                              Icon(Icons.add,color: Colors.white,size: 36,),
                               Text(allTranslations.text('ads_add'),style: TextStyle(fontSize: 13,color: Colors.white),)
                             ],)
                           ,
@@ -363,9 +364,9 @@ class _MainScreenState extends State<MainScreen> {
                                   style: TextStyle(color: Colors.white, fontSize: 20),
                                 ),
                                 onPressed: () {
-                                  BlocProvider.of<LoginBloc>(context).logout();
-                                  bloc.navigateToScreen(NavigationScreen.HOME);
                                   Navigator.pop(context);
+                                  BlocProvider.of<LoginBloc>(context).logout();
+
 
                                 },
                                 width: 120,
@@ -436,6 +437,7 @@ class _MainScreenState extends State<MainScreen> {
                           initialData:BlocProvider.of<LoginBloc>(context).isLogged(),
                           stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
                           builder: (context, snapshot) {
+                            if(snapshot.hasData&&!snapshot.data){}
                             return Padding(
                               padding: EdgeInsets.symmetric(vertical: 0,horizontal: 16),
                               child: Visibility(
@@ -480,7 +482,6 @@ class _MainScreenState extends State<MainScreen> {
                                 ),
                                 onPressed: () {
                                   BlocProvider.of<LoginBloc>(context).logout();
-                                  bloc.navigateToScreen(NavigationScreen.HOME);
                                   Navigator.pop(context);
 
                                 },
@@ -523,13 +524,29 @@ class _MainScreenState extends State<MainScreen> {
 
                 ),
 
-                body:StreamBuilder<NavigationScreen>(
-                  initialData: NavigationScreen.HOME,
-                  stream: bloc.stream,
-                  builder: (context,snap){
-                    return  _getDrawerItemWidget(snap.data);
+                body:WillPopScope(
+                  onWillPop: () async {
+                    if(bloc.currentScreen==NavigationScreen.HOME){
+                      if(_cateogyBloc.isStackIsEmpty()){
+                        // ignore: missing_return
+                        SystemNavigator.pop();
+                      }else {
+                        // ignore: missing_return
+                        _cateogyBloc.removeCateogryFromStack();
+                      }
+                    }
+                    else
 
+                    return false;
                   },
+                  child: StreamBuilder<NavigationScreen>(
+                    initialData: NavigationScreen.HOME,
+                    stream: bloc.stream,
+                    builder: (context,snap){
+                      return  _getDrawerItemWidget(snap.data);
+
+                    },
+                  ),
                 )
 
 

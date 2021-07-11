@@ -80,6 +80,8 @@ class _SelectDialogState<T> extends State<CountryListDialog<T>> {
   String cont ;
   int  i ;
 
+  var _slectedCountry=-1;
+
   _SelectDialogState(
       List<T> itemsList,
       this.onChange,

@@ -14,6 +14,8 @@ import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/utils.dart';
+import 'package:olx/widget/ads_widget_card.dart';
+import 'package:olx/widget/ads_widget_row.dart';
 import 'package:olx/widget/favroite_widget.dart';
 
 class MyAdsPage extends StatefulWidget {
@@ -211,8 +213,10 @@ class _MyAdsPageState extends State<MyAdsPage> {
     else
     if(_gridItemCount==2)
       return GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: _gridItemCount,          childAspectRatio: 0.80,),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: _gridItemCount,
+            childAspectRatio: 0.70,),
           controller: _scrollController,
+
           shrinkWrap: true,
           itemCount: ads.length,
           itemBuilder: (BuildContext context,int index){
@@ -224,14 +228,8 @@ class _MyAdsPageState extends State<MyAdsPage> {
               return _buildLoaderListItem();
 
             }else {
-              List<AdvertismentImage> imageList = ads[adsIndex]
-                  .AdvertismentImages;
-              /*if (imageList.isNotEmpty && imageList[0].base64Image == null &&
-                 imageList[0].isLoading == null)
-               BlocProvider.of<AdsBloc>(context).GetImage(
-                   imageList[0].Url, adsIndex, false);*/
 
-              return _buildDataGrid(imageList, adsIndex);
+                             return AdsCardWidget(ads[adsIndex],editable: true,);
 
 
             }
@@ -255,12 +253,8 @@ class _MyAdsPageState extends State<MyAdsPage> {
               List<AdvertismentImage> imageList = ads
               [adsIndex]
                   .AdvertismentImages;
-              /*     if (imageList.isNotEmpty && imageList[0].base64Image == null &&
-                    imageList[0].isLoading == null)
-                  BlocProvider.of<AdsBloc>(context).GetImage(
-                      imageList[0].Url, adsIndex, false);*/
 
-              return _buildDataRow(imageList, adsIndex);
+              return AdsRowWidget(ads[adsIndex],editable: true,);
 
 
             }
@@ -270,288 +264,6 @@ class _MyAdsPageState extends State<MyAdsPage> {
       );
 
 
-  }
-  Widget _buildDataRow(List<AdvertismentImage> imageList, int adsIndex){
-    return Container(
-
-      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-      child: new InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => DetailPage(true)
-                ,settings: RouteSettings(arguments: ads[adsIndex])),
-          );
-        },
-        child: new Card(
-          elevation: 4,
-          child: new SizedBox(
-            height: 120.0,
-            child: new Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                InkWell(
-
-                  onTap: () {
-
-                  },
-                  child: Container(
-                      margin: EdgeInsets.only(left: 4),
-
-                      alignment: Alignment.center,
-                      color: Colors.white,
-                      child: FavroiteWidget(onFavChange:(val){
-                        if(BlocProvider.of<LoginBloc>(context).isLogged())
-                          bloc.changeFavoriteState(val,ads[adsIndex].Id);
-                        else
-                          Navigator.push(
-                              context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
-                      },value: true,)),
-                ),
-
-
-                new Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Column(
-
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          // Text(ads[adsIndex]
-                          //     .EnglishTitle),
-                          Text(ads[adsIndex]
-                              .ArabicTitle,
-                            overflow: TextOverflow.fade,
-                            maxLines: 1,
-
-                            style: TextStyle(color: Theme
-                                .of(context)
-                                .accentColor),),
-                          Divider(height: 1,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-
-                            children: <Widget>[
-                              Text(ads[adsIndex]
-                                  .CityNameEnglish),
-                              Icon(Icons.pin_drop, size: 16),
-
-                            ],),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-
-                              Flexible(
-
-                                child: Text( DateFormatter.FormateDate(ads[adsIndex]
-                                    .CreationTime.toString())),
-                              ),
-                              Icon(Icons.update, size: 16,),
-
-
-                            ],),
-
-
-                        ],
-
-                      ),
-                    )
-
-
-                ),
-                new Container(
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(4),
-                          bottomRight: Radius.circular(4)),
-
-
-                    ),
-                    alignment: Alignment.center,
-                    child:
-                    FittedBox(
-                      child: CachedNetworkImage(
-                        fit: BoxFit.fill,
-
-                        placeholder: (context, url) => Image.asset("images/logo.png"),
-                        errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                        imageUrl: APIConstants.getFullImageUrl(imageList.isEmpty?"":imageList[0].Url,ImageType.ADS),
-                      ),
-                    )
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDataGrid(List<AdvertismentImage> imageList, int adsIndex){
-
-    return Container(
-
-      margin: const EdgeInsets.all(4),
-      child: new InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => DetailPage(true)
-                ,settings: RouteSettings(arguments: ads[adsIndex])),
-          );
-        },
-        child: Container(
-          height:250,
-          child: new Card(
-            elevation: 4,
-            child: new SizedBox(
-              child: new Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-
-                  new Container(
-                      width: 100,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(4),
-                            bottomRight: Radius.circular(4)),
-
-                      ),
-                      alignment: Alignment.center,
-                      child:
-                      FittedBox(
-                        child: CachedNetworkImage(
-                          fit: BoxFit.fill,
-                          height: 100,
-                          placeholder: (context, url) => Image.asset("images/logo.png"),
-                          errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                          imageUrl: APIConstants.getFullImageUrl(imageList.isEmpty?"":imageList[0].Url,ImageType.ADS),
-                        ),
-                      )
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 4),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        // Text(ads[adsIndex]
-                        //     .EnglishTitle),
-                        Container(
-                          height:30,
-                          child: Text(ads[adsIndex]
-                              .ArabicDescription,
-                            overflow: TextOverflow.fade,
-                            maxLines: 1,
-                            style: TextStyle(color: Theme
-                                .of(context)
-                                .accentColor),),
-                        ),
-                        Divider(height: 1,),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-
-                          children: <Widget>[
-                            Text(ads[adsIndex]
-                                .CityNameEnglish),
-                            Icon(Icons.pin_drop, size: 16),
-
-                          ],),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-
-                            Expanded(
-                              child: Text( DateFormatter.FormateDate(ads[adsIndex]
-                                  .CreationTime.toString())),
-                            ),
-                            Icon(Icons.update, size: 15,),
-
-                          ],),
-
-
-                      ],
-
-
-                    ),
-                  ),
-
-                  // new Expanded(
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.symmetric(horizontal: 4),
-                  //       child: Column(
-                  //         crossAxisAlignment: CrossAxisAlignment.end,
-                  //         mainAxisAlignment: MainAxisAlignment.start,
-                  //         children: <Widget>[
-                  //           Text(ads[adsIndex]
-                  //               .EnglishTitle),
-                  //           Text(ads[adsIndex]
-                  //               .ArabicDescription,
-                  //             overflow: TextOverflow.fade,
-                  //             maxLines: 1,
-                  //
-                  //             style: TextStyle(color: Theme
-                  //                 .of(context)
-                  //                 .accentColor),),
-                  //           Divider(height: 1,),
-                  //           Row(
-                  //             mainAxisAlignment: MainAxisAlignment.end,
-                  //
-                  //             children: <Widget>[
-                  //               Text(ads[adsIndex]
-                  //                   .CityNameEnglish),
-                  //               Icon(Icons.pin_drop, size: 16),
-                  //
-                  //             ],),
-                  //           Row(
-                  //             mainAxisAlignment: MainAxisAlignment.end,
-                  //             children: <Widget>[
-                  //
-                  //               Expanded(
-                  //                 child: Text( DateFormatter.FormateDate(ads[adsIndex]
-                  //                     .CreationTime.toString())),
-                  //               ),
-                  //               Icon(Icons.update, size: 15,),
-                  //
-                  //             ],),
-                  //
-                  //
-                  //         ],
-                  //
-                  //
-                  //       ),
-                  //     )
-                  //
-                  //
-                  // ),
-
-                  InkWell(
-
-                    onTap: () {},
-                    child: Container(
-                        margin: EdgeInsets.only(left: 4),
-
-                        alignment: Alignment.bottomCenter,
-                        color: Colors.white,
-                        child: FavroiteWidget(onFavChange:(val){
-                          bloc.changeFavoriteState(val,ads[adsIndex].Id);
-                        },value: true,)),
-                  ),
-
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
   }
 
 

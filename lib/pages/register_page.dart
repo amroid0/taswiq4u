@@ -242,7 +242,7 @@ class _RegisterPageState extends State<RegisterPage> {
         stream: bloc.country,
         builder: (context, snapshot) {
 
-          return AuthInputWidget(
+          return  AuthInputWidget(
 
 
               readOnly: true,

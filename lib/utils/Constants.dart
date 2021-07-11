@@ -26,7 +26,7 @@ class APIConstants {
   static const String REGISTER_BASE_URL = '${API_BASE_ENDPOINT}api/Auth/Register';
   static const String FIELDS_ADD_ADS="${API_BASE_ENDPOINT}api/Ads/AddAdvertismentForm/";
   static const String ADD_ADS="${API_BASE_ENDPOINT}api/Ads/AddNewAdvertisment";
-  static const String CATEOGRY_ADS="${API_BASE_ENDPOINT}api/category/MainCategories";
+  static const String CATEOGRY_ADS="${API_BASE_ENDPOINT}api/category/MainCategoriesNew";
  static const String COMM_CATEOGRY_ADS= "${API_BASE_ENDPOINT}api/CommercialAdCategory/GetAllCountryCategory";
   static const String SEARCH_WITH_PARAM="${API_BASE_ENDPOINT}api/Ads/SearchWithParams";
   static const String IMAGE_UPLOAD="${API_BASE_ENDPOINT}Api/ImageUpload/AddAdvertismentImage";
@@ -58,13 +58,17 @@ class APIConstants {
 
   static const String COUNTRY_API="${API_BASE_ENDPOINT}api/country/CountriesList";
 
-  static final String CITY_API="${API_BASE_ENDPOINT}api/country/CitiesList";
+  static final String CITY_API="${API_BASE_ENDPOINT}api/country/GetActiveCities";
 
   static final String FIELDS_EDIT_ADS="${API_BASE_ENDPOINT}api/Ads/EditAdvertismentForm/";
 
-  static final String USER_UPDATE_API="${API_BASE_ENDPOINT}/api/Auth/UpdateUserData";
+  static final String USER_UPDATE_API="${API_BASE_ENDPOINT}api/Auth/UpdateUserData";
 
-  static final String PASSWORD_UPDATE_API="${API_BASE_ENDPOINT}/api/Auth/ChangePassword";
+  static final String PASSWORD_UPDATE_API="${API_BASE_ENDPOINT}api/Auth/ChangePassword";
+
+  static final String FORGET_PASS_API="${API_BASE_ENDPOINT}api/Auth/ForgetPassword";
+
+  static final String RESET_PASS_API="${API_BASE_ENDPOINT}api/Auth/SetPassword";
 
   static final String Repoert_Ads_API="${API_BASE_ENDPOINT}/api/Ads/AddAbuseReport";
 

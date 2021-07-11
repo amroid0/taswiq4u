@@ -20,6 +20,7 @@ import 'package:olx/model/user_info.dart';
 import 'package:olx/pages/ImageUploaderListPage.dart';
 import 'package:olx/pages/cateogry_dialog_page.dart';
 import 'package:olx/utils/Theme.dart';
+import 'package:olx/utils/ToastUtils.dart';
 import 'package:olx/utils/dailogs.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/loading_dialog.dart';
@@ -120,16 +121,8 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
           break;
         case Status.ERROR:
           DialogBuilder(context).hideOpenDialog();
-
-          Fluttertoast.showToast(
-              msg: "Something went Wrong'",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0
-          );
+          ToastUtils.showErrorMessage(allTranslations.
+          text('err_wrong'));
           break;
       }
     });
@@ -187,7 +180,9 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
       selectedValue: CateogryEntity(),
       items: List(),
       onChange: (CateogryEntity selected) {
-        _cattextController.text=selected.name.toString();
+        _cattextController.text=allTranslations.isEnglish?
+        selected.englishDescription.toString()
+            :selected.arabicDescription.toString();
         _selectedFieldValue=[];
         _colorFieldValue=[];
         bloc.getAddFieldsByCatID(selected.id);
@@ -204,7 +199,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
       selectedValue: CityModel(),
       items: List(),
       onChange: (CityModel selected) {
-        _citytextController.text=selected.name.toString();
+        _citytextController.text=allTranslations.isEnglish?selected.englishDescription.toString():selected.arabicDescription;
         adsPostEntity.stateId=selected.id;
         adsPostEntity.cityId=selected.id;
 
@@ -292,7 +287,6 @@ body: Padding(
           _showDialog();
         }),
             SizedBox(height: 8,),
-            SizedBox(height: 8,),
 
             _BuildCityRoundedTextField(labelText: allTranslations.text('city'),
                 hintText: allTranslations.text('city'),
@@ -367,7 +361,7 @@ body: Padding(
                   var item = fields[index];
 
                   //if(item.CustomValue==null)
-                  if(item.MuliSelect==null||!item.MuliSelect)
+                  if((item.MuliSelect==null||!item.MuliSelect)&&item.SpecificationOptions.isNotEmpty)
                     return Padding(
                       padding: const EdgeInsets.only(bottom:8.0),
                       child: FormField<String>(
@@ -431,7 +425,7 @@ body: Padding(
                     );
 
 
-                  else if(item.CustomValue==null)
+                  else if(item.MuliSelect)
                        //if(item.MuliSelect!=null&&item.MuliSelect)
                     /*return Padding(
                       padding: const EdgeInsets.only(bottom:8.0),
@@ -867,7 +861,7 @@ body: Padding(
       return allTranslations.text('empty_field');
     }
 
-    else if(!regExp.hasMatch(value)){
+    else if(value.length<=10){
       return allTranslations.text('err_phone');
     }else{
       return null;

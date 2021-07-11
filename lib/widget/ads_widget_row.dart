@@ -15,8 +15,11 @@ import 'package:olx/widget/favroite_widget.dart';
 
 class AdsRowWidget extends StatefulWidget {
   AdsModel model;
-  AdsRowWidget({this.model,this.language});
   int language ;
+  final bool editable;
+  AdsRowWidget({this.model,this.language,this.editable});
+
+
   @override
   _AdsRowWidgetState createState() => _AdsRowWidgetState();
 
@@ -31,24 +34,27 @@ class _AdsRowWidgetState extends State<AdsRowWidget> {
 
   }
 
+
   @override
   Widget build(BuildContext context) {
 
     return Container(
-      height:180,
+
       margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       child: new InkWell(
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
+                builder: (context) => DetailPage(editable)
+                ,settings: RouteSettings(arguments: model)),
                 builder: (context) => DetailPage(false)
                 ,settings: RouteSettings(arguments: widget.model)),
           );
         },
         child: new Card(
           elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: new Container(
 
 
@@ -86,7 +92,7 @@ class _AdsRowWidgetState extends State<AdsRowWidget> {
 
                   new Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 18),
                         child: Column(
 
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,15 +141,15 @@ class _AdsRowWidgetState extends State<AdsRowWidget> {
 
                   ),
                   Column(
-                  //  mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       InkWell(
 
                         onTap: () {},
                         child: Container(
-                            margin: EdgeInsets.all(8.0),
+                            margin: EdgeInsets.only(left: 4),
 
-                            alignment: Alignment.topRight,
+                            alignment: Alignment.center,
                             color: Colors.white,
                             child: FavroiteWidget(
                                 onFavChange:(val){

@@ -90,7 +90,7 @@ class _DetailPageState extends State<DetailPage> {
           var isLogged=data as ApiResponse<bool>;
           var isss=isLogged.data;
           if(isss) {
-            Fluttertoast.showToast(
+     /*       Fluttertoast.showToast(
                 msg: "Favorite",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
@@ -98,10 +98,10 @@ class _DetailPageState extends State<DetailPage> {
                 backgroundColor: Colors.green,
                 textColor: Colors.white,
                 fontSize: 16.0
-            );
+            );*/
           }else{
 
-            Fluttertoast.showToast(
+      /*      Fluttertoast.showToast(
                 msg: "UnFavorite",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
@@ -109,7 +109,7 @@ class _DetailPageState extends State<DetailPage> {
                 backgroundColor: Colors.green,
                 textColor: Colors.white,
                 fontSize: 16.0
-            );
+            );*/
 
 
 
@@ -210,90 +210,16 @@ class _DetailPageState extends State<DetailPage> {
         ),
 
 
-        /* FloatingActionButton(
-          child: Icon(
-            Icons.call,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            _makePhoneCall('tel:${detailArgs.UserPhone}');
-          },
-          backgroundColor: Colors.green,
-          foregroundColor: Colors.black,
-        )*/
         body: StreamBuilder<ApiResponse<AdsDetail>>(
           stream: _bloc.stream,
           builder: (context, snapshot) {
+            if(snapshot.data==null) return    Container(
+              child: Center(child: CircularProgressIndicator()),
+            );
             switch (snapshot.data.status) {
               case Status.LOADING:
-                return  Stack(
-                  children: [
-                    Positioned(
-                      top: 10,
-                      child: Expanded(
-                          child: Shimmer.fromColors(
-                            baseColor: Colors.grey[300],
-                            highlightColor: Colors.grey[100],
-                            enabled: true,
-                            child:Container(
-
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    width: double.infinity,
-                                    height: 300.0,
-                                    color: Colors.white,
-
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                                      padding: const EdgeInsets.only(bottom: 8.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-
-                                          const Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 8.0),
-                                          ),
-                                          Container(
-                                            width: double.infinity,
-                                            height: 40.0,
-                                            color: Colors.white,
-                                          ),
-                                          const Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 8.0),
-                                          ),
-                                          Expanded(
-                                            child: ListView.builder(itemBuilder: (_,__)=>
-                                                Container(
-                                                  width: double.infinity,
-                                                  height: 22.0,
-                                                  color: Colors.white,
-                                                ),
-                                              itemCount: 15,
-
-
-                                            ),
-                                          )
-
-
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-
-                            ),
-                          )
-                      ),
-                    ),
-                  ],
+                return  Container(
+                  child: Center(child: CircularProgressIndicator()),
                 );
                 break;
               case Status.COMPLETED:
@@ -307,72 +233,70 @@ class _DetailPageState extends State<DetailPage> {
                       gettSliderImageWidget(detail.AdvertismentImages),
                       Padding(
                         padding: EdgeInsets.all(8),
-                        child: Expanded(
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  alignment: AlignmentDirectional.topStart,
-                                  child: InkWell(
-                                    onTap: (){
-                                      Navigator.pop(context);
-                                    },
-                                    child: CircleAvatar(
-                                      radius: 18,
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Container(
+                                alignment: AlignmentDirectional.topStart,
+                                child: InkWell(
+                                  onTap: (){
+                                    Navigator.pop(context);
+                                  },
+                                  child: CircleAvatar(
+                                    radius: 18,
 
-                                      backgroundColor: Colors.black.withOpacity(.4),
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.arrow_back_ios,
-                                          color: Colors.white,
-                                        ),
+                                    backgroundColor: Colors.black.withOpacity(.4),
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.arrow_back_ios,
+                                        color: Colors.white,
                                       ),
-
                                     ),
+
                                   ),
                                 ),
                               ),
+                            ),
 
-                              SizedBox(
-                                width: 10,
+                            SizedBox(
+                              width: 10,
+                            ),
+
+                            Visibility(
+                              visible: widget.isEditable,
+                              child: GestureDetector(
+
+                                onTap: (){
+
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => BlocProvider(bloc: AdsBloc(),child:EditPage(detail),),
+                                          settings: RouteSettings(arguments:detail)
+
+                                      ));
+
+
+
+
+
+
+                                },
+                                child: Container(
+
+                                    decoration: BoxDecoration(
+                                        color: Color(0xffECECEC).withOpacity(0.6),
+                                        borderRadius: BorderRadius.circular(20)),
+                                    child: Icon(
+                                      Icons.edit,
+                                      size: 30.0,
+                                      color: Colors.black,
+                                    )),
                               ),
-
-                              Visibility(
-                                visible: widget.isEditable,
-                                child: GestureDetector(
-
-                                  onTap: (){
-
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => BlocProvider(bloc: AdsBloc(),child:EditPage(detail),),
-                                            settings: RouteSettings(arguments:detail)
-
-                                        ));
+                            ),
 
 
 
-
-
-
-                                  },
-                                  child: Container(
-
-                                      decoration: BoxDecoration(
-                                          color: Color(0xffECECEC).withOpacity(0.6),
-                                          borderRadius: BorderRadius.circular(20)),
-                                      child: Icon(
-                                        Icons.edit,
-                                        size: 30.0,
-                                        color: Colors.black,
-                                      )),
-                                ),
-                              ),
-
-
-
-                            ],
-                          ),
+                          ],
                         ),
                       ),
                       Align(
@@ -418,7 +342,6 @@ class _DetailPageState extends State<DetailPage> {
                           ),
                         ),
                       ),
-                 //     Align(alignment:Alignment.bottomCenter ,child: AddReport()),
 
 
                     ]),
@@ -447,9 +370,7 @@ class _DetailPageState extends State<DetailPage> {
             }
             return Container();
           },
-
         ),
-
       ),
     );
   }
@@ -556,6 +477,9 @@ class _DetailPageState extends State<DetailPage> {
     widgets.add(SizedBox(
       height: 8,
     ));
+    widgets.add(Text(allTranslations.text("properties"),style:TextStyle(fontSize: 20,fontWeight: FontWeight.bold)));
+
+     bool isEvenRow=true;
 
     for (var spec in detail.Advertisment_Specification) {
       if (spec.AdvertismentSpecificatioOptions != null &&
@@ -565,34 +489,53 @@ class _DetailPageState extends State<DetailPage> {
           value += allTranslations.isEnglish?option.NameEnglish.toString():option.NameArabic.toString();
         }
 
-        widgets.add(Text(
-          "${allTranslations.isEnglish?spec.NameEnglish:spec.NameArabic}:$value",
-          textAlign: TextAlign.end,
-        ));
-        widgets.add(SizedBox(
-          height: 8,
-        ));
+        widgets.add(ListTile(
+
+          tileColor: isEvenRow?Colors.white:Colors.grey.shade200,
+     leading: Text(allTranslations.isEnglish?spec.NameEnglish:spec.NameArabic,style: TextStyle(fontWeight: FontWeight.bold),),
+        trailing: Text(value),
+        )
+        );
+
       } else {
         if (spec.CustomValue != null) {
-          widgets.add(Text(
-            "${allTranslations.isEnglish?spec.NameEnglish:spec.NameArabic}:${spec.CustomValue}",
-            textAlign: TextAlign.end,
-          ));
-          widgets.add(SizedBox(
-            height: 8,
-          ));
+          widgets.add(
+            ListTile(
+              tileColor: isEvenRow?Colors.white:Colors.grey.shade200,
+              leading:Text(
+                "${allTranslations.isEnglish?spec.NameEnglish:spec.NameArabic}",
+                  style: TextStyle(fontWeight: FontWeight.bold)    ) ,
+              trailing: Text(
+                "${spec.CustomValue}",
+              ),
+
+
+            )
+          );
+
         }
       }
+      isEvenRow=!isEvenRow;
     }
+    widgets.add(Text(allTranslations.text('details'),style:TextStyle(fontSize: 20,fontWeight: FontWeight.bold)));
     widgets.add(Row(
       children: [
         Expanded(
-          child: AutoDirection(
-            text: allTranslations.isEnglish ? detail.EnglishDescription : detail.ArabicDescription,
-            child: Text(
-                "${allTranslations.isEnglish ? detail.EnglishDescription : detail.ArabicDescription}",
+          child: StreamBuilder<bool>(
+            stream: _bloc.translatestream,
+            initialData: false,
+            builder:(ctx,snap){
+              String text=allTranslations.isEnglish ?
+              !snap.data? detail.EnglishDescription:detail.ArabicDescription
+                  :
+              !snap.data? detail.ArabicDescription:detail.EnglishDescription;
+              return AutoDirection(
+              text:text ,
+              child: Text(
+                  "$text",
 
-            ),
+              ),
+            );}
           ),
         ),
       ],
@@ -603,6 +546,15 @@ class _DetailPageState extends State<DetailPage> {
 
     widgets.add(Text(
         "${allTranslations.isEnglish ? detail.StateNameEnglish : detail.StateNameArabic}"));
+    widgets.add ( FlatButton.icon(onPressed: (){
+      _bloc.translateAds();
+
+
+
+    }, icon:
+    Icon(Icons.translate,color: Colors.blueAccent,), label: Text(allTranslations.text('translate')))
+    );
+
     final actions = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -706,10 +658,10 @@ class _DetailPageState extends State<DetailPage> {
 
     ],
     );
-    
-    
-    
-    
+
+
+
+
     widgets.add(actions);
     widgets.add(SizedBox(
       height: 60,
