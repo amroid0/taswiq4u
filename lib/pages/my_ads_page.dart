@@ -229,7 +229,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
 
             }else {
 
-                             return AdsCardWidget(ads[adsIndex],editable: true,);
+              return AdsCardWidget(model:ads[adsIndex],editable: true,);
 
 
             }
@@ -254,7 +254,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
               [adsIndex]
                   .AdvertismentImages;
 
-              return AdsRowWidget(ads[adsIndex],editable: true,);
+              return AdsRowWidget(model:ads[adsIndex],editable: true,);
 
 
             }

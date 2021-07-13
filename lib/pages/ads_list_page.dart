@@ -381,13 +381,14 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
                   return _buildLoaderListItem();
 
                 }
-                return AdsCardWidget(ads.advertisementList[adsIndex]);
+                      return AdsCardWidget(model:ads.advertisementList[adsIndex],language:lang);
                   }
-                  return AdsCardWidget(model:ads.advertisementList[adsIndex],language:lang);
 
 
-              }
-            },
+
+              },
+
+
             staggeredTileBuilder: (int index) => index!=0&&index % 6 == 0
                 ? new StaggeredTile.fit(2)
                 : new StaggeredTile.fit(1),
@@ -453,8 +454,8 @@ else {
 
                   }else {
 
-                    return AdsRowWidget(ads.advertisementList[adsIndex]);
-                  return AdsRowWidget(model:ads.advertisementList[adsIndex],language:lang);
+                          return AdsRowWidget(model:ads.advertisementList[adsIndex],language:lang);
+
 
 
                   }

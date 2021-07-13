@@ -49,6 +49,8 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   AdsPostEntity adsPostEntity=AdsPostEntity();
   final _formKey = GlobalKey<FormState>();
   bool isNeogtiable=false;
+  String countryId ;
+  int cId ;
   List<String> adsStateList=["جديد","مستعمل"];
   String selectedAdsStates="جديد";
    final TextEditingController _cattextController = TextEditingController();
@@ -81,11 +83,10 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_){_showDialog();});
    bloc=AddPostBloc();
    uploadBloc =UploadImageBloc();
-
+    getCountryId();
     getUserNumber();
     bloc.addStream.listen((data) {
       // Redirect to another view, given your conditi on
@@ -861,7 +862,7 @@ body: Padding(
       return allTranslations.text('empty_field');
     }
 
-    else if(value.length<=10){
+    else if(cId==1 &&value.length<=10 || cId==2 && value.length<=8 ){
       return allTranslations.text('err_phone');
     }else{
       return null;
@@ -871,6 +872,10 @@ body: Padding(
      UserInfo userInfo = await preferences.getUserInfo();
      _phonetextController.text = userInfo.phone;
 
+  }
+  void getCountryId() async{
+    countryId = await preferences.getCountryID() ;
+    cId = int.parse(countryId);
   }
 }
 
