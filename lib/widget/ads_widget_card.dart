@@ -20,126 +20,129 @@ class AdsCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Container(
 
-      margin: const EdgeInsets.all(4),
-      child: new InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => DetailPage(editable)
-                , settings: RouteSettings(arguments: model)),
-          );
-        },
-        child: new Card(
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20)
-          ),
-          child: new SizedBox(
-            height: 280,
-            child: new Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
+        margin: const EdgeInsets.all(2),
+        child: new InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DetailPage(editable)
+                  , settings: RouteSettings(arguments: model)),
+            );
+          },
+          child: new Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20)
+            ),
+            child: new SizedBox(
+              height: 280,
+              child: new Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
 
-                new Container(
-                    height: 120,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
+                  new Container(
+                      height: 120,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
 
-                        color: Colors.grey.shade300
-
-                    ),
-                    child:
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: _BuildImageWidget())
-                ),
-
-                new Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 4, vertical: 4),
-                      child: Column(
-
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(model
-                              .EnglishTitle, style: TextStyle(
-                              fontSize: 15,
-                              height: 1.2
-                          ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,),
-                          Text(language==1 ? "${model.Price}${allTranslations.text('cuurency')}" :"${model.Price}${allTranslations.text('cuurencyKd')}" ,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-
-                            style: TextStyle(color: Theme
-                                .of(context)
-                                .accentColor),),
-                          Divider(height: 1,
-                            color: Colors.grey.shade300,
-                            thickness: 1,),
-                          Row(
-
-                            children: <Widget>[
-                              Icon(Icons.pin_drop_outlined, size: 20,),
-
-                              Text(model
-                                  .CityNameEnglish,),
-
-                            ],),
-                          Row(
-                            children: <Widget>[
-                              Icon(Icons.update_outlined, size: 20,),
-
-                              FittedBox(
-                                child: Text(
-                                  displayTimeAgoFromTimestamp(model.CreationTime), style: TextStyle(fontSize: 13),),
-                              ),
-
-                            ],),
-
-
-                        ],
-
+                          color: Colors.grey.shade300
 
                       ),
-                    )
+                      child:
+                      ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: _BuildImageWidget())
+                  ),
 
-                ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [ InkWell(
+                  new Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 4, vertical: 4),
+                        child: Column(
 
-                      onTap: () {},
-                      child: Container(
-                          margin: EdgeInsets.only(left: 4),
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(model
+                                .EnglishTitle, style: TextStyle(
+                                fontSize: 15,
+                                height: 1.2
+                            ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,),
+                            Text(language==1 ? "${model.Price}${allTranslations.text('cuurency')}" :"${model.Price}${allTranslations.text('cuurencyKd')}" ,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
 
-                          alignment: Alignment.topRight,
-                          color: Colors.white,
-                          child: FavroiteWidget(
-                              onFavChange: (val) {
-                                if (BlocProvider.of<LoginBloc>(context)
-                                    .isLogged())
-                                  BlocProvider.of<FavroiteBloc>(context)
-                                      .changeFavoriteState(val, model.Id);
-                                else
-                                  Navigator.push(
-                                      context, MaterialPageRoute(
-                                      builder: (context) => ParentAuthPage()));
-                              },
-                              value: model.IsFavorite
-                          )
+                              style: TextStyle(color: Theme
+                                  .of(context)
+                                  .accentColor),),
+                            Divider(height: 1,
+                              color: Colors.grey.shade300,
+                              thickness: 1,),
+                            Row(
+
+                              children: <Widget>[
+                                Icon(Icons.pin_drop_outlined, size: 20,),
+
+                                Text(model
+                                    .CityNameEnglish,),
+
+                              ],),
+                            Row(
+                              children: <Widget>[
+                                Icon(Icons.update_outlined, size: 20,),
+
+                                FittedBox(
+                                  child: Text(
+                                    displayTimeAgoFromTimestamp(model.CreationTime), style: TextStyle(fontSize: 13),),
+                                ),
+
+                              ],),
+
+
+                          ],
+
+
+                        ),
+                      )
+
+                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [ InkWell(
+
+                        onTap: () {},
+                        child: Container(
+                            margin: EdgeInsets.only(left: 4),
+
+                            alignment: Alignment.topRight,
+                            color: Colors.white,
+                            child: FavroiteWidget(
+                                onFavChange: (val) {
+                                  if (BlocProvider.of<LoginBloc>(context)
+                                      .isLogged())
+                                    BlocProvider.of<FavroiteBloc>(context)
+                                        .changeFavoriteState(val, model.Id);
+                                  else
+                                    Navigator.push(
+                                        context, MaterialPageRoute(
+                                        builder: (context) => ParentAuthPage()));
+                                },
+                                value: model.IsFavorite
+                            )
+                        ),
                       ),
-                    ),
-                    ]
-                ),
+                      ]
+                  ),
 
-              ],
+                ],
+              ),
             ),
           ),
         ),
