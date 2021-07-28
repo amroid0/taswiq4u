@@ -75,7 +75,7 @@ class AdsCardWidget extends StatelessWidget {
                             ),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,),
-                            Text(language==1 ? "${model.Price}${allTranslations.text('cuurency')}" :"${model.Price}${allTranslations.text('cuurencyKd')}" ,
+                            Text(language==1 ? "${model.Price}  ${allTranslations.text('cuurency')}" :"${model.Price}  ${allTranslations.text('cuurencyKd')}" ,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
 

@@ -8,7 +8,7 @@
   },
   "login_loading": "Loading...",
   "err_email": "invalid Phone Must be at least 11 numbers",
-  "err_pass": "Invalid password, please enter more than 6 characters",
+  "err_pass": "Invalid password,please enter more than 6 characters or numbers",
   "err_fname": "Name Must consist from First name and Last name",
   "err_lname": "short last name ",
   "choose_category": "choose Cateogry",
@@ -97,11 +97,10 @@
   "welcome1_desc":"Buy and sell everything in 30 seconds",
   "welcome2_desc":"Choose the Preferable Option of Payment",
   "welcome3_desc":"Explore Multi Categories of Ads",
-  "report": "Report Ad",
   "map": "Map",
   "agree": "Ok",
   "err_verify": "Wrong SMS Code",
-  "cuurency": "L.E",
+  "cuurency": "EGP",
   "details": "Details",
   "properties": "Properties",
   "password_recovery": "change Password",
@@ -129,7 +128,13 @@
   "minute_ago" : "minute ago",
   "seconds_ago" : "seconds ago",
   "now" : "Just now",
-  "cuurencyKd": "K.D"
+  "cuurencyKd": "K.D",
+  "govrnment" : "Select Government",
+  "message" : "Message",
+  "report" : "Report Ad",
+  "reason" : "Reason",
+  "send" : "Send"
+
 
 
 

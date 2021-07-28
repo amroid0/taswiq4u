@@ -232,8 +232,8 @@ class FilterPage extends StatefulWidget {
                    ),
 
                    SizedBox(height: 8,),
-                   _BuildCityRoundedTextField(labelText: allTranslations.text('city'),
-                       hintText: allTranslations.text('city'),
+                   _BuildCityRoundedTextField(labelText: allTranslations.text('govrnment'),
+                       hintText: allTranslations.text('govrnment'),
                        controller: _citytextController,
                        iswithArrowIcon: true,onClickAction: (){
                          _showCityDialog();
@@ -317,7 +317,6 @@ class FilterPage extends StatefulWidget {
                                          fillColor: Colors.white,
                                          labelText:allTranslations.isEnglish? item.EnglishName: item.ArabicName,
                                          errorText: state.hasError?state.errorText:null,
-
                                          prefixIcon: Icon(Icons.check_circle,color: _colorFieldValue[index],),
                                          border: new OutlineInputBorder(
 
@@ -325,29 +324,32 @@ class FilterPage extends StatefulWidget {
                                        ),
 
 
-                                       child:DropdownButtonHideUnderline(
-                                         child: DropdownButton(
+                                       child:Container(
+                                         height:30,
+                                         child: DropdownButtonHideUnderline(
+                                           child: DropdownButton(
 
-                                           hint: Text('${allTranslations.text('choose')} ${allTranslations.isEnglish?item.EnglishName:item.ArabicName}'),
-                                           value:_selectedFieldValue[index],
-                                           isDense: true,
-                                           items: item.SpecificationOptions.map((FieldProprtiresSpecificationoption value){
-                                             return DropdownMenuItem(
-                                               value: value.Id,
-                                               child: Text(allTranslations.isEnglish?value.EnglishName:value.ArabicName),
-                                             );
-                                           }).toList(),
+                                             hint: Text('${allTranslations.text('choose')} ${allTranslations.isEnglish?item.EnglishName:item.ArabicName}'),
+                                             value:_selectedFieldValue[index],
+                                             isDense: true,
+                                             items: item.SpecificationOptions.map((FieldProprtiresSpecificationoption value){
+                                               return DropdownMenuItem(
+                                                 value: value.Id,
+                                                 child: Text(allTranslations.isEnglish?value.EnglishName:value.ArabicName),
+                                               );
+                                             }).toList(),
 
-                                           onChanged: (int newValue){
-                                             item.Value=newValue;
-                                             setState(() {
-                                              isFirst=false;
-                                               _selectedFieldValue[index]=newValue;
-                                               state.didChange(newValue.toString());
-                                               _colorFieldValue[index]=AppColors.validValueColor;
+                                             onChanged: (int newValue){
+                                               item.Value=newValue;
+                                               setState(() {
+                                                isFirst=false;
+                                                 _selectedFieldValue[index]=newValue;
+                                                 state.didChange(newValue.toString());
+                                                 _colorFieldValue[index]=AppColors.validValueColor;
 
-                                             });
-                                           },
+                                               });
+                                             },
+                                           ),
                                          ),
                                        ) ,
 

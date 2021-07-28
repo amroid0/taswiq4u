@@ -442,7 +442,7 @@ class _DetailPageState extends State<DetailPage> {
           ),
         ),
         Text(
-          detail.Price == null ? "" : '${detail.Price}${allTranslations.text('cuurency')}',
+          detail.Price == null ? "" : '${detail.Price}  ${allTranslations.text('cuurency')}',
           style: TextStyle(fontSize: 20, color: Colors.green),
         )
       ],
@@ -569,68 +569,74 @@ class _DetailPageState extends State<DetailPage> {
           // });
           Alert(
               context: context,
-              title: "Reason",
-              content: Column(
-                children: <Widget>[
-              DropdownButton<String>(
-                                  hint:  Text("Reason", style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  ),),
-                                  value: _select_Types,
-                                  onChanged: (String Value) {
-                                    setState(() {
-                                      _select_Types = Value;
-                                    });
-                                  },
-                                  items: reportReasons.map((String types) {
-                                    return  DropdownMenuItem<String>(
-                                      value: types,
-                                      child: Row(
-                                        children: <Widget>[
-                                          reportReasons.length > 0  ? Text(
-                                          types,
-                                            style:  TextStyle(color: Colors.black),
-                                          )
-                                              : Text(
-                                            'no data',
-                                            style:  TextStyle(color: Colors.black),
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                                SizedBox(height: 20,),
-                                Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8.0),
-                                        color:Colors.white10.withOpacity(0.5)
-                                    ),
-                                    height: 100,
-                                    //  color:Colors.black12,
-                                    margin: EdgeInsets.all(20),
-
-                                    child: TextField(
-                                      controller:message,
-                                        decoration :  new InputDecoration(
-                                          labelText: 'Message',
-                                          labelStyle:TextStyle(color:Colors.black),
-                                          border: new OutlineInputBorder(
-                                            borderRadius: const BorderRadius.all(
-                                              const Radius.circular(8.0),
-                                            ),
-                                          ),
-                                        )),
+              title: allTranslations.text('report'),
+              content: StatefulBuilder(
+                builder:(BuildContext context,
+                    void Function(void Function()) setState) =>
+                    Container(
+                child: Column(
+                  children: <Widget>[
+                DropdownButton<String>(
+                                    hint:  Text(allTranslations.text('reason'), style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),),
+                                    value: _select_Types,
+                                    onChanged: (String Value) {
+                                      setState(() {
+                                        _select_Types = Value;
+                                      });
+                                    },
+                                    items: reportReasons.map((String types) {
+                                      return  DropdownMenuItem<String>(
+                                        value: types,
+                                        child: Row(
+                                          children: <Widget>[
+                                            reportReasons.length > 0  ? Text(
+                                            types,
+                                              style:  TextStyle(color: Colors.black),
+                                            )
+                                                : Text(
+                                              'no data',
+                                              style:  TextStyle(color: Colors.black),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    }).toList(),
                                   ),
+                                  SizedBox(height: 20,),
+                                  Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                          color:Colors.white10.withOpacity(0.5)
+                                      ),
+                                      height: 100,
+                                      //  color:Colors.black12,
+                                      margin: EdgeInsets.all(20),
 
-              ]
+                                      child: TextField(
+                                        controller:message,
+                                          decoration :  new InputDecoration(
+                                            labelText: allTranslations.text('message'),
+                                            labelStyle:TextStyle(color:Colors.black),
+                                            border: new OutlineInputBorder(
+                                              borderRadius: const BorderRadius.all(
+                                                const Radius.circular(8.0),
+                                              ),
+                                            ),
+                                          )),
+                                    ),
+
+                ]
+                ),
+                    ),
               ),
               buttons: [
                 DialogButton(
                   onPressed: (){
-                    if(BlocProvider.of<LoginBloc>(context).isLogged())
+                    BlocProvider.of<LoginBloc>(context).isLogged() ?
                                          _reportBloc.adsReport(
                                             PostReport(
                                               countryId:1,
@@ -639,13 +645,13 @@ class _DetailPageState extends State<DetailPage> {
                                               reason:_select_Types
 
                                             )
-                                          );
-                                        else
-                                          Navigator.push(
+                                          )
+
+                                         : Navigator.push(
                                               context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
 
                   },                                 child: Text(
-                  "Send",
+                  allTranslations.text('send'),
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
                 )

@@ -492,7 +492,7 @@ body: Padding(
                       child: TextFormField(
                         controller: contollers[index],
                           onTap:() {
-                            WidgetsBinding.instance.addPostFrameCallback((_){_showReportDialog(index, item.EnglishName, item.SpecificationOptions);});
+                            WidgetsBinding.instance.addPostFrameCallback((_){_showReportDialog(index, item.ArabicName, item.SpecificationOptions);});
                             },
                           readOnly: true,
                           autovalidate: item.Required,
@@ -573,6 +573,7 @@ body: Padding(
           ),
             SizedBox(height: 8,),
             TextFormField(
+              keyboardType:TextInputType.numberWithOptions(),
                 controller: _phonetextController,
                 validator: _phoneValidate,
                 autovalidate: phoneColor==AppColors.validValueColor||phoneColor==AppColors.errorValueColor,
@@ -822,7 +823,7 @@ body: Padding(
                 if(contollers[index]==null){
                   contollers[index]=TextEditingController();}
                 String text="";
-                selectedList.forEach((val)=>text+="${val.EnglishName} ,");
+                selectedList.forEach((val)=>text+="${allTranslations.isEnglish ?val.EnglishName :val.ArabicName} ,");
                 contollers[index].text=text;
                 setState(() {
 
@@ -834,7 +835,7 @@ body: Padding(
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text("Ok"),
+                child: Text('${allTranslations.text('ok')}'),
                 onPressed: () => Navigator.of(context).pop(),
               )
             ],

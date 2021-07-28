@@ -89,7 +89,7 @@ class AdsRowWidget extends StatelessWidget {
                               Text(model.EnglishTitle,maxLines: 2,overflow: TextOverflow.ellipsis,style: TextStyle(
                                 height: 1.2,
                               ),),
-                              Text(language==1 ? "${model.Price}${allTranslations.text('cuurency')}" :"${model.Price}${allTranslations.text('cuurencyKd')}" ,
+                              Text(language==1 ? "${model.Price}  ${allTranslations.text('cuurency')}" :"${model.Price}  ${allTranslations.text('cuurencyKd')}" ,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
 
@@ -104,7 +104,7 @@ class AdsRowWidget extends StatelessWidget {
 
                                 children: <Widget>[
                                   Icon(Icons.pin_drop_outlined, size: 20,),
-                                  Text(model.CityNameEnglish, style: Theme.of(context).textTheme.bodyText2),
+                                  Text(allTranslations.isEnglish ?model.CityNameEnglish :model.CityNameArabic, style: Theme.of(context).textTheme.bodyText2),
 
                                 ],),
                               SizedBox(height: 4,),
@@ -177,7 +177,7 @@ class AdsRowWidget extends StatelessWidget {
 
       return '${(dateString.day)} / ${(dateString.month)} ' ;
     }  else if (difference.inDays >= 2) {
-      return '${difference.inDays} ${allTranslations.text('day_sago')}';
+      return '${difference.inDays} ${allTranslations.text('days_ago')}';
     } else if (difference.inDays >= 1) {
       return (numericDates) ? ' 1 ${allTranslations.text('day_ago')}' : ' ${allTranslations.text('yestrday')}';
     } else if (difference.inHours >= 2) {

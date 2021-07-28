@@ -49,7 +49,7 @@ class NavItem{
 class _MainScreenState extends State<MainScreen> {
   SharedPreferences sharedPreferences;
   NaviagtionBloc bloc;
-  String userName ='User';
+  String userName='User' ;
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -103,7 +103,7 @@ class _MainScreenState extends State<MainScreen> {
   bloc=new NaviagtionBloc();
   _cateogyBloc=CategoryBloc();
    searchController = new TextEditingController();
-  getUserName();
+
 
 
   bloc.stream.listen((data) async {
@@ -147,6 +147,7 @@ class _MainScreenState extends State<MainScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    getUserName();
     List<FABBottomAppBarItem> bottomItems= [
       FABBottomAppBarItem(iconData: Icons.person, text:allTranslations.text('account')),
       FABBottomAppBarItem(iconData: Icons.announcement, text: allTranslations.text('offers')),
@@ -296,23 +297,33 @@ class _MainScreenState extends State<MainScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       DrawerHeader(
-                        child: BlocProvider.of<LoginBloc>(context).isLogged() ? Container(
-                          alignment: Alignment.topLeft,
-                          child: Column(children: [
-                            Icon(Icons.notifications_paused),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
-                            ),
-                          ], ),
-                        ) : Container(
-                    alignment: Alignment.topLeft,
-                    child: Icon(Icons.notifications_paused),
-                    decoration: BoxDecoration(
-                        image:DecorationImage(
-                            image: AssetImage('images/logo.png'),fit: BoxFit.cover)),
+                        child:  StreamBuilder<bool>(
+                          initialData:BlocProvider.of<LoginBloc>(context).isLogged(),
+                          stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
+                            builder: (context, snapshot) {
+                              if(snapshot.hasData)
+                                return Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Column(children: [
+                                    Icon(Icons.notifications_paused),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
+                                    ),
+                                  ], ),
+                                );
+                              else{
+                               return Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Icon(Icons.notifications_paused),
+                                  decoration: BoxDecoration(
+                                      image:DecorationImage(
+                                          image: AssetImage('images/logo.png'),fit: BoxFit.cover)),
 
-                  ),
+                                );
+                              }
+                              }
+                        ),
                   //container
                         decoration: BoxDecoration(color: AppColors.appBackground),
                       ),
@@ -367,7 +378,6 @@ class _MainScreenState extends State<MainScreen> {
                                   Navigator.pop(context);
                                   BlocProvider.of<LoginBloc>(context).logout();
 
-
                                 },
                                 width: 120,
                               )
@@ -412,22 +422,32 @@ class _MainScreenState extends State<MainScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       DrawerHeader(
-                        child: BlocProvider.of<LoginBloc>(context).isLogged() ? Container(
-                          alignment: Alignment.topLeft,
-                          child: Column(children: [
-                            Icon(Icons.notifications_paused),
-                            Padding(
-                              padding: const EdgeInsets.only(right:24, top: 16,bottom: 8),
-                              child: Text(userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
-                            ),
-                          ], ),
-                        ) : Container(
-                          alignment: Alignment.topLeft,
-                          child: Icon(Icons.notifications_paused),
-                          decoration: BoxDecoration(
-                              image:DecorationImage(
-                                  image: AssetImage('images/logo.png'),fit: BoxFit.cover)),
+                        child:  StreamBuilder<bool>(
+                            initialData:BlocProvider.of<LoginBloc>(context).isLogged(),
+                            stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
+                            builder: (context, snapshot) {
+                              if(snapshot.hasData&&snapshot.data)
+                                return Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Column(children: [
+                                    Icon(Icons.notifications_paused),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
+                                    ),
+                                  ], ),
+                                );
+                              else{
+                               return Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Icon(Icons.notifications_paused),
+                                  decoration: BoxDecoration(
+                                      image:DecorationImage(
+                                          image: AssetImage('images/logo.png'),fit: BoxFit.cover)),
 
+                                );
+                              }
+                            }
                         ),
                         //container
                         decoration: BoxDecoration(color: AppColors.appBackground),
@@ -665,8 +685,13 @@ class _MainScreenState extends State<MainScreen> {
 
   }
   Future getUserName ()async{
-    UserInfo userInfo = await preferences.getUserInfo();
-    userName = userInfo.firstName;
+    if(BlocProvider.of<LoginBloc>(context).isLogged()){
+      UserInfo userInfo = await preferences.getUserInfo();
+      userName = userInfo.firstName+" "+userInfo.secondName;
+    }
+    else {
+      userName=null ;
+    }
 
   }
 

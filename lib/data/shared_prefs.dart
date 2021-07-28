@@ -193,6 +193,11 @@ SharedPreferencesHelper._internal();
         .toList(growable: false);
     return catList;
   }
+void clearCity() async{
+  SharedPreferences instance =await _prefs;
+  instance.remove(KEY_CITY_LIST);
+}
+
 
 Future<List<CityModel>> getCityList() async{
   SharedPreferences instance = await _prefs;

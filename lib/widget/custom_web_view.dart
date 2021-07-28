@@ -20,12 +20,15 @@ class MyWebView extends StatelessWidget {
         appBar: AppBar(
           title: Text(title),
         ),
-        body: WebView(
-          initialUrl: selectedUrl,
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController webViewController) {
-            _controller.complete(webViewController);
-          },
+        body: Padding(
+          padding: const EdgeInsets.only(top:14.0),
+          child: WebView(
+            initialUrl: selectedUrl,
+            javascriptMode: JavascriptMode.unrestricted,
+            onWebViewCreated: (WebViewController webViewController) {
+              _controller.complete(webViewController);
+            },
+          ),
         ));
   }
 }
