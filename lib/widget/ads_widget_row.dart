@@ -26,7 +26,7 @@ class AdsRowWidget extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Padding(
-      padding: const EdgeInsets.only(right:4.0,left:4.0,bottom:2.0,),
+      padding: const EdgeInsets.only(right:4.5,left:4.5,bottom:1.0,),
       child: Container(
 
         margin: const EdgeInsets.all(4.0),

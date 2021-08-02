@@ -100,6 +100,7 @@ class _MainScreenState extends State<MainScreen> {
 @override
   void initState() {
     // TODO: implement initState
+  getUserName();
   bloc=new NaviagtionBloc();
   _cateogyBloc=CategoryBloc();
    searchController = new TextEditingController();
@@ -147,7 +148,7 @@ class _MainScreenState extends State<MainScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    getUserName();
+
     List<FABBottomAppBarItem> bottomItems= [
       FABBottomAppBarItem(iconData: Icons.person, text:allTranslations.text('account')),
       FABBottomAppBarItem(iconData: Icons.announcement, text: allTranslations.text('offers')),
@@ -688,9 +689,10 @@ class _MainScreenState extends State<MainScreen> {
     if(BlocProvider.of<LoginBloc>(context).isLogged()){
       UserInfo userInfo = await preferences.getUserInfo();
       userName = userInfo.firstName+" "+userInfo.secondName;
+      print(userName+"rrrrrr");
     }
     else {
-      userName=null ;
+      userName='' ;
     }
 
   }

@@ -1,23 +1,26 @@
 import 'dart:async';
 
+import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/utils/global_locale.dart';
 
 class RegisterValidators {
 
   final validateEmail =
-  StreamTransformer<String, String>.fromHandlers(handleData: (email, sink) {
+  StreamTransformer<String, String>.fromHandlers(handleData: (email, sink) async{
+    String countryId = await preferences.getCountryID() ;
+    int c = int.parse(countryId) ;
     String pattern = r"\b([\-]?\d[\-]?){11}\b";
     RegExp regExp = new RegExp(pattern);
     print(email);
-    if (email.length>10) {
+    if (email.length>10&&c==1 ||email.length>7&&c==2) {
       sink.add(email);
     }
 
     else if (!regExp.hasMatch(email)) {
-      sink.addError(allTranslations.text('err_email'));
+      sink.addError(c==1 ?allTranslations.text('err_email'):allTranslations.text('err_numk'));
 
     }else {
-      sink.addError(allTranslations.text('err_email'));
+      sink.addError(c==1 ?allTranslations.text('err_email'):allTranslations.text('err_numk'));
 
     }
   });

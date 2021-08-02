@@ -21,7 +21,7 @@ class AdsCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.only(left:2.0, right:2.0 , top:1.0,bottom: 1.0),
       child: Container(
 
         margin: const EdgeInsets.all(2),
@@ -63,7 +63,7 @@ class AdsCardWidget extends StatelessWidget {
                   new Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 4, vertical: 4),
+                            horizontal: 2, vertical: 2),
                         child: Column(
 
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,7 +119,7 @@ class AdsCardWidget extends StatelessWidget {
 
                         onTap: () {},
                         child: Container(
-                            margin: EdgeInsets.only(left: 4),
+                            margin: EdgeInsets.only(left: 2),
 
                             alignment: Alignment.topRight,
                             color: Colors.white,

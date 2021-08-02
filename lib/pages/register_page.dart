@@ -45,8 +45,8 @@ class _RegisterPageState extends State<RegisterPage> {
   String _email;
   String _password;
   RegisterBloc bloc;
-
   int countryId;
+  int val = -1;
 
   @override
   void initState() {
@@ -230,6 +230,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
               onChange: bloc.changeEmail,
               contoller: phoneContorller,
+             keyboardType:TextInputType.phone,
 
           );
 
@@ -248,7 +249,7 @@ class _RegisterPageState extends State<RegisterPage> {
               readOnly: true,
               contoller: _countrytextController,
               onTap: (){
-                _showCountryDialog();
+                _showCountryD();
               },
               labelText: allTranslations.text('country'),
                 errorText: snapshot.error,
@@ -353,7 +354,7 @@ class _RegisterPageState extends State<RegisterPage> {
             if(firstController.text.isNotEmpty
             &&
             phoneContorller.text.isNotEmpty&& passwordContoller.text.isNotEmpty)
-            snapshot.hasError?null:bloc.submit(countryId);
+            snapshot.hasError?null:bloc.submit(val);
           },
             child: Container(
               height: 60.0,
@@ -390,9 +391,64 @@ class _RegisterPageState extends State<RegisterPage> {
     selectedValue: CountryEntity(),
     items: List(),
     onChange: (CountryEntity selected) {
-    _countrytextController.text=allTranslations.isEnglish?selected.englishDescription.toString():selected.arabicDescription;
-   countryId=selected.countryId;});
+          setState(() {
+            _countrytextController.text=allTranslations.isEnglish?selected.englishDescription.toString():selected.arabicDescription;
+            countryId=selected.countryId;});
+          });
+
   }
+   Widget _showCountryD(){
+     Alert(
+         context: context,
+         title: allTranslations.text('choose_country'),
+         content: StatefulBuilder(
+           builder:(BuildContext context,
+               void Function(void Function()) setState) =>
+               Container(
+                 child: Column(
+                     children: <Widget>[
+                       RadioListTile(
+                         value: 1,
+                         groupValue: val,
+                         onChanged: (value) {
+                           setState(() {
+                             val = value;
+                             _countrytextController.text =allTranslations.text('egypt');
+                           });
+                         },
+                         title: Text(allTranslations.text('egypt')),
+                       ),
+                       SizedBox(height: 20,),
+                       RadioListTile(
+                         value: 2,
+                         groupValue: val,
+                         onChanged: (value) {
+                           setState(() {
+                             val = value;
+                             _countrytextController.text =allTranslations.text('kuwait');
+                           });
+                         },
+                         title: Text(allTranslations.text('kuwait')),
+                       ),
+
+                     ]
+                 ),
+               ),
+         ),
+         buttons: [
+           DialogButton(
+             onPressed: (){
+              Navigator.pop(context);
+
+             },
+             child: Text(
+             allTranslations.text('ok'),
+             style: TextStyle(color: Colors.white, fontSize: 20),
+           ),
+           )
+         ]
+     ).show();
+   }
 
     showAlertDialog(BuildContext context) {
   return  Alert(
