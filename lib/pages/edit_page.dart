@@ -450,7 +450,7 @@ class _EditPageState extends State<EditPage> {
                               child: TextFormField(
                                   controller: contollers[index],
                                   onTap:() {
-                                    WidgetsBinding.instance.addPostFrameCallback((_){_showReportDialog(index, item.EnglishName, item.SpecificationOptions);});
+                                    WidgetsBinding.instance.addPostFrameCallback((_){_showReportDialog(index, allTranslations.isEnglish ?item.EnglishName:item.ArabicName, item.SpecificationOptions);});
                                   },
                                   readOnly: true,
                                   autovalidate: item.Required,
@@ -785,7 +785,7 @@ class _EditPageState extends State<EditPage> {
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text("Ok"),
+                child: Text('${allTranslations.text('ok')}'),
                 onPressed: () => Navigator.of(context).pop(),
               )
             ],

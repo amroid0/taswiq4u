@@ -34,7 +34,7 @@
   "id": "ID",
   "register": "تسجيل حساب",
   "login": "تسجيل دخول",
-  "password": "كلمه السر",
+  "password": "كلمه المرور",
   "logout": "تسجيل خروج",
   "home": "الرئيسيه",
   "favroite": "المفضله",
@@ -109,7 +109,7 @@
   "password_recovery": "تغيير كلمه المرور",
   "success_reset_pass": "تم تغيير كلمه المرور بنجاح",
   "new_password": "كلمة المرور الجديده",
-  "verify_label": "ادخل كود التفعيل المرسل اللي هاتفك",
+  "verify_label": "ادخل كود التفعيل المرسل الي هاتفك",
   "translate":"ترجمة الاعلان",
   "edit_ads": "تعديل الاعلان",
   "from" : "من",
@@ -131,11 +131,23 @@
   "seconds_ago" : "منذ ثواني",
   "now" : "الان",
   "cuurencyKd": "د.ك",
-  "govrnment" : "اختر المحافظه",
+  "choose_govrnment" : "اختر المحافظه",
+  "govrnment" : "المحافظه",
   "message" : "رساله",
   "report" : "الابلاغ عن اساءة",
   "reason" : "اختر السبب",
-  "send" : "ارسال"
+  "send" : "ارسال",
+  "egypt": "مصر",
+  "kuwait": "الكويت",
+  "verify_acc": "تم تفعيل الحساب",
+  "send_success":"تم الارسال بنجاح",
+  "conversation": "محادثه",
+  "copy_num" : "نسخ الرقم",
+  "calling": "اتصال",
+  "copied_num" : "تم النسخ",
+  "advert" : "اعلان",
+  "start" : "ابتداء من",
+  "about_us" : "عن التطبيق"
 
 
 

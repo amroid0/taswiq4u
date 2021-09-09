@@ -89,31 +89,6 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
         // TODO: Handle this case.
           var isLogged=data as ApiResponse<bool>;
           var isss=isLogged.data;
-          if(isss) {
-            Fluttertoast.showToast(
-                msg: "Favorite",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.green,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
-          }else{
-
-            Fluttertoast.showToast(
-                msg: "UnFavorite",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.green,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
-
-
-
-          }
           favbloc.getFavroite(1);
           break;
 

@@ -196,7 +196,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   _showCityDialog() async{
     await  CityListDialog.showModal<CityModel>(
       context,
-      label: allTranslations.text('choose_city'),
+      label: allTranslations.text('choose_govrnment'),
       selectedValue: CityModel(),
       items: List(),
       onChange: (CityModel selected) {
@@ -289,8 +289,8 @@ body: Padding(
         }),
             SizedBox(height: 8,),
 
-            _BuildCityRoundedTextField(labelText: allTranslations.text('city'),
-                hintText: allTranslations.text('city'),
+            _BuildCityRoundedTextField(labelText: allTranslations.text('govrnment'),
+                hintText: allTranslations.text('govrnment'),
                 controller: _citytextController,
                 iswithArrowIcon: true,onClickAction: (){
                   _showCityDialog();
@@ -395,28 +395,31 @@ body: Padding(
                             ),
 
 
-                            child:DropdownButtonHideUnderline(
-                              child: DropdownButton(
+                            child:Container(
+                              height:30,
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton(
 
-                                hint: Text('${allTranslations.text('choose')} ${allTranslations.isEnglish?item.EnglishName:item.ArabicName}'),
-                                value:_selectedFieldValue[index],
-                                isDense: true,
-                                items: item.SpecificationOptions.map((FieldProprtiresSpecificationoption value){
-                                  return DropdownMenuItem(
-                                    value: value.Id,
-                                    child: Text(allTranslations.isEnglish?value.EnglishName:value.ArabicName),
-                                  );
-                                }).toList(),
+                                  hint: Text('${allTranslations.text('choose')} ${allTranslations.isEnglish?item.EnglishName:item.ArabicName}'),
+                                  value:_selectedFieldValue[index],
+                                  isDense: true,
+                                  items: item.SpecificationOptions.map((FieldProprtiresSpecificationoption value){
+                                    return DropdownMenuItem(
+                                      value: value.Id,
+                                      child: Text(allTranslations.isEnglish?value.EnglishName:value.ArabicName),
+                                    );
+                                  }).toList(),
 
-                                   onChanged: (int newValue){
-                                     item.Value=newValue;
-                                     setState(() {
-                                    _selectedFieldValue[index]=newValue;
-                                    state.didChange(newValue.toString());
-                                    _colorFieldValue[index]=AppColors.validValueColor;
+                                     onChanged: (int newValue){
+                                       item.Value=newValue;
+                                       setState(() {
+                                      _selectedFieldValue[index]=newValue;
+                                      state.didChange(newValue.toString());
+                                      _colorFieldValue[index]=AppColors.validValueColor;
 
-                                     });
-                                   },
+                                       });
+                                     },
+                                ),
                               ),
                             ) ,
 
@@ -492,7 +495,7 @@ body: Padding(
                       child: TextFormField(
                         controller: contollers[index],
                           onTap:() {
-                            WidgetsBinding.instance.addPostFrameCallback((_){_showReportDialog(index, item.ArabicName, item.SpecificationOptions);});
+                            WidgetsBinding.instance.addPostFrameCallback((_){_showReportDialog(index, allTranslations.isEnglish ?item.EnglishName:item.ArabicName, item.SpecificationOptions);});
                             },
                           readOnly: true,
                           autovalidate: item.Required,
@@ -573,7 +576,7 @@ body: Padding(
           ),
             SizedBox(height: 8,),
             TextFormField(
-              keyboardType:TextInputType.numberWithOptions(),
+              keyboardType:TextInputType.phone,
                 controller: _phonetextController,
                 validator: _phoneValidate,
                 autovalidate: phoneColor==AppColors.validValueColor||phoneColor==AppColors.errorValueColor,

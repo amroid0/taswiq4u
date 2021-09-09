@@ -86,6 +86,9 @@ class APIConstants {
   static Future<String> getContactUrl()async{
     return  "http://beta.taswiq4u.com/ContactUs?appcountryid=${await preferences.getCountryID()}&applangid=${allTranslations.isEnglish?"en":"ar"}#step-1";
   }
+  static Future<String> getAboutUsUrl()async{
+    return  "http://beta.taswiq4u.com/aboutus/?appcountryid=1&applangid=ar#step-1";
+  }
 
 }
 

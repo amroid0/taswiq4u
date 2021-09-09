@@ -9,6 +9,7 @@ import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/utils.dart';
+import 'package:olx/widget/favorite_card.dart';
 import 'package:olx/widget/favroite_widget.dart';
 
 
@@ -40,7 +41,7 @@ class AdsCardWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20)
             ),
             child: new SizedBox(
-              height: 280,
+              height: 285,
               child: new Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -90,8 +91,7 @@ class AdsCardWidget extends StatelessWidget {
                               children: <Widget>[
                                 Icon(Icons.pin_drop_outlined, size: 20,),
 
-                                Text(model
-                                    .CityNameEnglish,),
+                                Text(allTranslations.isEnglish ?model.CityNameEnglish :model.CityNameArabic),
 
                               ],),
                             Row(
@@ -123,7 +123,7 @@ class AdsCardWidget extends StatelessWidget {
 
                             alignment: Alignment.topRight,
                             color: Colors.white,
-                            child: FavroiteWidget(
+                            child: FavroiteWidgetCard(
                                 onFavChange: (val) {
                                   if (BlocProvider.of<LoginBloc>(context)
                                       .isLogged())

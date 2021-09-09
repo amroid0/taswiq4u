@@ -11,6 +11,7 @@ import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/utils.dart';
+import 'package:olx/widget/favorite_card.dart';
 import 'package:olx/widget/favroite_widget.dart';
 
 class AdsRowWidget extends StatelessWidget {
@@ -26,10 +27,10 @@ class AdsRowWidget extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Padding(
-      padding: const EdgeInsets.only(right:4.5,left:4.5,bottom:1.0,),
+      padding: const EdgeInsets.only(right:4.5,left:4.5,bottom:0.25,),
       child: Container(
 
-        margin: const EdgeInsets.all(4.0),
+        margin: const EdgeInsets.only(right:4.5,left:4.5,bottom:0.25,),
         child: new InkWell(
           onTap: () {
             Navigator.push(
@@ -140,7 +141,7 @@ class AdsRowWidget extends StatelessWidget {
 
                               alignment: Alignment.center,
                               color: Colors.white,
-                              child: FavroiteWidget(
+                              child: FavroiteWidgetCard(
                                   onFavChange:(val){
 
                                     if(BlocProvider.of<LoginBloc>(context).isLogged())

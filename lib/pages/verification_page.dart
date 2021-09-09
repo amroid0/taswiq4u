@@ -59,7 +59,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
           if(isVerify.data){
 
             Fluttertoast.showToast(
-                msg: "Verified'",
+                msg: allTranslations.text('verify_acc'),
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
@@ -161,9 +161,24 @@ class _VerificationScreenState extends State<VerificationScreen> {
              ),
            ),
          ),
+                 Row(
+                   crossAxisAlignment:CrossAxisAlignment.center,
+           mainAxisAlignment: MainAxisAlignment.center,
+           children: [
+             Text(
+               "Didn't Recieve ?"
+             ),
+             TextButton(onPressed:(){
+             } ,
+               child: Text(
+                 "Send Again ",
+                 style: TextStyle(color: Colors.green),
+               ),
+             ),
+           ],
+         ) ,
 
-       ],
-
+               ],
      )
                 ])
             )

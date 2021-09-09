@@ -25,6 +25,7 @@ import 'package:olx/pages/edit_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/pages/slider_full+image_viewer.dart';
 import 'package:olx/utils/Constants.dart';
+import 'package:olx/utils/ToastUtils.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/favroite_widget.dart';
 import 'package:olx/widget/map_widget.dart';
@@ -176,7 +177,7 @@ class _DetailPageState extends State<DetailPage> {
             SpeedDialChild(
               child: Icon(Icons.textsms,color: Colors.white,),
               backgroundColor: Colors.green,
-              label: 'محادثه',
+              label: allTranslations.text('conversation'),
               labelBackgroundColor: Colors.white,
 
               labelStyle: TextStyle(fontSize: 18.0),
@@ -186,7 +187,7 @@ class _DetailPageState extends State<DetailPage> {
             SpeedDialChild(
               child: Icon(Icons.call,color: Colors.white,),
               backgroundColor: Colors.green,
-              label: 'اتصال',
+              label: allTranslations.text('calling'),
               labelStyle: TextStyle(fontSize: 18.0),
               labelBackgroundColor: Colors.white,
               onTap: (){
@@ -197,12 +198,12 @@ class _DetailPageState extends State<DetailPage> {
             SpeedDialChild(
               child: Icon(Icons.copy,color: Colors.white,),
               backgroundColor: Colors.green,
-              label: 'نسخ الرقم',
+              label: allTranslations.text('copy_num'),
               labelBackgroundColor: Colors.white,
               labelStyle: TextStyle(fontSize: 18.0),
               onTap: () =>  Clipboard.setData(new ClipboardData(text: detailArgs.UserPhone)).then((_){
                 detailScaffoldMessengerKey.currentState.showSnackBar(
-                    SnackBar(content:Text("تم النسخ")));
+                    SnackBar(content:Text(allTranslations.text('copied_num'))));
               }),
               onLongPress: () => print('THIRD CHILD LONG PRESS'),
             ),
@@ -327,10 +328,11 @@ class _DetailPageState extends State<DetailPage> {
                                       chooserTitle: 'taswiq Chooser Title');
                                 }                ,
                                 child: Container(
+                                  height:35,
                                    // margin:EdgeInsets.only(top: 300 ,left:50,right: 50),
                                     decoration: BoxDecoration(
                                         color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20)),
+                                        borderRadius: BorderRadius.circular(15)),
                                     child: Icon(
                                       Icons.share,
                                       size: 30.0,
@@ -644,11 +646,42 @@ class _DetailPageState extends State<DetailPage> {
                                               message:message.text,
                                               reason:_select_Types
 
-                                            )
+                                            ),
                                           )
-
                                          : Navigator.push(
                                               context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
+                    _reportBloc.addStream.listen((data) {
+                      switch (data.status) {
+                        case Status.LOADING:
+                          Future.delayed(Duration.zero, () {
+
+                          });
+                          break;
+                        case Status.COMPLETED:
+                          var isLogged=data as ApiResponse<bool>;
+                          var isss=isLogged.data;
+                          if(isss){
+
+                            Fluttertoast.showToast(
+                                msg: allTranslations.text('send_success'),
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.green,
+                                textColor: Colors.white,
+                                fontSize: 16.0
+                            );
+                            Navigator.pop(context);
+
+                          }
+
+                          break;
+                        case Status.ERROR:
+                          ToastUtils.showErrorMessage(allTranslations.
+                          text('err_wrong'));
+                          break;
+                      }
+                    });
 
                   },                                 child: Text(
                   allTranslations.text('send'),

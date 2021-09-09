@@ -100,7 +100,7 @@ class _MainScreenState extends State<MainScreen> {
 @override
   void initState() {
     // TODO: implement initState
-  getUserName();
+ // getUserName();
   bloc=new NaviagtionBloc();
   _cateogyBloc=CategoryBloc();
    searchController = new TextEditingController();
@@ -130,6 +130,14 @@ class _MainScreenState extends State<MainScreen> {
     selectedUrl:url,
     )));
     }
+    else if(data==NavigationScreen.ABOUT){
+      String url=await APIConstants.getAboutUsUrl();
+
+      Navigator.of(context).push(MaterialPageRoute(builder: (_)=> MyWebView(
+        title: allTranslations.text('about_us'),
+        selectedUrl:url,
+      )));
+    }
     else if(data==NavigationScreen.RuLES){
       String url=await APIConstants.getRuleUrl();
 
@@ -148,7 +156,7 @@ class _MainScreenState extends State<MainScreen> {
   }
   @override
   Widget build(BuildContext context) {
-
+    getUserName();
     List<FABBottomAppBarItem> bottomItems= [
       FABBottomAppBarItem(iconData: Icons.person, text:allTranslations.text('account')),
       FABBottomAppBarItem(iconData: Icons.announcement, text: allTranslations.text('offers')),
@@ -168,6 +176,7 @@ class _MainScreenState extends State<MainScreen> {
       NavItem(name:allTranslations.text('settings'),navIcon:Icons.settings),
       NavItem(name:allTranslations.text('policy'),navIcon:Icons.info),
       NavItem(name:allTranslations.text('rules'),navIcon:Icons.book),
+      NavItem(name:allTranslations.text('about_us'),navIcon:Icons.article),
       NavItem(name:allTranslations.text('contact_us'),navIcon:Icons.call)
     ];
     for (var i = 0; i < NavItemList.length; i++) {
@@ -303,16 +312,19 @@ class _MainScreenState extends State<MainScreen> {
                           stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
                             builder: (context, snapshot) {
                               if(snapshot.hasData)
-                                return Container(
-                                  alignment: Alignment.topLeft,
-                                  child: Column(children: [
-                                    Icon(Icons.notifications_paused),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
-                                    ),
-                                  ], ),
-                                );
+                               {
+                                 getUserName();
+                                 return Container(
+                                   alignment: Alignment.topLeft,
+                                   child: Column(children: [
+                                     Icon(Icons.notifications_paused),
+                                     Padding(
+                                       padding: const EdgeInsets.all(8.0),
+                                       child: Text(userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
+                                     ),
+                                   ], ),
+                                 );
+                               }
                               else{
                                return Container(
                                   alignment: Alignment.topLeft,
@@ -428,16 +440,19 @@ class _MainScreenState extends State<MainScreen> {
                             stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
                             builder: (context, snapshot) {
                               if(snapshot.hasData&&snapshot.data)
-                                return Container(
-                                  alignment: Alignment.topLeft,
-                                  child: Column(children: [
-                                    Icon(Icons.notifications_paused),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
-                                    ),
-                                  ], ),
-                                );
+                                {
+                                  getUserName();
+                                  return Container(
+                                    alignment: Alignment.topLeft,
+                                    child: Column(children: [
+                                      Icon(Icons.notifications_paused),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
+                                      ),
+                                    ], ),
+                                  );
+                                }
                               else{
                                return Container(
                                   alignment: Alignment.topLeft,
@@ -608,6 +623,10 @@ class _MainScreenState extends State<MainScreen> {
     }
     else if(index==6){
       bloc.navigateToScreen(NavigationScreen.RuLES);
+
+    }
+    else if(index==7){
+      bloc.navigateToScreen(NavigationScreen.ABOUT);
 
     }
     else {

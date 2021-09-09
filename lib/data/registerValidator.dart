@@ -51,9 +51,7 @@ class RegisterValidators {
 
         if(firstName.isEmpty){
           sink.addError(allTranslations.text('err_fname'));
-
         }
-
 
         if(nameRegExp.hasMatch(name.trim().toString())){
           print("true");

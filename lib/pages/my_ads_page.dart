@@ -218,7 +218,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
     if(_gridItemCount==2)
       return GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: _gridItemCount,
-            childAspectRatio: 0.70,),
+            childAspectRatio: 0.68,),
           controller: _scrollController,
 
           shrinkWrap: true,

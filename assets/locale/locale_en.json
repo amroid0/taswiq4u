@@ -136,13 +136,14 @@
   "reason" : "Reason",
   "send" : "Send",
   "egypt": "Egypt",
-  "kuwait": "Kuwait"
-
-
-
-
-
-
-
-
+  "kuwait": "Kuwait",
+  "verify_acc": "Account Is Verified",
+  "send_success":"Sucessfully Added",
+  "conversation": "Chat",
+  "copy_num" : "Copy Number",
+  "calling": "Call",
+  "copied_num" : "Copied Number",
+  "advert" : "Advertising",
+  "start" : "Start From",
+  "about_us" : "About Us"
 }

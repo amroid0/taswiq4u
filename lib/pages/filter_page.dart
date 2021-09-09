@@ -367,7 +367,7 @@ class FilterPage extends StatefulWidget {
                                child: TextFormField(
                                    controller: contollers[index],
                                    onTap:() {
-                                     WidgetsBinding.instance.addPostFrameCallback((_){_showReportDialog(index, item.EnglishName, item.SpecificationOptions);});
+                                     WidgetsBinding.instance.addPostFrameCallback((_){_showReportDialog(index, allTranslations.isEnglish ?item.EnglishName:item.ArabicName, item.SpecificationOptions);});
                                    },
                                     readOnly: true,
                                     onSaved: (val){
@@ -526,7 +526,7 @@ class FilterPage extends StatefulWidget {
              ),
              actions: <Widget>[
                FlatButton(
-                 child: Text("Ok"),
+                 child: Text('${allTranslations.text('ok')}'),
                  onPressed: () => Navigator.of(context).pop(),
                )
              ],
@@ -538,7 +538,7 @@ class FilterPage extends StatefulWidget {
    _showCityDialog() async{
      await  CityListDialog.showModal<CityModel>(
        context,
-       label: allTranslations.text('city'),
+       label: allTranslations.text('choose_govrnment'),
        selectedValue: CityModel(),
        items: List(),
        onChange: (CityModel selected) {
