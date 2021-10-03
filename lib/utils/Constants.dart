@@ -89,6 +89,10 @@ class APIConstants {
   static Future<String> getAboutUsUrl()async{
     return  "http://beta.taswiq4u.com/aboutus/?appcountryid=1&applangid=ar#step-1";
   }
+  static Future<String> getFAQUsUrl()async{
+    return  "http://beta.taswiq4u.com/FAQ#s1";
+
+  }
 
 }
 

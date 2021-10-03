@@ -146,6 +146,14 @@ class _MainScreenState extends State<MainScreen> {
     selectedUrl:url,
     )));
     }
+    else if(data==NavigationScreen.FAQ){
+      String url=await APIConstants.getFAQUsUrl();
+
+      Navigator.of(context).push(MaterialPageRoute(builder: (_)=> MyWebView(
+        title: allTranslations.text('questions'),
+        selectedUrl:url,
+      )));
+    }
 
 
 
@@ -177,6 +185,7 @@ class _MainScreenState extends State<MainScreen> {
       NavItem(name:allTranslations.text('policy'),navIcon:Icons.info),
       NavItem(name:allTranslations.text('rules'),navIcon:Icons.book),
       NavItem(name:allTranslations.text('about_us'),navIcon:Icons.article),
+      NavItem(name:allTranslations.text('questions'),navIcon:Icons.question_answer),
       NavItem(name:allTranslations.text('contact_us'),navIcon:Icons.call)
     ];
     for (var i = 0; i < NavItemList.length; i++) {
@@ -627,6 +636,10 @@ class _MainScreenState extends State<MainScreen> {
     }
     else if(index==7){
       bloc.navigateToScreen(NavigationScreen.ABOUT);
+
+    }
+    else if(index==8){
+      bloc.navigateToScreen(NavigationScreen.FAQ);
 
     }
     else {

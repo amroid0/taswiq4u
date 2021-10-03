@@ -5,7 +5,7 @@ import 'package:olx/utils/global_locale.dart';
 class Validators {
   final validateEmail =
   StreamTransformer<String, String>.fromHandlers(handleData: (email, sink) {
-    if (email.length>10) {
+    if (email.length>7) {
       sink.add(email);
     } else {
       sink.addError(allTranslations.text('err_email'));

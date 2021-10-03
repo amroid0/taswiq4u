@@ -10,6 +10,7 @@ import 'package:olx/pages/verification_page.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/auth_input_widget.dart';
 import 'package:olx/widget/country_list_dialog.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class ForgetPasswordScreen extends  StatefulWidget {
 
@@ -26,7 +27,7 @@ class _ForgetPassPageState extends State<ForgetPasswordScreen> {
   ForgetPasswordBloc _bloc;
 
   var _countrytextController=TextEditingController();
-
+  int val = -1;
   int countryId;
 
   @override
@@ -153,16 +154,57 @@ _bloc=ForgetPasswordBloc();
   }
 
 
-  _showCountryDialog() async{
-    await  CountryListDialog.showModal<CountryEntity>(
-        context,
-        label: allTranslations.text('choose_country'),
-        selectedValue: CountryEntity(),
-        items: List(),
-        onChange: (CountryEntity selected) {
-          _countrytextController.text=allTranslations.isEnglish?selected.englishDescription.toString():selected.arabicDescription;
-          _bloc.chnageCountry(_countrytextController.text);
-          countryId=selected.countryId;});
+  Widget _showCountryD(){
+    Alert(
+        context: context,
+        title: allTranslations.text('choose_country'),
+        content: StatefulBuilder(
+          builder:(BuildContext context,
+              void Function(void Function()) setState) =>
+              Container(
+                child: Column(
+                    children: <Widget>[
+                      RadioListTile(
+                        value: 1,
+                        groupValue: val,
+                        onChanged: (value) {
+                          setState(() {
+                            val = value;
+                            _countrytextController.text =allTranslations.text('egypt');
+                          });
+                        },
+                        title: Text(allTranslations.text('egypt')),
+                      ),
+                      SizedBox(height: 20,),
+                      RadioListTile(
+                        value: 2,
+                        groupValue: val,
+                        onChanged: (value) {
+                          setState(() {
+                            val = value;
+                            _countrytextController.text =allTranslations.text('kuwait');
+                          });
+                        },
+                        title: Text(allTranslations.text('kuwait')),
+                      ),
+
+                    ]
+                ),
+              ),
+        ),
+        buttons: [
+          DialogButton(
+            onPressed: (){
+              Navigator.pop(context);
+
+            },
+            child: Text(
+              allTranslations.text('ok'),
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          )
+        ]
+    ).show();
   }
   Widget country(ForgetPasswordBloc bloc ){
     return StreamBuilder(
@@ -175,7 +217,7 @@ _bloc=ForgetPasswordBloc();
             readOnly: true,
             contoller: _countrytextController,
             onTap: (){
-              _showCountryDialog();
+              _showCountryD();
             },
             labelText: allTranslations.text('country'),
             errorText: snapshot.error,
