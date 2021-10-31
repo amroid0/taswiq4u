@@ -166,12 +166,12 @@ class _VerificationScreenState extends State<VerificationScreen> {
            mainAxisAlignment: MainAxisAlignment.center,
            children: [
              Text(
-               "Didn't Recieve ?"
+               allTranslations.text('recive_code')
              ),
              TextButton(onPressed:(){
              } ,
                child: Text(
-                 "Send Again ",
+                 allTranslations.text('send_code'),
                  style: TextStyle(color: Colors.green),
                ),
              ),

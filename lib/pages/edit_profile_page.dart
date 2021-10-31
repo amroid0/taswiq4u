@@ -28,7 +28,7 @@ bool isupdated=false;
     switch (data.status) {
       case Status.LOADING:
         Future.delayed(Duration.zero, () {
-          DialogBuilder(context).showLoadingIndicator('loading');
+          DialogBuilder(context).showLoadingIndicator(allTranslations.text('loading'));
 
         });
         break;
@@ -46,7 +46,7 @@ bool isupdated=false;
            if(isupdated) {
              DialogBuilder(context).hideOpenDialog();
              Fluttertoast.showToast(
-                 msg: "Successfully Updated'",
+                 msg: allTranslations.text('Success_update'),
                  toastLength: Toast.LENGTH_SHORT,
                  gravity: ToastGravity.CENTER,
                  timeInSecForIosWeb: 1,

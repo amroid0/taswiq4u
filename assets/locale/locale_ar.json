@@ -64,7 +64,7 @@
   "profile": "الصفحه الشخصيه",
   "account_setting": "اعدادات الحساب",
   "personal_info": "البيانات الشخصيه",
-  "change_pass":"تغيير كلمه السر",
+  "change_pass":"ْاعاده تعين كلمة المرور",
   "other":"اخري",
   "notification":"الاشعارات",
   "lang":"اللغه",
@@ -106,7 +106,7 @@
   "err_verify": "كود التفعيل غير صحيح",
   "details": "التفاصيل",
   "properties": "خصائص الاعلان",
-  "password_recovery": "تغيير كلمه المرور",
+  "password_recovery": "نسيت كلمه المرور",
   "success_reset_pass": "تم تغيير كلمه المرور بنجاح",
   "new_password": "كلمة المرور الجديده",
   "verify_label": "ادخل كود التفعيل المرسل الي هاتفك",
@@ -148,7 +148,11 @@
   "advert" : "اعلان",
   "start" : "ابتداء من",
   "about_us" : "عن التطبيق",
-  "questions" : "الاسئله الشائعه"
+  "questions" : "الاسئله الشائعه",
+  "wait": "يرجي الانتظار..",
+  "Success_update" : "تم التحديث بنجاح",
+  "recive_code" : "لم يصل ؟",
+  "send_code" : "اعاده الارسال"
 
 
 

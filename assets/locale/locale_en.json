@@ -146,5 +146,9 @@
   "advert" : "Advertising",
   "start" : "Start From",
   "about_us" : "About Us",
-  "questions" : "FAQ"
+  "questions" : "FAQ",
+  "wait": "Please wait …",
+  "Success_update" : "Successfully Updated",
+  "recive_code" : "Didn't Recieve ?",
+  "send_code" : "Send Again"
 }

@@ -69,7 +69,7 @@ _bloc=ForgetPasswordBloc();
               context,
               MaterialPageRoute(builder: (context) => VerificationScreen(
                 naviagteToResetPassword: true,
-                countryId: countryId,
+                countryId: 1,
                 phone: _bloc.emailValue,
 
               ))
@@ -240,7 +240,8 @@ _bloc=ForgetPasswordBloc();
           return GestureDetector(onTap: (){
             SystemChannels.textInput.invokeMethod('TextInput.hide');
             if(snapshot.data!=null&&snapshot.data)
-             bloc.forgetPassword(countryId);
+              print("pasasasa");
+             bloc.forgetPassword(1);
 
           },
               child: Container(

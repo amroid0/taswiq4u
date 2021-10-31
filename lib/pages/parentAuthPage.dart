@@ -5,6 +5,9 @@ import 'package:olx/pages/register_page.dart';
 import 'login_page.dart';
 
 class ParentAuthPage extends StatefulWidget {
+  int login = 0 ;
+
+  ParentAuthPage({this.login});
   @override
   _ParentAuthPageState createState() => _ParentAuthPageState();
 }
@@ -81,7 +84,7 @@ class _ParentAuthPageState extends State<ParentAuthPage>  with SingleTickerProvi
                     child: TabBarView(
                       controller: _tabController,
                       children: <Widget>[
-                        LoginPage(tabController: _tabController),
+                        LoginPage(tabController: _tabController,home:widget.login,),
                         RegisterPage()
 
                       ],

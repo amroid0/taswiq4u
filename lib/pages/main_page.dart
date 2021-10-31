@@ -100,7 +100,7 @@ class _MainScreenState extends State<MainScreen> {
 @override
   void initState() {
     // TODO: implement initState
- // getUserName();
+  getUserName();
   bloc=new NaviagtionBloc();
   _cateogyBloc=CategoryBloc();
    searchController = new TextEditingController();
@@ -112,8 +112,8 @@ class _MainScreenState extends State<MainScreen> {
 
     if (data==NavigationScreen.FAVROITE||data==NavigationScreen.PRFOILE||data==NavigationScreen.MYADS) {
       if (!BlocProvider.of<LoginBloc>(context).isLogged())
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+            ParentAuthPage(login: 1,)), (Route<dynamic> route) => false);
     }else if(data==NavigationScreen.CONTACT_US){
      String url=await APIConstants.getContactUrl();
     Navigator.of(context).push(MaterialPageRoute(builder: (_)=>MyWebView(
@@ -220,8 +220,8 @@ class _MainScreenState extends State<MainScreen> {
                               context,
                               MaterialPageRoute(builder: (context) => AddAdvertisment()),)
                           else
-                            Navigator.push(
-                                context, MaterialPageRoute(builder: (context) => ParentAuthPage()))
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                        ParentAuthPage(login: 1,)), (Route<dynamic> route) => false)
 
                         },
                         child: Container(
@@ -364,8 +364,8 @@ class _MainScreenState extends State<MainScreen> {
                                       borderRadius: BorderRadius.circular(18.0),
                                       side: BorderSide(color: Colors.green)),
                                   onPressed: () {
-                                    Navigator.push(
-                                        context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
+                                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                                        ParentAuthPage(login: 1,)), (Route<dynamic> route) => false);
                                   },
                                   color: Colors.green,
                                   textColor: Colors.white,
@@ -493,8 +493,8 @@ class _MainScreenState extends State<MainScreen> {
                                       borderRadius: BorderRadius.circular(18.0),
                                       side: BorderSide(color: Colors.green)),
                                   onPressed: () {
-                                    Navigator.push(
-                                        context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
+                                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                                        ParentAuthPage(login: 1,)), (Route<dynamic> route) => false);
                                   },
                                   color: Colors.green,
                                   textColor: Colors.white,
@@ -717,11 +717,12 @@ class _MainScreenState extends State<MainScreen> {
     return  CategoryListFragment();
 
   }
-  Future getUserName ()async{
+   Future  getUserName ()async{
     if(BlocProvider.of<LoginBloc>(context).isLogged()){
       UserInfo userInfo = await preferences.getUserInfo();
       userName = userInfo.firstName+" "+userInfo.secondName;
       print(userName+"rrrrrr");
+
     }
     else {
       userName='' ;
