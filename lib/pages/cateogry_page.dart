@@ -273,7 +273,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
             child: FittedBox(
               alignment: AlignmentDirectional.centerStart,
               child: Row(
-                children: _bloc.cateogyTitle.map((e) => Text("${e.arabicDescription} | ",style: TextStyle(fontSize: 13),)).toList(),
+                children: _bloc.cateogyTitle.map((e) => Text(allTranslations.isEnglish ?"${e.englishDescription}  |  ":"${e.arabicDescription}  |  ",style: TextStyle(fontSize: 13),)).toList(),
               ),
             ),
           ),

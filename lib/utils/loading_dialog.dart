@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'global_locale.dart';
+
 class DialogBuilder {
   DialogBuilder(this.context);
 
@@ -72,7 +74,7 @@ class LoadingIndicator extends StatelessWidget{
     return
       Padding(
           child: Text(
-            'Please wait …',
+            allTranslations.text('wait'),
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 16

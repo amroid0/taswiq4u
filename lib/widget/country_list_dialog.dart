@@ -146,6 +146,7 @@ class _SelectDialogState<T> extends State<CountryListDialog<T>> {
                                 title: Text(allTranslations.isEnglish?item.englishDescription.toString():item.arabicDescription),
                                 selected: item == widget.selectedValue,
                                 onChanged: (val) {
+                                  preferences.clearCity();
                                   onChange(item);
                                   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                                       MainScreen()), (Route<dynamic> route) => false);

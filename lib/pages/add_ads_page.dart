@@ -49,6 +49,8 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   AdsPostEntity adsPostEntity=AdsPostEntity();
   final _formKey = GlobalKey<FormState>();
   bool isNeogtiable=false;
+  String countryId ;
+  int cId ;
   List<String> adsStateList=["جديد","مستعمل"];
   String selectedAdsStates="جديد";
    final TextEditingController _cattextController = TextEditingController();
@@ -81,11 +83,10 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_){_showDialog();});
    bloc=AddPostBloc();
    uploadBloc =UploadImageBloc();
-
+    getCountryId();
     getUserNumber();
     bloc.addStream.listen((data) {
       // Redirect to another view, given your conditi on
@@ -195,7 +196,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   _showCityDialog() async{
     await  CityListDialog.showModal<CityModel>(
       context,
-      label: allTranslations.text('choose_city'),
+      label: allTranslations.text('choose_govrnment'),
       selectedValue: CityModel(),
       items: List(),
       onChange: (CityModel selected) {
@@ -288,8 +289,8 @@ body: Padding(
         }),
             SizedBox(height: 8,),
 
-            _BuildCityRoundedTextField(labelText: allTranslations.text('city'),
-                hintText: allTranslations.text('city'),
+            _BuildCityRoundedTextField(labelText: allTranslations.text('govrnment'),
+                hintText: allTranslations.text('govrnment'),
                 controller: _citytextController,
                 iswithArrowIcon: true,onClickAction: (){
                   _showCityDialog();
@@ -394,28 +395,31 @@ body: Padding(
                             ),
 
 
-                            child:DropdownButtonHideUnderline(
-                              child: DropdownButton(
+                            child:Container(
+                              height:30,
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton(
 
-                                hint: Text('${allTranslations.text('choose')} ${allTranslations.isEnglish?item.EnglishName:item.ArabicName}'),
-                                value:_selectedFieldValue[index],
-                                isDense: true,
-                                items: item.SpecificationOptions.map((FieldProprtiresSpecificationoption value){
-                                  return DropdownMenuItem(
-                                    value: value.Id,
-                                    child: Text(allTranslations.isEnglish?value.EnglishName:value.ArabicName),
-                                  );
-                                }).toList(),
+                                  hint: Text('${allTranslations.text('choose')} ${allTranslations.isEnglish?item.EnglishName:item.ArabicName}'),
+                                  value:_selectedFieldValue[index],
+                                  isDense: true,
+                                  items: item.SpecificationOptions.map((FieldProprtiresSpecificationoption value){
+                                    return DropdownMenuItem(
+                                      value: value.Id,
+                                      child: Text(allTranslations.isEnglish?value.EnglishName:value.ArabicName),
+                                    );
+                                  }).toList(),
 
-                                   onChanged: (int newValue){
-                                     item.Value=newValue;
-                                     setState(() {
-                                    _selectedFieldValue[index]=newValue;
-                                    state.didChange(newValue.toString());
-                                    _colorFieldValue[index]=AppColors.validValueColor;
+                                     onChanged: (int newValue){
+                                       item.Value=newValue;
+                                       setState(() {
+                                      _selectedFieldValue[index]=newValue;
+                                      state.didChange(newValue.toString());
+                                      _colorFieldValue[index]=AppColors.validValueColor;
 
-                                     });
-                                   },
+                                       });
+                                     },
+                                ),
                               ),
                             ) ,
 
@@ -491,7 +495,7 @@ body: Padding(
                       child: TextFormField(
                         controller: contollers[index],
                           onTap:() {
-                            WidgetsBinding.instance.addPostFrameCallback((_){_showReportDialog(index, item.EnglishName, item.SpecificationOptions);});
+                            WidgetsBinding.instance.addPostFrameCallback((_){_showReportDialog(index, allTranslations.isEnglish ?item.EnglishName:item.ArabicName, item.SpecificationOptions);});
                             },
                           readOnly: true,
                           autovalidate: item.Required,
@@ -572,6 +576,7 @@ body: Padding(
           ),
             SizedBox(height: 8,),
             TextFormField(
+              keyboardType:TextInputType.phone,
                 controller: _phonetextController,
                 validator: _phoneValidate,
                 autovalidate: phoneColor==AppColors.validValueColor||phoneColor==AppColors.errorValueColor,
@@ -821,7 +826,7 @@ body: Padding(
                 if(contollers[index]==null){
                   contollers[index]=TextEditingController();}
                 String text="";
-                selectedList.forEach((val)=>text+="${val.EnglishName} ,");
+                selectedList.forEach((val)=>text+="${allTranslations.isEnglish ?val.EnglishName :val.ArabicName} ,");
                 contollers[index].text=text;
                 setState(() {
 
@@ -833,7 +838,7 @@ body: Padding(
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text("Ok"),
+                child: Text('${allTranslations.text('ok')}'),
                 onPressed: () => Navigator.of(context).pop(),
               )
             ],
@@ -861,7 +866,7 @@ body: Padding(
       return allTranslations.text('empty_field');
     }
 
-    else if(value.length<=10){
+    else if(cId==1 &&value.length<=10 || cId==2 && value.length<=8 ){
       return allTranslations.text('err_phone');
     }else{
       return null;
@@ -871,6 +876,10 @@ body: Padding(
      UserInfo userInfo = await preferences.getUserInfo();
      _phonetextController.text = userInfo.phone;
 
+  }
+  void getCountryId() async{
+    countryId = await preferences.getCountryID() ;
+    cId = int.parse(countryId);
   }
 }
 

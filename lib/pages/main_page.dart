@@ -49,7 +49,7 @@ class NavItem{
 class _MainScreenState extends State<MainScreen> {
   SharedPreferences sharedPreferences;
   NaviagtionBloc bloc;
-  String userName ='User';
+  String userName='User' ;
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -100,10 +100,11 @@ class _MainScreenState extends State<MainScreen> {
 @override
   void initState() {
     // TODO: implement initState
+  getUserName();
   bloc=new NaviagtionBloc();
   _cateogyBloc=CategoryBloc();
    searchController = new TextEditingController();
-  getUserName();
+
 
 
   bloc.stream.listen((data) async {
@@ -111,8 +112,8 @@ class _MainScreenState extends State<MainScreen> {
 
     if (data==NavigationScreen.FAVROITE||data==NavigationScreen.PRFOILE||data==NavigationScreen.MYADS) {
       if (!BlocProvider.of<LoginBloc>(context).isLogged())
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+            ParentAuthPage(login: 1,)), (Route<dynamic> route) => false);
     }else if(data==NavigationScreen.CONTACT_US){
      String url=await APIConstants.getContactUrl();
     Navigator.of(context).push(MaterialPageRoute(builder: (_)=>MyWebView(
@@ -129,6 +130,14 @@ class _MainScreenState extends State<MainScreen> {
     selectedUrl:url,
     )));
     }
+    else if(data==NavigationScreen.ABOUT){
+      String url=await APIConstants.getAboutUsUrl();
+
+      Navigator.of(context).push(MaterialPageRoute(builder: (_)=> MyWebView(
+        title: allTranslations.text('about_us'),
+        selectedUrl:url,
+      )));
+    }
     else if(data==NavigationScreen.RuLES){
       String url=await APIConstants.getRuleUrl();
 
@@ -136,6 +145,14 @@ class _MainScreenState extends State<MainScreen> {
     title: allTranslations.text('rules'),
     selectedUrl:url,
     )));
+    }
+    else if(data==NavigationScreen.FAQ){
+      String url=await APIConstants.getFAQUsUrl();
+
+      Navigator.of(context).push(MaterialPageRoute(builder: (_)=> MyWebView(
+        title: allTranslations.text('questions'),
+        selectedUrl:url,
+      )));
     }
 
 
@@ -147,6 +164,7 @@ class _MainScreenState extends State<MainScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    getUserName();
     List<FABBottomAppBarItem> bottomItems= [
       FABBottomAppBarItem(iconData: Icons.person, text:allTranslations.text('account')),
       FABBottomAppBarItem(iconData: Icons.announcement, text: allTranslations.text('offers')),
@@ -166,6 +184,8 @@ class _MainScreenState extends State<MainScreen> {
       NavItem(name:allTranslations.text('settings'),navIcon:Icons.settings),
       NavItem(name:allTranslations.text('policy'),navIcon:Icons.info),
       NavItem(name:allTranslations.text('rules'),navIcon:Icons.book),
+      NavItem(name:allTranslations.text('about_us'),navIcon:Icons.article),
+      NavItem(name:allTranslations.text('questions'),navIcon:Icons.question_answer),
       NavItem(name:allTranslations.text('contact_us'),navIcon:Icons.call)
     ];
     for (var i = 0; i < NavItemList.length; i++) {
@@ -200,8 +220,8 @@ class _MainScreenState extends State<MainScreen> {
                               context,
                               MaterialPageRoute(builder: (context) => AddAdvertisment()),)
                           else
-                            Navigator.push(
-                                context, MaterialPageRoute(builder: (context) => ParentAuthPage()))
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                        ParentAuthPage(login: 1,)), (Route<dynamic> route) => false)
 
                         },
                         child: Container(
@@ -296,23 +316,36 @@ class _MainScreenState extends State<MainScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       DrawerHeader(
-                        child: BlocProvider.of<LoginBloc>(context).isLogged() ? Container(
-                          alignment: Alignment.topLeft,
-                          child: Column(children: [
-                            Icon(Icons.notifications_paused),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
-                            ),
-                          ], ),
-                        ) : Container(
-                    alignment: Alignment.topLeft,
-                    child: Icon(Icons.notifications_paused),
-                    decoration: BoxDecoration(
-                        image:DecorationImage(
-                            image: AssetImage('images/logo.png'),fit: BoxFit.cover)),
+                        child:  StreamBuilder<bool>(
+                          initialData:BlocProvider.of<LoginBloc>(context).isLogged(),
+                          stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
+                            builder: (context, snapshot) {
+                              if(snapshot.hasData)
+                               {
+                                 getUserName();
+                                 return Container(
+                                   alignment: Alignment.topLeft,
+                                   child: Column(children: [
+                                     Icon(Icons.notifications_paused),
+                                     Padding(
+                                       padding: const EdgeInsets.all(8.0),
+                                       child: Text(userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
+                                     ),
+                                   ], ),
+                                 );
+                               }
+                              else{
+                               return Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Icon(Icons.notifications_paused),
+                                  decoration: BoxDecoration(
+                                      image:DecorationImage(
+                                          image: AssetImage('images/logo.png'),fit: BoxFit.cover)),
 
-                  ),
+                                );
+                              }
+                              }
+                        ),
                   //container
                         decoration: BoxDecoration(color: AppColors.appBackground),
                       ),
@@ -331,8 +364,8 @@ class _MainScreenState extends State<MainScreen> {
                                       borderRadius: BorderRadius.circular(18.0),
                                       side: BorderSide(color: Colors.green)),
                                   onPressed: () {
-                                    Navigator.push(
-                                        context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
+                                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                                        ParentAuthPage(login: 1,)), (Route<dynamic> route) => false);
                                   },
                                   color: Colors.green,
                                   textColor: Colors.white,
@@ -366,7 +399,6 @@ class _MainScreenState extends State<MainScreen> {
                                 onPressed: () {
                                   Navigator.pop(context);
                                   BlocProvider.of<LoginBloc>(context).logout();
-
 
                                 },
                                 width: 120,
@@ -412,22 +444,35 @@ class _MainScreenState extends State<MainScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       DrawerHeader(
-                        child: BlocProvider.of<LoginBloc>(context).isLogged() ? Container(
-                          alignment: Alignment.topLeft,
-                          child: Column(children: [
-                            Icon(Icons.notifications_paused),
-                            Padding(
-                              padding: const EdgeInsets.only(right:24, top: 16,bottom: 8),
-                              child: Text(userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
-                            ),
-                          ], ),
-                        ) : Container(
-                          alignment: Alignment.topLeft,
-                          child: Icon(Icons.notifications_paused),
-                          decoration: BoxDecoration(
-                              image:DecorationImage(
-                                  image: AssetImage('images/logo.png'),fit: BoxFit.cover)),
+                        child:  StreamBuilder<bool>(
+                            initialData:BlocProvider.of<LoginBloc>(context).isLogged(),
+                            stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
+                            builder: (context, snapshot) {
+                              if(snapshot.hasData&&snapshot.data)
+                                {
+                                  getUserName();
+                                  return Container(
+                                    alignment: Alignment.topLeft,
+                                    child: Column(children: [
+                                      Icon(Icons.notifications_paused),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
+                                      ),
+                                    ], ),
+                                  );
+                                }
+                              else{
+                               return Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Icon(Icons.notifications_paused),
+                                  decoration: BoxDecoration(
+                                      image:DecorationImage(
+                                          image: AssetImage('images/logo.png'),fit: BoxFit.cover)),
 
+                                );
+                              }
+                            }
                         ),
                         //container
                         decoration: BoxDecoration(color: AppColors.appBackground),
@@ -448,8 +493,8 @@ class _MainScreenState extends State<MainScreen> {
                                       borderRadius: BorderRadius.circular(18.0),
                                       side: BorderSide(color: Colors.green)),
                                   onPressed: () {
-                                    Navigator.push(
-                                        context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
+                                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                                        ParentAuthPage(login: 1,)), (Route<dynamic> route) => false);
                                   },
                                   color: Colors.green,
                                   textColor: Colors.white,
@@ -589,6 +634,14 @@ class _MainScreenState extends State<MainScreen> {
       bloc.navigateToScreen(NavigationScreen.RuLES);
 
     }
+    else if(index==7){
+      bloc.navigateToScreen(NavigationScreen.ABOUT);
+
+    }
+    else if(index==8){
+      bloc.navigateToScreen(NavigationScreen.FAQ);
+
+    }
     else {
       bloc.navigateToScreen(NavigationScreen.CONTACT_US);
 
@@ -664,9 +717,16 @@ class _MainScreenState extends State<MainScreen> {
     return  CategoryListFragment();
 
   }
-  Future getUserName ()async{
-    UserInfo userInfo = await preferences.getUserInfo();
-    userName = userInfo.firstName;
+   Future  getUserName ()async{
+    if(BlocProvider.of<LoginBloc>(context).isLogged()){
+      UserInfo userInfo = await preferences.getUserInfo();
+      userName = userInfo.firstName+" "+userInfo.secondName;
+      print(userName+"rrrrrr");
+
+    }
+    else {
+      userName='' ;
+    }
 
   }
 

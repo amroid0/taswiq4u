@@ -1,14 +1,18 @@
 import 'dart:async';
 
 import 'package:olx/utils/global_locale.dart';
+import 'package:olx/data/shared_prefs.dart';
 
 class Validators {
+
   final validateEmail =
-  StreamTransformer<String, String>.fromHandlers(handleData: (email, sink) {
-    if (email.length>10) {
+  StreamTransformer<String, String>.fromHandlers(handleData: (email, sink)  async {
+    String countryId = await preferences.getCountryID() ;
+    int c = int.parse(countryId) ;
+    if (email.length>10&&c==1 ||email.length>7&&c==2) {
       sink.add(email);
     } else {
-      sink.addError(allTranslations.text('err_email'));
+      sink.addError(c==1 ?allTranslations.text('err_email'):allTranslations.text('err_numk'));
     }
   });
   final validateEmpty =

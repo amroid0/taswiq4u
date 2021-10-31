@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/favroite_bloc.dart';
+import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/pages/detail_page.dart';
@@ -28,10 +29,13 @@ class FavroitePage extends StatefulWidget {
 
    var _gridItemCount=1;
    var bloc;
+   int lang;
+   String countryId;
 
    @override
    void initState() {
      // TODO: implement initState
+     getGroupId();
      super.initState();
         bloc=new FavroiteBloc();
 
@@ -209,7 +213,7 @@ class FavroitePage extends StatefulWidget {
                BlocProvider.of<AdsBloc>(context).GetImage(
                    imageList[0].Url, adsIndex, false);*/
 
-               return AdsCardWidget(ads.list[adsIndex]);
+               return AdsCardWidget(model:ads.list[adsIndex],language: lang,);
 
 
              }
@@ -238,7 +242,7 @@ class FavroitePage extends StatefulWidget {
                   BlocProvider.of<AdsBloc>(context).GetImage(
                       imageList[0].Url, adsIndex, false);*/
 
-               return AdsRowWidget(ads.list[adsIndex]);
+               return AdsRowWidget(model: ads.list[adsIndex],language:lang,);
 
 
 
@@ -259,6 +263,12 @@ class FavroitePage extends StatefulWidget {
      return Center(
        child: CircularProgressIndicator(),
      );
+   }
+   void getGroupId() async{
+     countryId = await preferences.getCountryID() ;
+     lang = int.parse(countryId);
+     print("group  value"+lang.toString());
+
    }
 
  }

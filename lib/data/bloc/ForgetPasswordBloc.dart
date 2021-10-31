@@ -27,12 +27,15 @@ class ForgetPasswordBloc extends Validators implements Bloc {
 
 
   forgetPassword(int countryId) async{
+    print("pasasasa22");
     final validEmail = _emailController.value;
 
     if(validEmail.isNotEmpty){
+      print("pasasasa11");
 
         _forgetController.add(ApiResponse.loading('loading'));
         try {
+          print("pasasasa2221");
 
           final results = await _client.forgetPassword(validEmail,countryId);
           if(results){

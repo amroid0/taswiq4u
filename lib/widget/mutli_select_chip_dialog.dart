@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:olx/model/field_proprtires_entity.dart';
+import 'package:olx/utils/global_locale.dart';
 
 class MultiSelectChip extends StatefulWidget {
   final List<FieldProprtiresSpecificationoption> reportList;
@@ -20,7 +21,7 @@ class _MultiSelectChipState extends State<MultiSelectChip> {
       choices.add(Container(
         padding: const EdgeInsets.all(2.0),
         child: ChoiceChip(
-          label: Text(item.EnglishName),
+          label: Text(allTranslations.isEnglish ?item.EnglishName :item.ArabicName),
           selected: selectedChoices.contains(item),
           onSelected: (selected) {
             setState(() {

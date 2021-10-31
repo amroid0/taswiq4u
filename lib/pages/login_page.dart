@@ -16,11 +16,14 @@ import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/auth_input_widget.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
+import 'main_page.dart';
+
 
 class LoginPage extends StatefulWidget {
   TabController tabController ;// +added
+  int home = 0 ;
   LoginPage(
-      {this.tabController} // +added
+      {this.tabController,this.home} // +added
       );
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -50,8 +53,9 @@ class _LoginPageState extends State<LoginPage> {
         progressDialog.show();
         break;
       case Status.AUTHNTICATED:
-              Navigator.of(context).pop();
-
+             widget.home==1 ? Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                 MainScreen()), (Route<dynamic> route) => false)
+             :  Navigator.pop(context);
 
         break;
 

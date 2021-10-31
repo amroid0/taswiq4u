@@ -27,6 +27,7 @@ class _CountryPageState extends State<CountryPage> {
   CountryBloc bloc;
   @override
   void initState() {
+    preferences.clearCity();
     // TODO: implement initState
     bloc=new CountryBloc();
     bloc.getCountryList();

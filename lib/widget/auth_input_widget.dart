@@ -54,6 +54,7 @@ class AuthInputWidget extends StatelessWidget {
           labelText: labelText,filled: true,
           border: InputBorder.none,
           errorText: errorText,
+          errorStyle:TextStyle(fontSize:10,fontWeight:FontWeight.bold,height: 2),
           fillColor: Color(0xffF2F4F6),
           isDense: true,
           suffixIcon: suffixIcon

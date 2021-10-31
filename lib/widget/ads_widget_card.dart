@@ -9,137 +9,140 @@ import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/utils.dart';
+import 'package:olx/widget/favorite_card.dart';
 import 'package:olx/widget/favroite_widget.dart';
 
 
 class AdsCardWidget extends StatelessWidget {
   AdsModel model;
+  int language ;
   final bool editable;
-
-  AdsCardWidget(this.model,{this.editable=false});
+  AdsCardWidget({this.model,this.editable=false,this.language});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Padding(
+      padding: const EdgeInsets.only(left:2.0, right:2.0 , top:1.0,bottom: 1.0),
+      child: Container(
 
-      margin: const EdgeInsets.all(4),
-      child: new InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => DetailPage(editable)
-                , settings: RouteSettings(arguments: model)),
-          );
-        },
-        child: new Card(
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20)
-          ),
-          child: new SizedBox(
-            height: 280,
-            child: new Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
+        margin: const EdgeInsets.all(2),
+        child: new InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DetailPage(editable)
+                  , settings: RouteSettings(arguments: model)),
+            );
+          },
+          child: new Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20)
+            ),
+            child: new SizedBox(
+              height: 285,
+              child: new Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
 
-                new Container(
-                    height: 120,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
+                  new Container(
+                      height: 120,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
 
-                        color: Colors.grey.shade300
-
-                    ),
-                    child:
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: _BuildImageWidget())
-                ),
-
-                new Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 4, vertical: 4),
-                      child: Column(
-
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(model
-                              .EnglishTitle, style: TextStyle(
-                              fontSize: 15,
-                              height: 1.2
-                          ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,),
-                          Text("${model.Price}+${allTranslations.text('cuurency')} ",
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-
-                            style: TextStyle(color: Theme
-                                .of(context)
-                                .accentColor),),
-                          Divider(height: 1,
-                            color: Colors.grey.shade300,
-                            thickness: 1,),
-                          Row(
-
-                            children: <Widget>[
-                              Icon(Icons.pin_drop_outlined, size: 20,),
-
-                              Text(model
-                                  .CityNameEnglish,),
-
-                            ],),
-                          Row(
-                            children: <Widget>[
-                              Icon(Icons.update_outlined, size: 20,),
-
-                              FittedBox(
-                                child: Text(
-                                  displayTimeAgoFromTimestamp(model.CreationTime), style: TextStyle(fontSize: 13),),
-                              ),
-
-                            ],),
-
-
-                        ],
-
+                          color: Colors.grey.shade300
 
                       ),
-                    )
+                      child:
+                      ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: _BuildImageWidget())
+                  ),
 
-                ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [ InkWell(
+                  new Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 2, vertical: 2),
+                        child: Column(
 
-                      onTap: () {},
-                      child: Container(
-                          margin: EdgeInsets.only(left: 4),
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(model
+                                .EnglishTitle, style: TextStyle(
+                                fontSize: 15,
+                                height: 1.2
+                            ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,),
+                            Text(language==1 ? "${model.Price}  ${allTranslations.text('cuurency')}" :"${model.Price}  ${allTranslations.text('cuurencyKd')}" ,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
 
-                          alignment: Alignment.topRight,
-                          color: Colors.white,
-                          child: FavroiteWidget(
-                              onFavChange: (val) {
-                                if (BlocProvider.of<LoginBloc>(context)
-                                    .isLogged())
-                                  BlocProvider.of<FavroiteBloc>(context)
-                                      .changeFavoriteState(val, model.Id);
-                                else
-                                  Navigator.push(
-                                      context, MaterialPageRoute(
-                                      builder: (context) => ParentAuthPage()));
-                              },
-                              value: model.IsFavorite
-                          )
+                              style: TextStyle(color: Theme
+                                  .of(context)
+                                  .accentColor),),
+                            Divider(height: 1,
+                              color: Colors.grey.shade300,
+                              thickness: 1,),
+                            Row(
+
+                              children: <Widget>[
+                                Icon(Icons.pin_drop_outlined, size: 20,),
+
+                                Text(allTranslations.isEnglish ?model.CityNameEnglish :model.CityNameArabic),
+
+                              ],),
+                            Row(
+                              children: <Widget>[
+                                Icon(Icons.update_outlined, size: 20,),
+
+                                FittedBox(
+                                  child: Text(
+                                    displayTimeAgoFromTimestamp(model.CreationTime), style: TextStyle(fontSize: 13),),
+                                ),
+
+                              ],),
+
+
+                          ],
+
+
+                        ),
+                      )
+
+                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [ InkWell(
+
+                        onTap: () {},
+                        child: Container(
+                            margin: EdgeInsets.only(left: 2),
+
+                            alignment: Alignment.topRight,
+                            color: Colors.white,
+                            child: FavroiteWidgetCard(
+                                onFavChange: (val) {
+                                  if (BlocProvider.of<LoginBloc>(context)
+                                      .isLogged())
+                                    BlocProvider.of<FavroiteBloc>(context)
+                                        .changeFavoriteState(val, model.Id);
+                                  else
+                                    Navigator.push(
+                                        context, MaterialPageRoute(
+                                        builder: (context) => ParentAuthPage()));
+                                },
+                                value: model.IsFavorite
+                            )
+                        ),
                       ),
-                    ),
-                    ]
-                ),
+                      ]
+                  ),
 
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -172,21 +175,21 @@ class AdsCardWidget extends StatelessWidget {
 
       return '${(dateString.day)} / ${(dateString.month)} ' ;
     }  else if (difference.inDays >= 2) {
-      return '${difference.inDays} days ago';
+      return '${difference.inDays} ${allTranslations.text('day_sago')}';
     } else if (difference.inDays >= 1) {
-      return (numericDates) ? '1 day ago' : 'Yesterday';
+      return (numericDates) ? ' 1 ${allTranslations.text('day_ago')}' : ' ${allTranslations.text('yestrday')}';
     } else if (difference.inHours >= 2) {
-      return '${difference.inHours} hours ago';
+      return '${difference.inHours}${allTranslations.text('hours_ago')}';
     } else if (difference.inHours >= 1) {
-      return (numericDates) ? '1 hour ago' : 'An hour ago';
+      return (numericDates) ? '${allTranslations.text('hour_ago')}' : '${allTranslations.text('hour_ago')}';
     } else if (difference.inMinutes >= 2) {
-      return '${difference.inMinutes} minutes ago';
+      return '${difference.inMinutes}${allTranslations.text('minutes_ago')}';
     } else if (difference.inMinutes >= 1) {
-      return (numericDates) ? '1 minute ago' : 'A minute ago';
+      return (numericDates) ? '1${allTranslations.text('minute_ago')}' : '${allTranslations.text('minute_ago')}';
     } else if (difference.inSeconds >= 3) {
-      return '${difference.inSeconds} seconds ago';
+      return '${difference.inSeconds} ${allTranslations.text('seconds_ago')}';
     } else {
-      return 'Just now';
+      return '${allTranslations.text('now')}';
     }
   }
 }

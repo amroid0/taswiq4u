@@ -78,13 +78,54 @@ class APIConstants {
   }
 
   static Future<String> getPolicyUrl()async{
-    return  "http://beta.taswiq4u.com/Privacy?appcountryid=${await preferences.getCountryID()}&applangid=${allTranslations.isEnglish?"en":"ar"}#step-1";
+    String url ;
+    if (allTranslations.isEnglish){
+      url = "http://beta.taswiq4u.com//ChangeLanguage?returnUrl=/Privacy?appcountryid=${await preferences.getCountryID()}&language=en#step-1" ;
+    } else {
+      url = "http://beta.taswiq4u.com//ChangeLanguage?returnUrl=/Privacy?appcountryid=${await preferences.getCountryID()}&language=ar#step-1" ;
+    }
+    return url ;
   }
   static Future<String> getRuleUrl()async{
-    return  "http://beta.taswiq4u.com/TermsOfUse?appcountryid=${await preferences.getCountryID()}&applangid=${allTranslations.isEnglish?"en":"ar"}#step-1";
+
+   // allTranslations.isEnglish ?  url =  "http://beta.taswiq4u.com//ChangeLanguage?returnUrl=/TermsOfUse?appcountryid=${await preferences.getCountryID()}&language=en#step-1" ;
+   //     :  url =  "http://beta.taswiq4u.com//ChangeLanguage?returnUrl=/TermsOfUse?appcountryid=${await preferences.getCountryID()}&language=en#step-1";
+   // return url ;
+    String url ;
+    if (allTranslations.isEnglish){
+      url = "http://beta.taswiq4u.com//ChangeLanguage?returnUrl=/TermsOfUse?appcountryid=${await preferences.getCountryID()}&language=en#step-1" ;
+    } else {
+      url = "http://beta.taswiq4u.com//ChangeLanguage?returnUrl=/TermsOfUse?appcountryid=${await preferences.getCountryID()}&language=ar#step-1" ;
+    }
+    return url ;
   }
   static Future<String> getContactUrl()async{
-    return  "http://beta.taswiq4u.com/ContactUs?appcountryid=${await preferences.getCountryID()}&applangid=${allTranslations.isEnglish?"en":"ar"}#step-1";
+    String url ;
+    if (allTranslations.isEnglish){
+      url = "http://beta.taswiq4u.com//ChangeLanguage?returnUrl=/ContactUs?appcountryid=${await preferences.getCountryID()}&language=en#step-1" ;
+    } else {
+      url = "http://beta.taswiq4u.com//ChangeLanguage?returnUrl=/ContactUs?appcountryid=${await preferences.getCountryID()}&language=ar#step-1" ;
+    }
+    return url ;
+  }
+  static Future<String> getAboutUsUrl()async{
+    String url ;
+    if (allTranslations.isEnglish){
+      url = "http://beta.taswiq4u.com//ChangeLanguage?returnUrl=/AboutUs?appcountryid=${await preferences.getCountryID()}&language=en#step-1" ;
+    } else {
+      url = "http://beta.taswiq4u.com//ChangeLanguage?returnUrl=/AboutUs?appcountryid=${await preferences.getCountryID()}&language=ar#step-1" ;
+    }
+    return url ;
+  }
+
+  static Future<String> getFAQUsUrl()async{
+    String url ;
+    if (allTranslations.isEnglish){
+      url = "http://beta.taswiq4u.com//ChangeLanguage?returnUrl=/FAQ?appcountryid=${await preferences.getCountryID()}&language=en#step-1" ;
+    } else {
+      url = "http://beta.taswiq4u.com//ChangeLanguage?returnUrl=/FAQ?appcountryid=${await preferences.getCountryID()}&language=ar#step-1" ;
+    }
+    return url ;
   }
 
 }
@@ -122,6 +163,8 @@ class EventConstants {
   static const int CHANGE_PASSWORD_SUCCESSFUL = 505;
   static const int CHANGE_PASSWORD_UN_SUCCESSFUL = 506;
   static const int INVALID_OLD_PASSWORD = 507;
+
+
 ///////////////////////////////////////////////////////////////////////////////
 }
 

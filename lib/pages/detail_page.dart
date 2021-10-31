@@ -25,6 +25,7 @@ import 'package:olx/pages/edit_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/pages/slider_full+image_viewer.dart';
 import 'package:olx/utils/Constants.dart';
+import 'package:olx/utils/ToastUtils.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/favroite_widget.dart';
 import 'package:olx/widget/map_widget.dart';
@@ -176,7 +177,7 @@ class _DetailPageState extends State<DetailPage> {
             SpeedDialChild(
               child: Icon(Icons.textsms,color: Colors.white,),
               backgroundColor: Colors.green,
-              label: 'محادثه',
+              label: allTranslations.text('conversation'),
               labelBackgroundColor: Colors.white,
 
               labelStyle: TextStyle(fontSize: 18.0),
@@ -186,7 +187,7 @@ class _DetailPageState extends State<DetailPage> {
             SpeedDialChild(
               child: Icon(Icons.call,color: Colors.white,),
               backgroundColor: Colors.green,
-              label: 'اتصال',
+              label: allTranslations.text('calling'),
               labelStyle: TextStyle(fontSize: 18.0),
               labelBackgroundColor: Colors.white,
               onTap: (){
@@ -197,12 +198,12 @@ class _DetailPageState extends State<DetailPage> {
             SpeedDialChild(
               child: Icon(Icons.copy,color: Colors.white,),
               backgroundColor: Colors.green,
-              label: 'نسخ الرقم',
+              label: allTranslations.text('copy_num'),
               labelBackgroundColor: Colors.white,
               labelStyle: TextStyle(fontSize: 18.0),
               onTap: () =>  Clipboard.setData(new ClipboardData(text: detailArgs.UserPhone)).then((_){
                 detailScaffoldMessengerKey.currentState.showSnackBar(
-                    SnackBar(content:Text("تم النسخ")));
+                    SnackBar(content:Text(allTranslations.text('copied_num'))));
               }),
               onLongPress: () => print('THIRD CHILD LONG PRESS'),
             ),
@@ -327,10 +328,11 @@ class _DetailPageState extends State<DetailPage> {
                                       chooserTitle: 'taswiq Chooser Title');
                                 }                ,
                                 child: Container(
+                                  height:35,
                                    // margin:EdgeInsets.only(top: 300 ,left:50,right: 50),
                                     decoration: BoxDecoration(
                                         color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20)),
+                                        borderRadius: BorderRadius.circular(15)),
                                     child: Icon(
                                       Icons.share,
                                       size: 30.0,
@@ -442,7 +444,7 @@ class _DetailPageState extends State<DetailPage> {
           ),
         ),
         Text(
-          detail.Price == null ? "" : '${detail.Price}${allTranslations.text('cuurency')}',
+          detail.Price == null ? "" : '${detail.Price}  ${allTranslations.text('cuurency')}',
           style: TextStyle(fontSize: 20, color: Colors.green),
         )
       ],
@@ -569,68 +571,74 @@ class _DetailPageState extends State<DetailPage> {
           // });
           Alert(
               context: context,
-              title: "Reason",
-              content: Column(
-                children: <Widget>[
-              DropdownButton<String>(
-                                  hint:  Text("Reason", style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  ),),
-                                  value: _select_Types,
-                                  onChanged: (String Value) {
-                                    setState(() {
-                                      _select_Types = Value;
-                                    });
-                                  },
-                                  items: reportReasons.map((String types) {
-                                    return  DropdownMenuItem<String>(
-                                      value: types,
-                                      child: Row(
-                                        children: <Widget>[
-                                          reportReasons.length > 0  ? Text(
-                                          types,
-                                            style:  TextStyle(color: Colors.black),
-                                          )
-                                              : Text(
-                                            'no data',
-                                            style:  TextStyle(color: Colors.black),
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                                SizedBox(height: 20,),
-                                Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8.0),
-                                        color:Colors.white10.withOpacity(0.5)
-                                    ),
-                                    height: 100,
-                                    //  color:Colors.black12,
-                                    margin: EdgeInsets.all(20),
-
-                                    child: TextField(
-                                      controller:message,
-                                        decoration :  new InputDecoration(
-                                          labelText: 'Message',
-                                          labelStyle:TextStyle(color:Colors.black),
-                                          border: new OutlineInputBorder(
-                                            borderRadius: const BorderRadius.all(
-                                              const Radius.circular(8.0),
-                                            ),
-                                          ),
-                                        )),
+              title: allTranslations.text('report'),
+              content: StatefulBuilder(
+                builder:(BuildContext context,
+                    void Function(void Function()) setState) =>
+                    Container(
+                child: Column(
+                  children: <Widget>[
+                DropdownButton<String>(
+                                    hint:  Text(allTranslations.text('reason'), style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),),
+                                    value: _select_Types,
+                                    onChanged: (String Value) {
+                                      setState(() {
+                                        _select_Types = Value;
+                                      });
+                                    },
+                                    items: reportReasons.map((String types) {
+                                      return  DropdownMenuItem<String>(
+                                        value: types,
+                                        child: Row(
+                                          children: <Widget>[
+                                            reportReasons.length > 0  ? Text(
+                                            types,
+                                              style:  TextStyle(color: Colors.black),
+                                            )
+                                                : Text(
+                                              'no data',
+                                              style:  TextStyle(color: Colors.black),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    }).toList(),
                                   ),
+                                  SizedBox(height: 20,),
+                                  Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                          color:Colors.white10.withOpacity(0.5)
+                                      ),
+                                      height: 100,
+                                      //  color:Colors.black12,
+                                      margin: EdgeInsets.all(20),
 
-              ]
+                                      child: TextField(
+                                        controller:message,
+                                          decoration :  new InputDecoration(
+                                            labelText: allTranslations.text('message'),
+                                            labelStyle:TextStyle(color:Colors.black),
+                                            border: new OutlineInputBorder(
+                                              borderRadius: const BorderRadius.all(
+                                                const Radius.circular(8.0),
+                                              ),
+                                            ),
+                                          )),
+                                    ),
+
+                ]
+                ),
+                    ),
               ),
               buttons: [
                 DialogButton(
                   onPressed: (){
-                    if(BlocProvider.of<LoginBloc>(context).isLogged())
+                    BlocProvider.of<LoginBloc>(context).isLogged() ?
                                          _reportBloc.adsReport(
                                             PostReport(
                                               countryId:1,
@@ -638,14 +646,45 @@ class _DetailPageState extends State<DetailPage> {
                                               message:message.text,
                                               reason:_select_Types
 
-                                            )
-                                          );
-                                        else
-                                          Navigator.push(
+                                            ),
+                                          )
+                                         : Navigator.push(
                                               context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
+                    _reportBloc.addStream.listen((data) {
+                      switch (data.status) {
+                        case Status.LOADING:
+                          Future.delayed(Duration.zero, () {
+
+                          });
+                          break;
+                        case Status.COMPLETED:
+                          var isLogged=data as ApiResponse<bool>;
+                          var isss=isLogged.data;
+                          if(isss){
+
+                            Fluttertoast.showToast(
+                                msg: allTranslations.text('send_success'),
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.green,
+                                textColor: Colors.white,
+                                fontSize: 16.0
+                            );
+                            Navigator.pop(context);
+
+                          }
+
+                          break;
+                        case Status.ERROR:
+                          ToastUtils.showErrorMessage(allTranslations.
+                          text('err_wrong'));
+                          break;
+                      }
+                    });
 
                   },                                 child: Text(
-                  "Send",
+                  allTranslations.text('send'),
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
                 )

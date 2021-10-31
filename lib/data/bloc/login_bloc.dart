@@ -107,9 +107,9 @@ _logincontroller.close();*/
   }
 
   void logout() async{
-    preferences.logout();
     mIsLogged=false;
     _logincontroller.sink.add(false);
     _controller.sink.add(null);
+    preferences.logout();
   }
 }

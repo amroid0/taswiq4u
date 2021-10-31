@@ -6,6 +6,7 @@ import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/favroite_bloc.dart';
 import 'package:olx/data/bloc/login_bloc.dart';
+import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/favroite_entity.dart';
@@ -28,6 +29,8 @@ class _MyAdsPageState extends State<MyAdsPage> {
   ScrollController _scrollController = new ScrollController();
   int page=1;
   List<AdsModel> ads;
+  int lang ;
+  String countryId;
 
   var _gridItemCount=1;
   var bloc;
@@ -37,6 +40,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getGroupId();
     bloc=new FavroiteBloc();
 
     bloc.stateStream.listen((data) {
@@ -214,7 +218,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
     if(_gridItemCount==2)
       return GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: _gridItemCount,
-            childAspectRatio: 0.70,),
+            childAspectRatio: 0.68,),
           controller: _scrollController,
 
           shrinkWrap: true,
@@ -229,7 +233,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
 
             }else {
 
-                             return AdsCardWidget(ads[adsIndex],editable: true,);
+              return AdsCardWidget(model:ads[adsIndex],editable: true,language: lang,);
 
 
             }
@@ -254,7 +258,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
               [adsIndex]
                   .AdvertismentImages;
 
-              return AdsRowWidget(ads[adsIndex],editable: true,);
+              return AdsRowWidget(model:ads[adsIndex],editable: true,language:lang,);
 
 
             }
@@ -274,6 +278,12 @@ class _MyAdsPageState extends State<MyAdsPage> {
     return Center(
       child: CircularProgressIndicator(),
     );
+  }
+  void getGroupId() async{
+    countryId = await preferences.getCountryID() ;
+    lang = int.parse(countryId);
+    print("group  value"+lang.toString());
+
   }
 
 }
