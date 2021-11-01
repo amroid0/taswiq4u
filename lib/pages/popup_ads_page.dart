@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:olx/data/bloc/offer_bloc.dart';
+import 'package:olx/model/Counter.dart';
 import 'package:olx/model/popup_ads_entity_entity.dart';
 import 'package:olx/utils/Constants.dart';
 
@@ -9,10 +11,10 @@ class PopUpAdsPage extends StatefulWidget {
 
 class _PopUpAdsPageState extends State<PopUpAdsPage> {
   PopupAdsEntityList result;
+  OfferBloc bloc;
   @override
   void initState() {
-
-
+   bloc =OfferBloc();
     super.initState();
   }
   @override
@@ -92,15 +94,7 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                     Column(mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                Text(result.likes.toString(),style: TextStyle(color: Colors.white),),
-                                FlatButton(onPressed:(){
-  //                                bloc.likeAds(true);
-
-                                },child: Icon(Icons.favorite,color: Colors.white,)),
-                              ]
-                          ),
+                    _buildLikeWidget(result),
 
                       Column(mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
@@ -133,6 +127,33 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
       )
     );
   }
+
+  Widget _buildLikeWidget(PopupAdsEntityList item) {
+    return StreamBuilder<Counter>(
+      initialData: Counter(item.likes, true),
+      stream: bloc.Likestream,
+      builder: (context, snapshot) {
+        Counter likeCounter = Counter(0, true);
+        if (snapshot.hasData)
+          likeCounter = snapshot.data;
+        return Column(mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Text(likeCounter.count.toString(),
+                style: TextStyle(color: Colors.white),),
+              FlatButton(onPressed: () {
+               if( likeCounter.isEanbled)
+                bloc.likePopUpAds(result,true);
+              },
+                  child: Icon(
+                    likeCounter.isEanbled ? Icons.favorite_border : Icons
+                        .favorite, color: Colors.white,)),
+            ]
+        );
+      },
+    );
+  }
+
+
 }
 
 

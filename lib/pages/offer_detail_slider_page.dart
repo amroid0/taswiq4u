@@ -205,7 +205,8 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
             children: <Widget>[
               Text(likeCounter.count.toString(),style: TextStyle(color: Colors.white),),
               FlatButton(onPressed:(){
-                BlocProvider.of<OfferBloc>(context).likeAds(pos,true);
+                if(likeCounter.isEanbled)
+                BlocProvider.of<OfferBloc>(context).likePopUpAds(item,true);
 
               },child: Icon(likeCounter.isEanbled?Icons.favorite_border:Icons.favorite,color: Colors.white,)),
             ]
