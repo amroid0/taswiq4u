@@ -46,18 +46,19 @@ class RegisterValidators {
 
   final validateFirstName = StreamTransformer<String, String>.fromHandlers(
       handleData: (firstName, sink) {
-        final nameRegExp = new RegExp(r"^[a-zA-Zء-ي]+\s[a-zA-Zء-ي]+$");
+        final nameRegExp = new RegExp(r"^\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$");
         final String name = firstName.replaceAll(RegExp(r'\u{200e}', unicode: true), '');
-
 
         if(firstName.isEmpty){
           sink.addError(allTranslations.text('err_fname'));
         }
 
-        if(nameRegExp.hasMatch(name.toString())){
+        if(nameRegExp.hasMatch(name.trim().toString())){
+          print("true");
           sink.add(firstName);
         }
         else {
+          print("false");
 
           sink.addError(allTranslations.text('err_fname'));
         }
