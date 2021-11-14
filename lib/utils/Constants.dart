@@ -16,6 +16,7 @@
  */
 
 import 'package:olx/data/shared_prefs.dart';
+import 'package:olx/model/user_info.dart';
 import 'package:olx/utils/global_locale.dart';
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -74,6 +75,14 @@ class APIConstants {
 
   static String getFullImageUrl(String url,int type){
     return  url!=null&&url.isNotEmpty?'http://api.taswiq4u.com/Api/ImageUpload/i?url=$url&type=$type':"";
+
+  }
+  static Future<String>  getUserNameLogin()async{
+
+      UserInfo userInfo = await preferences.getUserInfo();
+    String  userName = userInfo.firstName+" "+userInfo.secondName;
+      print(userName+"rrrrrr");
+      return userName ;
 
   }
 

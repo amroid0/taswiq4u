@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -49,7 +51,8 @@ class NavItem{
 class _MainScreenState extends State<MainScreen> {
   SharedPreferences sharedPreferences;
   NaviagtionBloc bloc;
-  String userName='User' ;
+  String userName=null ;
+  StreamController _controller = StreamController();
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -322,14 +325,14 @@ class _MainScreenState extends State<MainScreen> {
                             builder: (context, snapshot) {
                               if(snapshot.hasData)
                                {
-                                 getUserName();
+                                // getUserName();
                                  return Container(
                                    alignment: Alignment.topLeft,
                                    child: Column(children: [
                                      Icon(Icons.notifications_paused),
                                      Padding(
                                        padding: const EdgeInsets.all(8.0),
-                                       child: Text(userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
+                                       child: Text(LoginBloc.nameLogin !=null ? LoginBloc.nameLogin :userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
                                      ),
                                    ], ),
                                  );
@@ -450,14 +453,14 @@ class _MainScreenState extends State<MainScreen> {
                             builder: (context, snapshot) {
                               if(snapshot.hasData&&snapshot.data)
                                 {
-                                  getUserName();
+                                  //getUserName();
                                   return Container(
                                     alignment: Alignment.topLeft,
                                     child: Column(children: [
                                       Icon(Icons.notifications_paused),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: Text(userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
+                                        child: Text(LoginBloc.nameLogin !=null ? LoginBloc.nameLogin :userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
                                       ),
                                     ], ),
                                   );
@@ -721,11 +724,12 @@ class _MainScreenState extends State<MainScreen> {
     if(BlocProvider.of<LoginBloc>(context).isLogged()){
       UserInfo userInfo = await preferences.getUserInfo();
       userName = userInfo.firstName+" "+userInfo.secondName;
+    //  _controller.sink.add(userName);
       print(userName+"rrrrrr");
 
     }
     else {
-      userName='' ;
+      userName=null ;
     }
 
   }
