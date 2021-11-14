@@ -66,14 +66,7 @@ void getOfferLsit(String categoryID) async {
 }
   void likeAds(int index,isClicked) async {
     try {
-      List<String> ids=await preferences.getLikedCommericalList();
-      if(ids!=null)
-        for(String id in ids){
-          if(id==commercialAds[index].id.toString()){
-            _likeController.sink.add(Counter(commercialAds[index].likes,false));
-            return;
-          }
-        }
+
       if(isClicked){
         final results = await _client.LikeAds(commercialAds[index].id.toString());
         if(results) {
@@ -88,6 +81,26 @@ void getOfferLsit(String categoryID) async {
     }catch(e) {
       _likeController.sink.add(Counter(commercialAds[index].likes,true));
     }}
+  void likePopUpAds(PopupAdsEntityList item,isClicked) async {
+    try {
+
+      if(isClicked){
+        final results = await _client.LikeAds(item.id.toString());
+        if(results) {
+          await preferences.saveLikedCommericalList(item.id.toString());
+          item.likes = item.likes + 1;
+          _likeController.sink.add(Counter(item.likes, false));
+        }else{
+          _likeController.sink.add(Counter(item.likes,true));
+        }}else{
+        _likeController.sink.add(Counter(item.likes,true));
+      }
+    }catch(e) {
+      _likeController.sink.add(Counter(item.likes,true));
+    }}
+
+
+
 
 
   void viewAds(int index) async {

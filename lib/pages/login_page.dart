@@ -35,7 +35,8 @@ class _LoginPageState extends State<LoginPage> {
   ArsProgressDialog progressDialog;
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
-
+  final emailContoller=TextEditingController();
+  final passwordContoller=TextEditingController();
   @override
   void initState() {
 
@@ -162,12 +163,13 @@ class _LoginPageState extends State<LoginPage> {
   Widget emailField(LoginBloc bloc) {
     return StreamBuilder(
       stream: bloc.email,
+
       builder: (context, snapshot) {
 
       return AuthInputWidget(
         focusNode: _emailFocus,
         labelText: allTranslations.text('phone'),
-
+        contoller: emailContoller,
         keyboardType:TextInputType.numberWithOptions(),
           errorText: snapshot.error,
 
@@ -192,6 +194,9 @@ class _LoginPageState extends State<LoginPage> {
 
       return GestureDetector(onTap: (){
         SystemChannels.textInput.invokeMethod('TextInput.hide');
+        if(emailContoller.text.isEmpty||passwordContoller.text.isEmpty){
+          return;
+        }
         snapshot.hasError?null:bloc.submit();
 
       },
@@ -233,7 +238,9 @@ class _LoginPageState extends State<LoginPage> {
            return AuthInputWidget(
              focusNode: _passwordFocus,
             invisbleText: true,
-            labelText: allTranslations.text('password'),
+             contoller: passwordContoller,
+
+             labelText: allTranslations.text('password'),
 
                errorText: snapshot.error,
 
