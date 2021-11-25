@@ -208,14 +208,21 @@ class _LoginPageState extends State<LoginPage> {
           borderRadius: new BorderRadius.circular(10.0),
         ),
         child:  Stack(children:<Widget>[
-          Align( child: new Text(allTranslations.text('login'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
-            ,alignment: Alignment.centerRight,),
+          Align(
+            alignment:Alignment.centerLeft,
+            child: Row(
+              children: [
 
-          Align( child: Icon(
-            allTranslations.isEnglish?
-            Icons.arrow_back: Icons.arrow_forward,
-            color: Colors.white,
-          )    ,alignment: Alignment.centerLeft,),
+                Icon(
+                  allTranslations.isEnglish?
+                  Icons.arrow_back: Icons.arrow_forward,
+                  color: Colors.white,
+                ),
+                new Text(allTranslations.text('login'), style: new TextStyle(fontSize: 18.0, color: Colors.white),),
+              ],
+            ),
+          )
+
 
 
         ]

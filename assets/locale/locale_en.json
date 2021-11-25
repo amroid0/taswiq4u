@@ -108,7 +108,7 @@
   "success_reset_pass": "Password Changed Successfully",
   "new_password": "New Password",
   "verify_label": "Enter 6 digits verification code sent to your number",
-"translate":"Translate Ad",
+  "translate":"Translate Ad",
   "edit_ads": "Edit Ad",
 
   "from" : "from",
@@ -131,6 +131,7 @@
   "now" : "Just now",
   "cuurencyKd": "K.D",
   "govrnment" : "Select Government",
+  "choose_govrnment" : "اChoose Government",
   "message" : "Message",
   "report" : "Report Ad",
   "reason" : "Reason",

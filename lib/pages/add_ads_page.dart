@@ -710,6 +710,7 @@ body: Padding(
   Widget _BuildRoundedTextField({ String labelText,TextEditingController controller=null,String hintText,iswithArrowIcon=false,
       Function onClickAction}){
    return TextFormField(
+     readOnly: true,
      validator: _emptyValidate,
        autovalidate: categoryColor==AppColors.validValueColor||categoryColor==AppColors.errorValueColor,
      controller: controller,
@@ -735,6 +736,7 @@ body: Padding(
   Widget _BuildCityRoundedTextField({ String labelText,TextEditingController controller=null,String hintText,iswithArrowIcon=false,
     Function onClickAction}){
     return TextFormField(
+        readOnly: true,
         validator: _emptyValidate,
         autovalidate: cityColor==AppColors.validValueColor||cityColor==AppColors.errorValueColor,
         controller: controller,

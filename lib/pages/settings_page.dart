@@ -33,7 +33,7 @@ class _SettingsPageState extends State<SettingsPage> {
         backgroundColor: AppColors.appBackground,
         appBar: AppBar(
           title: Center(
-            child: Text(allTranslations.text('settings'),textAlign: TextAlign.center,style: TextStyle(
+            child: Text(allTranslations.text('settings'),textAlign: TextAlign.center,style: TextStyle(fontSize:18,
                 color:
                 Colors.black38
 
@@ -73,7 +73,10 @@ class _SettingsPageState extends State<SettingsPage> {
         ,
           children: [
             SizedBox(height: 24,),
-            Text(allTranslations.text('account_setting'),style: TextStyle(color: Colors.green,fontSize: 24),),
+            Padding(
+              padding: const EdgeInsets.only(right:8.0,left:8.0),
+              child: Text(allTranslations.text('account_setting'),style: TextStyle(color: Colors.green,fontSize: 24),),
+            ),
             ListTile(leading: Icon(Icons.person),
               title: Text(allTranslations.text('personal_info')),
                 trailing: Icon(Icons.arrow_forward_ios),
@@ -92,7 +95,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
                 }),
             SizedBox(height: 16,),
-            Text(allTranslations.text('other'),style: TextStyle(color: Colors.green,fontSize: 24),),
+            Padding(
+              padding: const EdgeInsets.only(right:8.0,left:8.0),
+              child: Text(allTranslations.text('other'),style: TextStyle(color: Colors.green,fontSize: 24),),
+            ),
             ListTile(leading: Icon(Icons.notifications),title: Text(allTranslations.text('notification')),
               trailing: CupertinoSwitch(
               value: isSwitched,
@@ -134,13 +140,13 @@ class _SettingsPageState extends State<SettingsPage> {
                           selected: true,
                         ),
                       ),
-                      Divider(height: 2,color: Colors.grey,),
+                      Divider(height: 2,color: Colors.black,thickness:1,),
                       Directionality(textDirection: TextDirection.rtl,
 
                         child: RadioListTile(
                           value: 2,
                           groupValue: _langSelectedValue,
-                          title: Text("اللغه العربيه",style: TextStyle(color: Colors.black,fontSize: 18)),
+                          title: Text("اللغه العربيه",style: TextStyle(color: Colors.black,fontSize: 20)),
                           onChanged: (val) {
                             BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
                                 "ar");

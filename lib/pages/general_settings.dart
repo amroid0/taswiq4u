@@ -79,7 +79,7 @@ class _SettingsPageState extends State<GeneralSettingsPage> {
                         child: RadioListTile(
                           value: 1,
                           groupValue: _langSelectedValue,
-                          title: Text("English",style: TextStyle(color: Colors.black),),
+                          title: Text("English",style: TextStyle(color: Colors.black,fontSize: 20),),
                           onChanged: (val) {
                             _langSelectedValue=val;
                             BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
@@ -90,13 +90,13 @@ class _SettingsPageState extends State<GeneralSettingsPage> {
                           selected: true,
                         ),
                       ),
-                      Divider(height: 2,color: Colors.grey,),
+                      Divider(height: 2,color: Colors.black,thickness: 1,),
                       Directionality(textDirection: TextDirection.rtl,
 
                         child: RadioListTile(
                           value: 2,
                           groupValue: _langSelectedValue,
-                          title: Text("اللغه العربيه",style: TextStyle(color: Colors.black)),
+                          title: Text("اللغه العربيه",style: TextStyle(color: Colors.black,fontSize: 20)),
                           onChanged: (val) {
                             BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
                                 "ar");
