@@ -245,7 +245,7 @@ class _EditPageState extends State<EditPage> {
                   TextFormField(
                       controller: _nametextController,
                       inputFormatters: [
-                        LengthLimitingTextInputFormatter(200)
+                        LengthLimitingTextInputFormatter(70)
                       ],
                       onSaved: (val){
                         adsPostEntity.title=val;
@@ -453,6 +453,7 @@ class _EditPageState extends State<EditPage> {
                                     WidgetsBinding.instance.addPostFrameCallback((_){_showReportDialog(index, allTranslations.isEnglish ?item.EnglishName:item.ArabicName, item.SpecificationOptions);});
                                   },
                                   readOnly: true,
+                                  enableInteractiveSelection: true,
                                   autovalidate: item.Required,
                                   validator: item.Required?_emptyValidate:null,
                                   onSaved: (val){
@@ -665,6 +666,8 @@ class _EditPageState extends State<EditPage> {
     Function onClickAction}){
     return TextFormField(
         validator: _emptyValidate,
+        readOnly: true,
+        enableInteractiveSelection: true,
         autovalidate: categoryColor==AppColors.validValueColor||categoryColor==AppColors.errorValueColor,
         controller: controller,
         onTap: (){
@@ -807,6 +810,8 @@ class _EditPageState extends State<EditPage> {
     Function onClickAction}){
     return TextFormField(
         validator: _emptyValidate,
+        readOnly: true,
+        enableInteractiveSelection: true,
         autovalidate: cityColor==AppColors.validValueColor||cityColor==AppColors.errorValueColor,
         controller: controller,
         onTap: (){

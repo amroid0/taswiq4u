@@ -26,6 +26,7 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
   List< PopupAdsEntityList>  list ;
    int currentPage=0;
    int ImageIndex=0 ;
+   bool isFirstLoad=true;
    @override
   void initState() {
     // TODO: implement initState
@@ -36,7 +37,8 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
 
 
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
-    if (arguments != null) {
+    if (arguments != null&&isFirstLoad) {
+      isFirstLoad=false;
       list = arguments["list"] as List< PopupAdsEntityList> ;
       currentPage=arguments["index"]as int;
     }
@@ -149,6 +151,30 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
                                    throw "Could not launch $url";
                                },
                                child: Icon(Icons.language_outlined,color: Colors.white,size: 36,)),
+                           SizedBox(width: 12,),
+                           InkWell(
+                               onTap: ()async{
+                                 const url = "http://taswiq4u.com/";
+                                 if (await canLaunch(url))
+                                   await launch(url);
+                                 else
+                                   // can't launch url, there is some error
+                                   throw "Could not launch $url";
+                               },
+                               child: Icon(MdiIcons.instagram,color: Colors.white,size: 36,)),
+
+                           SizedBox(width: 12,),
+                           InkWell(
+                               onTap: ()async{
+                                 const url = 01119726142;
+                                 if (await canLaunch('tel:$url'))
+                                   await launch('tel:$url');
+                                 else
+                                   // can't launch url, there is some error
+                                   throw "Could not launch $url";
+                               },
+                               child: Icon(MdiIcons.phone,color: Colors.white,size: 36,)),
+
 
                            _buildViewWidget(currentPage,list[currentPage])
                          ],)

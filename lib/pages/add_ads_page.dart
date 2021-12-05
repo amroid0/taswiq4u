@@ -261,7 +261,7 @@ body: Padding(
         validator:_titleAdsValidate,
           controller: _nametextController,
           inputFormatters: [
-            LengthLimitingTextInputFormatter(200)
+            LengthLimitingTextInputFormatter(70)
           ],
           onSaved: (val){
           adsPostEntity.title=val;
@@ -383,6 +383,7 @@ body: Padding(
 
                             decoration: InputDecoration(
 
+
                               filled: true,
                               fillColor: Colors.white,
                               labelText: item.ArabicName,
@@ -498,6 +499,9 @@ body: Padding(
                             WidgetsBinding.instance.addPostFrameCallback((_){_showReportDialog(index, allTranslations.isEnglish ?item.EnglishName:item.ArabicName, item.SpecificationOptions);});
                             },
                           readOnly: true,
+                          enableInteractiveSelection: true,
+
+
                           autovalidate: item.Required,
                           validator: item.Required?_emptyValidate:null,
                           onSaved: (val){
@@ -716,7 +720,9 @@ body: Padding(
      onTap: (){
          onClickAction();
      },
-        decoration: InputDecoration(
+       readOnly: true,
+       enableInteractiveSelection: true,
+       decoration: InputDecoration(
           suffixIcon: iswithArrowIcon? Icon(Icons.arrow_drop_down):null,
           prefixIcon: Icon(Icons.check_circle,color: categoryColor,),
 
@@ -735,6 +741,9 @@ body: Padding(
   Widget _BuildCityRoundedTextField({ String labelText,TextEditingController controller=null,String hintText,iswithArrowIcon=false,
     Function onClickAction}){
     return TextFormField(
+      readOnly: true,
+        enableInteractiveSelection: true,
+
         validator: _emptyValidate,
         autovalidate: cityColor==AppColors.validValueColor||cityColor==AppColors.errorValueColor,
         controller: controller,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:olx/data/bloc/offer_bloc.dart';
 import 'package:olx/model/Counter.dart';
 import 'package:olx/model/popup_ads_entity_entity.dart';
 import 'package:olx/utils/Constants.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PopUpAdsPage extends StatefulWidget {
   @override
@@ -95,8 +97,52 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                     _buildLikeWidget(result),
+                      InkWell(
+                          onTap: ()async{
+                            var whatsappUrl ="whatsapp://send?phone=${201119726142}";
+                            await canLaunch(whatsappUrl)? launch(whatsappUrl):print("open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
 
-                      Column(mainAxisAlignment: MainAxisAlignment.end,
+                          },
+
+                          child: Icon(MdiIcons.whatsapp,color: Colors.white,size: 36,)),
+                      SizedBox(width: 12,),
+                      InkWell(
+                          onTap: ()async{
+                            const url = "http://taswiq4u.com/";
+                            if (await canLaunch(url))
+                              await launch(url);
+                            else
+                              // can't launch url, there is some error
+                              throw "Could not launch $url";
+                          },
+                          child: Icon(Icons.language_outlined,color: Colors.white,size: 36,)),
+                      SizedBox(width: 12,),
+                      InkWell(
+                          onTap: ()async{
+                            const url = "http://taswiq4u.com/";
+                            if (await canLaunch(url))
+                              await launch(url);
+                            else
+                              // can't launch url, there is some error
+                              throw "Could not launch $url";
+                          },
+                          child: Icon(MdiIcons.instagram,color: Colors.white,size: 36,)),
+
+                   SizedBox(width: 12,),
+                      InkWell(
+                          onTap: ()async{
+                            const url = 01119726142;
+                            if (await canLaunch('tel:$url'))
+                              await launch('tel:$url');
+                            else
+                              // can't launch url, there is some error
+                              throw "Could not launch $url";
+                          },
+                          child: Icon(MdiIcons.phone,color: Colors.white,size: 36,)),
+
+
+
+                Column(mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Text(result.viewsCount.toString(),style: TextStyle(color: Colors.white),),
                             FlatButton(onPressed:(){

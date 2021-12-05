@@ -43,7 +43,48 @@ class _VerificationScreenState extends State<VerificationScreen> {
         backgroundColor: Color(0x33000000),
         animationDuration: Duration(milliseconds: 500));
     bloc =VerifcationBloc();
+    bloc.resendStream.listen((snap) {
+      if(progressDialog.isShowing){
+        progressDialog.dismiss();
+      }
+      switch (snap.status) {
+        case Status.LOADING:
+          progressDialog.show();
+          break;
 
+
+        case Status.ERROR:
+
+          Fluttertoast.showToast(
+              msg: allTranslations.text('err_wrong'),
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+
+
+
+          break;
+
+        case Status.COMPLETED:
+          Fluttertoast.showToast(
+              msg: allTranslations.text('code_sent'),
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+
+
+
+          break;
+      }
+    });
     bloc.stream.listen((data) {
       if(progressDialog.isShowing){
         progressDialog.dismiss();
@@ -169,6 +210,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                allTranslations.text('recive_code')
              ),
              TextButton(onPressed:(){
+               bloc.resendCode(widget.countryId,widget.phone);
+
              } ,
                child: Text(
                  allTranslations.text('send_code'),

@@ -280,8 +280,8 @@ class _MyAdsPageState extends State<MyAdsPage> {
     );
   }
   void getGroupId() async{
-    countryId = await preferences.getCountryID() ;
-    lang = int.parse(countryId);
+    var user = await preferences.getUserInfo() ;
+    lang = user.countryId;
     print("group  value"+lang.toString());
 
   }
