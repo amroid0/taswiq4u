@@ -179,7 +179,7 @@ class FilterPage extends StatefulWidget {
                                  TextField(
 
                                    controller: _fromController,
-                                   keyboardType:TextInputType.number,
+                                   keyboardType:TextInputType.numberWithOptions(),
                                    decoration: InputDecoration(
                                      labelText: '${allTranslations.text('min')}',
 
@@ -187,7 +187,7 @@ class FilterPage extends StatefulWidget {
                                  ),
                                  TextField(
                                    controller: _toController,
-                                   keyboardType:TextInputType.number,
+                                   keyboardType:TextInputType.numberWithOptions(),
                                    decoration: InputDecoration(
                                      labelText: '${allTranslations.text('max')}',
                                    ),

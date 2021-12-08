@@ -1,4 +1,5 @@
 import 'package:ars_progress_dialog/ars_progress_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:olx/data/bloc/verifcationBloc.dart';
@@ -127,14 +128,17 @@ class _VerificationScreenState extends State<VerificationScreen> {
         ),
      Column(
        children: <Widget>[
-         VerificationCodeInput(
-           length: 6,
-           keyboardType: TextInputType.number,
-          onCompleted: (value){
-            setState(() {
-              _code = value;
-            });
-          },
+         Directionality(
+           textDirection:TextDirection.ltr,
+           child: VerificationCodeInput(
+             length: 6,
+             keyboardType: TextInputType.phone,
+            onCompleted: (value){
+              setState(() {
+                _code = value;
+              });
+            },
+           ),
          ),
          SizedBox(height: 16,),
 

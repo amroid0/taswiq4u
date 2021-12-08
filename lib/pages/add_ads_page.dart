@@ -385,7 +385,7 @@ body: Padding(
 
                               filled: true,
                               fillColor: Colors.white,
-                              labelText: item.ArabicName,
+                              labelText: allTranslations.isEnglish?item.EnglishName:item.ArabicName,
                               errorText: state.hasError?state.errorText:null,
 
                               prefixIcon: Icon(Icons.check_circle,color: _colorFieldValue[index],),
@@ -711,8 +711,7 @@ body: Padding(
       Function onClickAction}){
    return TextFormField(
      readOnly: true,
-     validator: _emptyValidate,
-       autovalidate: categoryColor==AppColors.validValueColor||categoryColor==AppColors.errorValueColor,
+     validator: _emptyValidate, autovalidate: categoryColor==AppColors.validValueColor||categoryColor==AppColors.errorValueColor,
      controller: controller,
      onTap: (){
          onClickAction();
@@ -788,7 +787,7 @@ body: Padding(
      if(value.isEmpty){
        return allTranslations.text('empty_field');
      }
-     else if(value.length<3){
+     else if(value.length<25){
        return allTranslations.text('err_short');
      }else{
        return null;
@@ -868,7 +867,7 @@ body: Padding(
       return allTranslations.text('empty_field');
     }
 
-    else if(cId==1 &&value.length<=10 || cId==2 && value.length<=8 ){
+    else if(value.length<=8 ){
       return allTranslations.text('err_phone');
     }else{
       return null;

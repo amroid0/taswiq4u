@@ -379,8 +379,8 @@ class _EditPageState extends State<EditPage> {
                             return Padding(
                               padding: const EdgeInsets.only(bottom:8.0),
                               child: FormField<String>(
-                                  autovalidate: item.Required&&_selectedFieldValue[index]==null,
-                                  validator:item.Required&&_selectedFieldValue[index]==null?_emptyValidate:null,
+                                  autovalidate: item.Required,
+                                  validator:item.Required?_emptyValidate:null,
                                   onSaved: (val){
 
                                     var vv=Advertisment_SpecificationBean();
@@ -400,7 +400,7 @@ class _EditPageState extends State<EditPage> {
 
                                         filled: true,
                                         fillColor: Colors.white,
-                                        labelText: item.ArabicName,
+                                        labelText: allTranslations.isEnglish?item.EnglishName:item.ArabicName ,
                                         errorText: state.hasError?state.errorText:null,
 
                                         prefixIcon: Icon(Icons.check_circle,color: _colorFieldValue[index],),
@@ -410,29 +410,32 @@ class _EditPageState extends State<EditPage> {
                                       ),
 
 
-                                      child:DropdownButtonHideUnderline(
-                                        child: DropdownButton(
+                                      child:Container(
+                                        height:30,
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton(
 
-                                          hint: Text('${allTranslations.text('choose')} ${allTranslations.isEnglish?item.EnglishName:item.ArabicName}'),
-                                          value:_selectedFieldValue[index],
-                                          isDense: true,
-                                          items: item.SpecificationOptions.map((FieldProprtiresSpecificationoption value){
-                                            return DropdownMenuItem(
-                                              value: value.Id,
-                                              child: Text(allTranslations.isEnglish?value.EnglishName:value.ArabicName),
-                                            );
-                                          }).toList(),
+                                            hint: Text('${allTranslations.text('choose')} ${allTranslations.isEnglish?item.EnglishName:item.ArabicName}'),
+                                            value:_selectedFieldValue[index],
+                                            isDense: true,
+                                            items: item.SpecificationOptions.map((FieldProprtiresSpecificationoption value){
+                                              return DropdownMenuItem(
+                                                value: value.Id,
+                                                child: Text(allTranslations.isEnglish?value.EnglishName:value.ArabicName),
+                                              );
+                                            }).toList(),
 
-                                          onChanged: (int newValue){
-                                            item.Value=newValue;
-                                            setState(() {
-                                              isFirst=false;
-                                              _selectedFieldValue[index]=newValue;
-                                              state.didChange(newValue.toString());
-                                              _colorFieldValue[index]=AppColors.validValueColor;
+                                            onChanged: (int newValue){
+                                              item.Value=newValue;
+                                              setState(() {
+                                                isFirst=false;
+                                                _selectedFieldValue[index]=newValue;
+                                                state.didChange(newValue.toString());
+                                                _colorFieldValue[index]=AppColors.validValueColor;
 
-                                            });
-                                          },
+                                              });
+                                            },
+                                          ),
                                         ),
                                       ) ,
 
@@ -631,7 +634,13 @@ class _EditPageState extends State<EditPage> {
                           }
                           adsPostEntity.id=adsObj.Id;
                           adsPostEntity.locationLatitude=0 /*_markers.elementAt(0).position.latitude as int*/;
-                          adsPostEntity.locationLongtude=0 /*_markers.elementAt(0).position.longitude as int*/;
+                          adsPostEntity.locationLongtude=0
+                          /*_markers.elementAt(0).position.longitude as int*/;
+                          adsPostEntity.cityId=widget.detail.CityId ;
+                          adsPostEntity.stateId=widget.detail.StateId;
+                          adsPostEntity.countryId=widget.detail.CountryId;
+                          adsPostEntity.categoryId=widget.detail.CategoryId;
+                          adsPostEntity.isNogitable =isNeogtiable ;
                           bloc.editAdvertisment(adsPostEntity);
 
 
@@ -664,6 +673,7 @@ class _EditPageState extends State<EditPage> {
   Widget _BuildRoundedTextField({ String labelText,TextEditingController controller=null,String hintText,iswithArrowIcon=false,
     Function onClickAction}){
     return TextFormField(
+      //  validator: _emptyValidate,
         validator: _emptyValidate,
         autovalidate: categoryColor==AppColors.validValueColor||categoryColor==AppColors.errorValueColor,
         controller: controller,
@@ -711,6 +721,16 @@ class _EditPageState extends State<EditPage> {
         ),
       );    });
   }
+  String _descAdsValidate(String value){
+    if(value.isEmpty){
+      return allTranslations.text('empty_field');
+    }
+    else if(value.length<30){
+      return allTranslations.text('err_short');
+    }else{
+      return null;
+    }
+  }
   String _titleAdsValidate(String value){
     if(value.isEmpty){
       return allTranslations.text('empty_field');
@@ -718,6 +738,15 @@ class _EditPageState extends State<EditPage> {
     else if(value.length<3){
       return allTranslations.text('err_short');
     }else{
+      return null;
+    }
+  }
+
+  String _emptyValidate(String value){
+    if(value==null||value.isEmpty){
+      return allTranslations.text('empty_field');
+    }
+    else{
       return null;
     }
   }
@@ -747,15 +776,6 @@ class _EditPageState extends State<EditPage> {
     else if(!regExp.hasMatch(value)){
       return allTranslations.text('err_email');
     }else{
-      return null;
-    }
-  }
-  String _emptyValidate(String value){
-
-    if(value==null||value.isEmpty){
-      return allTranslations.text('empty_field');
-    }
-    else{
       return null;
     }
   }
@@ -793,16 +813,6 @@ class _EditPageState extends State<EditPage> {
         });
   }
 
-  String _descAdsValidate(String value){
-    if(value.isEmpty){
-      return allTranslations.text('empty_field');
-    }
-    else if(value.length<30){
-      return allTranslations.text('err_short');
-    }else{
-      return null;
-    }
-  }
   Widget _BuildCityRoundedTextField({ String labelText,TextEditingController controller=null,String hintText,iswithArrowIcon=false,
     Function onClickAction}){
     return TextFormField(

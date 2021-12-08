@@ -434,18 +434,29 @@ class _DetailPageState extends State<DetailPage> {
 
   List<Widget> _buildDetailWidgets(AdsDetail detail) {
     List<Widget> widgets = [];
-    final title = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final title = Column(
+
       children: <Widget>[
-        Expanded(
-          child: Text(
-            allTranslations.isEnglish ? detail.EnglishTitle : detail.ArabicTitle,
-            style: TextStyle(fontSize: 18),maxLines: 3,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                allTranslations.isEnglish ? detail.EnglishTitle : detail.ArabicTitle,
+                style: TextStyle(fontSize: 18),maxLines: 1,
+              ),
+            ),
+            Text(
+              detail.Price == null ? "" : '${detail.Price}  ${allTranslations.text('cuurency')}',
+              style: TextStyle(fontSize: 20, color: Colors.green),
+            ),
+
+          ],
         ),
-        Text(
-          detail.Price == null ? "" : '${detail.Price}  ${allTranslations.text('cuurency')}',
-          style: TextStyle(fontSize: 20, color: Colors.green),
+        Align(
+          alignment:Alignment.topRight ,
+          child: Text(
+              "${allTranslations.isEnglish ? detail.StateNameEnglish : detail.StateNameArabic}"),
         )
       ],
     ); //title and price
@@ -546,8 +557,7 @@ class _DetailPageState extends State<DetailPage> {
       height: 8,
     ));
 
-    widgets.add(Text(
-        "${allTranslations.isEnglish ? detail.StateNameEnglish : detail.StateNameArabic}"));
+
     widgets.add ( FlatButton.icon(onPressed: (){
       _bloc.translateAds();
 
