@@ -151,5 +151,8 @@
   "wait": "Please wait …",
   "Success_update" : "Successfully Updated",
   "recive_code" : "Didn't Recieve ?",
-  "send_code" : "Send Again"
+  "send_code" : "Send Again",
+  "choose_govrnment": "Choose Government",
+  "code_sent": "code sent successfully"
+
 }

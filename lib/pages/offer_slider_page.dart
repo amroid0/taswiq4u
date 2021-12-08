@@ -59,7 +59,7 @@ class _OfferSliderScreenState extends State<OfferSliderScreen> {
                 margin:EdgeInsets.only(top:MediaQuery.of(context).size.height*.1),
                 child: CarouselSlider(
                   height: MediaQuery.of(context).size.height*.7,
-                  initialPage: 0,
+                  initialPage: currentPage,
                   enlargeCenterPage: true,
                   aspectRatio: 2,
                   autoPlay: false,

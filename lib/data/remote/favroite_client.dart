@@ -7,7 +7,7 @@ import '../shared_prefs.dart';
 
 class FavroiteClient{
   Future<FavoriteModel> getFavroiyeList( int page) async {
-    final results = await NetworkCommon().dio.get(APIConstants.FAVROITE_ADS);
+    final results = await NetworkCommon().dio.get(APIConstants.FAVROITE_ADS,queryParameters: {"Size": 100});
     if (results.statusCode == 200) {
       return  FavoriteModel.fromJson(results.data);
     }
