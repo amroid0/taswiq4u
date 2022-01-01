@@ -9,6 +9,7 @@ import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/offfer_entity.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/Theme.dart';
+import 'package:olx/utils/ToastUtils.dart';
 import 'package:olx/widget/base64_image.dart';
 import 'package:olx/model/popup_ads_entity_entity.dart';
 import 'package:photo_view/photo_view.dart';
@@ -134,8 +135,8 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
 
                            InkWell(
                                onTap: ()async{
-                           var whatsappUrl ="whatsapp://send?phone=${201119726142}";
-                           await canLaunch(whatsappUrl)? launch(whatsappUrl):print("open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
+                           var whatsappUrl ="whatsapp://send?phone=${list[currentPage].phoneNumber}";
+                           await canLaunch(whatsappUrl)? launch(whatsappUrl):ToastUtils.showErrorMessage("رقم الهاتف غير صحيح");
 
                            },
 
@@ -154,25 +155,25 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
                            SizedBox(width: 12,),
                            InkWell(
                                onTap: ()async{
-                                 const url = "http://taswiq4u.com/";
+                                 var url = list[currentPage].instagramLink;
                                  if (await canLaunch(url))
                                    await launch(url);
                                  else
                                    // can't launch url, there is some error
-                                   throw "Could not launch $url";
+                                   ToastUtils.showErrorMessage("اللينك غير صالح");
                                },
                                child: Icon(MdiIcons.instagram,color: Colors.white,size: 36,)),
 
                            SizedBox(width: 12,),
                            InkWell(
                                onTap: ()async{
-                                 const url = 01119726142;
+                                 var url = list[currentPage].phoneNumber;
                                  if (await canLaunch('tel:$url'))
                                    await launch('tel:$url');
                                  else
                                    // can't launch url, there is some error
-                                   throw "Could not launch $url";
-                               },
+                                   ToastUtils.showErrorMessage("رقم الهاتف غير صحيح");
+                                 },
                                child: Icon(MdiIcons.phone,color: Colors.white,size: 36,)),
 
 

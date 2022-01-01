@@ -33,4 +33,18 @@ class ToastUtils{
 
   }
 
+  static showWarningMessage(String message){
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.limeAccent,
+        textColor: Colors.white,
+        fontSize: 18.0
+    );
+
+
+
+  }
 }

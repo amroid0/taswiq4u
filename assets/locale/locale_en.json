@@ -152,6 +152,8 @@
   "recive_code" : "Didn't Recieve ?",
   "send_code" : "Send Again",
   "choose_govrnment": "Choose Government",
-  "code_sent": "code sent successfully"
+  "code_sent": "code sent successfully",
+  "missing_fields": "please complete all required fields"
+
 
 }

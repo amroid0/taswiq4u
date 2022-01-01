@@ -4,6 +4,7 @@ import 'package:olx/data/bloc/offer_bloc.dart';
 import 'package:olx/model/Counter.dart';
 import 'package:olx/model/popup_ads_entity_entity.dart';
 import 'package:olx/utils/Constants.dart';
+import 'package:olx/utils/ToastUtils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PopUpAdsPage extends StatefulWidget {
@@ -99,8 +100,8 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
                     _buildLikeWidget(result),
                       InkWell(
                           onTap: ()async{
-                            var whatsappUrl ="whatsapp://send?phone=${201119726142}";
-                            await canLaunch(whatsappUrl)? launch(whatsappUrl):print("open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
+                            var whatsappUrl ="whatsapp://send?phone=${result.phoneNumber}";
+                            await canLaunch(whatsappUrl)? launch(whatsappUrl):ToastUtils.showErrorMessage("رقم الهاتف غير صحيح");;
 
                           },
 
@@ -119,24 +120,24 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
                       SizedBox(width: 12,),
                       InkWell(
                           onTap: ()async{
-                            const url = "http://taswiq4u.com/";
+                            final url = result.instagramLink;
                             if (await canLaunch(url))
                               await launch(url);
                             else
                               // can't launch url, there is some error
-                              throw "Could not launch $url";
+                              ToastUtils.showErrorMessage("اللينك غير صالح");
                           },
                           child: Icon(MdiIcons.instagram,color: Colors.white,size: 36,)),
 
                    SizedBox(width: 12,),
                       InkWell(
                           onTap: ()async{
-                            const url = 01119726142;
+                            final url = result.phoneNumber;
                             if (await canLaunch('tel:$url'))
                               await launch('tel:$url');
                             else
                               // can't launch url, there is some error
-                              throw "Could not launch $url";
+                              ToastUtils.showErrorMessage("رقم الهاتف غير صحيح");
                           },
                           child: Icon(MdiIcons.phone,color: Colors.white,size: 36,)),
 

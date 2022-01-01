@@ -685,6 +685,8 @@ body: Padding(
                     bloc.postAds(adsPostEntity);
 
 
+                  }else{
+                    ToastUtils.showWarningMessage(allTranslations.text("missing_fields"));
                   }
 
                 },
