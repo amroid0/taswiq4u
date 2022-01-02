@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:olx/data/bloc/NavigationBloc.dart';
 import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
@@ -29,6 +30,7 @@ import 'package:olx/widget/custom_web_view.dart';
 import 'package:olx/widget/tab_item.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'cateogry_page.dart';
 import 'my_ads_page.dart';
@@ -51,7 +53,7 @@ class NavItem{
 class _MainScreenState extends State<MainScreen> {
   SharedPreferences sharedPreferences;
   NaviagtionBloc bloc;
-  String userName=null ;
+  String userName="" ;
   StreamController _controller = StreamController();
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -103,7 +105,7 @@ class _MainScreenState extends State<MainScreen> {
 @override
   void initState() {
     // TODO: implement initState
-  getUserName();
+ // getUserName();
   bloc=new NaviagtionBloc();
   _cateogyBloc=CategoryBloc();
    searchController = new TextEditingController();
@@ -185,18 +187,28 @@ class _MainScreenState extends State<MainScreen> {
       NavItem(name: allTranslations.text('my_ads'),navIcon:Icons.announcement),
       NavItem(name:allTranslations.text('favroite'),navIcon:Icons.favorite),
       NavItem(name:allTranslations.text('settings'),navIcon:Icons.settings),
-      NavItem(name:allTranslations.text('policy'),navIcon:Icons.info),
-      NavItem(name:allTranslations.text('rules'),navIcon:Icons.book),
-      NavItem(name:allTranslations.text('about_us'),navIcon:Icons.article),
-      NavItem(name:allTranslations.text('questions'),navIcon:Icons.question_answer),
-      NavItem(name:allTranslations.text('contact_us'),navIcon:Icons.call)
+       NavItem(name:allTranslations.text('links'),navIcon:FontAwesomeIcons.link,isExpanded: true),
+      // NavItem(name:allTranslations.text('rules'),navIcon:Icons.book),
+      // NavItem(name:allTranslations.text('about_us'),navIcon:Icons.article),
+      // NavItem(name:allTranslations.text('questions'),navIcon:Icons.question_answer),
+      // NavItem(name:allTranslations.text('contact_us'),navIcon:Icons.call)
     ];
     for (var i = 0; i < NavItemList.length; i++) {
       var d = NavItemList[i];
       drawerOptions.add(
-          createNavItem(d, i)
+          createNavItem(d, i),
       );
+
+
     }
+    drawerOptions.add(  Row(
+      mainAxisAlignment:MainAxisAlignment.spaceAround,
+      children: [
+        IconButton(icon:Icon(FontAwesomeIcons.facebook),color:Colors.green,onPressed:()=> _openSocail('https://www.facebook.com/taswiq4u.eg/') ,),
+        IconButton(icon:Icon(FontAwesomeIcons.instagram),color:Colors.green,onPressed:()=> _openSocail('https://www.instagram.com/taswiq4u.eg/?hl=en/') ,),
+        IconButton(icon:Icon(FontAwesomeIcons.twitter),color:Colors.green,onPressed: ()=>_openSocail('https://twitter.com/Taswiq4uEG'),),
+      ],
+    ));
     return BlocProvider(
       bloc: _cateogyBloc,
       child: StreamBuilder(
@@ -332,7 +344,7 @@ class _MainScreenState extends State<MainScreen> {
                                      Icon(Icons.notifications_paused),
                                      Padding(
                                        padding: const EdgeInsets.all(8.0),
-                                       child: Text(LoginBloc.nameLogin !=null ? LoginBloc.nameLogin :userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
+                                       child: Text(LoginBloc.nameLogin !=null || LoginBloc.nameLogin!="null" ? LoginBloc.nameLogin :userName,style:TextStyle(fontSize:22,color:AppColors.validValueColor ),),
                                      ),
                                    ], ),
                                  );
@@ -402,6 +414,7 @@ class _MainScreenState extends State<MainScreen> {
                                 onPressed: () {
                                   Navigator.pop(context);
                                   BlocProvider.of<LoginBloc>(context).logout();
+                                  LoginBloc.nameLogin = "null";
 
                                 },
                                 width: 120,
@@ -433,7 +446,7 @@ class _MainScreenState extends State<MainScreen> {
                               else return Container();
                             }
                         ),
-                      )
+                      ),
 
                     ],
 
@@ -479,6 +492,7 @@ class _MainScreenState extends State<MainScreen> {
                         ),
                         //container
                         decoration: BoxDecoration(color: AppColors.appBackground),
+
                       ),
 
                       StreamBuilder<bool>(
@@ -511,7 +525,8 @@ class _MainScreenState extends State<MainScreen> {
 
                       Expanded(
                         child:  ListView(children:
-                        drawerOptions
+                          drawerOptions
+
 
                         ),
                       ),//listview
@@ -531,6 +546,7 @@ class _MainScreenState extends State<MainScreen> {
                                 onPressed: () {
                                   BlocProvider.of<LoginBloc>(context).logout();
                                   Navigator.pop(context);
+                                  LoginBloc.nameLogin = "null";
 
                                 },
                                 width: 120,
@@ -562,7 +578,7 @@ class _MainScreenState extends State<MainScreen> {
                               else return Container();
                             }
                         ),
-                      )
+                      ),
 
                     ],
 
@@ -629,7 +645,7 @@ class _MainScreenState extends State<MainScreen> {
       bloc.navigateToScreen(NavigationScreen.SETTINGS);
 
     }
-    else if(index==5){
+    else if(index==9){
       bloc.navigateToScreen(NavigationScreen.POLICY);
 
     }
@@ -657,18 +673,19 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget createNavItem(NavItem nav,int index){
     if(nav.isExpanded){
-     /*  List<Widget>subItemlist=[];
-      for (var i = 0; i < depratmentNavList.length; i++) {
-        var d = depratmentNavList[i];
-        subItemlist.add(
-            createNavItem(d, i)
-        );
-      }
-      return ExpansionTile(trailing: Icon(nav.navIcon),leading: Icon(Icons.keyboard_arrow_down),
-        title: Text(nav.name, textAlign: TextAlign.end,
+      List<Widget>subItemlist=[];
+      return ExpansionTile(leading: Icon(nav.navIcon),trailing: Icon(Icons.keyboard_arrow_down),
+        title: Text(nav.name, textAlign: TextAlign.start,
         ),
-         children:subItemlist,
-      );*/
+         children:<Widget>[Column(children: [ListTile(leading: Icon(Icons.book), title: Text(allTranslations.text('rules')),onTap:()=> _onSelectItem(6)),
+           ListTile(leading: Icon(Icons.article), title: Text(allTranslations.text('about_us')), onTap:()=> _onSelectItem(7)),
+           ListTile(leading: Icon(Icons.info), title: Text(allTranslations.text('policy')), onTap:()=> _onSelectItem(9)),
+           ListTile(leading: Icon(Icons.question_answer), title: Text(allTranslations.text('questions')), onTap:()=> _onSelectItem(8)),
+           ListTile(leading: Icon(Icons.call), title: Text(allTranslations.text('contact_us')), onTap:()=> _onSelectItem(10))
+         ],
+
+         )],
+      );
 
     }else {
       return ListTile(leading: Icon(nav.navIcon),
@@ -723,15 +740,22 @@ class _MainScreenState extends State<MainScreen> {
    Future  getUserName ()async{
     if(BlocProvider.of<LoginBloc>(context).isLogged()){
       UserInfo userInfo = await preferences.getUserInfo();
-      userName = userInfo.firstName+" "+userInfo.secondName;
+      userName = userInfo.firstName;
     //  _controller.sink.add(userName);
       print(userName+"rrrrrr");
 
     }
     else {
-      userName=null ;
+      userName="" ;
     }
 
+  }
+  _openSocail(String url_Social) async {
+    if (await canLaunch(url_Social)) {
+      await launch(url_Social);
+    } else {
+      throw 'Could not launch $url_Social';
+    }
   }
 
 }

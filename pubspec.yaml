@@ -56,7 +56,7 @@ dependencies:
   shimmer: ^1.1.2
   auto_direction: any
   material_design_icons_flutter: any
-
+  font_awesome_flutter: ^8.10.0
   device_preview: any
 
 

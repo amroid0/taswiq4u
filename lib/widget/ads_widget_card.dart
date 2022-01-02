@@ -123,18 +123,24 @@ class AdsCardWidget extends StatelessWidget {
 
                             alignment: Alignment.topRight,
                             color: Colors.white,
-                            child: FavroiteWidgetCard(
-                                onFavChange: (val) {
-                                  if (BlocProvider.of<LoginBloc>(context)
-                                      .isLogged())
-                                    BlocProvider.of<FavroiteBloc>(context)
-                                        .changeFavoriteState(val, model.Id);
-                                  else
-                                    Navigator.push(
-                                        context, MaterialPageRoute(
-                                        builder: (context) => ParentAuthPage()));
-                                },
-                                value: model.IsFavorite
+                            child: StreamBuilder<bool>(
+                              initialData:model.IsFavorite,
+                              stream:null ,
+                              builder: (context, snapshot) {
+                                return FavroiteWidgetCard(
+                                    onFavChange: (val) {
+                                      if (BlocProvider.of<LoginBloc>(context)
+                                          .isLogged())
+                                        BlocProvider.of<FavroiteBloc>(context)
+                                            .changeFavoriteState(val, model.Id);
+                                      else
+                                        Navigator.push(
+                                            context, MaterialPageRoute(
+                                            builder: (context) => ParentAuthPage()));
+                                    },
+                                    value: model.IsFavorite
+                                );
+                              }
                             )
                         ),
                       ),

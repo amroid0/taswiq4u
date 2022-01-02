@@ -179,18 +179,26 @@ class FilterPage extends StatefulWidget {
                                  TextField(
 
                                    controller: _fromController,
-                                   keyboardType:TextInputType.numberWithOptions(),
+                                   keyboardType:TextInputType.number,
                                    decoration: InputDecoration(
                                      labelText: '${allTranslations.text('min')}',
 
                                    ),
+                                   inputFormatters:<TextInputFormatter> [
+                                     FilteringTextInputFormatter.digitsOnly
+
+                                   ],
                                  ),
                                  TextField(
                                    controller: _toController,
-                                   keyboardType:TextInputType.numberWithOptions(),
+                                   keyboardType:TextInputType.number,
                                    decoration: InputDecoration(
                                      labelText: '${allTranslations.text('max')}',
                                    ),
+                                   inputFormatters:<TextInputFormatter> [
+                                     FilteringTextInputFormatter.digitsOnly
+
+                                   ],
                                  ),
                                ],
                              ),

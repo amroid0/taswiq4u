@@ -12,7 +12,7 @@ class RegisterValidators {
     String pattern = r"\b([\-]?\d[\-]?){11}\b";
     RegExp regExp = new RegExp(pattern);
     print(email);
-    if (email.length>10&&c==1 ||email.length>7&&c==2) {
+    if (email.length==11&&c==1 ||email.length==8&&c==2) {
       sink.add(email);
     }
 

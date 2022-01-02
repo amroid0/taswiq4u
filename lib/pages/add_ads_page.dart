@@ -714,7 +714,6 @@ body: Padding(
   Widget _BuildRoundedTextField({ String labelText,TextEditingController controller=null,String hintText,iswithArrowIcon=false,
       Function onClickAction}){
    return TextFormField(
-     readOnly: true,
      validator: _emptyValidate, autovalidate: categoryColor==AppColors.validValueColor||categoryColor==AppColors.errorValueColor,
      controller: controller,
      onTap: (){
@@ -741,7 +740,6 @@ body: Padding(
   Widget _BuildCityRoundedTextField({ String labelText,TextEditingController controller=null,String hintText,iswithArrowIcon=false,
     Function onClickAction}){
     return TextFormField(
-      readOnly: true,
         enableInteractiveSelection: true,
 
         readOnly: true,
@@ -876,7 +874,7 @@ body: Padding(
       return allTranslations.text('empty_field');
     }
 
-    else if(value.length<=8 ){
+    else if(value.length<8 ){
       return allTranslations.text('err_phone');
     }else{
       return null;

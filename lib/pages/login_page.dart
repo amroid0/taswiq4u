@@ -37,6 +37,13 @@ class _LoginPageState extends State<LoginPage> {
   final FocusNode _passwordFocus = FocusNode();
   final emailContoller=TextEditingController();
   final passwordContoller=TextEditingController();
+ // static String nameLogin ;
+
+  void getusernameee() async{
+    print("streamEnterrr");
+    LoginBloc.nameLogin = await APIConstants.getUserNameLogin();
+    print("stream"+LoginBloc.nameLogin);
+  }
   @override
   void initState() {
 
@@ -57,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
              widget.home==1 ? Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                  MainScreen()), (Route<dynamic> route) => false)
              :  Navigator.pop(context);
+             getusernameee();
 
         break;
 

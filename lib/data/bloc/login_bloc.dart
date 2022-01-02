@@ -81,12 +81,13 @@ bool isLogged() => mIsLogged==null?false:mIsLogged;
       _controller.sink.add(LoginApiResponse.authenticate(""));
       _logincontroller.sink.add(true);
       mIsLogged=true;
-       getusernameee();
+
        //_userName.sink.add(_userName.toString());
 
 
 
        _controller.sink.add(null);
+       //getusernameee();
 
     },onError: (e){
       if(e is UnVerfiedException){
@@ -121,10 +122,8 @@ _logincontroller.close();*/
     mIsLogged=false;
     _logincontroller.sink.add(false);
     _controller.sink.add(null);
+    nameLogin = null ;
     preferences.logout();
   }
-void getusernameee() async{
-  nameLogin = await APIConstants.getUserNameLogin();
-  print("stream"+nameLogin);
-}
+
 }

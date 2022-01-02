@@ -80,7 +80,7 @@ class APIConstants {
   static Future<String>  getUserNameLogin()async{
 
       UserInfo userInfo = await preferences.getUserInfo();
-    String  userName = userInfo.firstName+" "+userInfo.secondName;
+    String  userName = userInfo.firstName;
       print(userName+"rrrrrr");
       return userName ;
 

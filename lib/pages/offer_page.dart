@@ -117,15 +117,20 @@ class _OfferPageState extends State<OfferPage> {
               case Status.COMPLETED:
                 var offerObj=snap.data.data ;
                  if(offerObj.length!=0)
-                return   GridView.count(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  primary: true,
-                  crossAxisCount: 2,
-                  childAspectRatio: .9,
-                  children: List.generate(offerObj.length, (index) {
-                    return _getOfferGridCell(offerObj,index);
-                  }),
+                return   SingleChildScrollView(
+                  child: Container(
+                  //  height:MediaQuery.of(context).size.height+100,
+                    child: GridView.count(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      primary: true,
+                      crossAxisCount: 2,
+                      childAspectRatio: .9,
+                      children: List.generate(offerObj.length, (index) {
+                        return _getOfferGridCell(offerObj,index);
+                      }),
+                    ),
+                  ),
                 );
                  else
                    return EmptyListWidget(
@@ -219,7 +224,7 @@ class _OfferPageState extends State<OfferPage> {
 
       },
       child: Container(
-       // height:100,
+       // height:160,
         child: new Card(
             elevation: 2,
             shape: RoundedRectangleBorder(
@@ -232,7 +237,7 @@ class _OfferPageState extends State<OfferPage> {
                 Padding(
                   padding: const EdgeInsets.all(2.0),
                   child: new Container(
-                    height: 175.0,
+                    height: 170.0,
                     width: 100.0,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
