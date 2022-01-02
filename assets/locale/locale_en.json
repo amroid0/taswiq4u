@@ -154,6 +154,7 @@
   "send_code" : "Send Again",
   "choose_govrnment": "Choose Government",
   "code_sent": "code sent successfully",
+  "missing_fields": "please complete all required fields"
   "links":"Other links"
 
 }

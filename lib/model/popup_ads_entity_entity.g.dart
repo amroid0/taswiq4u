@@ -30,6 +30,8 @@ PopupAdsEntityList _$PopupAdsEntityListFromJson(Map<String, dynamic> json) {
         ? null
         : PopupAdsEntityListSystemDataFile.fromJson(
             json['SystemDataFile'] as Map<String, dynamic>),
+    json['InstagramLink'] as String,
+    json['PhoneNumber'] as String,
     json['CommercialAdsUsers'] as List,
   );
 }
@@ -50,6 +52,8 @@ Map<String, dynamic> _$PopupAdsEntityListToJson(PopupAdsEntityList instance) =>
       'ViewsCount': instance.viewsCount,
       'Likes': instance.likes,
       'CategoryId': instance.categoryId,
+      'InstagramLink': instance.instagramLink,
+      'PhoneNumber': instance.phoneNumber,
       'Category': instance.category,
       'SystemDataFile': instance.systemDataFile,
       'CommercialAdsUsers': instance.commercialAdsUsers,
