@@ -123,11 +123,7 @@ class AdsCardWidget extends StatelessWidget {
 
                             alignment: Alignment.topRight,
                             color: Colors.white,
-                            child: StreamBuilder<bool>(
-                              initialData:model.IsFavorite,
-                              stream:null ,
-                              builder: (context, snapshot) {
-                                return FavroiteWidgetCard(
+                            child: FavroiteWidgetCard(
                                     onFavChange: (val) {
                                       if (BlocProvider.of<LoginBloc>(context)
                                           .isLogged())
@@ -139,9 +135,7 @@ class AdsCardWidget extends StatelessWidget {
                                             builder: (context) => ParentAuthPage()));
                                     },
                                     value: model.IsFavorite
-                                );
-                              }
-                            )
+                                ),
                         ),
                       ),
                       ]
