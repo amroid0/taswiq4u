@@ -14,9 +14,15 @@ class DetailBloc extends Bloc{
   final _client = DetailAdsClient();
   final _controller = PublishSubject<ApiResponse<AdsDetail>>();
   final _sliderController = PublishSubject<List<AdvertismentImage>>();
+  final _deleteStatecontroller = BehaviorSubject<ApiResponse<bool>>();
+  final _distnctStatecontroller = BehaviorSubject<ApiResponse<bool>>();
+
   AdsDetail detail=null;
   final _viewController = PublishSubject<Counter>();
   final _translateController = BehaviorSubject<bool>();
+  Stream<ApiResponse<bool>> get deleteStateStream => _deleteStatecontroller.stream;
+  Stream<ApiResponse<bool>> get distnictStateStream => _distnctStatecontroller.stream;
+
   Stream<bool> get translatestream => _translateController.stream;
 
   Stream<Counter> get viewstream => _viewController.stream;
@@ -34,7 +40,28 @@ class DetailBloc extends Bloc{
       _controller.sink.add( ApiResponse.error(e.toString()));
     }
   }
+void deleteAds(String adsID)async{
+    try{
+     _deleteStatecontroller.sink.add(ApiResponse.loading("message"));
+     final results = await _client.deleteAds(adsID);
+     _deleteStatecontroller.sink.add(ApiResponse.completed(results));
+    }catch(e){
+      _deleteStatecontroller.sink.add( ApiResponse.error(e.toString()));
 
+    }
+}
+
+
+  void distinictAds(String adsID)async{
+    try{
+      _distnctStatecontroller.sink.add(ApiResponse.loading("message"));
+      final results = await _client.distinctAds(adsID);
+      _distnctStatecontroller.sink.add(ApiResponse.completed(results));
+    }catch(e){
+      _distnctStatecontroller.sink.add( ApiResponse.error(e.toString()));
+
+    }
+  }
   void viewAds() async {
     try {
       List<String> ids=await preferences.getViewedCommericalList();

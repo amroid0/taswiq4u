@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:olx/data/bloc/ads_bloc.dart';
+import 'package:olx/data/bloc/bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/favroite_bloc.dart';
 import 'package:olx/data/bloc/login_bloc.dart';
@@ -18,7 +20,8 @@ class AdsRowWidget extends StatelessWidget {
   AdsModel model;
   int language ;
   final bool editable;
-  AdsRowWidget({this.model,this.language,this.editable});
+  final AdsBloc bloc;
+  AdsRowWidget({this.model,this.language,this.editable,this.bloc});
 
 
 
@@ -38,7 +41,7 @@ class AdsRowWidget extends StatelessWidget {
               MaterialPageRoute(
                   // builder: (context) => DetailPage(editable)
                   // ,settings: RouteSettings(arguments: model),
-                  builder: (context) => DetailPage(false)
+                  builder: (context) => BlocProvider(bloc:bloc,child: DetailPage(editable??false))
                   ,settings: RouteSettings(arguments: model)),);
 
           },

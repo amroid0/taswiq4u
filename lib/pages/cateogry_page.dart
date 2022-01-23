@@ -65,7 +65,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
         break;
       case Status.COMPLETED:
         var response=data.data;
-        if(response!=null)
+        if(response!=null&&response.isNotEmpty)
         _openAddEntryDialog(data.data[0]);
 
 
@@ -193,6 +193,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
                 }
               }
                 }
+              if(imgList.isNotEmpty){
 
               carouselSlider = CarouselSlider(
 
@@ -245,6 +246,15 @@ class CarouselDemoState extends State<CategoryListFragment> {
                 }).toList(),
               );
           return carouselSlider;
+              }else {
+                return Container(
+                  margin: EdgeInsets.all(8),
+                  height: MediaQuery.of(context).size.height*.25,
+                  color: AppColors.appBackground,
+                  child:Center(child: Icon(Icons.image,color:Colors.grey,size: 60,)
+                  ),
+                );
+              }
 
               break;
           }

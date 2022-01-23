@@ -39,7 +39,7 @@ class ToastUtils{
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
-        backgroundColor: Colors.limeAccent,
+        backgroundColor: Colors.amber,
         textColor: Colors.white,
         fontSize: 18.0
     );

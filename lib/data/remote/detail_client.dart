@@ -38,4 +38,25 @@ class DetailAdsClient{
     }
 
   }
+
+  Future<bool>deleteAds(String id)async{
+    final result=await NetworkCommon().dio.get(APIConstants.DELETE_ADS,queryParameters: {"id":id});
+        if(result.statusCode==200){
+          return true;
+        }
+
+  }
+
+
+
+  Future<bool>distinctAds(String id)async{
+    final result=await NetworkCommon().dio.get(APIConstants.DISTINCT_ADS,queryParameters: {"adId":id});
+    if(result.statusCode==200){
+      return true;
+    }
+
+  }
+
+
+
 }

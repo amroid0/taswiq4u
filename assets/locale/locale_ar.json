@@ -154,7 +154,9 @@
   "recive_code" : "لم يصل ؟",
   "send_code" : "اعاده الارسال",
   "code_sent": "تم ارسال الكود بنجاح",
-  "missing_fields": "يجب إكمال جميع الحقول المطلوبة"
+  "missing_fields": "يجب إكمال جميع الحقول المطلوبة",
+  "success_delete_ads": "تم حذف الاعلان بنجاح",
+  "success_distincit_ads": "تم تمييز الاعلان بنجاح"
 
 
 
