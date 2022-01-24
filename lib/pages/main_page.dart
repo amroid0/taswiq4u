@@ -158,6 +158,16 @@ class _MainScreenState extends State<MainScreen> {
         title: allTranslations.text('questions'),
         selectedUrl:url,
       )));
+
+    }
+    else if(data==NavigationScreen.SAFETY){
+      String url=await APIConstants.getSafetyUsUrl();
+
+      Navigator.of(context).push(MaterialPageRoute(builder: (_)=> MyWebView(
+        title: allTranslations.text('safety'),
+        selectedUrl:url,
+      )));
+
     }
 
 
@@ -661,6 +671,10 @@ class _MainScreenState extends State<MainScreen> {
       bloc.navigateToScreen(NavigationScreen.FAQ);
 
     }
+    else if(index==12){
+      bloc.navigateToScreen(NavigationScreen.SAFETY);
+
+    }
     else {
       bloc.navigateToScreen(NavigationScreen.CONTACT_US);
 
@@ -681,7 +695,8 @@ class _MainScreenState extends State<MainScreen> {
            ListTile(leading: Icon(Icons.article), title: Text(allTranslations.text('about_us')), onTap:()=> _onSelectItem(7)),
            ListTile(leading: Icon(Icons.info), title: Text(allTranslations.text('policy')), onTap:()=> _onSelectItem(9)),
            ListTile(leading: Icon(Icons.question_answer), title: Text(allTranslations.text('questions')), onTap:()=> _onSelectItem(8)),
-           ListTile(leading: Icon(Icons.call), title: Text(allTranslations.text('contact_us')), onTap:()=> _onSelectItem(10))
+           ListTile(leading: Icon(Icons.call), title: Text(allTranslations.text('contact_us')), onTap:()=> _onSelectItem(10)),
+           ListTile(leading: Icon(Icons.ac_unit), title: Text(allTranslations.text('safety')), onTap:()=> _onSelectItem(12))
          ],
 
          )],

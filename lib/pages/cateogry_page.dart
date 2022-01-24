@@ -188,8 +188,8 @@ class CarouselDemoState extends State<CategoryListFragment> {
               if (response != null) {
                 imgList.clear();
                 for(int i=0;i<response.data.length;i++){
-                if(response.data[i].systemDataFile!=null){
-                  imgList.add(response.data[i].systemDataFile.url);
+                if(response.data[i].systemDataFile1!=null){
+                  imgList.add(response.data[i].systemDataFile1.url);
                 }
               }
                 }

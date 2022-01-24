@@ -18,7 +18,7 @@ class AdsRowWidget extends StatelessWidget {
   AdsModel model;
   int language ;
   final bool editable;
-  AdsRowWidget({this.model,this.language,this.editable});
+  AdsRowWidget({this.model,this.language,this.editable=false});
 
 
 
@@ -38,7 +38,7 @@ class AdsRowWidget extends StatelessWidget {
               MaterialPageRoute(
                   // builder: (context) => DetailPage(editable)
                   // ,settings: RouteSettings(arguments: model),
-                  builder: (context) => DetailPage(false)
+                  builder: (context) => DetailPage(editable)
                   ,settings: RouteSettings(arguments: model)),);
 
           },

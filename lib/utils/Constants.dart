@@ -136,6 +136,15 @@ class APIConstants {
     }
     return url ;
   }
+  static Future<String> getSafetyUsUrl()async{
+    String url ;
+    if (allTranslations.isEnglish){
+      url = "http://beta.taswiq4u.com//ChangeLanguage?returnUrl=/SafetyRules?appcountryid=${await preferences.getCountryID()}&language=en#step-1" ;
+    } else {
+      url = "http://beta.taswiq4u.com//ChangeLanguage?returnUrl=/SafetyRules?appcountryid=${await preferences.getCountryID()}&language=ar#step-1" ;
+    }
+    return url ;
+  }
 
 }
 

@@ -1,12 +1,8 @@
 import 'dart:async';
-
-import 'package:olx/data/remote/addPostClient.dart';
 import 'package:olx/data/bloc/bloc.dart';
 import 'package:olx/data/remote/addReportClient.dart';
 import 'package:olx/data/shared_prefs.dart';
-import 'package:olx/model/FieldproprtieyReposne.dart';
 import 'package:olx/model/Post_Report_entity.dart';
-import 'package:olx/model/ads_post_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/user_info.dart';
 

@@ -55,7 +55,7 @@ Map<String, dynamic> _$PopupAdsEntityListToJson(PopupAdsEntityList instance) =>
       'InstagramLink': instance.instagramLink,
       'PhoneNumber': instance.phoneNumber,
       'Category': instance.category,
-      'SystemDataFile': instance.systemDataFile,
+      'SystemDataFile1': instance.systemDataFile1,
       'CommercialAdsUsers': instance.commercialAdsUsers,
     };
 

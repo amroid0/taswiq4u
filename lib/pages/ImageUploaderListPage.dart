@@ -16,6 +16,7 @@ import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/upload_image_entity.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/Theme.dart';
+import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/base64_image.dart';
 import 'package:olx/widget/circle_button.dart';
 
@@ -56,7 +57,7 @@ var _bloc;
             child: Column(
               children: <Widget>[
                 Text(
-                  'Pick an image',
+            allTranslations.text('pick image'),
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
@@ -64,14 +65,14 @@ var _bloc;
                 ),
                 FlatButton(
                   textColor: flatButtonColor,
-                  child: Text('Use Camera'),
+                  child: Text( allTranslations.text('camera')),
                   onPressed: () {
                     _getImage(context, ImageSource.camera);
                   },
                 ),
                 FlatButton(
                   textColor: flatButtonColor,
-                  child: Text('Use Gallery'),
+                  child: Text(allTranslations.text('gallery')),
                   onPressed: () {
                     _getImage(context, ImageSource.gallery);
                   },

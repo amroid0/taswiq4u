@@ -57,7 +57,7 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
                    var item=list[index];
                    return PhotoViewGalleryPageOptions(
                      imageProvider: NetworkImage(
-                         APIConstants.getFullImageUrl(item.systemDataFile!=null ?item.systemDataFile.url:"", ImageType.COMMAD)
+                         APIConstants.getFullImageUrl(item.systemDataFile1!=null ?item.systemDataFile1.url:"", ImageType.COMMAD)
                      ),
                      // Contained = the smallest possible size to fit one dimension of the screen
                      minScale: PhotoViewComputedScale.contained * 0.8,

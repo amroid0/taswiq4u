@@ -98,7 +98,7 @@ class _OfferSliderScreenState extends State<OfferSliderScreen> {
                                 fit: BoxFit.fill,
                                 placeholder: (context, url) => Image.asset("images/logo.png"),
                                 errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                                imageUrl: APIConstants.getFullImageUrl(imgUrl.systemDataFile==null?"":imgUrl.systemDataFile.url==null ||imgUrl.systemDataFile.url.isEmpty?"":imgUrl.systemDataFile.url, ImageType.COMMAD)
+                                imageUrl: APIConstants.getFullImageUrl(imgUrl.systemDataFile1==null?"":imgUrl.systemDataFile1.url==null ||imgUrl.systemDataFile1.url.isEmpty?"":imgUrl.systemDataFile1.url, ImageType.COMMAD)
                             ),
                           ),
                         );

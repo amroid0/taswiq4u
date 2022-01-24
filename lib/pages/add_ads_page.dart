@@ -504,6 +504,7 @@ body: Padding(
 
                           autovalidate: item.Required,
                           validator: item.Required?_emptyValidate:null,
+
                           onSaved: (val){
 
                             var vv=Advertisment_SpecificationBean();
@@ -515,7 +516,6 @@ body: Padding(
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.white,
-
                             labelText: allTranslations.isEnglish?item.EnglishName:item.ArabicName,
                             hintText:allTranslations.isEnglish?item.EnglishName:item.ArabicName,
                             prefixIcon: item.Required?Icon(Icons.check_circle,color: _colorFieldValue[index],):null,

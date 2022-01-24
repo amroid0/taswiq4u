@@ -40,7 +40,7 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
                                       fit: BoxFit.fill,
 
                 placeholder: 'images/logo.png',
-                image: APIConstants.getFullImageUrl(result.systemDataFile!=null ?result.systemDataFile.url:"", ImageType.COMMAD)
+                image: APIConstants.getFullImageUrl(result.systemDataFile1!=null ?result.systemDataFile1.url:"", ImageType.COMMAD)
               ),
               margin:EdgeInsets.only(top:70,left:20,right: 20),
 
