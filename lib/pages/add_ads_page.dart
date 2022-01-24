@@ -298,7 +298,7 @@ body: Padding(
             SizedBox(height: 8,),
 
             TextFormField(
-
+              validator: _descAdsValidate,
               controller: _desctextController,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.check_circle,color: AppColors.validValueColor,),

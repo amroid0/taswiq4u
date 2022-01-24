@@ -159,4 +159,11 @@
   "camera": "Use Camera",
   "gallery": "Use Gallery",
   "safety": "Saftey Rules"
+  "missing_fields": "please complete all required fields",
+  "success_delete_ads": "Ad deleted Successfully",
+  "success_distincit_ads": "Ad featured Successfully"
+
+
+
+
 }

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:olx/data/bloc/bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/favroite_bloc.dart';
 import 'package:olx/data/bloc/login_bloc.dart';
@@ -17,7 +18,8 @@ class AdsCardWidget extends StatelessWidget {
   AdsModel model;
   int language ;
   final bool editable;
-  AdsCardWidget({this.model,this.editable=false,this.language});
+  final Bloc bloc;
+  AdsCardWidget({this.model,this.editable=false,this.language,this.bloc});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class AdsCardWidget extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => DetailPage(editable)
+                  builder: (context) => BlocProvider(bloc:bloc,child: DetailPage(editable))
                   , settings: RouteSettings(arguments: model)),
             );
           },

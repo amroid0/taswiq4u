@@ -166,7 +166,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
 
                   case Status.COMPLETED:
                     ads=snap.data.data as List<AdsModel>;
-                    return _buildAdsList(ads);
+                    return BlocProvider(bloc:_bloc,child: _buildAdsList(ads));
                     break;
                   case Status.ERROR:
                     return EmptyListWidget(
@@ -225,7 +225,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
 
             }else {
 
-              return AdsCardWidget(model:ads[adsIndex],editable: true,language: lang,);
+              return AdsCardWidget(model:ads[adsIndex],editable: true,language: lang,bloc: _bloc,);
 
 
             }
@@ -250,7 +250,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
               [adsIndex]
                   .AdvertismentImages;
 
-              return AdsRowWidget(model:ads[adsIndex],editable: true,language:lang,);
+              return AdsRowWidget(model:ads[adsIndex],editable: true,language:lang,bloc: _bloc,);
 
 
             }

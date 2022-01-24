@@ -1,11 +1,11 @@
 import 'dart:io';
 
+import 'package:ars_progress_dialog/ars_progress_dialog.dart';
 import 'package:auto_direction/auto_direction.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -65,6 +65,8 @@ class _DetailPageState extends State<DetailPage> {
   bool reportDiolag = false ;
   TextEditingController message = TextEditingController();
 
+  ArsProgressDialog progressDialog;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -119,6 +121,84 @@ class _DetailPageState extends State<DetailPage> {
 
       }
     });
+
+    progressDialog = ArsProgressDialog(
+        context,
+        blur: 2,
+        backgroundColor: Color(0x33000000),
+        animationDuration: Duration(milliseconds: 500));
+    _bloc.deleteStateStream.listen((snap) {
+      if(progressDialog.isShowing){
+        progressDialog.dismiss();
+      }
+      switch (snap.status) {
+        case Status.LOADING:
+          progressDialog.show();
+          break;
+
+
+        case Status.ERROR:
+
+
+
+          ToastUtils.
+          showErrorMessage(
+              allTranslations.text('err_wrong'));
+
+
+          break;
+
+        case Status.COMPLETED:
+
+          ToastUtils.
+          showSuccessMessage(allTranslations.text('success_delete_ads'));
+          WidgetsBinding.instance.addPostFrameCallback((_)  {
+            BlocProvider.of<AdsBloc>(context).getMyAdsListe(1);
+              Navigator.pop(context);
+          });
+
+          break;
+      }
+    });
+    _bloc.distnictStateStream.listen((snap) {
+      if(progressDialog.isShowing){
+        progressDialog.dismiss();
+      }
+      switch (snap.status) {
+        case Status.LOADING:
+          progressDialog.show();
+          break;
+
+
+        case Status.ERROR:
+
+
+
+          ToastUtils.
+          showErrorMessage(
+              allTranslations.text('err_wrong'));
+
+
+          break;
+
+        case Status.COMPLETED:
+
+          ToastUtils.
+          showSuccessMessage(allTranslations.text('success_distincit_ads'));
+
+          break;
+      }
+    });
+
+
+
+
+
+
+
+
+
+
 
     super.initState();
   }
@@ -294,8 +374,59 @@ class _DetailPageState extends State<DetailPage> {
                                     )),
                               ),
                             ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Visibility(
+                              visible: widget.isEditable,
+                              child: GestureDetector(
+
+                                onTap: (){
+
+                                  _bloc.deleteAds(detail.Id.toString());
 
 
+
+
+
+
+                                },
+                                child: Container(
+
+                                    decoration: BoxDecoration(
+                                        color: Color(0xffECECEC).withOpacity(0.6),
+                                        borderRadius: BorderRadius.circular(20)),
+                                    child: Icon(
+                                      Icons.delete,
+                                      size: 30.0,
+                                      color: Colors.red,
+                                    )),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ), Visibility(
+                              visible: widget.isEditable,
+                              child: GestureDetector(
+
+                                onTap: (){
+
+                                  _bloc.distinictAds(detail.Id.toString());
+
+
+                                },
+                                child: Container(
+
+                                    decoration: BoxDecoration(
+                                        color: Color(0xffECECEC).withOpacity(0.6),
+                                        borderRadius: BorderRadius.circular(20)),
+                                    child: Icon(
+                                      Icons.star,
+                                      size: 30.0,
+                                      color: Colors.amber,
+                                    )),
+                              ),
+                            ),
 
                           ],
                         ),
@@ -321,11 +452,11 @@ class _DetailPageState extends State<DetailPage> {
                               SizedBox(width:20,),
                               GestureDetector(
                                 onTap: () async {
-                                  await FlutterShare.share(
+                              /*    await FlutterShare.share(
                                       title: 'Taswiq share',
                                       text: detail.ArabicDescription,
                                       linkUrl: detail.ArabicDescriptionUrl,
-                                      chooserTitle: 'taswiq Chooser Title');
+                                      chooserTitle: 'taswiq Chooser Title');*/
                                 }                ,
                                 child: Container(
                                   height:35,
