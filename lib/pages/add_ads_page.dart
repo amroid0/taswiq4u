@@ -205,6 +205,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
         adsPostEntity.cityId=selected.id;
 
 
+
       },);
   }
 

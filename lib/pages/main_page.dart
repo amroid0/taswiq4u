@@ -214,9 +214,9 @@ class _MainScreenState extends State<MainScreen> {
     drawerOptions.add(  Row(
       mainAxisAlignment:MainAxisAlignment.spaceAround,
       children: [
-        IconButton(icon:Icon(FontAwesomeIcons.facebook),color:Colors.green,onPressed:()=> _openSocail('https://www.facebook.com/taswiq4u.eg/') ,),
-        IconButton(icon:Icon(FontAwesomeIcons.instagram),color:Colors.green,onPressed:()=> _openSocail('https://www.instagram.com/taswiq4u.eg/?hl=en/') ,),
-        IconButton(icon:Icon(FontAwesomeIcons.twitter),color:Colors.green,onPressed: ()=>_openSocail('https://twitter.com/Taswiq4uEG'),),
+        IconButton(icon:Icon(FontAwesomeIcons.facebook),color:Colors.blue,onPressed:()=> _openSocail('https://www.facebook.com/taswiq4u.eg/') ,),
+        IconButton(icon:Icon(FontAwesomeIcons.instagram),color:Colors.purpleAccent,onPressed:()=> _openSocail('https://www.instagram.com/taswiq4u.eg/?hl=en/') ,),
+        IconButton(icon:Icon(FontAwesomeIcons.twitter),color:Colors.lightBlueAccent,onPressed: ()=>_openSocail('https://twitter.com/Taswiq4uEG'),),
       ],
     ));
     return BlocProvider(

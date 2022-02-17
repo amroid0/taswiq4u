@@ -67,50 +67,58 @@ class _SettingsPageState extends State<GeneralSettingsPage> {
               onTap: ()async{
                 String lan=await preferences.getLang();
                 _langSelectedValue=lan=='en'?1:2;
-                Alert(
-                  context: context,
-                  title: "",
-                  buttons: [],
-                  content: Column(
-                    children: <Widget>[
-
-                      Directionality(textDirection: TextDirection.rtl,
-
-                        child: RadioListTile(
-                          value: 1,
-                          groupValue: _langSelectedValue,
-                          title: Text("English",style: TextStyle(color: Colors.black,fontSize: 20),),
-                          onChanged: (val) {
-                            _langSelectedValue=val;
-                            BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
-                                "en");
-                            Navigator.of(context).pop();
-                          },
-
-                          selected: true,
-                        ),
-                      ),
-                      Divider(height: 2,color: Colors.black,thickness: 1,),
-                      Directionality(textDirection: TextDirection.rtl,
-
-                        child: RadioListTile(
-                          value: 2,
-                          groupValue: _langSelectedValue,
-                          title: Text("اللغه العربيه",style: TextStyle(color: Colors.black,fontSize: 20)),
-                          onChanged: (val) {
-                            BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
-                                "ar");
-                            _langSelectedValue=val;
-                            Navigator.of(context).pop();
-                          },
-
-                          selected: true,
-
-                        ),
-                      ),
+                showDialog(
+                  context:context,
+                  child: AlertDialog(
+              //    context: context,
+                  //  title: "",
+               //   buttons: [],
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    actions: [
+                      FlatButton(child:Text(allTranslations.text('cancel')), onPressed: () {
+                        Navigator.of(context).pop();
+                      },)
                     ],
+                    title:Text(allTranslations.text('choose'),),
+                    content: Container(
+                      width: MediaQuery.of(context).size.width * .8,
+                      height: MediaQuery.of(context).size.height * .2,
+                      child: Column(
+                        children: <Widget>[
+
+                          RadioListTile(
+                            value: 1,
+                            groupValue: _langSelectedValue,
+                            title: Text("English",style: TextStyle(color: Colors.black,fontSize: 20),),
+                            onChanged: (val) {
+                              _langSelectedValue=val;
+                              BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
+                                  "en");
+                              Navigator.of(context).pop();
+                            },
+
+                            selected: true,
+                          ),
+                         // Divider(height: 2,color: Colors.black,thickness: 1,),
+                          RadioListTile(
+                            value: 2,
+                            groupValue: _langSelectedValue,
+                            title: Text("اللغه العربيه",style: TextStyle(color: Colors.black,fontSize: 20)),
+                            onChanged: (val) {
+                              BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
+                                  "ar");
+                              _langSelectedValue=val;
+                              Navigator.of(context).pop();
+                            },
+
+                            selected: true,
+
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ).show();
+                );
               },
             ),
             ListTile(leading: Icon(Icons.language),

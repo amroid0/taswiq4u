@@ -104,7 +104,7 @@ class _CountryPageState extends State<CountryPage> {
                                             ),
                                           ),
                                         ),
-                                         Align(alignment: Alignment.bottomCenter,child: Text(allTranslations.isEnglish?list[index].englishDescription.toString():list[index].arabicDescription, style: new TextStyle(fontSize: 20.0,),))
+                                         Align(alignment: Alignment.bottomCenter,child: Text(allTranslations.isEnglish?list[index].englishDescription.toString():list[index].arabicDescription, style: new TextStyle(fontSize: 20.0,fontWeight:FontWeight.w600),))
                                   ]
                                   ),
 

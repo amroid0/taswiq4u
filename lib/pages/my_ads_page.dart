@@ -1,15 +1,23 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:olx/data/bloc/ads_bloc.dart';
+import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/favroite_bloc.dart';
+import 'package:olx/data/bloc/login_bloc.dart';
 import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
+import 'package:olx/model/favroite_entity.dart';
+import 'package:olx/pages/detail_page.dart';
+import 'package:olx/pages/parentAuthPage.dart';
+import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/Theme.dart';
+import 'package:olx/utils/utils.dart';
 import 'package:olx/widget/ads_widget_card.dart';
 import 'package:olx/widget/ads_widget_row.dart';
-
+import 'package:olx/widget/favroite_widget.dart';
 
 class MyAdsPage extends StatefulWidget {
   @override
@@ -26,7 +34,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
 
   var _gridItemCount=1;
   var bloc;
- AdsBloc _bloc= AdsBloc();
+  AdsBloc _bloc= AdsBloc();
 
   @override
   void initState() {
@@ -152,33 +160,33 @@ class _MyAdsPageState extends State<MyAdsPage> {
               stream: _bloc.myAdsstream,
               builder:(context,snap){
                 if(snap.data!=null)
-                switch(snap.data.status) {
-                  case Status.LOADING:
-                    if(page==1)
-                      return new Center(
-                        child: new CircularProgressIndicator(
-                          backgroundColor: Colors.deepOrangeAccent,
-                          strokeWidth: 5.0,
-                        ),
+                  switch(snap.data.status) {
+                    case Status.LOADING:
+                      if(page==1)
+                        return new Center(
+                          child: new CircularProgressIndicator(
+                            backgroundColor: Colors.deepOrangeAccent,
+                            strokeWidth: 5.0,
+                          ),
+                        );
+
+                      break;
+
+                    case Status.COMPLETED:
+                      ads=snap.data.data as List<AdsModel>;
+                      return BlocProvider(bloc:_bloc,child: _buildAdsList(ads));
+                      break;
+                    case Status.ERROR:
+                      return EmptyListWidget(
+
+                          title: 'Error',
+                          subTitle: 'Something Went Wrong',
+                          image: 'images/error.png',
+                          titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
+                          subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
                       );
-
-                    break;
-
-                  case Status.COMPLETED:
-                    ads=snap.data.data as List<AdsModel>;
-                    return BlocProvider(bloc:_bloc,child: _buildAdsList(ads));
-                    break;
-                  case Status.ERROR:
-                    return EmptyListWidget(
-
-                        title: 'Error',
-                        subTitle: 'Something Went Wrong',
-                        image: 'images/error.png',
-                        titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
-                        subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
-                    );
-                    break;
-                }
+                      break;
+                  }
                 return Container();
 
 

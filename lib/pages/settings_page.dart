@@ -33,7 +33,7 @@ class _SettingsPageState extends State<SettingsPage> {
         backgroundColor: AppColors.appBackground,
         appBar: AppBar(
           title: Center(
-            child: Text(allTranslations.text('settings'),textAlign: TextAlign.center,style: TextStyle(fontSize:18,
+            child: Text(allTranslations.text('setting'),textAlign: TextAlign.center,style: TextStyle(fontSize:18,
                 color:
                 Colors.black38
 
@@ -121,44 +121,48 @@ class _SettingsPageState extends State<SettingsPage> {
                   context: context,
                   title: "",
                   buttons: [],
-                  content: Column(
-                    children: <Widget>[
+                  content: Container(
+                    width: MediaQuery.of(context).size.width * .9,
+                    height: MediaQuery.of(context).size.height * .3,
+                    child: Column(
+                      children: <Widget>[
 
-                      Directionality(textDirection: TextDirection.rtl,
+                        Directionality(textDirection: TextDirection.rtl,
 
-                        child: RadioListTile(
-                          value: 1,
-                          groupValue: _langSelectedValue,
-                          title: Text("English",style: TextStyle(color: Colors.black,fontSize: 20),),
-                          onChanged: (val) {
-                            _langSelectedValue=val;
-                            BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
-                                "en");
-                            Navigator.of(context).pop();
-                          },
-
-                          selected: true,
-                        ),
-                      ),
-                      Divider(height: 2,color: Colors.black,thickness:1,),
-                      Directionality(textDirection: TextDirection.rtl,
-
-                        child: RadioListTile(
-                          value: 2,
-                          groupValue: _langSelectedValue,
-                          title: Text("اللغه العربيه",style: TextStyle(color: Colors.black,fontSize: 20)),
-                          onChanged: (val) {
-                            BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
-                                "ar");
+                          child: RadioListTile(
+                            value: 1,
+                            groupValue: _langSelectedValue,
+                            title: Text("English",style: TextStyle(color: Colors.black,fontSize: 20),),
+                            onChanged: (val) {
                               _langSelectedValue=val;
+                              BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
+                                  "en");
                               Navigator.of(context).pop();
-                          },
+                            },
 
-                          selected: true,
-
+                            selected: true,
+                          ),
                         ),
-                      ),
-                    ],
+                      //  Divider(height: 2,color: Colors.black,thickness:1,),
+                        Directionality(textDirection: TextDirection.rtl,
+
+                          child: RadioListTile(
+                            value: 2,
+                            groupValue: _langSelectedValue,
+                            title: Text("اللغه العربيه",style: TextStyle(color: Colors.black,fontSize: 20)),
+                            onChanged: (val) {
+                              BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
+                                  "ar");
+                                _langSelectedValue=val;
+                                Navigator.of(context).pop();
+                            },
+
+                            selected: true,
+
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                  ).show();
             },

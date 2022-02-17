@@ -129,9 +129,9 @@ bool isupdated=false;
                 SizedBox(height: 24,),
                 _BuildProifleImage(100,100),
                 SizedBox(height: 8,),
-                Text(allTranslations.text('change_profile'),style: TextStyle(color: Colors.black87,fontSize: 18,            decoration: TextDecoration.underline,
+                Text(allTranslations.text('change_profile'),style: TextStyle(fontWeight:FontWeight.normal,color: Colors.black87,fontSize: 18,            decoration: TextDecoration.underline,
                 ),),
-                SizedBox(height: 24,),
+                SizedBox(height: 24),
                 
                 StreamBuilder(
            stream: BlocProvider.of<ProfileBloc>(context).firstName,

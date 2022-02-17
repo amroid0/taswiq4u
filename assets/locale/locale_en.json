@@ -42,6 +42,7 @@
   "sections": "Sections",
   "my_ads": "My Ads",
   "settings": "Settings",
+  "setting": "Settings",
   "search": "Search...",
   "first_name": "Name",
   "sec_name": "Second Name",
@@ -158,8 +159,7 @@
   "pick image": "Pick an image",
   "camera": "Use Camera",
   "gallery": "Use Gallery",
-  "safety": "Saftey Rules"
-  "missing_fields": "please complete all required fields",
+  "safety": "Saftey Rules",
   "success_delete_ads": "Ad deleted Successfully",
   "success_distincit_ads": "Ad featured Successfully"
 
