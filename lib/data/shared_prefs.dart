@@ -30,7 +30,9 @@ static final String KEY_COUNTRY="country_key";
 
   Future<bool> isLoggedIn() async {
     SharedPreferences instance = await _prefs;
-    return instance.getBool(KEY_IS_LOGGED)&&instance.getBool(ACTIVE_STATE_KEY);
+    var isLogged=instance.getBool(KEY_IS_LOGGED)??false;
+    var isActive=instance.getBool(ACTIVE_STATE_KEY)??false;
+    return isLogged&&isActive;
   }
 
   void setLoggedIn(LoginResponse user) async {

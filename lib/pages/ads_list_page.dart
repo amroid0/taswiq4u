@@ -534,7 +534,7 @@ void _OnSelectSort(int val){
 
   Widget _buildCategoryList(List<CateogryEntity> category){
     return Visibility(
-      visible: category[0].hasHorizontal!=null&&category[0].hasHorizontal,
+      visible: true,
       child: Container(
         height: 80,
         child: ListView.builder(
@@ -549,7 +549,7 @@ void _OnSelectSort(int val){
                   child:     Container(
                     margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
                     child: ChoiceChip(
-                      label: Text(category[index].name),
+                      label: Text(allTranslations.isEnglish?category[index].englishDescription:category[index].arabicDescription),
                       selected:category[index].isSelected==null?false:category[index].isSelected||category[index].id==widget.category.id,
                       onSelected: (select){
 
