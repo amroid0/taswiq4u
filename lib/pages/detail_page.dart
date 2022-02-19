@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:ars_progress_dialog/ars_progress_dialog.dart';
+import 'package:ars_dialog/ars_dialog.dart';
 import 'package:auto_direction/auto_direction.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -47,25 +47,25 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-  DetailBloc _bloc;
-  GoogleMapController _mapController;
-  AdsReportBloc _reportBloc ;
+  DetailBloc? _bloc;
+  GoogleMapController? _mapController;
+  late AdsReportBloc _reportBloc ;
   final detailScaffoldMessengerKey = GlobalKey<ScaffoldState>();
 
 
   final Set<Marker> _markers = {};
-  AdsModel detailArgs;
+  AdsModel? detailArgs;
 
-  FavroiteBloc favbloc;
+  late FavroiteBloc favbloc;
 
-  AdsDetail detail;
-  PostReport _postReport ;
-  List <String> reportReasons =[allTranslations.text('report_ressons1'),allTranslations.text('report_ressons2'),allTranslations.text('report_ressons3'),allTranslations.text('report_ressons4'),allTranslations.text('report_ressons5')];
-  String _select_Types ;
+  AdsDetail? detail;
+  PostReport? _postReport ;
+  List <String?> reportReasons =[allTranslations.text('report_ressons1'),allTranslations.text('report_ressons2'),allTranslations.text('report_ressons3'),allTranslations.text('report_ressons4'),allTranslations.text('report_ressons5')];
+  String? _select_Types ;
   bool reportDiolag = false ;
   TextEditingController message = TextEditingController();
 
-  ArsProgressDialog progressDialog;
+  late CustomProgressDialog progressDialog;
 
   @override
   void initState() {
@@ -91,7 +91,7 @@ class _DetailPageState extends State<DetailPage> {
         case Status.COMPLETED:
         // TODO: Handle this case.
           var isLogged=data as ApiResponse<bool>;
-          var isss=isLogged.data;
+          var isss=isLogged.data!;
           if(isss) {
      /*       Fluttertoast.showToast(
                 msg: "Favorite",
@@ -122,15 +122,10 @@ class _DetailPageState extends State<DetailPage> {
       }
     });
 
-    progressDialog = ArsProgressDialog(
-        context,
-        blur: 2,
-        backgroundColor: Color(0x33000000),
-        animationDuration: Duration(milliseconds: 500));
-    _bloc.deleteStateStream.listen((snap) {
-      if(progressDialog.isShowing){
+    progressDialog = CustomProgressDialog(context,blur: 10);
+    _bloc!.deleteStateStream.listen((snap) {
         progressDialog.dismiss();
-      }
+
       switch (snap.status) {
         case Status.LOADING:
           progressDialog.show();
@@ -143,7 +138,7 @@ class _DetailPageState extends State<DetailPage> {
 
           ToastUtils.
           showErrorMessage(
-              allTranslations.text('err_wrong'));
+              allTranslations.text('err_wrong')!);
 
 
           break;
@@ -151,8 +146,8 @@ class _DetailPageState extends State<DetailPage> {
         case Status.COMPLETED:
 
           ToastUtils.
-          showSuccessMessage(allTranslations.text('success_delete_ads'));
-          WidgetsBinding.instance.addPostFrameCallback((_)  {
+          showSuccessMessage(allTranslations.text('success_delete_ads')!);
+          WidgetsBinding.instance!.addPostFrameCallback((_)  {
             BlocProvider.of<AdsBloc>(context).getMyAdsListe(1);
               Navigator.pop(context);
           });
@@ -160,10 +155,9 @@ class _DetailPageState extends State<DetailPage> {
           break;
       }
     });
-    _bloc.distnictStateStream.listen((snap) {
-      if(progressDialog.isShowing){
+    _bloc!.distnictStateStream.listen((snap) {
         progressDialog.dismiss();
-      }
+
       switch (snap.status) {
         case Status.LOADING:
           progressDialog.show();
@@ -176,7 +170,7 @@ class _DetailPageState extends State<DetailPage> {
 
           ToastUtils.
           showErrorMessage(
-              allTranslations.text('err_wrong'));
+              allTranslations.text('err_wrong')!);
 
 
           break;
@@ -184,7 +178,7 @@ class _DetailPageState extends State<DetailPage> {
         case Status.COMPLETED:
 
           ToastUtils.
-          showSuccessMessage(allTranslations.text('success_distincit_ads'));
+          showSuccessMessage(allTranslations.text('success_distincit_ads')!);
 
           break;
       }
@@ -205,9 +199,9 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    detailArgs = ModalRoute.of(context).settings.arguments;
-    _bloc.getAdsDetail(detailArgs.Id.toString());
-    return BlocProvider<DetailBloc>(
+    detailArgs = ModalRoute.of(context)!.settings.arguments as AdsModel?;
+    _bloc!.getAdsDetail(detailArgs!.Id.toString());
+    return BlocProvider<DetailBloc?>(
       bloc: _bloc,
       child: Scaffold(
         key: detailScaffoldMessengerKey,
@@ -216,8 +210,8 @@ class _DetailPageState extends State<DetailPage> {
         floatingActionButton:
         SpeedDial(
           /// both default to 16
-          marginEnd: 18,
-          marginBottom: 20,
+
+          childMargin: EdgeInsets.only(bottom: 20,left: 18,right: 18),
           // animatedIcon: AnimatedIcons.menu_close,
           // animatedIconTheme: IconThemeData(size: 22.0),
           /// This is ignored if animatedIcon is non null
@@ -231,7 +225,7 @@ class _DetailPageState extends State<DetailPage> {
           /// Transition Builder between label and activeLabel, defaults to FadeTransition.
           // labelTransitionBuilder: (widget, animation) => ScaleTransition(scale: animation,child: widget),
           /// The below button size defaults to 56 itself, its the FAB size + It also affects relative padding and other elements
-          buttonSize: 56.0,
+          buttonSize: Size(56.0,56.0),
           visible: true,
           /// If true user is forced to close dial manually
           /// by tapping main button and overlay is not rendered.
@@ -271,7 +265,7 @@ class _DetailPageState extends State<DetailPage> {
               labelStyle: TextStyle(fontSize: 18.0),
               labelBackgroundColor: Colors.white,
               onTap: (){
-                _makePhoneCall('tel:${detailArgs.UserPhone}');
+                _makePhoneCall('tel:${detailArgs!.UserPhone}');
               },
               onLongPress: () => print('SECOND CHILD LONG PRESS'),
             ),
@@ -281,9 +275,9 @@ class _DetailPageState extends State<DetailPage> {
               label: allTranslations.text('copy_num'),
               labelBackgroundColor: Colors.white,
               labelStyle: TextStyle(fontSize: 18.0),
-              onTap: () =>  Clipboard.setData(new ClipboardData(text: detailArgs.UserPhone)).then((_){
-                detailScaffoldMessengerKey.currentState.showSnackBar(
-                    SnackBar(content:Text(allTranslations.text('copied_num'))));
+              onTap: () =>  Clipboard.setData(new ClipboardData(text: detailArgs!.UserPhone)).then((_){
+                detailScaffoldMessengerKey.currentState!.showSnackBar(
+                    SnackBar(content:Text(allTranslations.text('copied_num')!)));
               }),
               onLongPress: () => print('THIRD CHILD LONG PRESS'),
             ),
@@ -292,26 +286,26 @@ class _DetailPageState extends State<DetailPage> {
 
 
         body: StreamBuilder<ApiResponse<AdsDetail>>(
-          stream: _bloc.stream,
+          stream: _bloc!.stream,
           builder: (context, snapshot) {
             if(snapshot.data==null) return    Container(
               child: Center(child: CircularProgressIndicator()),
             );
-            switch (snapshot.data.status) {
+            switch (snapshot.data!.status) {
               case Status.LOADING:
                 return  Container(
                   child: Center(child: CircularProgressIndicator()),
                 );
                 break;
               case Status.COMPLETED:
-                var value = snapshot.data.data;
-                 detail = value as AdsDetail;
+                var value = snapshot.data!.data;
+                 detail = value as AdsDetail?;
                 //_bloc.viewAds();
                 return ListView(
                   shrinkWrap: true,
                   children: <Widget>[
                     Stack(children: [
-                      gettSliderImageWidget(detail.AdvertismentImages),
+                      gettSliderImageWidget(detail!.AdvertismentImages),
                       Padding(
                         padding: EdgeInsets.all(8),
                         child: Row(
@@ -383,7 +377,7 @@ class _DetailPageState extends State<DetailPage> {
 
                                 onTap: (){
 
-                                  _bloc.deleteAds(detail.Id.toString());
+                                  _bloc!.deleteAds(detail!.Id.toString());
 
 
 
@@ -411,7 +405,7 @@ class _DetailPageState extends State<DetailPage> {
 
                                 onTap: (){
 
-                                  _bloc.distinictAds(detail.Id.toString());
+                                  _bloc!.distinictAds(detail!.Id.toString());
 
 
                                 },
@@ -444,11 +438,11 @@ class _DetailPageState extends State<DetailPage> {
                                       borderRadius: BorderRadius.circular(20)),
                                   child:FavroiteWidget(onFavChange:(val){
                                     if(BlocProvider.of<LoginBloc>(context).isLogged())
-                                      favbloc.changeFavoriteState(val,detail.Id);
+                                      favbloc.changeFavoriteState(val!,detail!.Id);
                                     else
                                       Navigator.push(
                                           context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
-                                  },value: detail.IsFavorite,)),
+                                  },value: detail!.IsFavorite,)),
                               SizedBox(width:20,),
                               GestureDetector(
                                 onTap: () async {
@@ -488,7 +482,7 @@ class _DetailPageState extends State<DetailPage> {
                       child: Column(
 
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: _buildDetailWidgets(detail)),
+                          children: _buildDetailWidgets(detail!)),
                     ),
                   ],
                 );
@@ -496,7 +490,7 @@ class _DetailPageState extends State<DetailPage> {
                 break;
               case Status.ERROR:
                 return Center(
-                  child: Text(allTranslations.text('err_wrong')),
+                  child: Text(allTranslations.text('err_wrong')!),
                 );
 
                 break;
@@ -508,19 +502,21 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
-  Widget gettSliderImageWidget(List<AdvertismentImage> items) {
+  Widget gettSliderImageWidget(List<AdvertismentImage>? items) {
     if (items != null && items.length > 0)
       return Container(
           height: 320.0,
           width: double.infinity,
           child: CarouselSlider.builder(
             itemCount: items.length,
-            enableInfiniteScroll: false,
-            height: 400.0,
-            aspectRatio: 1,
-            viewportFraction: 1.0,
+           options: CarouselOptions(
+             enableInfiniteScroll: false,
+             height: 400.0,
+             aspectRatio: 1,
+             viewportFraction: 1.0,
+           ),
 
-            itemBuilder: (context, index) {
+            itemBuilder: (context, index,realindex) {
 /*
             if(items[index].base64Image == null &&
                 items[index].isLoading == null)
@@ -570,7 +566,7 @@ class _DetailPageState extends State<DetailPage> {
       children: <Widget>[
         Expanded(
           child: Text(
-            allTranslations.isEnglish ? detail.EnglishTitle : detail.ArabicTitle,
+            allTranslations.isEnglish ? detail.EnglishTitle! : detail.ArabicTitle!,
             style: TextStyle(fontSize: 18),maxLines: 3,
           ),
         ),
@@ -590,13 +586,13 @@ class _DetailPageState extends State<DetailPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           StreamBuilder(
-              stream: _bloc.viewstream,
+              stream: _bloc!.viewstream,
               builder: (context, snapshot) {
-                Counter viewCounter = Counter(0, true);
-                if (snapshot.hasData) viewCounter = snapshot.data;
+                Counter? viewCounter = Counter(0, true);
+                if (snapshot.hasData) viewCounter = snapshot.data as Counter?;
 
                 return Text(
-                    "${allTranslations.text('view_count')}:${viewCounter.count.toString()}");
+                    "${allTranslations.text('view_count')}:${viewCounter!.count.toString()}");
               }),
           Text("${allTranslations.text('id')}: ${detail.Id}")
         ],
@@ -610,22 +606,22 @@ class _DetailPageState extends State<DetailPage> {
     widgets.add(SizedBox(
       height: 8,
     ));
-    widgets.add(Text(allTranslations.text("properties"),style:TextStyle(fontSize: 20,fontWeight: FontWeight.bold)));
+    widgets.add(Text(allTranslations.text("properties")!,style:TextStyle(fontSize: 20,fontWeight: FontWeight.bold)));
 
      bool isEvenRow=true;
 
-    for (var spec in detail.Advertisment_Specification) {
+    for (var spec in detail.Advertisment_Specification!) {
       if (spec.AdvertismentSpecificatioOptions != null &&
-          spec.AdvertismentSpecificatioOptions.length > 0) {
+          spec.AdvertismentSpecificatioOptions!.length > 0) {
         String value = "";
-        for (var option in spec.AdvertismentSpecificatioOptions) {
+        for (var option in spec.AdvertismentSpecificatioOptions!) {
           value += allTranslations.isEnglish?option.NameEnglish.toString():option.NameArabic.toString();
         }
 
         widgets.add(ListTile(
 
           tileColor: isEvenRow?Colors.white:Colors.grey.shade200,
-     leading: Text(allTranslations.isEnglish?spec.NameEnglish:spec.NameArabic,style: TextStyle(fontWeight: FontWeight.bold),),
+     leading: Text(allTranslations.isEnglish?spec.NameEnglish!:spec.NameArabic!,style: TextStyle(fontWeight: FontWeight.bold),),
         trailing: Text(value),
         )
         );
@@ -650,18 +646,18 @@ class _DetailPageState extends State<DetailPage> {
       }
       isEvenRow=!isEvenRow;
     }
-    widgets.add(Text(allTranslations.text('details'),style:TextStyle(fontSize: 20,fontWeight: FontWeight.bold)));
+    widgets.add(Text(allTranslations.text('details')!,style:TextStyle(fontSize: 20,fontWeight: FontWeight.bold)));
     widgets.add(Row(
       children: [
         Expanded(
           child: StreamBuilder<bool>(
-            stream: _bloc.translatestream,
+            stream: _bloc!.translatestream,
             initialData: false,
             builder:(ctx,snap){
               String text=allTranslations.isEnglish ?
-              !snap.data? detail.EnglishDescription:detail.ArabicDescription
+              !snap.data!? detail.EnglishDescription!:detail.ArabicDescription!
                   :
-              !snap.data? detail.ArabicDescription:detail.EnglishDescription;
+              !snap.data!? detail.ArabicDescription!:detail.EnglishDescription!;
               return AutoDirection(
               text:text ,
               child: Text(
@@ -680,12 +676,12 @@ class _DetailPageState extends State<DetailPage> {
     widgets.add(Text(
         "${allTranslations.isEnglish ? detail.StateNameEnglish : detail.StateNameArabic}"));
     widgets.add ( FlatButton.icon(onPressed: (){
-      _bloc.translateAds();
+      _bloc!.translateAds();
 
 
 
     }, icon:
-    Icon(Icons.translate,color: Colors.blueAccent,), label: Text(allTranslations.text('translate')))
+    Icon(Icons.translate,color: Colors.blueAccent,), label: Text(allTranslations.text('translate')!))
     );
 
     final actions = Row(
@@ -695,7 +691,7 @@ class _DetailPageState extends State<DetailPage> {
     FlatButton.icon(onPressed: (){
       navigateTo(detail.LocationLatitude,detail.LocationLongtude);
 
-    }, icon: Icon(Icons.map,color: Colors.green,), label: Text(allTranslations.text('map'))),
+    }, icon: Icon(Icons.map,color: Colors.green,), label: Text(allTranslations.text('map')!)),
         FlatButton.icon(onPressed:(){
           // setState(() {
           //   reportDiolag = true ;
@@ -710,24 +706,24 @@ class _DetailPageState extends State<DetailPage> {
                 child: Column(
                   children: <Widget>[
                 DropdownButton<String>(
-                                    hint:  Text(allTranslations.text('reason'), style: TextStyle(
+                                    hint:  Text(allTranslations.text('reason')!, style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                     ),),
                                     value: _select_Types,
-                                    onChanged: (String Value) {
+                                    onChanged: (String? Value) {
                                       setState(() {
                                         _select_Types = Value;
                                       });
                                     },
-                                    items: reportReasons.map((String types) {
+                                    items: reportReasons.map((String? types) {
                                       return  DropdownMenuItem<String>(
                                         value: types,
                                         child: Row(
                                           children: <Widget>[
                                             reportReasons.length > 0  ? Text(
-                                            types,
+                                            types!,
                                               style:  TextStyle(color: Colors.black),
                                             )
                                                 : Text(
@@ -773,7 +769,7 @@ class _DetailPageState extends State<DetailPage> {
                                          _reportBloc.adsReport(
                                             PostReport(
                                               countryId:1,
-                                              adId: detailArgs.Id,
+                                              adId: detailArgs!.Id,
                                               message:message.text,
                                               reason:_select_Types
 
@@ -790,11 +786,11 @@ class _DetailPageState extends State<DetailPage> {
                           break;
                         case Status.COMPLETED:
                           var isLogged=data as ApiResponse<bool>;
-                          var isss=isLogged.data;
+                          var isss=isLogged.data!;
                           if(isss){
 
                             Fluttertoast.showToast(
-                                msg: allTranslations.text('send_success'),
+                                msg: allTranslations.text('send_success')!,
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.CENTER,
                                 timeInSecForIosWeb: 1,
@@ -809,20 +805,20 @@ class _DetailPageState extends State<DetailPage> {
                           break;
                         case Status.ERROR:
                           ToastUtils.showErrorMessage(allTranslations.
-                          text('err_wrong'));
+                          text('err_wrong')!);
                           break;
                       }
                     });
 
                   },                                 child: Text(
-                  allTranslations.text('send'),
+                  allTranslations.text('send')!,
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
                 )
               ]
               ).show();
 
-        }, icon:  Icon(Icons.flag,color: Colors.red,), label: Text(allTranslations.text('report'))),
+        }, icon:  Icon(Icons.flag,color: Colors.red,), label: Text(allTranslations.text('report')!)),
 
 
 
@@ -866,16 +862,16 @@ class _DetailPageState extends State<DetailPage> {
   }
   _textMe() async {
     if (Platform.isAndroid) {
-      String uri = 'sms:${detailArgs.UserPhone}?body=hello%20there';
+      String uri = 'sms:${detailArgs!.UserPhone}?body=hello%20there';
       await launch(uri);
     } else if (Platform.isIOS) {
       // iOS
-      String uri = 'sms:${detailArgs.UserPhone}&body=hello%20there';
+      String uri = 'sms:${detailArgs!.UserPhone}&body=hello%20there';
       await launch(uri);
     }
   }
 
-   void navigateTo(double lat, double lng) async {
+   void navigateTo(double? lat, double? lng) async {
     var uri = Uri.parse("google.navigation:q=$lat,$lng&mode=d");
     if (await canLaunch(uri.toString())) {
       await launch(uri.toString());
@@ -883,7 +879,7 @@ class _DetailPageState extends State<DetailPage> {
       throw 'Could not launch ${uri.toString()}';
     }
   }
-  bool AddReport() {
+  bool? AddReport() {
 //     return Container(
 //       margin:EdgeInsets.only(top:100),
 //         child: Visibility(

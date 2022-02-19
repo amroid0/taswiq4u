@@ -8,16 +8,16 @@ typedef Widget SelectOneItemBuilderType<T>(
     BuildContext context, CateogryEntity item, bool isSelected);
 
 class SelectDialog<T> extends StatefulWidget {
-  final T selectedValue;
-  final List<T> itemsList;
-  final bool showSearchBox;
-  final void Function(CateogryEntity) onChange;
-  final Future<List<T>> Function(String text) onFind;
-  final SelectOneItemBuilderType<T> itemBuilder;
-  final InputDecoration searchBoxDecoration;
+  final T? selectedValue;
+  final List<T>? itemsList;
+  final bool? showSearchBox;
+  final void Function(CateogryEntity)? onChange;
+  final Future<List<T>> Function(String text)? onFind;
+  final SelectOneItemBuilderType<T>? itemBuilder;
+  final InputDecoration? searchBoxDecoration;
 
   const SelectDialog({
-    Key key,
+    Key? key,
     this.itemsList,
     this.showSearchBox,
     this.onChange,
@@ -27,16 +27,16 @@ class SelectDialog<T> extends StatefulWidget {
     this.searchBoxDecoration,
   }) : super(key: key);
 
-  static Future<T> showModal<T>(
+  static Future<T?> showModal<T>(
       BuildContext context, {
-        List<T> items,
-        String label,
-        T selectedValue,
-        bool showSearchBox,
-        Future<List<T>> Function(String text) onFind,
-        SelectOneItemBuilderType<T> itemBuilder,
-        void Function(CateogryEntity) onChange,
-        InputDecoration searchBoxDecoration,
+        List<T>? items,
+        String? label,
+        T? selectedValue,
+        bool? showSearchBox,
+        Future<List<T>> Function(String text)? onFind,
+        SelectOneItemBuilderType<T>? itemBuilder,
+        void Function(CateogryEntity)? onChange,
+        InputDecoration? searchBoxDecoration,
       }) {
     return showDialog(
       context: context,
@@ -45,7 +45,7 @@ class SelectDialog<T> extends StatefulWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           title: Text(label ?? ""),
           actions: <Widget>[
-            FlatButton(child:Text(allTranslations.text('cancel')), onPressed: () {
+            FlatButton(child:Text(allTranslations.text('cancel')!), onPressed: () {
               Navigator.of(context).pop();
             },)
           ],
@@ -69,13 +69,13 @@ class SelectDialog<T> extends StatefulWidget {
 }
 
 class _SelectDialogState<T> extends State<SelectDialog<T>> {
-  CategoryBloc bloc;
-  void Function(CateogryEntity) onChange;
+  late CategoryBloc bloc;
+  void Function(CateogryEntity)? onChange;
 
   _SelectDialogState(
-      List<T> itemsList,
+      List<T>? itemsList,
       this.onChange,
-      Future<List<T>> Function(String text) onFind,
+      Future<List<T>> Function(String text)? onFind,
       ) {
   }
 
@@ -110,22 +110,22 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
                     return Center(child: Text("Something wrong"));
                   else if (!snapshot.hasData)
                     return Center(child: CircularProgressIndicator());
-                  else if (snapshot.data.isEmpty)
+                  else if (snapshot.data!.isEmpty)
                     return Center(child: Text("No data found"));
                   return ListView.separated(
-                    itemCount: snapshot.data.length,
+                    itemCount: snapshot.data!.length,
                     separatorBuilder: (c,index)=>Divider(height: 1,color: Colors.grey.shade500,),
                     itemBuilder: (context, index) {
-                      var item = snapshot.data[index];
+                      var item = snapshot.data![index];
                       if (widget.itemBuilder != null)
                         return InkWell(
-                          child: widget.itemBuilder(
+                          child: widget.itemBuilder!(
                               context, item, item == widget.selectedValue),
                           onTap: () {
-                            if(item.hasSub){
+                            if(item.hasSub!){
                               bloc.addCateogryToStack(item);
                             }else{
-                              onChange(item);
+                              onChange!(item);
                               Navigator.pop(context);
                             }
                           },
@@ -136,10 +136,10 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
                           item.arabicDescription.toString()),
                           selected: item == widget.selectedValue,
                           onTap: () {
-                            if(item.hasSub){
+                            if(item.hasSub!){
                               bloc.addCateogryToStack(item);
                             }else{
-                              onChange(item);
+                              onChange!(item);
                               Navigator.pop(context);
                             }
                           },

@@ -5,7 +5,7 @@ import '../shared_prefs.dart';
 import 'NetworkCommon.dart';
 
 class DetailAdsClient{
-  Future<AdsDetail>getADsDetails(String adsID)async{
+  Future<AdsDetail?>getADsDetails(String adsID)async{
     final results = await NetworkCommon()
         .dio
         .get(
@@ -18,7 +18,7 @@ class DetailAdsClient{
 
   }
 
-  Future<String> getImageAds(String imageName) async {
+  Future<String?> getImageAds(String? imageName) async {
     final results = await NetworkCommon().dio.post(APIConstants.GET_IMAGE,
         data: {"ImageName":imageName}
     );
@@ -28,7 +28,7 @@ class DetailAdsClient{
   }
 
 
-  Future<bool>viewAds(String adsID)async{
+  Future<bool?>viewAds(String adsID)async{
     final results = await NetworkCommon()
         .dio
         .get(
@@ -39,7 +39,7 @@ class DetailAdsClient{
 
   }
 
-  Future<bool>deleteAds(String id)async{
+  Future<bool?>deleteAds(String id)async{
     final result=await NetworkCommon().dio.get(APIConstants.DELETE_ADS,queryParameters: {"id":id});
         if(result.statusCode==200){
           return true;
@@ -49,7 +49,7 @@ class DetailAdsClient{
 
 
 
-  Future<bool>distinctAds(String id)async{
+  Future<bool?>distinctAds(String id)async{
     final result=await NetworkCommon().dio.get(APIConstants.DISTINCT_ADS,queryParameters: {"adId":id});
     if(result.statusCode==200){
       return true;

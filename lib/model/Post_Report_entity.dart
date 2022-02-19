@@ -4,15 +4,15 @@ import 'package:json_annotation/json_annotation.dart';
 @JsonSerializable()
 class PostReport {
   @JsonKey(name: "Id")
-  int id;
+  int? id;
   @JsonKey(name: "AdId")
-  int adId;
+  int? adId;
   @JsonKey(name: "Message")
-  String message;
+  String? message;
   @JsonKey(name: "Reason")
-  String reason;
+  String? reason;
   @JsonKey(name: "CountryId")
-  int countryId;
+  int? countryId;
   PostReport({
     this.id,
   this.adId,
@@ -49,11 +49,11 @@ class PostReport {
   }
   PostReport _$AdsReportEntityFromJson(Map<String, dynamic> json) {
     return PostReport(
-      id: json['Id'] as int,
-      adId: json['AdId'] as int,
-      message: json['Message'] as String,
-      reason: json['Reason'] as String,
-      countryId: json['CountryId'] as int,
+      id: json['Id'] as int?,
+      adId: json['AdId'] as int?,
+      message: json['Message'] as String?,
+      reason: json['Reason'] as String?,
+      countryId: json['CountryId'] as int?,
     );
   }
 

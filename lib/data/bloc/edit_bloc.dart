@@ -24,7 +24,7 @@ class EditBloc implements Bloc{
   void getEditFieldsByCatID(String adsID) async {
     final results = await _client.getEditFieldByAddID(adsID);
 
-    _controller.sink.add(results);
+    _controller.sink.add(results!);
   }
 
 
@@ -48,7 +48,7 @@ class EditBloc implements Bloc{
       final results = await _client.editAds(obj);
       _addController.sink.add(ApiResponse.completed(results));
     }catch(e){
-      _addController.sink.add(ApiResponse.error(e));
+      _addController.sink.add(ApiResponse.error(e.toString()));
 
     }
 

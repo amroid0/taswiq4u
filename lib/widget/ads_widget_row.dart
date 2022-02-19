@@ -17,10 +17,10 @@ import 'package:olx/widget/favorite_card.dart';
 import 'package:olx/widget/favroite_widget.dart';
 
 class AdsRowWidget extends StatelessWidget {
-  AdsModel model;
-  int language ;
-  final bool editable;
-  final AdsBloc bloc;
+  AdsModel? model;
+  int? language ;
+  final bool? editable;
+  final AdsBloc? bloc;
   AdsRowWidget({this.model,this.language,this.editable,this.bloc});
 
 
@@ -69,14 +69,14 @@ class AdsRowWidget extends StatelessWidget {
                         child: ClipRRect(
                           borderRadius:BorderRadius.circular(20) ,
                           child:
-                            (model.AdvertismentImages.isNotEmpty&&model.AdvertismentImages[0].Url!=null&&model.AdvertismentImages[0].Url.isNotEmpty)?
+                            (model!.AdvertismentImages!.isNotEmpty&&model!.AdvertismentImages![0].Url!=null&&model!.AdvertismentImages![0].Url!.isNotEmpty)?
 
 
                   CachedNetworkImage(
                             fit: BoxFit.fill,
                             placeholder: (context, url) => Image.asset("images/logo.png"),
                             errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                            imageUrl: APIConstants.getFullImageUrl(model.AdvertismentImages.isEmpty?"":model.AdvertismentImages[0].Url,ImageType.ADS),
+                            imageUrl: APIConstants.getFullImageUrl(model!.AdvertismentImages!.isEmpty?"":model!.AdvertismentImages![0].Url,ImageType.ADS),
                           ):      Image.asset("images/logo.png",fit: BoxFit.fill,)
                   ,
                         )
@@ -90,10 +90,10 @@ class AdsRowWidget extends StatelessWidget {
 
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text(model.EnglishTitle,maxLines: 2,overflow: TextOverflow.ellipsis,style: TextStyle(
+                              Text(model!.EnglishTitle!,maxLines: 2,overflow: TextOverflow.ellipsis,style: TextStyle(
                                 height: 1.2,
                               ),),
-                              Text(language==1 ? "${model.Price}  ${allTranslations.text('cuurency')}" :"${model.Price}  ${allTranslations.text('cuurencyKd')}" ,
+                              Text(language==1 ? "${model!.Price}  ${allTranslations.text('cuurency')}" :"${model!.Price}  ${allTranslations.text('cuurencyKd')}" ,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
 
@@ -108,7 +108,7 @@ class AdsRowWidget extends StatelessWidget {
 
                                 children: <Widget>[
                                   Icon(Icons.pin_drop_outlined, size: 20,),
-                                  Text(allTranslations.isEnglish ?model.CityNameEnglish :model.CityNameArabic, style: Theme.of(context).textTheme.bodyText2),
+                                  Text(allTranslations.isEnglish ?model!.CityNameEnglish! :model!.CityNameArabic!, style: Theme.of(context).textTheme.bodyText2),
 
                                 ],),
                               SizedBox(height: 4,),
@@ -118,8 +118,8 @@ class AdsRowWidget extends StatelessWidget {
                                   Icon(Icons.update_outlined, size: 20,),
 
                                   FittedBox(
-                                    child: Text( displayTimeAgoFromTimestamp(model.CreationTime),
-                                      style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize: 13),maxLines: 1,overflow: TextOverflow.ellipsis,),
+                                    child: Text( displayTimeAgoFromTimestamp(model!.CreationTime!),
+                                      style: Theme.of(context).textTheme.subtitle2!.copyWith(fontSize: 13),maxLines: 1,overflow: TextOverflow.ellipsis,),
                                   ),
 
 
@@ -148,11 +148,11 @@ class AdsRowWidget extends StatelessWidget {
                                   onFavChange:(val){
 
                                     if(BlocProvider.of<LoginBloc>(context).isLogged())
-                                      BlocProvider.of<FavroiteBloc>(context).changeFavoriteState(val,model.Id);
+                                      BlocProvider.of<FavroiteBloc>(context).changeFavoriteState(val!,model!.Id);
                                     else
                                       Navigator.push(
                                           context, MaterialPageRoute(builder: (context) => ParentAuthPage()));                          },
-                                  value:                   (BlocProvider.of<LoginBloc>(context).isLogged())?model.IsFavorite:false
+                                  value:                   (BlocProvider.of<LoginBloc>(context).isLogged())?model!.IsFavorite:false
                               )
 
                           ),

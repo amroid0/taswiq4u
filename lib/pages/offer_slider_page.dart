@@ -23,9 +23,9 @@ class OfferSliderScreen extends StatefulWidget {
 
 
 class _OfferSliderScreenState extends State<OfferSliderScreen> {
-  PageController _pageController;
-  List< PopupAdsEntityList>  list ;
-  int currentPage=0;
+  PageController? _pageController;
+  List< PopupAdsEntityList>?  list ;
+  int? currentPage=0;
   int ImageIndex=0 ;
   @override
   void initState() {
@@ -36,12 +36,12 @@ class _OfferSliderScreenState extends State<OfferSliderScreen> {
   Widget build(BuildContext context) {
 
 
-    final Map arguments = ModalRoute.of(context).settings.arguments as Map;
+    final Map? arguments = ModalRoute.of(context)!.settings.arguments as Map?;
     if (arguments != null) {
-      list = arguments["list"] as List< PopupAdsEntityList> ;
-      currentPage=arguments["index"]as int;
+      list = arguments["list"] as List< PopupAdsEntityList>? ;
+      currentPage=arguments["index"]as int?;
     }
-    _pageController=PageController(initialPage: currentPage,viewportFraction:1, keepPage: true,);
+    _pageController=PageController(initialPage: currentPage!,viewportFraction:1, keepPage: true,);
 
     // _pageController.jumpToPage(currentPage);
     return Scaffold(
@@ -58,25 +58,27 @@ class _OfferSliderScreenState extends State<OfferSliderScreen> {
               Container(
                 margin:EdgeInsets.only(top:MediaQuery.of(context).size.height*.1),
                 child: CarouselSlider(
-                  height: MediaQuery.of(context).size.height*.7,
-                  initialPage: currentPage,
-                  enlargeCenterPage: true,
-                  aspectRatio: 2,
-                  autoPlay: false,
-                  reverse: false,
+                  options: CarouselOptions(
+                      height: MediaQuery.of(context).size.height*.7,
+                      initialPage: currentPage!,
+                      enlargeCenterPage: true,
+                      aspectRatio: 2,
+                      autoPlay: false,
+                      reverse: false,
 
-                  viewportFraction: 0.9,
-                  enableInfiniteScroll: true,
-                  autoPlayInterval: Duration(seconds: 3),
-                  autoPlayAnimationDuration: Duration(milliseconds: 3000),
-                  pauseAutoPlayOnTouch: Duration(seconds: 3),
-                  scrollDirection: Axis.horizontal,
-                  onPageChanged: (index) {
-                    ImageIndex=index;
+                      viewportFraction: 0.9,
+                      enableInfiniteScroll: true,
+                      autoPlayInterval: Duration(seconds: 3),
+                      autoPlayAnimationDuration: Duration(milliseconds: 3000),
+                      pauseAutoPlayOnTouch: true,
+                      scrollDirection: Axis.horizontal,
+                      onPageChanged: (index,changeRes) {
+                        ImageIndex=index;
 
-                    // _bloc.updateImageSliderNumber(index);
-                  },
-                  items: list.map((imgUrl) {
+                        // _bloc.updateImageSliderNumber(index);
+                      }
+                  ),
+                  items: list!.map((imgUrl) {
                     return Builder(
                       builder: (BuildContext context) {
                         return Container(
@@ -98,7 +100,7 @@ class _OfferSliderScreenState extends State<OfferSliderScreen> {
                                 fit: BoxFit.fill,
                                 placeholder: (context, url) => Image.asset("images/logo.png"),
                                 errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                                imageUrl: APIConstants.getFullImageUrl(imgUrl.systemDataFile==null?"":imgUrl.systemDataFile.url==null ||imgUrl.systemDataFile.url.isEmpty?"":imgUrl.systemDataFile.url, ImageType.COMMAD)
+                                imageUrl: APIConstants.getFullImageUrl(imgUrl.systemDataFile==null?"":imgUrl.systemDataFile!.url==null ||imgUrl.systemDataFile!.url!.isEmpty?"":imgUrl.systemDataFile!.url, ImageType.COMMAD)
                             ),
                           ),
                         );
@@ -182,14 +184,14 @@ class _OfferSliderScreenState extends State<OfferSliderScreen> {
       initialData:Counter(item.viewsCount,true) ,
       stream: BlocProvider.of<OfferBloc>(context).viewstream,
       builder: (context,snapshot){
-        Counter viewCounter=Counter(0,true);
+        Counter? viewCounter=Counter(0,true);
         if(snapshot.hasData)
           viewCounter=snapshot.data;
 
         return Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text(viewCounter.count.toString(),style: TextStyle(color: Colors.white),),
+              Text(viewCounter!.count.toString(),style: TextStyle(color: Colors.white),),
               FlatButton(onPressed:(){
                 BlocProvider.of<OfferBloc>(context).likeAds(pos,true);
 
@@ -208,12 +210,12 @@ class _OfferSliderScreenState extends State<OfferSliderScreen> {
       initialData:Counter(item.likes,true) ,
       stream: BlocProvider.of<OfferBloc>(context).Likestream,
       builder: (context,snapshot){
-        Counter likeCounter=Counter(0,true);
+        Counter? likeCounter=Counter(0,true);
         if(snapshot.hasData)
           likeCounter=snapshot.data;
         return  Column(mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text(likeCounter.count.toString(),style: TextStyle(color: Colors.white),),
+              Text(likeCounter!.count.toString(),style: TextStyle(color: Colors.white),),
               FlatButton(onPressed:(){
                 BlocProvider.of<OfferBloc>(context).likeAds(pos,true);
 

@@ -11,7 +11,7 @@ import 'NetworkCommon.dart';
 class OfferClient{
 
 
-  Future<List<PopupAdsEntityList>> getOfferList(String catID,String  countryID) async {
+  Future<List<PopupAdsEntityList>?> getOfferList(String catID,String  countryID) async {
     final results = await NetworkCommon()
         .dio.get(APIConstants.OFFER_ADS+countryID+"/"+ catID);
     if(results.statusCode==200){
@@ -22,7 +22,7 @@ class OfferClient{
 
 
 
-  Future<bool>LikeAds(String adsID)async{
+  Future<bool?>LikeAds(String adsID)async{
     final results = await NetworkCommon()
         .dio
         .get(
@@ -33,7 +33,7 @@ class OfferClient{
 
   }
 
-  Future<bool>viewAds(String adsID)async{
+  Future<bool?>viewAds(String adsID)async{
     final results = await NetworkCommon()
         .dio
         .get(
@@ -45,7 +45,7 @@ class OfferClient{
   }
 
 
-  Future<String> getImageAds(String imageName) async {
+  Future<String?> getImageAds(String imageName) async {
     final results = await NetworkCommon().dio.post(APIConstants.GET_IMAGE,
         data: {"ImageName":imageName}
     );
@@ -54,7 +54,7 @@ class OfferClient{
     }
   }
 
-  Future<List<CateogryEntity>> getCateogryList( ) async {
+  Future<List<CateogryEntity>?> getCateogryList( ) async {
 
     final results = await NetworkCommon()
         .dio
@@ -63,7 +63,7 @@ class OfferClient{
         queryParameters: {"countryId": await preferences.getCountryID(),"iscom":true});
     if(results.statusCode==200){
       final suggestions = results.data;
-      List<CateogryEntity> list= suggestions
+      List<CateogryEntity>? list= suggestions
           .map<CateogryEntity>((json) => CateogryEntity.fromJson(json))
           .toList(growable: false);
       preferences.saveCateogryList(list);

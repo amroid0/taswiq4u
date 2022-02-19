@@ -14,30 +14,30 @@ class SliderFullImageViewer extends StatefulWidget {
 }
 
 class _SliderFullImageViewerState extends State<SliderFullImageViewer> {
-  PageController _pageController;
-  List<AdvertismentImage>list;
-  int currentPage=0;
+  PageController? _pageController;
+  List<AdvertismentImage>?list;
+  int? currentPage=0;
   int page=0 ;
 
   @override
   Widget build(BuildContext context) {
-    final Map arguments = ModalRoute.of(context).settings.arguments as Map;
+    final Map? arguments = ModalRoute.of(context)!.settings.arguments as Map?;
     if (arguments != null) {
-      list = arguments["list"] as List<AdvertismentImage>;
-      currentPage=arguments["index"]as int;
+      list = arguments["list"] as List<AdvertismentImage>?;
+      currentPage=arguments["index"]as int?;
     }
-      _pageController=PageController(initialPage: currentPage,viewportFraction: 1, keepPage:true);
+      _pageController=PageController(initialPage: currentPage!,viewportFraction: 1, keepPage:true);
     // _pageController.jumpToPage(currentPage);
     return Scaffold(
 
       body: Stack(
         children: [
       PhotoViewGallery.builder(
-      itemCount: list.length,
+      itemCount: list!.length,
         builder: (context, index) {
           return PhotoViewGalleryPageOptions(
             imageProvider: NetworkImage(
-              APIConstants.getFullImageUrl(list.isEmpty?"":list[index].Url,ImageType.ADS),
+              APIConstants.getFullImageUrl(list!.isEmpty?"":list![index].Url,ImageType.ADS),
             ),
             // Contained = the smallest possible size to fit one dimension of the screen
             minScale: PhotoViewComputedScale.contained * 0.8,
@@ -67,7 +67,7 @@ class _SliderFullImageViewerState extends State<SliderFullImageViewer> {
             child: CircularProgressIndicator(
               value: event == null
                   ? 0
-                  : event.cumulativeBytesLoaded / event.expectedTotalBytes,
+                  : event.cumulativeBytesLoaded / event.expectedTotalBytes!,
             ),
           ),
         ),
@@ -96,7 +96,7 @@ class _SliderFullImageViewerState extends State<SliderFullImageViewer> {
           ),
          Align(
            alignment:Alignment.bottomCenter,
-           child:Container(margin:const EdgeInsets.only(bottom:24),child: Text('${page!=0?page:currentPage+1}/${list.length}',style:TextStyle(color:Colors.yellowAccent,fontSize:24),)),
+           child:Container(margin:const EdgeInsets.only(bottom:24),child: Text('${page!=0?page:currentPage!+1}/${list!.length}',style:TextStyle(color:Colors.yellowAccent,fontSize:24),)),
          )
 
         ]

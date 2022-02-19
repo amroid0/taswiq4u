@@ -13,16 +13,16 @@ typedef Widget SelectOneItemBuilderType<T>(
     BuildContext context, CountryEntity item, bool isSelected);
 
 class CountryListDialog<T> extends StatefulWidget {
-  final T selectedValue;
-  final List<T> itemsList;
-  final bool showSearchBox;
-  final void Function(CountryEntity) onChange;
-  final Future<List<T>> Function(String text) onFind;
-  final SelectOneItemBuilderType<T> itemBuilder;
-  final InputDecoration searchBoxDecoration;
+  final T? selectedValue;
+  final List<T>? itemsList;
+  final bool? showSearchBox;
+  final void Function(CountryEntity)? onChange;
+  final Future<List<T>> Function(String text)? onFind;
+  final SelectOneItemBuilderType<T>? itemBuilder;
+  final InputDecoration? searchBoxDecoration;
 
   const CountryListDialog({
-    Key key,
+    Key? key,
     this.itemsList,
     this.showSearchBox,
     this.onChange,
@@ -32,16 +32,16 @@ class CountryListDialog<T> extends StatefulWidget {
     this.searchBoxDecoration,
   }) : super(key: key);
 
-  static Future<T> showModal<T>(
+  static Future<T?> showModal<T>(
       BuildContext context, {
-        List<T> items,
-        String label,
-        T selectedValue,
-        bool showSearchBox,
-        Future<List<T>> Function(String text) onFind,
-        SelectOneItemBuilderType<T> itemBuilder,
-        void Function(CountryEntity) onChange,
-        InputDecoration searchBoxDecoration,
+        List<T>? items,
+        String? label,
+        T? selectedValue,
+        bool? showSearchBox,
+        Future<List<T>> Function(String text)? onFind,
+        SelectOneItemBuilderType<T>? itemBuilder,
+        void Function(CountryEntity)? onChange,
+        InputDecoration? searchBoxDecoration,
       }) {
     return showDialog(
       context: context,
@@ -51,7 +51,7 @@ class CountryListDialog<T> extends StatefulWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: Text(label ?? ""),
           actions: <Widget>[
-            FlatButton(child:Text(allTranslations.text('cancel')), onPressed: () {
+            FlatButton(child:Text(allTranslations.text('cancel')!), onPressed: () {
               Navigator.of(context).pop();
             },)
           ],
@@ -75,17 +75,17 @@ class CountryListDialog<T> extends StatefulWidget {
 }
 
 class _SelectDialogState<T> extends State<CountryListDialog<T>> {
-  CountryBloc bloc;
-  void Function(CountryEntity) onChange;
-  String cont ;
-  int  i ;
+  late CountryBloc bloc;
+  void Function(CountryEntity)? onChange;
+  String? cont ;
+  int?  i ;
 
   var _slectedCountry=-1;
 
   _SelectDialogState(
-      List<T> itemsList,
+      List<T>? itemsList,
       this.onChange,
-      Future<List<T>> Function(String text) onFind,
+      Future<List<T>> Function(String text)? onFind,
       ) {
   }
 
@@ -117,24 +117,24 @@ class _SelectDialogState<T> extends State<CountryListDialog<T>> {
                 stream: bloc.stream,
                 builder: (context, snapshot) {
                   if(snapshot.data!=null){
-                    switch(snapshot.data.status){
+                    switch(snapshot.data!.status){
                       case Status.LOADING:
                         return Center(child: CircularProgressIndicator());
                         break;
                       case Status.COMPLETED:
                       // TODO: Handle this case.
-                        List<CountryEntity> list=snapshot.data.data;
+                        List<CountryEntity> list=snapshot.data!.data!;
                         return ListView.builder(
                           itemCount: list.length,
                           itemBuilder: (context, index) {
                             var item = list[index];
                             if (widget.itemBuilder != null)
                               return InkWell(
-                                child: widget.itemBuilder(
+                                child: widget.itemBuilder!(
                                     context, item, item == widget.selectedValue),
                                 onTap: () {
 
-                                  onChange(item);
+                                  onChange!(item);
                                   Navigator.pop(context);
 
                                 },
@@ -143,11 +143,11 @@ class _SelectDialogState<T> extends State<CountryListDialog<T>> {
                               return RadioListTile(
                                 value: item.countryId,
                                 groupValue:i,
-                                title: Text(allTranslations.isEnglish?item.englishDescription.toString():item.arabicDescription),
+                                title: Text(allTranslations.isEnglish?item.englishDescription.toString():item.arabicDescription!),
                                 selected: item == widget.selectedValue,
-                                onChanged: (val) {
+                                onChanged: (dynamic val) {
                                   preferences.clearCity();
-                                  onChange(item);
+                                  onChange!(item);
                                   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                                       MainScreen()), (Route<dynamic> route) => false);
                                 },
@@ -180,8 +180,8 @@ class _SelectDialogState<T> extends State<CountryListDialog<T>> {
   }
   void getGroupId() async{
     cont = await preferences.getCountryID() ;
-    i = int.parse(cont);
+    i = int.parse(cont!);
 
-    print("group  value"+cont);
+    print("group  value"+cont!);
   }
 }

@@ -6,52 +6,48 @@ part of 'ads_detail.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-AdsDetail _$AdsDetailFromJson(Map<String, dynamic> json) {
-  return AdsDetail(
-    Id: json['Id'] as int,
-    ArabicDescription: json['ArabicDescription'] as String,
-    EnglishDescription: json['EnglishDescription'] as String,
-    IsNogitable: json['IsNogitable'] as bool,
-    Price: (json['Price'] as num)?.toDouble(),
-    CategoryId: json['CategoryId'] as int,
-    CategoryName: json['CategoryName'] as String,
-    UserId: json['UserId'] as String,
-    UserName: json['UserName'] as String,
-    UserPhone: json['UserPhone'] as String,
-    ArabicDescriptionUrl: json['ArabicDescriptionUrl'] as String,
-    EnglishDescriptionUrl: json['EnglishDescriptionUrl'] as String,
-    ArabicTitle: json['ArabicTitle'] as String,
-    EnglishTitle: json['EnglishTitle'] as String,
-    CountryId: json['CountryId'] as int,
-    CountryNameEnglish: json['CountryNameEnglish'] as String,
-    CountryNameArabic: json['CountryNameArabic'] as String,
-    LocationLatitude: (json['LocationLatitude'] as num)?.toDouble(),
-    LocationLongtude: (json['LocationLongtude'] as num)?.toDouble(),
-    IsDisplayed: json['IsDisplayed'] as bool,
-    IsDeleted: json['IsDeleted'] as bool,
-    CreationTime: json['CreationTime'] as String,
-    UpdateTime: json['UpdateTime'] as String,
-    ViewCount: json['ViewCount'] as int,
-    CityId: json['CityId'] as int,
-    CityNameEnglish: json['CityNameEnglish'] as String,
-    CityNameArabic: json['CityNameArabic'] as String,
-    StateId: json['StateId'] as int,
-    StateNameArabic: json['StateNameArabic'] as String,
-    StateNameEnglish: json['StateNameEnglish'] as String,
-    IsFavorite: json['IsFavorite'] as bool,
-    IsActive: json['IsActive'] as bool,
-    Advertisment_Specification: (json['Advertisment_Specification'] as List)
-        ?.map((e) => e == null
-            ? null
-            : AdvertismentSpecification.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-    AdvertismentImages: (json['AdvertismentImages'] as List)
-        ?.map((e) => e == null
-            ? null
-            : AdvertismentImage.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-  );
-}
+AdsDetail _$AdsDetailFromJson(Map<String, dynamic> json) => AdsDetail(
+      Id: json['Id'] as int?,
+      ArabicDescription: json['ArabicDescription'] as String?,
+      EnglishDescription: json['EnglishDescription'] as String?,
+      IsNogitable: json['IsNogitable'] as bool?,
+      Price: (json['Price'] as num?)?.toDouble(),
+      CategoryId: json['CategoryId'] as int?,
+      CategoryName: json['CategoryName'] as String?,
+      UserId: json['UserId'] as String?,
+      UserName: json['UserName'] as String?,
+      UserPhone: json['UserPhone'] as String?,
+      ArabicDescriptionUrl: json['ArabicDescriptionUrl'] as String?,
+      EnglishDescriptionUrl: json['EnglishDescriptionUrl'] as String?,
+      ArabicTitle: json['ArabicTitle'] as String?,
+      EnglishTitle: json['EnglishTitle'] as String?,
+      CountryId: json['CountryId'] as int?,
+      CountryNameEnglish: json['CountryNameEnglish'] as String?,
+      CountryNameArabic: json['CountryNameArabic'] as String?,
+      LocationLatitude: (json['LocationLatitude'] as num?)?.toDouble(),
+      LocationLongtude: (json['LocationLongtude'] as num?)?.toDouble(),
+      IsDisplayed: json['IsDisplayed'] as bool?,
+      IsDeleted: json['IsDeleted'] as bool?,
+      CreationTime: json['CreationTime'] as String?,
+      UpdateTime: json['UpdateTime'] as String?,
+      ViewCount: json['ViewCount'] as int?,
+      CityId: json['CityId'] as int?,
+      CityNameEnglish: json['CityNameEnglish'] as String?,
+      CityNameArabic: json['CityNameArabic'] as String?,
+      StateId: json['StateId'] as int?,
+      StateNameArabic: json['StateNameArabic'] as String?,
+      StateNameEnglish: json['StateNameEnglish'] as String?,
+      IsFavorite: json['IsFavorite'] as bool?,
+      IsActive: json['IsActive'] as bool?,
+      Advertisment_Specification:
+          (json['Advertisment_Specification'] as List<dynamic>?)
+              ?.map((e) =>
+                  AdvertismentSpecification.fromJson(e as Map<String, dynamic>))
+              .toList(),
+      AdvertismentImages: (json['AdvertismentImages'] as List<dynamic>?)
+          ?.map((e) => AdvertismentImage.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$AdsDetailToJson(AdsDetail instance) => <String, dynamic>{
       'Id': instance.Id,
@@ -91,26 +87,24 @@ Map<String, dynamic> _$AdsDetailToJson(AdsDetail instance) => <String, dynamic>{
     };
 
 AdvertismentSpecification _$AdvertismentSpecificationFromJson(
-    Map<String, dynamic> json) {
-  return AdvertismentSpecification(
-    Id: json['Id'] as int,
-    CategoryId: json['CategoryId'] as int,
-    AdvertismentId: json['AdvertismentId'] as int,
-    CategorySpecificationId: json['CategorySpecificationId'] as int,
-    NameEnglish: json['NameEnglish'] as String,
-    NameArabic: json['NameArabic'] as String,
-    CustomValue: json['CustomValue'] as String,
-    AdvertismentSpecificatioOptions:
-        (json['AdvertismentSpecificatioOptions'] as List)
-            ?.map((e) => e == null
-                ? null
-                : AdsSpecificatioOptions.fromJson(e as Map<String, dynamic>))
-            ?.toList(),
-    CategorySpecificationVM: json['CategorySpecificationVM'] as String,
-    AdvertismentSpecificationOptions:
-        json['AdvertismentSpecificationOptions'] as String,
-  );
-}
+        Map<String, dynamic> json) =>
+    AdvertismentSpecification(
+      Id: json['Id'] as int?,
+      CategoryId: json['CategoryId'] as int?,
+      AdvertismentId: json['AdvertismentId'] as int?,
+      CategorySpecificationId: json['CategorySpecificationId'] as int?,
+      NameEnglish: json['NameEnglish'] as String?,
+      NameArabic: json['NameArabic'] as String?,
+      CustomValue: json['CustomValue'] as String?,
+      AdvertismentSpecificatioOptions: (json['AdvertismentSpecificatioOptions']
+              as List<dynamic>?)
+          ?.map(
+              (e) => AdsSpecificatioOptions.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      CategorySpecificationVM: json['CategorySpecificationVM'] as String?,
+      AdvertismentSpecificationOptions:
+          json['AdvertismentSpecificationOptions'] as String?,
+    );
 
 Map<String, dynamic> _$AdvertismentSpecificationToJson(
         AdvertismentSpecification instance) =>
@@ -130,15 +124,15 @@ Map<String, dynamic> _$AdvertismentSpecificationToJson(
     };
 
 AdsSpecificatioOptions _$AdsSpecificatioOptionsFromJson(
-    Map<String, dynamic> json) {
-  return AdsSpecificatioOptions(
-    Id: json['Id'] as int,
-    AdvertismentSpecificationId: json['AdvertismentSpecificationId'] as String,
-    NameEnglish: json['NameEnglish'] as String,
-    NameArabic: json['NameArabic'] as String,
-    SpecificationOptionId: json['SpecificationOptionId'] as int,
-  );
-}
+        Map<String, dynamic> json) =>
+    AdsSpecificatioOptions(
+      Id: json['Id'] as int?,
+      AdvertismentSpecificationId:
+          json['AdvertismentSpecificationId'] as String?,
+      NameEnglish: json['NameEnglish'] as String?,
+      NameArabic: json['NameArabic'] as String?,
+      SpecificationOptionId: json['SpecificationOptionId'] as int?,
+    );
 
 Map<String, dynamic> _$AdsSpecificatioOptionsToJson(
         AdsSpecificatioOptions instance) =>

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class FractionallyAlignedSizedBox extends StatelessWidget {
   FractionallyAlignedSizedBox({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.leftFactor,
     this.topFactor,
     this.rightFactor,
@@ -18,20 +18,20 @@ class FractionallyAlignedSizedBox extends StatelessWidget {
         assert(heightFactor == null || heightFactor >= 0.0),
         super(key: key);
 
-  final double leftFactor;
-  final double topFactor;
-  final double rightFactor;
-  final double bottomFactor;
-  final double widthFactor;
-  final double heightFactor;
+  final double? leftFactor;
+  final double? topFactor;
+  final double? rightFactor;
+  final double? bottomFactor;
+  final double? widthFactor;
+  final double? heightFactor;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     double dx = 0;
     double dy = 0;
-    double width = widthFactor;
-    double height = heightFactor;
+    double? width = widthFactor;
+    double? height = heightFactor;
 
     if (widthFactor == null) {
       final left = leftFactor ?? 0;
@@ -54,17 +54,17 @@ class FractionallyAlignedSizedBox extends StatelessWidget {
 
     if (widthFactor != null && widthFactor != 1) {
       if (leftFactor != null) {
-        dx = leftFactor / (1 - widthFactor);
+        dx = leftFactor! / (1 - widthFactor!);
       } else if (leftFactor == null && rightFactor != null) {
-        dx = (1 - widthFactor - rightFactor) / (1 - widthFactor);
+        dx = (1 - widthFactor! - rightFactor!) / (1 - widthFactor!);
       }
     }
 
     if (heightFactor != null && heightFactor != 1) {
       if (topFactor != null) {
-        dy = topFactor / (1 - heightFactor);
+        dy = topFactor! / (1 - heightFactor!);
       } else if (topFactor == null && bottomFactor != null) {
-        dy = (1 - heightFactor - bottomFactor) / (1 - heightFactor);
+        dy = (1 - heightFactor! - bottomFactor!) / (1 - heightFactor!);
       }
     }
 

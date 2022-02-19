@@ -18,15 +18,15 @@ class CategoryListDialog extends StatefulWidget {
 }
 
 class CarouselDemoState extends State<CategoryListDialog> {
-  var  _bloc;
-  List<CateogryEntity>totalCateogryList;
+  late var  _bloc;
+  List<CateogryEntity>?totalCateogryList;
 
   //
   int _current = 0;
 
 
-  List<T> map<T>(List list, Function handler) {
-    List<T> result = [];
+  List<T?> map<T>(List list, Function handler) {
+    List<T?> result = [];
     for (var i = 0; i < list.length; i++) {
       result.add(handler(i, list[i]));
     }
@@ -49,7 +49,7 @@ class CarouselDemoState extends State<CategoryListDialog> {
         }else {
           _bloc.removeCateogryFromStack();
         }
-      },
+      } as Future<bool> Function()?,
       child: Container(
         child: Column(
 
@@ -65,7 +65,7 @@ class CarouselDemoState extends State<CategoryListDialog> {
                       return Text('Loading...');
                     }
 
-                    return _buildCategoryList(snapshot.data);
+                    return _buildCategoryList(snapshot.data!);
                   }
               ),
             )
@@ -89,7 +89,7 @@ class CarouselDemoState extends State<CategoryListDialog> {
           margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
           child: new InkWell(
             onTap: (){
-              if(category[index].hasSub){
+              if(category[index].hasSub!){
                 _bloc.addCateogryToStack(category[index].subCategories);
               }else{
              /*   Navigator.push(
@@ -107,8 +107,8 @@ class CarouselDemoState extends State<CategoryListDialog> {
                   children: <Widget>[
                     new Expanded(
                       child: new ListTile(
-                        title: new Text(category[index].name,textAlign:TextAlign.end),
-                        subtitle: Text(allTranslations.isEnglish?category[index].englishDescription:category[index].arabicDescription,textAlign: TextAlign.end,),
+                        title: new Text(category[index].name!,textAlign:TextAlign.end),
+                        subtitle: Text(allTranslations.isEnglish?category[index].englishDescription!:category[index].arabicDescription!,textAlign: TextAlign.end,),
                         leading: Icon(allTranslations.isEnglish?Icons.keyboard_arrow_right:Icons.keyboard_arrow_left,color: Colors.black,),
                       ),
                     ),

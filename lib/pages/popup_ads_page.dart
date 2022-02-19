@@ -13,8 +13,8 @@ class PopUpAdsPage extends StatefulWidget {
 }
 
 class _PopUpAdsPageState extends State<PopUpAdsPage> {
-  PopupAdsEntityList result;
-  OfferBloc bloc;
+  PopupAdsEntityList? result;
+  late OfferBloc bloc;
   @override
   void initState() {
    bloc =OfferBloc();
@@ -24,9 +24,9 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
   Widget build(BuildContext context) {
 
     result = ModalRoute
-        .of(context)
+        .of(context)!
         .settings
-        .arguments;
+        .arguments as PopupAdsEntityList?;
 
     return new Scaffold(
 
@@ -40,7 +40,7 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
                                       fit: BoxFit.fill,
 
                 placeholder: 'images/logo.png',
-                image: APIConstants.getFullImageUrl(result.systemDataFile!=null ?result.systemDataFile.url:"", ImageType.COMMAD)
+                image: APIConstants.getFullImageUrl(result!.systemDataFile!=null ?result!.systemDataFile!.url:"", ImageType.COMMAD)
               ),
               margin:EdgeInsets.only(top:70,left:20,right: 20),
 
@@ -89,18 +89,18 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
                 children: <Widget>[
                   SizedBox(height: 8,),
 
-                  Text(result.category.name.toString(),style: TextStyle(color: Colors.white),),
+                  Text(result!.category?.name??"",style: TextStyle(color: Colors.white),),
                   SizedBox(height: 16,),
-                  Text(result.description,style: TextStyle(color: Colors.white),),
+                  Text(result!.description!,style: TextStyle(color: Colors.white),),
                   SizedBox(height: 16,),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                    _buildLikeWidget(result),
+                    _buildLikeWidget(result!),
                       InkWell(
                           onTap: ()async{
-                            var whatsappUrl ="whatsapp://send?phone=${result.phoneNumber}";
+                            var whatsappUrl ="whatsapp://send?phone=${result!.phoneNumber}";
                             await canLaunch(whatsappUrl)? launch(whatsappUrl):ToastUtils.showErrorMessage("رقم الهاتف غير صحيح");;
 
                           },
@@ -120,7 +120,7 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
                       SizedBox(width: 12,),
                       InkWell(
                           onTap: ()async{
-                            final url = result.instagramLink;
+                            final url = result!.instagramLink!;
                             if (await canLaunch(url))
                               await launch(url);
                             else
@@ -132,7 +132,7 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
                    SizedBox(width: 12,),
                       InkWell(
                           onTap: ()async{
-                            final url = result.phoneNumber;
+                            final url = result!.phoneNumber;
                             if (await canLaunch('tel:$url'))
                               await launch('tel:$url');
                             else
@@ -145,7 +145,7 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
 
                 Column(mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                            Text(result.viewsCount.toString(),style: TextStyle(color: Colors.white),),
+                            Text(result!.viewsCount.toString(),style: TextStyle(color: Colors.white),),
                             FlatButton(onPressed:(){
                               //                                bloc.likeAds(true);
 
@@ -180,15 +180,15 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
       initialData: Counter(item.likes, true),
       stream: bloc.Likestream,
       builder: (context, snapshot) {
-        Counter likeCounter = Counter(0, true);
+        Counter? likeCounter = Counter(0, true);
         if (snapshot.hasData)
           likeCounter = snapshot.data;
         return Column(mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text(likeCounter.count.toString(),
+              Text(likeCounter!.count.toString(),
                 style: TextStyle(color: Colors.white),),
               FlatButton(onPressed: () {
-               if( likeCounter.isEanbled)
+               if( likeCounter!.isEanbled)
                 bloc.likePopUpAds(result,true);
               },
                   child: Icon(

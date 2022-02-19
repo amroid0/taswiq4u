@@ -8,12 +8,12 @@ class BundleScreen extends StatefulWidget {
 }
 
 class _BundleScreenState extends State<BundleScreen> {
-  AppBar appBar;
+  AppBar? appBar;
   @override
   Widget build(BuildContext context) {
     appBar=AppBar(
       title: Center(
-        child: Text(allTranslations.text('bundle'),textAlign: TextAlign.center,style: TextStyle(
+        child: Text(allTranslations.text('bundle')!,textAlign: TextAlign.center,style: TextStyle(
             color:
             Colors.black38
 
@@ -64,7 +64,7 @@ class _BundleScreenState extends State<BundleScreen> {
               Spacer(),
               Icon(Icons.announcement,size: 40,color: Colors.green,),
               Spacer(),
-              Text(allTranslations.text('advert'),style: TextStyle(fontSize: 22,),),
+              Text(allTranslations.text('advert')!,style: TextStyle(fontSize: 22,),),
               Spacer(),
               Text("${allTranslations.text('start')} 2500",style: TextStyle(fontSize: 14,color: Colors.black26),),
               Spacer(),
@@ -149,7 +149,7 @@ Padding(
               borderRadius: new BorderRadius.circular(8.0),
             ),
             child:  Stack(children:<Widget>[
-              Align( child: new Text(allTranslations.text('save_change'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
+              Align( child: new Text(allTranslations.text('save_change')!, style: new TextStyle(fontSize: 18.0, color: Colors.white),)
                 ,alignment: Alignment.center,),
 
 

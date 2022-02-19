@@ -15,14 +15,13 @@ class ProfileClient{
         .dio
         .get(
         APIConstants.USER_PROFILE_API);
-    if(results.statusCode==200){
       final suggestions = results.data;
       return UserInfo.fromJson(suggestions);
-    }
+
 
   }
 
-  Future<String> updateUserData(UserInfo userInfo)  async{
+  Future<String?> updateUserData(UserInfo userInfo)  async{
   final results = await NetworkCommon()
       .dio
       .post(
@@ -34,7 +33,7 @@ class ProfileClient{
 
 
 
-  Future<String> changePassword(PasswordRequest request)  async{
+  Future<String?> changePassword(PasswordRequest request)  async{
     final results = await NetworkCommon()
         .dio
         .post(

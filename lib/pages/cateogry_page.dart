@@ -30,17 +30,18 @@ class CategoryListFragment extends StatefulWidget {
 }
 
 class CarouselDemoState extends State<CategoryListFragment> {
-  CategoryBloc  _bloc;
-  List<CateogryEntity>totalCateogryList;
+ late CategoryBloc  _bloc;
+  List<CateogryEntity>?totalCateogryList;
+  CarouselController buttonCarouselController = CarouselController();
 
   //
-  CarouselSlider carouselSlider;
+  late CarouselSlider carouselSlider;
   List imgList = [];
 
   int ImageIndex=0;
 
-  List<T> map<T>(List list, Function handler) {
-    List<T> result = [];
+  List<T?> map<T>(List list, Function handler) {
+    List<T?> result = [];
     for (var i = 0; i < list.length; i++) {
       result.add(handler(i, list[i]));
     }
@@ -52,7 +53,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
 
   _bloc = BlocProvider.of<CategoryBloc>(context);
 
-  _bloc.popupStream..listen((data){
+  _bloc!.popupStream..listen((data){
     switch (data.status) {
       case Status.LOADING:
 
@@ -66,7 +67,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
       case Status.COMPLETED:
         var response=data.data;
         if(response!=null&&response.isNotEmpty)
-        _openAddEntryDialog(data.data[0]);
+        _openAddEntryDialog(data.data![0]);
 
 
         break;
@@ -91,13 +92,13 @@ class CarouselDemoState extends State<CategoryListFragment> {
 
             Expanded(
               child: StreamBuilder<List<CateogryEntity>>(
-                stream: _bloc.stream,
+                stream: _bloc!.stream,
                 builder: (context, snapshot) {
 
                   if (!snapshot.hasData) {
                     return  Shimmer.fromColors(
-                      baseColor: Colors.grey[300],
-                      highlightColor: Colors.grey[100],
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
                       enabled: true,
                       child: ListView.builder(
                         itemBuilder: (_, __) => Container(
@@ -151,9 +152,9 @@ class CarouselDemoState extends State<CategoryListFragment> {
 
                   }
                   if(imgList.isEmpty){
-                    _bloc.getMainSliderAds();
+                    _bloc!.getMainSliderAds();
                   }
-                  return _buildCategoryList(snapshot.data);
+                  return _buildCategoryList(snapshot.data!);
                 }
               ),
             )
@@ -167,12 +168,12 @@ class CarouselDemoState extends State<CategoryListFragment> {
     );
   }
 
-  Widget _buildMainSlider(CategoryBloc bloc){
+  Widget _buildMainSlider(CategoryBloc? bloc){
    return StreamBuilder<ApiResponse<List<PopupAdsEntityList>>>(
-        stream: _bloc.mainSliderStreaam,
+        stream: _bloc!.mainSliderStreaam,
         builder: (context, snapshot) {
           if(snapshot.hasData)
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               break;
 
@@ -181,40 +182,43 @@ class CarouselDemoState extends State<CategoryListFragment> {
               break;
             case Status.COMPLETED:
               if(BlocProvider.of<LoginBloc>(context).isfirstPopupAd){
-              _bloc.getPopupAds();
+              _bloc!.getPopupAds();
               BlocProvider.of<LoginBloc>(context).isfirstPopupAd=false;
               }
               var response = snapshot.data;
               if (response != null) {
                 imgList.clear();
-                for(int i=0;i<response.data.length;i++){
-                if(response.data[i].systemDataFile!=null){
-                  imgList.add(response.data[i].systemDataFile.url);
+                for(int i=0;i<response.data!.length;i++){
+                if(response.data![i].systemDataFile!=null){
+                  imgList.add(response.data![i].systemDataFile!.url);
                 }
               }
                 }
               if(imgList.isNotEmpty){
 
               carouselSlider = CarouselSlider(
+                carouselController: buttonCarouselController,
+options: CarouselOptions(
+  height: MediaQuery.of(context).size.height*.28,
+  initialPage: 0,
+  enlargeCenterPage: true,
+  aspectRatio: 1,
+  autoPlay: true,
+  reverse: false,
 
-                height: MediaQuery.of(context).size.height*.28,
-                initialPage: 0,
-                enlargeCenterPage: true,
-                aspectRatio: 1,
-                autoPlay: true,
-                reverse: false,
+  viewportFraction: 1.0,
+  enableInfiniteScroll: true,
+  autoPlayInterval: Duration(seconds: 3),
+  autoPlayAnimationDuration: Duration(milliseconds: 3000),
+  pauseAutoPlayOnTouch: true,
+  scrollDirection: Axis.horizontal,
+  onPageChanged: (index,changeReason) {
+    ImageIndex=index;
 
-                viewportFraction: 1.0,
-                enableInfiniteScroll: true,
-                autoPlayInterval: Duration(seconds: 3),
-                autoPlayAnimationDuration: Duration(milliseconds: 3000),
-                pauseAutoPlayOnTouch: Duration(seconds: 3),
-                scrollDirection: Axis.horizontal,
-                onPageChanged: (index) {
-                  ImageIndex=index;
+    _bloc!.updateImageSliderNumber(index);
+  },
+),
 
-                  _bloc.updateImageSliderNumber(index);
-                },
                 items: imgList.map((imgUrl) {
                   return Builder(
                     builder: (BuildContext context) {
@@ -230,7 +234,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => BlocProvider(bloc: new OfferBloc(),child: OfferSliderPage())
-                                    ,settings: RouteSettings(arguments:{"list":response.data,"index":ImageIndex})));
+                                    ,settings: RouteSettings(arguments:{"list":response!.data,"index":ImageIndex})));
 
                           },
                           child: CachedNetworkImage(
@@ -283,7 +287,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
             child: FittedBox(
               alignment: AlignmentDirectional.centerStart,
               child: Row(
-                children: _bloc.cateogyTitle.map((e) => Text(allTranslations.isEnglish ?"${e.englishDescription}  |  ":"${e.arabicDescription}  |  ",style: TextStyle(fontSize: 13),)).toList(),
+                children: _bloc!.cateogyTitle.map((e) => Text(allTranslations.isEnglish ?"${e.englishDescription}  |  ":"${e.arabicDescription}  |  ",style: TextStyle(fontSize: 13),)).toList(),
               ),
             ),
           ),
@@ -297,8 +301,8 @@ class CarouselDemoState extends State<CategoryListFragment> {
                   margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
                   child: new InkWell(
                     onTap: (){
-                      if(category[index].hasSub){
-                        _bloc.addCateogryToStack(category[index]);
+                      if(category[index].hasSub!){
+                        _bloc!.addCateogryToStack(category[index]);
                       }else{
                       Navigator.push(
                         context,
@@ -328,8 +332,8 @@ class CarouselDemoState extends State<CategoryListFragment> {
 
 
                                      title: new Text(allTranslations.isEnglish?category[index]
-                                         .englishDescription:category[index]
-                                         .arabicDescription,style: TextStyle(fontSize: 15),),
+                                         .englishDescription!:category[index]
+                                         .arabicDescription!,style: TextStyle(fontSize: 15),),
                                      subtitle:RichText(text: TextSpan(
                                      children: [
                                        TextSpan(text: '20 ',style: TextStyle(color: Colors.grey)),
@@ -383,12 +387,12 @@ class CarouselDemoState extends State<CategoryListFragment> {
 
 
   goToPrevious() {
-    carouselSlider.previousPage(
+    buttonCarouselController.previousPage(
         duration: Duration(milliseconds: 300), curve: Curves.ease);
   }
 
   goToNext() {
-    carouselSlider.nextPage(
+    buttonCarouselController.nextPage(
         duration: Duration(milliseconds: 300), curve: Curves.decelerate);
   }
 

@@ -7,24 +7,24 @@ part 'offfer_entity.g.dart';
 class OfferEntity{
 
   @JsonKey (name:"TotalItems" )
-  int totalItems;
+  int? totalItems;
   @JsonKey (name:"Page" )
 
-  int page;
+  int? page;
   @JsonKey (name:"Size" )
-  int size;
+  int? size;
   @JsonKey(name: "List")
-  List<OfferDetail> list;
+  List<OfferDetail>? list;
   @JsonKey (name:"TotalPages" )
-  int totalPages;
+  int? totalPages;
   @JsonKey (name:"HasPreviousPage" )
-  bool hasPreviousPage;
+  bool? hasPreviousPage;
   @JsonKey (name:"HasNextPage" )
-  bool hasNextPage;
+  bool? hasNextPage;
   @JsonKey (name:"NextPage" )
-  int nextPage;
+  int? nextPage;
   @JsonKey (name:"PreviousPage" )
-  int previousPage;
+  int? previousPage;
 
 
   OfferEntity({this.totalItems, this.page, this.size, this.list, this.totalPages,
@@ -37,39 +37,39 @@ class OfferEntity{
 @JsonSerializable()
 class OfferDetail {
   @JsonKey (name:"Id" )
-  int id;
+  int? id;
   @JsonKey (name:"ImageId" )
-  String imageId;
+  String? imageId;
   @JsonKey (name:"Type" )
-  int type;
+  int? type;
   @JsonKey (name:"Description" )
-  String description;
+  String? description;
   @JsonKey (name:"Link" )
-  String link;
+  String? link;
   @JsonKey (name:"CreationDate" )
-  String creationDate;
+  String? creationDate;
   @JsonKey (name:"EndDate" )
-  String endDate;
+  String? endDate;
   @JsonKey (name:"Active" )
-  bool active;
+  bool? active;
   @JsonKey (name:"Notification" )
-  int notification;
+  int? notification;
   @JsonKey (name:"CountryId" )
-  int countryId;
+  int? countryId;
   @JsonKey (name:"ViewsCount" )
-  int viewsCount;
+  int? viewsCount;
   @JsonKey (name:"Likes" )
 
-  int likes;
+  int? likes;
   @JsonKey (name:"CategoryId" )
-  int categoryId;
+  int? categoryId;
   @JsonKey (name:"Category" )
-  Category category;
+  Category? category;
   @JsonKey (name:"SystemDataFile" )
   dynamic systemDataFile;
   @JsonKey (name:"CommercialAdsUsers" )
-  List<dynamic> commercialAdsUsers;
-  String base64Image;
+  List<dynamic>? commercialAdsUsers;
+  String? base64Image;
 
   OfferDetail({
       this.id,
@@ -97,9 +97,9 @@ class OfferDetail {
 @JsonSerializable()
 class Category {
   @JsonKey (name:"Id" )
-  int id;
+  int? id;
   @JsonKey (name:"Name" )
-  String name;
+  String? name;
 
   Category({this.id, this.name});
 

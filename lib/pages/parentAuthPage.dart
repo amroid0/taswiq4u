@@ -5,7 +5,7 @@ import 'package:olx/pages/register_page.dart';
 import 'login_page.dart';
 
 class ParentAuthPage extends StatefulWidget {
-  int login = 0 ;
+  int? login = 0 ;
 
   ParentAuthPage({this.login});
   @override
@@ -13,7 +13,7 @@ class ParentAuthPage extends StatefulWidget {
 }
 
 class _ParentAuthPageState extends State<ParentAuthPage>  with SingleTickerProviderStateMixin  {
-  TabController _tabController;
+  TabController? _tabController;
   @override
   void initState() {
     // TODO: implement initState

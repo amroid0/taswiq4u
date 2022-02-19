@@ -18,7 +18,7 @@ class ForgetPasswordBloc extends Validators implements Bloc {
   Stream<String> get email => _emailController.stream.transform(validateEmail);
    String get emailValue=>_emailController.value;
   Stream<bool> get submitValid =>
-      Rx.combineLatest2(email, country, (e, p) {
+      Rx.combineLatest2(email, country, (dynamic e, dynamic p) {
         return true;
       });
   Function(String) get changeEmail => _emailController.sink.add;
@@ -38,7 +38,7 @@ class ForgetPasswordBloc extends Validators implements Bloc {
           print("pasasasa2221");
 
           final results = await _client.forgetPassword(validEmail,countryId);
-          if(results){
+          if(results!=null){
             _forgetController.sink.add(ApiResponse.completed(results));
           }
         }catch(e){

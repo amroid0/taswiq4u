@@ -76,8 +76,8 @@ class APIConstants {
 
   static String DISTINCT_ADS="${API_BASE_ENDPOINT}api/Ads/AddFeaturedAd";
 
-  static String getFullImageUrl(String url,int type){
-    return  url!=null&&url.isNotEmpty?'http://api.taswiq4u.com/Api/ImageUpload/i?url=$url&type=$type':"";
+  static String getFullImageUrl(String? url,int type){
+    return  url!=null&&url.isNotEmpty?'http://api.taswiq4u.com/Api/ImageUpload/i?url=$url&type=$type':"http://api.taswiq4u.com/tasq.png";
 
   }
 

@@ -17,7 +17,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
- ProfileBloc _bloc;
+ late ProfileBloc _bloc;
 
   @override
   void initState() {
@@ -75,7 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
         stream: _bloc.stream,
         builder: (context, snap) {
           if(snap.data!=null)
-          switch(snap.data.status) {
+          switch(snap.data!.status) {
             case Status.LOADING:
                 return new Center(
                   child: new CircularProgressIndicator(
@@ -87,17 +87,17 @@ class _ProfilePageState extends State<ProfilePage> {
               break;
 
             case Status.COMPLETED:
-              var obj=snap.data.data as UserInfo;
+              var obj=snap.data!.data as UserInfo;
               return _buildProfile(obj);
               break;
             case Status.ERROR:
-              return EmptyListWidget(
+              return EmptyWidget(
 
                   title: 'Error',
                   subTitle: 'Something Went Wrong',
                   image: 'images/error.png',
-                  titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
-                  subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
+                  titleTextStyle: Theme.of(context).typography.dense.displayMedium!.copyWith(color: Color(0xff9da9c7)),
+                  subtitleTextStyle: Theme.of(context).typography.dense.bodySmall!.copyWith(color: Color(0xffabb8d6))
               );
               break;
           }
@@ -125,7 +125,7 @@ class _ProfilePageState extends State<ProfilePage> {
       SizedBox(height: 8,),
       Text("${obj.firstName} ${obj.secondName}",style: TextStyle(color: Colors.black87,fontSize: 18),),
         SizedBox(height: 8,),
-      Text(obj.phone,style: TextStyle(color: Colors.grey,fontSize: 18),),
+      Text(obj.phone!,style: TextStyle(color: Colors.grey,fontSize: 18),),
       SizedBox(height: 24,),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -149,7 +149,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   borderRadius: new BorderRadius.circular(10.0),
                 ),
                 child:  Stack(children:<Widget>[
-                  Align( child: new Text(allTranslations.text('settings'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
+                  Align( child: new Text(allTranslations.text('settings')!, style: new TextStyle(fontSize: 18.0, color: Colors.white),)
                     ,alignment: Alignment.center,),
 
 
@@ -180,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   borderRadius: new BorderRadius.circular(10.0),
                 ),
                 child:  Stack(children:<Widget>[
-                  Align( child: new Text(allTranslations.text('bundle'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
+                  Align( child: new Text(allTranslations.text('bundle')!, style: new TextStyle(fontSize: 18.0, color: Colors.white),)
                     ,alignment: Alignment.center,),
 
 
@@ -210,7 +210,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   }
 
-  Widget _BuildProifleImage(String url,double width,double height){
+  Widget _BuildProifleImage(String? url,double width,double height){
    return CircleAvatar(
      radius: 80.0,
      backgroundImage:

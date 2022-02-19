@@ -36,8 +36,8 @@ class MainScreen extends StatefulWidget {
   _MainScreenState createState() => _MainScreenState();
 }
 class NavItem{
-  String name;
-  IconData navIcon;
+  String? name;
+  IconData? navIcon;
   bool isExpanded=false;
   NavItem({this.name,this.navIcon,this.isExpanded=false}){}
 }
@@ -47,13 +47,13 @@ class NavItem{
 
 
 class _MainScreenState extends State<MainScreen> {
-  SharedPreferences sharedPreferences;
-  NaviagtionBloc bloc;
+  SharedPreferences? sharedPreferences;
+  late NaviagtionBloc bloc;
   String userName='User' ;
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  CategoryBloc _cateogyBloc;
+ late CategoryBloc _cateogyBloc;
 /*
   List<NavItem>depratmentNavList=[
     NavItem(name: 'اجهزه الكترونيه',navIcon:Icons.settings ),
@@ -68,7 +68,7 @@ class _MainScreenState extends State<MainScreen> {
 
   super.dispose();
   }
-  void _selectedTab(int index) {
+  void _selectedTab(int? index) {
 
     if(index==1){
 
@@ -93,9 +93,9 @@ class _MainScreenState extends State<MainScreen> {
 
   }
   int _navSelectedIndex=0;
-  Widget appBarTitle =  Text(allTranslations.text('home'),style:TextStyles.appBarTitle ,);
+  Widget appBarTitle =  Text(allTranslations.text('home')!,style:TextStyles.appBarTitle ,);
   Icon actionIcon = new Icon(Icons.search);
-  TextEditingController searchController=null;
+  TextEditingController? searchController=null;
 
 @override
   void initState() {
@@ -238,7 +238,7 @@ class _MainScreenState extends State<MainScreen> {
                             children: <Widget>[
 
                               Icon(Icons.add,color: Colors.white,size: 36,),
-                              Text(allTranslations.text('ads_add'),style: TextStyle(fontSize: 13,color: Colors.white),)
+                              Text(allTranslations.text('ads_add')!,style: TextStyle(fontSize: 13,color: Colors.white),)
                             ],)
                           ,
                         ),
@@ -252,7 +252,7 @@ class _MainScreenState extends State<MainScreen> {
                     title: StreamBuilder<NavigationScreen>(
                   stream: bloc.stream,
                builder: (context,snap){
-                    String title=allTranslations.text('home');
+                    String? title=allTranslations.text('home');
                     switch(snap.data){
           case NavigationScreen.HOME:
 
@@ -283,7 +283,7 @@ class _MainScreenState extends State<MainScreen> {
           default:
           title=allTranslations.text('home');
           }
-        return  Text(title,style:TextStyles.appBarTitle ,);
+        return  Text(title!,style:TextStyles.appBarTitle ,);
           }
 
 
@@ -294,7 +294,7 @@ class _MainScreenState extends State<MainScreen> {
                     IconButton(icon: Icon(Icons.menu,color: Colors.black,),
                         onPressed: () {
 
-                            _scaffoldKey.currentState.openDrawer();
+                            _scaffoldKey.currentState!.openDrawer();
 
                         }),
 
@@ -358,7 +358,7 @@ class _MainScreenState extends State<MainScreen> {
                               padding: EdgeInsets.symmetric(vertical: 0,horizontal: 16),
                               child: Visibility(
 
-                                visible:snapshot.hasData? !snapshot.data:true,
+                                visible:snapshot.hasData? !snapshot.data!:true,
                                 child: RaisedButton(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(18.0),
@@ -369,7 +369,7 @@ class _MainScreenState extends State<MainScreen> {
                                   },
                                   color: Colors.green,
                                   textColor: Colors.white,
-                                  child: Text(allTranslations.text('sign_in_up').toUpperCase(),
+                                  child: Text(allTranslations.text('sign_in_up')!.toUpperCase(),
                                       style: TextStyle(fontSize: 14)),
                                 ),),
                             );
@@ -393,7 +393,7 @@ class _MainScreenState extends State<MainScreen> {
                             buttons: [
                               DialogButton(
                                 child: Text(
-                                  allTranslations.text('ok'),
+                                  allTranslations.text('ok')!,
                                   style: TextStyle(color: Colors.white, fontSize: 20),
                                 ),
                                 onPressed: () {
@@ -405,7 +405,7 @@ class _MainScreenState extends State<MainScreen> {
                               )
                               ,               DialogButton(
                                 child: Text(
-                                  allTranslations.text('cancel'),
+                                  allTranslations.text('cancel')!,
                                   style: TextStyle(color: Colors.white, fontSize: 20),
                                 ),
                                 onPressed: () => Navigator.pop(context),
@@ -420,12 +420,12 @@ class _MainScreenState extends State<MainScreen> {
                             initialData:BlocProvider.of<LoginBloc>(context).isLogged() ,
                             stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
                             builder: (context, snapshot) {
-                              if(snapshot.hasData&&snapshot.data)
+                              if(snapshot.hasData&&snapshot.data!)
                                 return Container(
                                   alignment: Alignment.center,
                                   height: 60,
                                   color: Theme.of(context).accentColor,
-                                  child: Text(allTranslations.text('logout'),style: TextStyle(color: Colors.white),),
+                                  child: Text(allTranslations.text('logout')!,style: TextStyle(color: Colors.white),),
                                 );
                               else return Container();
                             }
@@ -448,7 +448,7 @@ class _MainScreenState extends State<MainScreen> {
                             initialData:BlocProvider.of<LoginBloc>(context).isLogged(),
                             stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
                             builder: (context, snapshot) {
-                              if(snapshot.hasData&&snapshot.data)
+                              if(snapshot.hasData&&snapshot.data!)
                                 {
                                   getUserName();
                                   return Container(
@@ -482,12 +482,12 @@ class _MainScreenState extends State<MainScreen> {
                           initialData:BlocProvider.of<LoginBloc>(context).isLogged(),
                           stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
                           builder: (context, snapshot) {
-                            if(snapshot.hasData&&!snapshot.data){}
+                            if(snapshot.hasData&&!snapshot.data!){}
                             return Padding(
                               padding: EdgeInsets.symmetric(vertical: 0,horizontal: 16),
                               child: Visibility(
 
-                                visible:snapshot.hasData? !snapshot.data:true,
+                                visible:snapshot.hasData? !snapshot.data!:true,
                                 child: RaisedButton(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(18.0),
@@ -498,7 +498,7 @@ class _MainScreenState extends State<MainScreen> {
                                   },
                                   color: Colors.green,
                                   textColor: Colors.white,
-                                  child: Text(allTranslations.text('sign_in_up').toUpperCase(),
+                                  child: Text(allTranslations.text('sign_in_up')!.toUpperCase(),
                                       style: TextStyle(fontSize: 14)),
                                 ),),
                             );
@@ -522,7 +522,7 @@ class _MainScreenState extends State<MainScreen> {
                             buttons: [
                               DialogButton(
                                 child: Text(
-                                  allTranslations.text('agree'),
+                                  allTranslations.text('agree')!,
                                   style: TextStyle(color: Colors.white, fontSize: 20),
                                 ),
                                 onPressed: () {
@@ -534,7 +534,7 @@ class _MainScreenState extends State<MainScreen> {
                               )
                               ,               DialogButton(
                                 child: Text(
-                                  allTranslations.text('cancel'),
+                                  allTranslations.text('cancel')!,
                                   style: TextStyle(color: Colors.white, fontSize: 20),
                                 ),
                                 onPressed: () => Navigator.pop(context),
@@ -549,12 +549,12 @@ class _MainScreenState extends State<MainScreen> {
                             initialData:BlocProvider.of<LoginBloc>(context).isLogged() ,
                             stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
                             builder: (context, snapshot) {
-                              if(snapshot.hasData&&snapshot.data)
+                              if(snapshot.hasData&&snapshot.data!)
                                 return Container(
                                   alignment: Alignment.center,
                                   height: 60,
                                   color: Theme.of(context).accentColor,
-                                  child: Text(allTranslations.text('logout'),style: TextStyle(color: Colors.white),),
+                                  child: Text(allTranslations.text('logout')!,style: TextStyle(color: Colors.white),),
                                 );
                               else return Container();
                             }
@@ -572,13 +572,14 @@ class _MainScreenState extends State<MainScreen> {
                 body:WillPopScope(
                   onWillPop: () async {
                     if(bloc.currentScreen==NavigationScreen.HOME){
-                      if(_cateogyBloc.isStackIsEmpty()){
+                      if(_cateogyBloc!.isStackIsEmpty()){
                         // ignore: missing_return
                         SystemNavigator.pop();
                       }else {
                         // ignore: missing_return
-                        _cateogyBloc.removeCateogryFromStack();
+                        _cateogyBloc!.removeCateogryFromStack();
                       }
+                      return true;
                     }
                     else
 
@@ -666,10 +667,11 @@ class _MainScreenState extends State<MainScreen> {
         ),
          children:subItemlist,
       );*/
+      return Container();
 
     }else {
       return ListTile(leading: Icon(nav.navIcon),
-        title: Text(nav.name),
+        title: Text(nav.name!),
         selected: index==_navSelectedIndex,
         onTap:()=> _onSelectItem(index),
 
@@ -679,8 +681,8 @@ class _MainScreenState extends State<MainScreen> {
 
 
 
-  _getDrawerItemWidget(NavigationScreen screen) {
-    if (_scaffoldKey.currentState.isDrawerOpen) {
+  _getDrawerItemWidget(NavigationScreen? screen) {
+    if (_scaffoldKey.currentState!.isDrawerOpen) {
       Navigator.of(context).pop();
     }
     switch (screen) {
@@ -720,7 +722,7 @@ class _MainScreenState extends State<MainScreen> {
    Future  getUserName ()async{
     if(BlocProvider.of<LoginBloc>(context).isLogged()){
       UserInfo userInfo = await preferences.getUserInfo();
-      userName = userInfo.firstName+" "+userInfo.secondName;
+      userName = userInfo.firstName!+" "+userInfo.secondName!;
       print(userName+"rrrrrr");
 
     }

@@ -4,9 +4,9 @@ import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/login_bloc.dart';
 
 class FavroiteWidget extends StatefulWidget {
-  bool value = true;
+  bool? value = true;
 
-  final Function(bool) onFavChange;
+  final Function(bool?)? onFavChange;
 
   FavroiteWidget({this.onFavChange,this.value});
 
@@ -22,9 +22,9 @@ class _FavroiteWidgetState extends State<FavroiteWidget> {
         onTap: () {
           setState(() {
             if(BlocProvider.of<LoginBloc>(context).isLogged()){
-              widget.value = !widget.value;
+              widget.value = !widget.value!;
             }
-            widget.onFavChange(widget.value);
+            widget.onFavChange!(widget.value);
 
 
 
@@ -35,7 +35,7 @@ class _FavroiteWidgetState extends State<FavroiteWidget> {
           height:35,
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),
               boxShadow:[ BoxShadow(blurRadius: 4,color: Colors.black26)], color: Colors.white),
-          child: widget.value
+          child: widget.value!
               ?
                Icon(
             Icons.favorite_rounded,

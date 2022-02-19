@@ -1,4 +1,4 @@
-import 'package:ars_progress_dialog/ars_progress_dialog.dart';
+import 'package:ars_dialog/ars_dialog.dart';
 import 'package:bmprogresshud/progresshud.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,18 +10,16 @@ import 'package:olx/pages/forget_password_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/pages/register_page.dart';
 import 'package:olx/pages/verification_page.dart';
-import 'package:olx/remote/client_api.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/auth_input_widget.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 
 import 'main_page.dart';
 
 
 class LoginPage extends StatefulWidget {
-  TabController tabController ;// +added
-  int home = 0 ;
+  TabController? tabController ;// +added
+  int? home = 0 ;
   LoginPage(
       {this.tabController,this.home} // +added
       );
@@ -32,7 +30,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final formKey = GlobalKey<FormState>();
-  ArsProgressDialog progressDialog;
+  late CustomProgressDialog progressDialog;
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
   final emailContoller=TextEditingController();
@@ -40,16 +38,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
 
-    progressDialog = ArsProgressDialog(
-        context,
-        blur: 2,
-        backgroundColor: Color(0x33000000),
-        animationDuration: Duration(milliseconds: 500));
+    progressDialog = CustomProgressDialog(context,blur: 10);
   BlocProvider.of<LoginBloc>(context).stream.listen((snap) {
-    if(progressDialog.isShowing){
       progressDialog.dismiss();
-    }
-    switch (snap.status) {
+
+    switch (snap!.status) {
       case Status.LOADING:
         progressDialog.show();
         break;
@@ -71,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
 
       case Status.ERROR:
 
-          showSnackBar(context,allTranslations.text('login_err'));
+          showSnackBar(context,allTranslations.text('login_err')!);
 
 
 
@@ -79,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
         break;
 
       case Status.UNAUTHINTICATED:
-        showSnackBar(context,allTranslations.text('login_err'));
+        showSnackBar(context,allTranslations.text('login_err')!);
 
 
         break;
@@ -112,8 +105,8 @@ class _LoginPageState extends State<LoginPage> {
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  Align(alignment:Alignment.center,child: Text(allTranslations.text('login'),
-                    style: Theme.of(context).textTheme.headline5.copyWith(fontWeight: FontWeight.bold),)),
+                  Align(alignment:Alignment.center,child: Text(allTranslations.text('login')!,
+                    style: Theme.of(context).textTheme.headline5!.copyWith(fontWeight: FontWeight.bold),)),
                   SizedBox(height: 10,),
                   emailField(BlocProvider.of<LoginBloc>(context)),
                   SizedBox(height: 16,),
@@ -128,10 +121,10 @@ class _LoginPageState extends State<LoginPage> {
                       InkWell(
                         onTap: (){
                         //  Navigator.push(context, MaterialPageRoute( builder: (context) => RegisterPage()));
-                          widget.tabController.animateTo(1);
+                          widget.tabController!.animateTo(1);
                         },
                         child: Padding(padding: EdgeInsets.all(10),
-                        child: Text(allTranslations.text('register')),
+                        child: Text(allTranslations.text('register')!),
                         ),
 
                       ),
@@ -144,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
 
                           },
 
-                          child: Text(allTranslations.text('forget_pass')))
+                          child: Text(allTranslations.text('forget_pass')!))
                     ],
                   )
 
@@ -171,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
         labelText: allTranslations.text('phone'),
         contoller: emailContoller,
         keyboardType:TextInputType.numberWithOptions(),
-          errorText: snapshot.error,
+          errorText: snapshot.error as String?,
 
 
         textInputAction: TextInputAction.next,
@@ -208,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
           borderRadius: new BorderRadius.circular(10.0),
         ),
         child:  Stack(children:<Widget>[
-          Align( child: new Text(allTranslations.text('login'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
+          Align( child: new Text(allTranslations.text('login')!, style: new TextStyle(fontSize: 18.0, color: Colors.white),)
             ,alignment: Alignment.centerRight,),
 
           Align( child: Icon(
@@ -242,7 +235,7 @@ class _LoginPageState extends State<LoginPage> {
 
              labelText: allTranslations.text('password'),
 
-               errorText: snapshot.error,
+               errorText: snapshot.error as String?,
 
              onChange: bloc.changePassword,
              onFieldSubmitted: (val){
@@ -268,11 +261,11 @@ class _LoginPageState extends State<LoginPage> {
               decoration: InputDecoration(labelText: allTranslations.text('password'),filled: true,
                 fillColor: Colors.black12,
                 border: InputBorder.none,
-                errorText: snapshot.error,
+                errorText: snapshot.error as String?,
 
               ),
               validator: (val) =>
-              val.length < 6 ? allTranslations.text('err_short') : null,
+              val!.length < 6 ? allTranslations.text('err_short') : null,
               obscureText: true,
               onChanged: bloc.changePassword,
               onFieldSubmitted: (val){

@@ -12,10 +12,10 @@ class FullComerialScreen extends StatefulWidget {
 }
 
 class _FullComerialScreenState extends State<FullComerialScreen> {
-  String commerialAdsId;
+  String? commerialAdsId;
 
-  CommercialAdsList detailArgs;
-  CommericalBloc bloc;
+  CommercialAdsList? detailArgs;
+  CommericalBloc? bloc;
   @override
   void initState() {
     // TODO: implement initState
@@ -23,24 +23,24 @@ class _FullComerialScreenState extends State<FullComerialScreen> {
 
 
     super.initState();
-    bloc.GetImage();
-    bloc.viewAds();
-    bloc.likeAds(false);
+    bloc!.GetImage();
+    bloc!.viewAds();
+    bloc!.likeAds(false);
   }
   @override
   void dispose() {
     // TODO: implement dispose
-    bloc.dispose();
+    bloc!.dispose();
     super.dispose();
   }
   @override
   Widget build(BuildContext context) {
-     detailArgs=ModalRoute.of(context).settings.arguments;
-     bloc.setDefaultData(detailArgs);
+     detailArgs=ModalRoute.of(context)!.settings.arguments as CommercialAdsList?;
+     bloc!.setDefaultData(detailArgs);
 
 
     // _pageController.jumpToPage(currentPage);
-    return BlocProvider<CommericalBloc>(
+    return BlocProvider<CommericalBloc?>(
       bloc: bloc,
       child: Scaffold(
 
@@ -49,8 +49,8 @@ class _FullComerialScreenState extends State<FullComerialScreen> {
                   Container(
                     width: double.infinity,
                     height: double.infinity,
-                    child: StreamBuilder<String>(
-                      stream: bloc.Imagestream,
+                    child: StreamBuilder<String?>(
+                      stream: bloc!.Imagestream,
                       builder: (context,snapshot){
                      return
                        ImageBox(
@@ -95,25 +95,25 @@ class _FullComerialScreenState extends State<FullComerialScreen> {
                         children: <Widget>[
                           SizedBox(height: 8,),
 
-                          Text(detailArgs.Link.toString(),style: TextStyle(color: Colors.white),),
+                          Text(detailArgs!.Link.toString(),style: TextStyle(color: Colors.white),),
                           SizedBox(height: 16,),
-                          Text(detailArgs.Description,style: TextStyle(color: Colors.white),),
+                          Text(detailArgs!.Description!,style: TextStyle(color: Colors.white),),
                           SizedBox(height: 16,),
 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                                 StreamBuilder<Counter>(
-                                  stream: bloc.Likestream,
+                                  stream: bloc!.Likestream,
                                   builder: (context,snapshot){
-                                    Counter likeCounter=Counter(0,true);
+                                    Counter? likeCounter=Counter(0,true);
                                      if(snapshot.hasData)
                                      likeCounter=snapshot.data;
                                   return  Column(mainAxisAlignment: MainAxisAlignment.end,
                                         children: <Widget>[
-                                          Text(likeCounter.count.toString(),style: TextStyle(color: Colors.white),),
+                                          Text(likeCounter!.count.toString(),style: TextStyle(color: Colors.white),),
                                           FlatButton(onPressed:(){
-                                            bloc.likeAds(true);
+                                            bloc!.likeAds(true);
 
                                           },child: Icon(likeCounter.isEanbled?Icons.favorite_border:Icons.favorite,color: Colors.white,)),
                                         ]
@@ -122,16 +122,16 @@ class _FullComerialScreenState extends State<FullComerialScreen> {
                                 ),
 
                               StreamBuilder<Counter>(
-                                stream: bloc.viewstream,
+                                stream: bloc!.viewstream,
                                 builder: (context,snapshot){
-                                  Counter viewCounter=Counter(0,true);
+                                  Counter? viewCounter=Counter(0,true);
                                   if(snapshot.hasData)
                                     viewCounter=snapshot.data;
 
                                  return Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: <Widget>[
-                                        Text(viewCounter.count.toString(),style: TextStyle(color: Colors.white),),
+                                        Text(viewCounter!.count.toString(),style: TextStyle(color: Colors.white),),
                                         FlatButton(onPressed:(){},child: Icon(Icons.remove_red_eye,color: Colors.white),),
                                       ]
                                   );

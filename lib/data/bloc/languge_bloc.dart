@@ -12,18 +12,18 @@ class TranslationsBloc implements Bloc {
   BehaviorSubject<String> _languageController = BehaviorSubject<String>();
   Stream<String> get currentLanguage => _languageController.stream;
 
-  BehaviorSubject<Locale> _localeController = BehaviorSubject<Locale>();
-  Stream<Locale> get currentLocale => _localeController.stream;
+  BehaviorSubject<Locale?> _localeController = BehaviorSubject<Locale?>();
+  Stream<Locale?> get currentLocale => _localeController.stream;
 
   @override
   void dispose() {
-    _languageController?.close();
-    _localeController?.close();
+    _languageController.close();
+    _localeController.close();
   }
 
   void setNewLanguage(String newLanguage) async {
     // Save the selected language as a user preference
-    await preferences.saveLangauge(newLanguage);
+     preferences.saveLangauge(newLanguage);
 
     // Notification the translations module about the new language
     await allTranslations.setNewLanguage(newLanguage);

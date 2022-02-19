@@ -20,17 +20,17 @@ class AdsBloc implements Bloc {
   Stream<ApiResponse<List<AdsModel>>> get myAdsstream => _myAddController.stream;
   AdsBloc();
 
-  void submitQuery(FilterParamsEntity paramsEntity,int orderby,int page) async {
+  void submitQuery(FilterParamsEntity paramsEntity,int? orderby,int page) async {
     if(page==1) {
       _controller.sink.add(ApiResponse.loading('loading'));
     }else{
       ads.isLoadMore=true;
-      ads.advertisementList.add(null);
+      ads.advertisementList!.add(null);
       _controller.sink.add(ApiResponse.completed(ads));
 
     }
     try {
-      String countryId=await preferences.getCountryID();
+      String countryId=await (preferences.getCountryID() as FutureOr<String>);
 //      AdsParams params=AdsParams( CategoryId:int.parse(catId),CityId: 1,CountryId: int.tryParse(countryId) );
       FilterParamsEntity entity=new FilterParamsEntity();
       entity.stateId=paramsEntity.cityId;
@@ -43,29 +43,29 @@ class AdsBloc implements Bloc {
 
       if(paramsEntity.params!=null) {
         entity.params =[];
-        for(var item in paramsEntity.params){
+        for(var item in paramsEntity.params!){
           if(item!=null){
-            entity.params.add(item);
+            entity.params!.add(item);
           }
         }
       }
 
-      AdsEntity newAds = await _client.getCateogryList(entity,orderby,page);
+      AdsEntity? newAds = await _client.getCateogryList(entity,orderby,page);
 
         if(page==1){
-          ads=newAds;
+          ads=newAds!;
         }else {
 
-          ads.advertisementList.removeLast();
-            List<AdsModel> list = new List<AdsModel>();
-            list.addAll(ads.advertisementList);
-            list.addAll(newAds.advertisementList);
-            List<CommercialAdsList>commerial= ads.commercialAdsList;
+          ads.advertisementList!.removeLast();
+            List<AdsModel?> list = new List<AdsModel?>.empty();
+            list.addAll(ads.advertisementList!);
+            list.addAll(newAds!.advertisementList!);
+            List<CommercialAdsList>commerial= ads.commercialAdsList!;
           ads=newAds;
-          ads.advertisementList.clear();
-          ads.advertisementList.addAll(list);
-          ads.commercialAdsList.clear();
-          ads.commercialAdsList.addAll(commerial);
+          ads.advertisementList!.clear();
+          ads.advertisementList!.addAll(list);
+          ads.commercialAdsList!.clear();
+          ads.commercialAdsList!.addAll(commerial);
           ads.isLoadMore=null;
 
         }
@@ -83,11 +83,12 @@ class AdsBloc implements Bloc {
 
 
 
-  void searchWithKey(String query,int orderby) async {
+  void searchWithKey(String query,int? orderby) async {
     _controller.sink.add(ApiResponse.loading('loading'));
     try {
-      String countryId=await preferences.getCountryID();
-      ads = await _client.searchWithKey(query,int.parse(countryId),orderby);
+      String countryId=await (preferences.getCountryID() as FutureOr<String>);
+      AdsEntity? res = await _client.searchWithKey(query,int.parse(countryId),orderby);
+      ads=res!;
       _controller.sink.add(ApiResponse.completed(ads));
 
     }catch(e) {

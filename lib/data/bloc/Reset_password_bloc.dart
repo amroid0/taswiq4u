@@ -17,13 +17,13 @@ class ResetPasswordBloc extends RegisterValidators implements Bloc {
   Stream<String> get confrimPassword => _ConfirmPassword.stream.transform(validateConfirmPassword).doOnData((String c) {
     if (0 != _passwordController.value.compareTo(c)) {
       // If they do not match, add an error
-      _ConfirmPassword.addError(allTranslations.text('err_pass_confirm'));
+      _ConfirmPassword.addError(allTranslations.text('err_pass_confirm')!);
     }});
 
   Stream<ApiResponse<bool>> get resetPasswordStream => _resetController.stream;
 
   Stream<bool> get submitValid =>
-      Rx.combineLatest2(password, confrimPassword, (e, p) {
+      Rx.combineLatest2(password, confrimPassword, (dynamic e, dynamic p) {
         return true;
       });
   Function(String) get changePassword => _passwordController.sink.add;
@@ -32,7 +32,7 @@ class ResetPasswordBloc extends RegisterValidators implements Bloc {
 
 
 
-  resetPassword(String token,int countryId,String phone) async{
+  resetPassword(String token,int? countryId,String? phone) async{
     final validPass = _passwordController.value;
 
     if(validPass.isNotEmpty){
@@ -41,7 +41,7 @@ class ResetPasswordBloc extends RegisterValidators implements Bloc {
       try {
 
         final results = await _client.resetPassword(token,validPass,phone,countryId);
-        if(results){
+        if(results!=null){
           _resetController.sink.add(ApiResponse.completed(results));
         }
       }catch(e){

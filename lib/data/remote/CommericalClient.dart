@@ -4,7 +4,7 @@ import 'package:olx/utils/Constants.dart';
 import 'NetworkCommon.dart';
 
 class CommericalClient {
-  Future<CommercialAdsList>getADsDetails(String adsID)async{
+  Future<CommercialAdsList?>getADsDetails(String adsID)async{
     final results = await NetworkCommon()
         .dio
         .get(
@@ -16,7 +16,7 @@ class CommericalClient {
 
   }
 
-  Future<bool>LikeAds(String adsID)async{
+  Future<bool?>LikeAds(String adsID)async{
     final results = await NetworkCommon()
         .dio
         .get(
@@ -27,7 +27,7 @@ class CommericalClient {
 
   }
 
-  Future<bool>viewAds(String adsID)async{
+  Future<bool?>viewAds(String adsID)async{
     final results = await NetworkCommon()
         .dio
         .get(
@@ -39,7 +39,7 @@ class CommericalClient {
   }
 
 
-  Future<String> getImageAds(String imageName) async {
+  Future<String?> getImageAds(String imageName) async {
     final results = await NetworkCommon().dio.post(APIConstants.GET_IMAGE,
         data: {"ImageName":imageName}
     );

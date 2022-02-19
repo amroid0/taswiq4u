@@ -8,16 +8,16 @@ part 'favroite_entity.g.dart';
 
 @JsonSerializable()
 class FavoriteModel {
-  int Totalitems;
-  int Page;
-  int Size;
+  int? Totalitems;
+  int? Page;
+  int? Size;
   @JsonKey(name: "List")
-  List<AdsModel> list;
-  int TotalPages;
-  bool HasPreviousPage;
-  bool HasNextPage;
-  int NextPage;
-  int PreviousPage;
+  List<AdsModel>? list;
+  int? TotalPages;
+  bool? HasPreviousPage;
+  bool? HasNextPage;
+  int? NextPage;
+  int? PreviousPage;
 
   var isLoadMore;
 
@@ -37,39 +37,39 @@ class FavoriteModel {
 }
 @JsonSerializable()
 class FavAds {
-  int Id;
-  String Title;
-  String ArabicDescription;
-  String EnglishDescription;
-  bool IsNogitable;
-  double Price;
-  int CategoryId;
-  String CategoryName;
-  String UserId;
-  String UserName;
-  String UserPhone;
-  String ArabicDescriptionUrl;
-  String EnglishDescriptionUrl;
-  String ArabicTitle;
-  String EnglishTitle;
-  int CountryId;
-  String CountryNameEnglish;
-  String CountryNameArabic;
-  double LocationLatitude;
-  double LocationLongtude;
-  bool IsDisplayed;
-  bool IsDeleted;
-  DateTime CreationTime;
-  int ViewCount;
-  int CityId;
-  String CityNameEnglish;
-  String CityNameArabic;
-  int StateId;
-  String StateNameArabic;
-  String StateNameEnglish;
-  bool IsFeatured;
-  bool IsFavorite;
-  List<AdvertismentImage> AdvertismentImages;
+  int? Id;
+  String? Title;
+  String? ArabicDescription;
+  String? EnglishDescription;
+  bool? IsNogitable;
+  double? Price;
+  int? CategoryId;
+  String? CategoryName;
+  String? UserId;
+  String? UserName;
+  String? UserPhone;
+  String? ArabicDescriptionUrl;
+  String? EnglishDescriptionUrl;
+  String? ArabicTitle;
+  String? EnglishTitle;
+  int? CountryId;
+  String? CountryNameEnglish;
+  String? CountryNameArabic;
+  double? LocationLatitude;
+  double? LocationLongtude;
+  bool? IsDisplayed;
+  bool? IsDeleted;
+  DateTime? CreationTime;
+  int? ViewCount;
+  int? CityId;
+  String? CityNameEnglish;
+  String? CityNameArabic;
+  int? StateId;
+  String? StateNameArabic;
+  String? StateNameEnglish;
+  bool? IsFeatured;
+  bool? IsFavorite;
+  List<AdvertismentImage>? AdvertismentImages;
 
   FavAds(
       this.Id,

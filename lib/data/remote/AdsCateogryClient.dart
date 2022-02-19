@@ -6,7 +6,7 @@ import 'package:olx/model/cateogry_entity.dart';
 import 'package:olx/utils/Constants.dart';
 
 class AdsCategoryClient{
-Future<List<CateogryEntity>> getCateogryList( ) async {
+Future<List<CateogryEntity>?> getCateogryList( ) async {
   final results = await NetworkCommon()
       .dio
       .get(
@@ -14,7 +14,7 @@ Future<List<CateogryEntity>> getCateogryList( ) async {
       queryParameters: {"countryId": await preferences.getCountryID()});
   if(results.statusCode==200){
   final suggestions = results.data;
-  List<CateogryEntity> list= suggestions
+  List<CateogryEntity>? list= suggestions
       .map<CateogryEntity>((json) => CateogryEntity.fromJson(json))
       .toList(growable: false);
   preferences.saveCateogryList(list);
@@ -23,7 +23,7 @@ Future<List<CateogryEntity>> getCateogryList( ) async {
     new CateogryEntity(name: "");
   }
 }
-Future<List<CateogryEntity>> getSliderList( ) async {
+Future<List<CateogryEntity>?> getSliderList( ) async {
   final results = await NetworkCommon()
       .dio
       .get(

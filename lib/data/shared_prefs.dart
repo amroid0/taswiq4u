@@ -30,13 +30,15 @@ static final String KEY_COUNTRY="country_key";
 
   Future<bool> isLoggedIn() async {
     SharedPreferences instance = await _prefs;
-    return instance.getBool(KEY_IS_LOGGED)&&instance.getBool(ACTIVE_STATE_KEY);
+    var isLogged= instance.getBool(KEY_IS_LOGGED)??false;
+    var isActive=instance.getBool(ACTIVE_STATE_KEY)??false;
+    return isLogged&&isActive;
   }
 
   void setLoggedIn(LoginResponse user) async {
     SharedPreferences instance = await _prefs;
     instance.setBool(KEY_IS_LOGGED, true);
-    instance.setString(KEY_SESSION, user.accessToken);
+    instance.setString(KEY_SESSION, user.accessToken!);
 
   }
 void saveCredit(UserCredit credit) async {
@@ -45,17 +47,17 @@ void saveCredit(UserCredit credit) async {
 
 }
 
-void saveCateogryList(List<CateogryEntity> categoruList) async {
+void saveCateogryList(List<CateogryEntity>? categoruList) async {
   SharedPreferences instance = await _prefs;
   instance.setString(KEY_CATEGORY, json.encode(categoruList));
 
 }
-Future<List<CateogryEntity>> getCateogryList() async {
+Future<List<CateogryEntity>?> getCateogryList() async {
   SharedPreferences instance = await _prefs;
-  String stringJson=instance.getString(KEY_CATEGORY);
+  String stringJson=instance.getString(KEY_CATEGORY)!;
   if(stringJson.isEmpty) return null;
   var list= json.decode(stringJson);
-  List<CateogryEntity> catList= list
+  List<CateogryEntity>? catList= list
       .map<CateogryEntity>((json) => CateogryEntity.fromJson(json))
       .toList(growable: false);
 return catList;
@@ -69,24 +71,24 @@ void saveCountry(CountryEntity entity) async {
 
 }
 
- Future<CountryEntity> getCountry( ) async {
+ Future<CountryEntity?> getCountry( ) async {
   SharedPreferences instance = await _prefs;
-  String stringJson=instance.getString(KEY_LIKED);
+  String? stringJson=instance.getString(KEY_LIKED);
   if(stringJson==null) return null;
   return CountryEntity.fromJson(json.decode(stringJson));
 
 }
-Future<List<String>> getLikedCommericalList() async {
+Future<List<String>?> getLikedCommericalList() async {
   SharedPreferences instance = await _prefs;
-  String stringJson=instance.getString(KEY_LIKED);
+  String? stringJson=instance.getString(KEY_LIKED);
   if(stringJson==null) return null;
   List<String> stringList = (jsonDecode(stringJson) as List<dynamic>).cast<String>();
   return stringList;
 
 }
-Future<List<String>> getViewedCommericalList() async {
+Future<List<String>?> getViewedCommericalList() async {
   SharedPreferences instance = await _prefs;
-  String stringJson=instance.getString(KEY_VIEWD);
+  String? stringJson=instance.getString(KEY_VIEWD);
   if(stringJson==null) return null;
   List<String> stringList = (jsonDecode(stringJson) as List<dynamic>).cast<String>();
   return stringList;
@@ -94,9 +96,9 @@ Future<List<String>> getViewedCommericalList() async {
 }
 
 void saveLikedCommericalList(String id) async {
-  List<String>ids= List();
+  List<String>ids= List.empty();
     SharedPreferences instance = await _prefs;
-  String stringJson=instance.getString(KEY_LIKED);
+  String? stringJson=instance.getString(KEY_LIKED);
   if(stringJson!=null){
     ids=(jsonDecode(stringJson) as List<dynamic>).cast<String>();
   }
@@ -108,9 +110,9 @@ void saveLikedCommericalList(String id) async {
 
 
 void saveViewCommericalList(String id) async {
-  List<String>ids= List();
+  List<String>ids= List.empty();
   SharedPreferences instance = await _prefs;
-  String stringJson=instance.getString(KEY_VIEWD);
+  String? stringJson=instance.getString(KEY_VIEWD);
   if(stringJson!=null){
     ids=(jsonDecode(stringJson) as List<dynamic>).cast<String>();
   }
@@ -125,18 +127,18 @@ void saveViewCommericalList(String id) async {
 
 Future<UserCredit> getUserCredit() async {
   SharedPreferences instance = await _prefs;
-  String stringJson=instance.getString(KEY_CREDIT);
+  String stringJson=instance.getString(KEY_CREDIT)!;
   return UserCredit.fromJson(json.decode(stringJson));
 
 }
 
   void setToken(LoginResponse user) async{
     SharedPreferences instance = await _prefs;
-    instance.setString(KEY_SESSION, user.accessToken);
+    instance.setString(KEY_SESSION, user.accessToken!);
     instance.setBool(KEY_IS_LOGGED, true);
 
   }
-Future<String> getToken() async {
+Future<String?> getToken() async {
   SharedPreferences instance = await _prefs;
  return instance.getString(KEY_SESSION);
 
@@ -145,7 +147,7 @@ Future<String> getToken() async {
     SharedPreferences instance =await _prefs;
         instance.setString(KEY_COUNTRY_ID, countryId);
   }
-Future<String> getCountryID()async{
+Future<String?> getCountryID()async{
   SharedPreferences instance =await _prefs;
  return instance.getString(KEY_COUNTRY_ID);
 }
@@ -154,7 +156,7 @@ Future<String> getCountryID()async{
     SharedPreferences instance =await _prefs;
         instance.setString(KEY_LANG, lang);
   }
-  Future<String> getLang()async{
+  Future<String?> getLang()async{
     SharedPreferences instance =await _prefs;
     return instance.getString(KEY_LANG);
   }
@@ -177,18 +179,18 @@ factory SharedPreferencesHelper(){
 }
 SharedPreferencesHelper._internal();
 
-  void saveAllCountry(List<CountryEntity> countryList) async{
+  void saveAllCountry(List<CountryEntity>? countryList) async{
 
     SharedPreferences instance = await _prefs;
     instance.setString(KEY_COUNTRY_LIST, json.encode(countryList));
   }
 
-  Future<List<CountryEntity>> getCountryList() async{
+  Future<List<CountryEntity>?> getCountryList() async{
     SharedPreferences instance = await _prefs;
-    String stringJson=instance.getString(KEY_COUNTRY_LIST);
+    String stringJson=instance.getString(KEY_COUNTRY_LIST)!;
     if(stringJson.isEmpty) return null;
     var list= json.decode(stringJson);
-    List<CountryEntity> catList= list
+    List<CountryEntity>? catList= list
         .map<CountryEntity>((json) => CountryEntity.fromJson(json))
         .toList(growable: false);
     return catList;
@@ -199,18 +201,18 @@ void clearCity() async{
 }
 
 
-Future<List<CityModel>> getCityList() async{
+Future<List<CityModel>?> getCityList() async{
   SharedPreferences instance = await _prefs;
-  String stringJson=instance.getString(KEY_CITY_LIST);
+  String stringJson=instance.getString(KEY_CITY_LIST)!;
   if(stringJson.isEmpty) return null;
   var list= json.decode(stringJson);
-  List<CityModel> catList= list
+  List<CityModel>? catList= list
       .map<CityModel>((json) => CityModel.fromJson(json))
       .toList(growable: false);
   return catList;
 }
 
-  Future saveCities(List<CityModel> cities)async {
+  Future saveCities(List<CityModel>? cities)async {
 
     SharedPreferences instance = await _prefs;
     instance.setString(KEY_CITY_LIST, json.encode(cities));
@@ -224,7 +226,7 @@ Future<List<CityModel>> getCityList() async{
   }
 Future<UserInfo> getUserInfo() async {
   SharedPreferences instance = await _prefs;
-  String stringJson=instance.getString(KEY_USER_INFO);
+  String stringJson=instance.getString(KEY_USER_INFO)!;
   return UserInfo.fromJson(json.decode(stringJson));
 
 }
@@ -234,9 +236,9 @@ Future<UserInfo> getUserInfo() async {
     SharedPreferences instance = await _prefs;
     instance.setBool(ACTIVE_STATE_KEY, bool);
   }
-Future<bool> isAccountActive() async {
+Future<bool?> isAccountActive() async {
   SharedPreferences instance = await _prefs;
-  bool stringJson=instance.getBool(ACTIVE_STATE_KEY);
+  bool? stringJson=instance.getBool(ACTIVE_STATE_KEY);
   return stringJson;
 
 }

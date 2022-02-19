@@ -23,9 +23,9 @@ class GeneralSettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<GeneralSettingsPage> {
   bool isSwitched = false;
 
-  var _langSelectedValue=1;
+  int? _langSelectedValue=1;
 
-  var _countrySelectedValue=1;
+  int? _countrySelectedValue=1;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class _SettingsPageState extends State<GeneralSettingsPage> {
           ,
           children: [
             SizedBox(height: 24,),
-            ListTile(leading: Icon(Icons.notifications),title: Text(allTranslations.text('notification')),
+            ListTile(leading: Icon(Icons.notifications),title: Text(allTranslations.text('notification')!),
               trailing: CupertinoSwitch(
                 value: isSwitched,
                 onChanged: (value){
@@ -62,10 +62,10 @@ class _SettingsPageState extends State<GeneralSettingsPage> {
                 activeColor: Colors.green,
               ),),
             ListTile(leading: Icon(Icons.language),
-              title: Text(allTranslations.text('lang')),
+              title: Text(allTranslations.text('lang')!),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: ()async{
-                String lan=await preferences.getLang();
+                String? lan=await preferences.getLang();
                 _langSelectedValue=lan=='en'?1:2;
                 Alert(
                   context: context,
@@ -80,7 +80,7 @@ class _SettingsPageState extends State<GeneralSettingsPage> {
                           value: 1,
                           groupValue: _langSelectedValue,
                           title: Text("English",style: TextStyle(color: Colors.black),),
-                          onChanged: (val) {
+                          onChanged: (dynamic val) {
                             _langSelectedValue=val;
                             BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
                                 "en");
@@ -97,7 +97,7 @@ class _SettingsPageState extends State<GeneralSettingsPage> {
                           value: 2,
                           groupValue: _langSelectedValue,
                           title: Text("اللغه العربيه",style: TextStyle(color: Colors.black)),
-                          onChanged: (val) {
+                          onChanged: (dynamic val) {
                             BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
                                 "ar");
                             _langSelectedValue=val;
@@ -114,7 +114,7 @@ class _SettingsPageState extends State<GeneralSettingsPage> {
               },
             ),
             ListTile(leading: Icon(Icons.language),
-              title: Text(allTranslations.text('country')),
+              title: Text(allTranslations.text('country')!),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: (){
                 _showCountryDialog();
@@ -136,7 +136,7 @@ class _SettingsPageState extends State<GeneralSettingsPage> {
         context,
         label: allTranslations.text('choose_country'),
         selectedValue: CountryEntity(),
-        items: List(),
+        items: List.empty(),
         onChange: (CountryEntity selected) {
           preferences.saveCountryID(selected.countryId.toString());
           preferences.saveCountry(selected);

@@ -12,7 +12,7 @@ import 'package:olx/model/favroite_entity.dart';
 
 class AdsClient{
 
-  Future<AdsEntity> getCateogryList(FilterParamsEntity params, int orderby,int page) async {
+  Future<AdsEntity?> getCateogryList(FilterParamsEntity params, int? orderby,int page) async {
     final results = await NetworkCommon().dio.post(APIConstants.SEARCH_WITH_PARAM,
         data:  jsonEncode(params),queryParameters: {"orderBy":orderby,"Page":page,"Size":20}
 
@@ -23,7 +23,7 @@ class AdsClient{
   }
 
 
-  Future<AdsEntity> searchWithKey(String query,int countId, int orderby) async {
+  Future<AdsEntity?> searchWithKey(String query,int countId, int? orderby) async {
     final results = await NetworkCommon().dio.post(APIConstants.SEARCH_KEY,
         queryParameters: {"orderBy":orderby,"key":query,"countryId":countId}
     );
@@ -32,7 +32,7 @@ class AdsClient{
     }
   }
 
-  Future<List<PopupAdsEntityList>> getPopupAds() async {
+  Future<List<PopupAdsEntityList>?> getPopupAds() async {
     final results = await NetworkCommon().dio.get(APIConstants.POPUP_ADS+"${await preferences.getCountryID()}"
     );
     if (results.statusCode == 200) {
@@ -45,7 +45,7 @@ class AdsClient{
 
 
 
-  Future<List<FieldProprtiresEntity>> getAdsFieldsProp( ) async {
+  Future<List<FieldProprtiresEntity>?> getAdsFieldsProp( ) async {
     final results = await NetworkCommon().dio.get(APIConstants.SEARCH_WITH_PARAM,
         queryParameters: {"countryId": 1});
     if(results.statusCode==200){
@@ -56,7 +56,7 @@ class AdsClient{
     }
   }
 
-  Future<List<AdsModel>> getMyAdsList( int page) async {
+  Future<List<AdsModel>?> getMyAdsList( int page) async {
     final results = await NetworkCommon().dio.get(APIConstants.MY_ADS);
     if (results.statusCode == 200) {
       return results.data
@@ -65,7 +65,7 @@ class AdsClient{
     }
   }
 
-  Future<String> getImageAds(String imageName) async {
+  Future<String?> getImageAds(String imageName) async {
     final results = await NetworkCommon().dio.post(APIConstants.GET_IMAGE,
         data: {"ImageName":imageName}
     );
@@ -76,7 +76,7 @@ class AdsClient{
 
 
 
-  Future<List<PopupAdsEntityList>> getMainSliderAds() async {
+  Future<List<PopupAdsEntityList>?> getMainSliderAds() async {
     final results = await NetworkCommon().dio.get(APIConstants.MAIN_SLIDER_ADS+"${await preferences.getCountryID()}"
     );
     if (results.statusCode == 200) {

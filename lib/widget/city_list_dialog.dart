@@ -12,16 +12,16 @@ typedef Widget SelectOneItemBuilderType<T>(
     BuildContext context, CityModel item, bool isSelected);
 
 class CityListDialog<T> extends StatefulWidget {
-  final T selectedValue;
-  final List<T> itemsList;
-  final bool showSearchBox;
-  final void Function(CityModel) onChange;
-  final Future<List<T>> Function(String text) onFind;
-  final SelectOneItemBuilderType<T> itemBuilder;
-  final InputDecoration searchBoxDecoration;
+  final T? selectedValue;
+  final List<T>? itemsList;
+  final bool? showSearchBox;
+  final void Function(CityModel)? onChange;
+  final Future<List<T>> Function(String text)? onFind;
+  final SelectOneItemBuilderType<T>? itemBuilder;
+  final InputDecoration? searchBoxDecoration;
 
   const CityListDialog({
-    Key key,
+    Key? key,
     this.itemsList,
     this.showSearchBox,
     this.onChange,
@@ -31,16 +31,16 @@ class CityListDialog<T> extends StatefulWidget {
     this.searchBoxDecoration,
   }) : super(key: key);
 
-  static Future<T> showModal<T>(
+  static Future<T?> showModal<T>(
       BuildContext context, {
-        List<T> items,
-        String label,
-        T selectedValue,
-        bool showSearchBox,
-        Future<List<T>> Function(String text) onFind,
-        SelectOneItemBuilderType<T> itemBuilder,
-        void Function(CityModel) onChange,
-        InputDecoration searchBoxDecoration,
+        List<T>? items,
+        String? label,
+        T? selectedValue,
+        bool? showSearchBox,
+        Future<List<T>> Function(String text)? onFind,
+        SelectOneItemBuilderType<T>? itemBuilder,
+        void Function(CityModel)? onChange,
+        InputDecoration? searchBoxDecoration,
       }) {
     return showDialog(
       context: context,
@@ -48,7 +48,7 @@ class CityListDialog<T> extends StatefulWidget {
         return AlertDialog(
           title: Text(label ?? ""),
           actions: <Widget>[
-            FlatButton(child:Text(allTranslations.text('cancel')), onPressed: () {
+            FlatButton(child:Text(allTranslations.text('cancel')!), onPressed: () {
               Navigator.of(context).pop();
             },)
           ],
@@ -72,13 +72,13 @@ class CityListDialog<T> extends StatefulWidget {
 }
 
 class _SelectDialogState<T> extends State<CityListDialog<T>> {
-  CountryBloc bloc;
-  void Function(CityModel) onChange;
+  late CountryBloc bloc;
+  void Function(CityModel)? onChange;
 
   _SelectDialogState(
-      List<T> itemsList,
+      List<T>? itemsList,
       this.onChange,
-      Future<List<T>> Function(String text) onFind,
+      Future<List<T>> Function(String text)? onFind,
       ) {
   }
 
@@ -110,34 +110,34 @@ class _SelectDialogState<T> extends State<CityListDialog<T>> {
                 stream: bloc.cityStream,
                 builder: (context, snapshot) {
                   if(snapshot.data!=null){
-                    switch(snapshot.data.status){
+                    switch(snapshot.data!.status){
                       case Status.LOADING:
                         return Center(child: CircularProgressIndicator());
                         break;
                       case Status.COMPLETED:
                       // TODO: Handle this case.
-                        List<CityModel> list=snapshot.data.data;
+                        List<CityModel> list=snapshot.data!.data!;
                         return ListView.builder(
                           itemCount: list.length,
                           itemBuilder: (context, index) {
                             var item = list[index];
                             if (widget.itemBuilder != null)
                               return InkWell(
-                                child: widget.itemBuilder(
+                                child: widget.itemBuilder!(
                                     context, item, item == widget.selectedValue),
                                 onTap: () {
 
-                                  onChange(item);
+                                  onChange!(item);
                                   Navigator.pop(context);
 
                                 },
                               );
                             else
                               return ListTile(
-                                title: Text(allTranslations.isEnglish?item.englishDescription??item.name:item.arabicDescription??item.name),
+                                title: Text(allTranslations.isEnglish?item.englishDescription??item.name!:item.arabicDescription??item.name!),
                                 selected: item == widget.selectedValue,
                                 onTap: () {
-                                  onChange(item);
+                                  onChange!(item);
                                   Navigator.pop(context);
                                 },
                               );

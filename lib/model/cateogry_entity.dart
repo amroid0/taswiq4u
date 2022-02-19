@@ -5,35 +5,35 @@ part 'cateogry_entity.g.dart';
 
 class CateogryEntity {
 	@JsonKey(name:"CountryId")
-	int countryId;
+	int? countryId;
 	@JsonKey(name:"ArabicDescription")
-	String arabicDescription;
+	String? arabicDescription;
 	@JsonKey(name:"EnglishDescription")
-	String englishDescription;
+	String? englishDescription;
 	@JsonKey(name:"IsActive")
-	bool isActive;
+	bool? isActive;
 	@JsonKey(name:"CategoryLevel")
-	int categoryLevel;
+	int? categoryLevel;
 	@JsonKey(name:"CategoryLogo")
-	String categoryLogo;
+	String? categoryLogo;
 	@JsonKey(name:"ImageUrl")
-	String imageUrl;
+	String? imageUrl;
 	@JsonKey(name:"imageId")
-	String imageId;
+	String? imageId;
 	@JsonKey(name:"Id")
-	int id;
+	int? id;
 	@JsonKey(name:"SubCats")
-	String subCats;
+	String? subCats;
 	@JsonKey(name:"SubCategories")
-	List<CateogryEntity> subCategories;
+	List<CateogryEntity>? subCategories;
 	@JsonKey(name:"Name")
-	String name;
+	String? name;
 	@JsonKey(name:"HasSub")
-	bool hasSub;
+	bool? hasSub;
 	@JsonKey(name:"hasHorizontal")
-	bool hasHorizontal;
+	bool? hasHorizontal;
 
-	bool isSelected=false;
+	bool? isSelected=false;
 
 	CateogryEntity({this.countryId, this.arabicDescription, this.englishDescription, this.isActive, this.categoryLevel, this.categoryLogo, this.imageUrl, this.id, this.subCats, this.subCategories, this.name, this.hasSub,this.isSelected=false,this.hasHorizontal});
 	factory CateogryEntity.fromJson(Map<String, dynamic> json) => _$CateogryEntityFromJson(json);

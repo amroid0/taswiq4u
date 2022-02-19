@@ -13,7 +13,7 @@ class ChnagePassScreen extends StatefulWidget {
 }
 
 class _ChnagePassScreenState extends State<ChnagePassScreen> {
-  AppBar appBar;
+  AppBar? appBar;
   TextEditingController curPasswordController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
@@ -72,7 +72,7 @@ class _ChnagePassScreenState extends State<ChnagePassScreen> {
   Widget build(BuildContext context) {
     appBar=AppBar(
       title: Center(
-        child: Text(allTranslations.text('change_pass'),textAlign: TextAlign.center,style: TextStyle(
+        child: Text(allTranslations.text('change_pass')!,textAlign: TextAlign.center,style: TextStyle(
             color:
             Colors.black38
 
@@ -126,7 +126,7 @@ class _ChnagePassScreenState extends State<ChnagePassScreen> {
                       controller: curPasswordController,
                         style: TextStyle(fontSize: 22.0, color: Color(0xFFbdc6cf),decoration: TextDecoration.none),
                         decoration: InputDecoration(
-                            errorText: snapshot.error,
+                            errorText: snapshot.error as String?,
                             filled: true,
                             fillColor: Colors.white,
                             hintText: allTranslations.text('current_pass'),
@@ -158,7 +158,7 @@ class _ChnagePassScreenState extends State<ChnagePassScreen> {
                       controller: newPasswordController,
                         style: TextStyle(fontSize: 22.0, color: Color(0xFFbdc6cf),decoration: TextDecoration.none),
                         decoration: InputDecoration(
-                            errorText: snapshot.error,
+                            errorText: snapshot.error as String?,
                             filled: true,
                             fillColor: Colors.white,
                             hintText: allTranslations.text('new_pass'),
@@ -188,7 +188,7 @@ class _ChnagePassScreenState extends State<ChnagePassScreen> {
                       controller: confirmPasswordController,
                         style: TextStyle(fontSize: 22.0, color: Color(0xFFbdc6cf),decoration: TextDecoration.none),
                         decoration: InputDecoration(
-                            errorText: snapshot.error,
+                            errorText: snapshot.error as String?,
                             filled: true,
                             fillColor: Colors.white,
                             hintText: allTranslations.text('confirm_pass'),
@@ -247,7 +247,7 @@ class _ChnagePassScreenState extends State<ChnagePassScreen> {
               borderRadius: new BorderRadius.circular(8.0),
             ),
             child:  Stack(children:<Widget>[
-              Align( child: new Text(allTranslations.text('save_change'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
+              Align( child: new Text(allTranslations.text('save_change')!, style: new TextStyle(fontSize: 18.0, color: Colors.white),)
                 ,alignment: Alignment.center,),
 
 

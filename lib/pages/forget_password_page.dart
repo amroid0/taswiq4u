@@ -1,4 +1,4 @@
-import 'package:ars_progress_dialog/ars_progress_dialog.dart';
+import 'package:ars_dialog/ars_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -21,27 +21,22 @@ _ForgetPassPageState createState() => _ForgetPassPageState();
 class _ForgetPassPageState extends State<ForgetPasswordScreen> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final formKey = GlobalKey<FormState>();
-  ArsProgressDialog progressDialog;
+  late CustomProgressDialog progressDialog;
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
-  ForgetPasswordBloc _bloc;
+  ForgetPasswordBloc? _bloc;
 
   var _countrytextController=TextEditingController();
-  int val = -1;
-  int countryId;
+  int? val = -1;
+  int? countryId;
 
   @override
   void initState() {
 _bloc=ForgetPasswordBloc();
-    progressDialog = ArsProgressDialog(
-        context,
-        blur: 2,
-        backgroundColor: Color(0x33000000),
-        animationDuration: Duration(milliseconds: 500));
-    _bloc.forgetPasswordStream.listen((snap) {
-      if(progressDialog.isShowing){
+    progressDialog = CustomProgressDialog(context,blur: 10);
+    _bloc!.forgetPasswordStream.listen((snap) {
         progressDialog.dismiss();
-      }
+
       switch (snap.status) {
         case Status.LOADING:
           progressDialog.show();
@@ -51,7 +46,7 @@ _bloc=ForgetPasswordBloc();
         case Status.ERROR:
 
           Fluttertoast.showToast(
-              msg: allTranslations.text('err_wrong'),
+              msg: allTranslations.text('err_wrong')!,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
@@ -70,7 +65,7 @@ _bloc=ForgetPasswordBloc();
               MaterialPageRoute(builder: (context) => VerificationScreen(
                 naviagteToResetPassword: true,
                 countryId: 1,
-                phone: _bloc.emailValue,
+                phone: _bloc!.emailValue,
 
               ))
           );
@@ -93,7 +88,7 @@ _bloc=ForgetPasswordBloc();
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ForgetPasswordBloc>(
+    return BlocProvider<ForgetPasswordBloc?>(
       bloc: _bloc,
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -107,15 +102,15 @@ _bloc=ForgetPasswordBloc();
                mainAxisAlignment: MainAxisAlignment.center,
                children: [
                  Align(alignment:Alignment.center,
-                     child: Text(allTranslations.text('password_recovery'),
-               style: Theme.of(context).textTheme.headline5.copyWith(fontWeight: FontWeight.bold),)),
+                     child: Text(allTranslations.text('password_recovery')!,
+               style: Theme.of(context).textTheme.headline5!.copyWith(fontWeight: FontWeight.bold),)),
 
                  SizedBox(height: 10,),
-                 emailField(_bloc),
+                 emailField(_bloc!),
                  SizedBox(height: 16,),
-                 country(_bloc) ,
+                 country(_bloc!) ,
                  SizedBox(height: 16,),
-                 submitButton(_bloc),
+                 submitButton(_bloc!),
                ],
               ),
             ),
@@ -137,7 +132,7 @@ _bloc=ForgetPasswordBloc();
           labelText: allTranslations.text('phone'),
 
           keyboardType:TextInputType.numberWithOptions(),
-          errorText: snapshot.error,
+          errorText: snapshot.error as String?,
 
 
           textInputAction: TextInputAction.next,
@@ -154,7 +149,7 @@ _bloc=ForgetPasswordBloc();
   }
 
 
-  Widget _showCountryD(){
+  Widget? _showCountryD(){
     Alert(
         context: context,
         title: allTranslations.text('choose_country'),
@@ -167,25 +162,25 @@ _bloc=ForgetPasswordBloc();
                       RadioListTile(
                         value: 1,
                         groupValue: val,
-                        onChanged: (value) {
+                        onChanged: (dynamic value) {
                           setState(() {
                             val = value;
-                            _countrytextController.text =allTranslations.text('egypt');
+                            _countrytextController.text =allTranslations.text('egypt')!;
                           });
                         },
-                        title: Text(allTranslations.text('egypt')),
+                        title: Text(allTranslations.text('egypt')!),
                       ),
                       SizedBox(height: 20,),
                       RadioListTile(
                         value: 2,
                         groupValue: val,
-                        onChanged: (value) {
+                        onChanged: (dynamic value) {
                           setState(() {
                             val = value;
-                            _countrytextController.text =allTranslations.text('kuwait');
+                            _countrytextController.text =allTranslations.text('kuwait')!;
                           });
                         },
-                        title: Text(allTranslations.text('kuwait')),
+                        title: Text(allTranslations.text('kuwait')!),
                       ),
 
                     ]
@@ -199,7 +194,7 @@ _bloc=ForgetPasswordBloc();
 
             },
             child: Text(
-              allTranslations.text('ok'),
+              allTranslations.text('ok')!,
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
           )
@@ -220,7 +215,7 @@ _bloc=ForgetPasswordBloc();
               _showCountryD();
             },
             labelText: allTranslations.text('country'),
-            errorText: snapshot.error,
+            errorText: snapshot.error as String?,
             suffixIcon:  Icon(Icons.arrow_drop_down),
 
 
@@ -239,7 +234,7 @@ _bloc=ForgetPasswordBloc();
 
           return GestureDetector(onTap: (){
             SystemChannels.textInput.invokeMethod('TextInput.hide');
-            if(snapshot.data!=null&&snapshot.data)
+            if(snapshot.data!=null)
               print("pasasasa");
              bloc.forgetPassword(1);
 
@@ -252,7 +247,7 @@ _bloc=ForgetPasswordBloc();
                   borderRadius: new BorderRadius.circular(10.0),
                 ),
                 child:  Stack(children:<Widget>[
-                  Align( child: new Text(allTranslations.text('password_recovery'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
+                  Align( child: new Text(allTranslations.text('password_recovery')!, style: new TextStyle(fontSize: 18.0, color: Colors.white),)
                     ,alignment: Alignment.centerRight,),
 
                   Align( child: Icon(
@@ -282,7 +277,7 @@ _bloc=ForgetPasswordBloc();
       duration: Duration(milliseconds: 1000),
 
     );
-    scaffoldKey.currentState.showSnackBar(snackBar);
+    scaffoldKey.currentState!.showSnackBar(snackBar);
   }
 
 

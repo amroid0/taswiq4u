@@ -23,9 +23,9 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool isSwitched = false;
 
-  var _langSelectedValue=1;
+  int? _langSelectedValue=1;
 
-  var _countrySelectedValue=1;
+  int? _countrySelectedValue=1;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class _SettingsPageState extends State<SettingsPage> {
         backgroundColor: AppColors.appBackground,
         appBar: AppBar(
           title: Center(
-            child: Text(allTranslations.text('settings'),textAlign: TextAlign.center,style: TextStyle(
+            child: Text(allTranslations.text('settings')!,textAlign: TextAlign.center,style: TextStyle(
                 color:
                 Colors.black38
 
@@ -73,9 +73,9 @@ class _SettingsPageState extends State<SettingsPage> {
         ,
           children: [
             SizedBox(height: 24,),
-            Text(allTranslations.text('account_setting'),style: TextStyle(color: Colors.green,fontSize: 24),),
+            Text(allTranslations.text('account_setting')!,style: TextStyle(color: Colors.green,fontSize: 24),),
             ListTile(leading: Icon(Icons.person),
-              title: Text(allTranslations.text('personal_info')),
+              title: Text(allTranslations.text('personal_info')!),
                 trailing: Icon(Icons.arrow_forward_ios),
 
             onTap: (){
@@ -84,7 +84,7 @@ class _SettingsPageState extends State<SettingsPage> {
             },
             ),
             ListTile(leading: Icon(Icons.vpn_key),
-              title: Text(allTranslations.text('change_pass')),
+              title: Text(allTranslations.text('change_pass')!),
                 trailing: Icon(Icons.arrow_forward_ios),
 
                 onTap: (){
@@ -92,8 +92,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
                 }),
             SizedBox(height: 16,),
-            Text(allTranslations.text('other'),style: TextStyle(color: Colors.green,fontSize: 24),),
-            ListTile(leading: Icon(Icons.notifications),title: Text(allTranslations.text('notification')),
+            Text(allTranslations.text('other')!,style: TextStyle(color: Colors.green,fontSize: 24),),
+            ListTile(leading: Icon(Icons.notifications),title: Text(allTranslations.text('notification')!),
               trailing: CupertinoSwitch(
               value: isSwitched,
               onChanged: (value){
@@ -106,10 +106,10 @@ class _SettingsPageState extends State<SettingsPage> {
               activeColor: Colors.green,
             ),),
             ListTile(leading: Icon(Icons.language),
-              title: Text(allTranslations.text('lang')),
+              title: Text(allTranslations.text('lang')!),
               trailing: Icon(Icons.arrow_forward_ios),
             onTap: ()async{
-              String lan=await preferences.getLang();
+              String? lan=await preferences.getLang();
               _langSelectedValue=lan=='en'?1:2;
               Alert(
                   context: context,
@@ -124,7 +124,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           value: 1,
                           groupValue: _langSelectedValue,
                           title: Text("English",style: TextStyle(color: Colors.black,fontSize: 20),),
-                          onChanged: (val) {
+                          onChanged: (dynamic val) {
                             _langSelectedValue=val;
                             BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
                                 "en");
@@ -141,7 +141,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           value: 2,
                           groupValue: _langSelectedValue,
                           title: Text("اللغه العربيه",style: TextStyle(color: Colors.black,fontSize: 18)),
-                          onChanged: (val) {
+                          onChanged: (dynamic val) {
                             BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
                                 "ar");
                               _langSelectedValue=val;
@@ -158,7 +158,7 @@ class _SettingsPageState extends State<SettingsPage> {
             },
             ),
             ListTile(leading: Icon(Icons.language),
-              title: Text(allTranslations.text('country')),
+              title: Text(allTranslations.text('country')!),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: (){
                 _showCountryDialog();
@@ -179,7 +179,7 @@ class _SettingsPageState extends State<SettingsPage> {
         context,
         label: allTranslations.text('choose_country'),
         selectedValue: CountryEntity(),
-        items: List(),
+        items: List.empty(),
         onChange: (CountryEntity selected) {
           preferences.saveCountryID(selected.countryId.toString());
           preferences.saveCountry(selected);

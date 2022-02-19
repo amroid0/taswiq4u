@@ -15,8 +15,8 @@ class WelocmeScreen extends StatefulWidget {
 }
 
 class _WelocmeScreenState extends State<WelocmeScreen> {
-  int currentIndexPage;
-  int pageLength;
+  int? currentIndexPage;
+  late int pageLength;
   PageController _controller = PageController(initialPage: 0, keepPage: false);
 
   static const _kDuration = const Duration(milliseconds: 300);
@@ -50,24 +50,24 @@ class _WelocmeScreenState extends State<WelocmeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children:<Widget>[
 
-                 FlatButton(child: new Text(allTranslations.text('next'),style: TextStyle(fontWeight: FontWeight.bold)),onPressed:(){
+                 FlatButton(child: new Text(allTranslations.text('next')!,style: TextStyle(fontWeight: FontWeight.bold)),onPressed:(){
                    setState(() {
                      if(currentIndexPage==2){
                        Navigator.push(context,MaterialPageRoute(builder: (context) => CountryPage()));
                      }else{
-                       currentIndexPage++;
+                      currentIndexPage=currentIndexPage!+1;
                      }
-                     _controller.animateToPage(currentIndexPage, duration: _kDuration, curve: _kCurve);
+                     _controller.animateToPage(currentIndexPage!, duration: _kDuration, curve: _kCurve);
                    });
                  },),
 
 
                      DotsIndicator(
                     dotsCount:pageLength ,
-             position: currentIndexPage,
+             position: currentIndexPage!.toDouble(),
                   decorator: DotsDecorator(activeColor: Colors.green),),
 
-                    FlatButton(child: new Text(allTranslations.text('skip'),style: TextStyle(fontWeight: FontWeight.bold),),onPressed: (){
+                    FlatButton(child: new Text(allTranslations.text('skip')!,style: TextStyle(fontWeight: FontWeight.bold),),onPressed: (){
                       Navigator.push(context,MaterialPageRoute(builder: (context) => CountryPage()));
                     },),
 

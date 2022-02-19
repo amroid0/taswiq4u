@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import 'package:olx/data/remote/NetworkCommon.dart';
@@ -7,7 +8,7 @@ import 'package:olx/model/field_proprtires_entity.dart';
 import 'package:olx/utils/Constants.dart';
 
 class addPostClient{
-  Future<FieldPropReponse> getPropertiesByCat( int catId) async {
+  Future<FieldPropReponse> getPropertiesByCat( int? catId) async {
     try{
     final results = await NetworkCommon()
         .dio.get(APIConstants.FIELDS_ADD_ADS+catId.toString(),
@@ -19,11 +20,11 @@ class addPostClient{
           .toList(growable: false);
       return FieldPropReponse(list, true);
     }else{
-      return FieldPropReponse(List(), false);
+      return FieldPropReponse(List.empty(), false);
 
     }
   }catch(e){
-      return FieldPropReponse(List(), false);
+      return FieldPropReponse(List.empty(), false);
     }
   }
 

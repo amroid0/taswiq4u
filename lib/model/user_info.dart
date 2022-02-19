@@ -23,35 +23,35 @@ class UserInfo {
   });
   @JsonKey(name: "Id")
 
-  String id;
+  String? id;
   @JsonKey(name: "FirstName")
-  String firstName;
+  String? firstName;
   @JsonKey(name: "SecondName")
-  String secondName;
+  String? secondName;
   @JsonKey(name: "Email")
-  String email;
+  String? email;
   @JsonKey(name: "Phone")
-  String phone;
+  String? phone;
   @JsonKey(name: "CountryId")
-  int countryId;
+  int? countryId;
   @JsonKey(name: "CountryNameEnglish")
-  String countryNameEnglish;
+  String? countryNameEnglish;
   @JsonKey(name: "CountryNameArabic")
-  String countryNameArabic;
+  String? countryNameArabic;
   @JsonKey(name: "Image")
-  String image;
+  String? image;
   @JsonKey(name: "CityId")
-  int cityId;
+  int? cityId;
   @JsonKey(name: "CityNameEnglish")
-  String cityNameEnglish;
+  String? cityNameEnglish;
   @JsonKey(name: "CityNameArabic")
-  String cityNameArabic;
+  String? cityNameArabic;
   @JsonKey(name: "FreeAdsCount")
-  int freeAdsCount;
+  int? freeAdsCount;
   @JsonKey(name: "MembershipType")
-  bool membershipType;
+  bool? membershipType;
   @JsonKey(name: "PhoneConfirmed")
-  bool phoneConfirmed;
+  bool? phoneConfirmed;
 
   factory UserInfo.fromJson(Map<String, dynamic> json) => _$UserInfoFromJson(json);
   Map<String, dynamic> toJson() => _$UserInfoToJson(this);

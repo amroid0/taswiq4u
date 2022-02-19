@@ -1,4 +1,4 @@
-import 'package:ars_progress_dialog/ars_progress_dialog.dart';
+import 'package:ars_dialog/ars_dialog.dart';
 import 'package:bmprogresshud/progresshud.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,18 +10,16 @@ import 'package:olx/model/country_entity.dart';
 import 'package:olx/model/login_api_response.dart';
 import 'package:olx/pages/login_page.dart';
 import 'package:olx/pages/verification_page.dart';
-import 'package:olx/remote/client_api.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/loading_dialog.dart';
 import 'package:olx/widget/auth_input_widget.dart';
 import 'package:olx/widget/city_list_dialog.dart';
 import 'package:olx/widget/country_list_dialog.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class RegisterPage extends StatefulWidget {
-  final Function(int pos) onSelectionChanged; // +added
+  final Function(int pos)? onSelectionChanged; // +added
   RegisterPage(
       {this.onSelectionChanged} // +added
    );
@@ -41,29 +39,24 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController passwordContoller = TextEditingController();
   final TextEditingController _countrytextController = TextEditingController();
 
-  ArsProgressDialog progressDialog;
-  String _email;
-  String _password;
-  RegisterBloc bloc;
-  int countryId;
-  int val = -1;
+  late CustomProgressDialog progressDialog;
+  String? _email;
+  String? _password;
+  RegisterBloc? bloc;
+  int? countryId;
+  int? val = -1;
 
   @override
   void initState() {
     // TODO: implement initState
     bloc=RegisterBloc();
 
-    progressDialog = ArsProgressDialog(
-        context,
-        blur: 2,
-        backgroundColor: Color(0x33000000),
-        animationDuration: Duration(milliseconds: 500));
+    progressDialog =CustomProgressDialog(context,blur: 10);
 
-    bloc.stream.listen((data) {
+    bloc!.stream.listen((data) {
       // Redirect to another view, given your condition
-      if(progressDialog.isShowing){
         progressDialog.dismiss();
-      }
+
       switch (data.status) {
         case Status.LOADING:
           progressDialog.show();
@@ -74,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
         case Status.ERROR:
 
           Fluttertoast.showToast(
-              msg: data.message,
+              msg: data.message!,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 1,
@@ -88,14 +81,14 @@ class _RegisterPageState extends State<RegisterPage> {
           break;
         case Status.UNVERFIED:
           // TODO: Handle this case.
-          WidgetsBinding.instance.addPostFrameCallback((_) =>  Navigator.pushReplacement(
+          WidgetsBinding.instance!.addPostFrameCallback((_) =>  Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => VerificationScreen())
           ));
 
           break;
         case Status.UNAUTHINTICATED:
-          WidgetsBinding.instance.addPostFrameCallback((_) =>  Navigator.pushReplacement(
+          WidgetsBinding.instance!.addPostFrameCallback((_) =>  Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => LoginPage())
           ));
@@ -107,7 +100,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
   @override
   void dispose() {
-    bloc.dispose();
+    bloc!.dispose();
     super.dispose();
   }
 
@@ -116,7 +109,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<RegisterBloc>(
+    return BlocProvider<RegisterBloc?>(
       bloc: bloc,
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -129,21 +122,21 @@ class _RegisterPageState extends State<RegisterPage> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Align(alignment:Alignment.center,child: Text(allTranslations.text('register'),
-                      style: Theme.of(context).textTheme.headline5.copyWith(fontWeight: FontWeight.bold),)),
+                    Align(alignment:Alignment.center,child: Text(allTranslations.text('register')!,
+                      style: Theme.of(context).textTheme.headline5!.copyWith(fontWeight: FontWeight.bold),)),
                     SizedBox(height: 10,),
-                    firstName(bloc),
+                    firstName(bloc!),
                     SizedBox(height: 16,),
                   //  secondName(bloc),
-                    phone(bloc),
+                    phone(bloc!),
                     SizedBox(height: 16,),
-                    password(bloc),
+                    password(bloc!),
                     SizedBox(height: 16,),
-                    confrimPassword(bloc),
+                    confrimPassword(bloc!),
                     SizedBox(height: 16,),
-                    country(bloc),
+                    country(bloc!),
                     SizedBox(height: 16,),
-                    submitButton(bloc),
+                    submitButton(bloc!),
                  //  registerState(bloc)
 
                   ],
@@ -207,7 +200,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
 
              labelText: allTranslations.text('first_name'),
-                    errorText: snapshot.error,
+                    errorText: snapshot.error as String?,
               onChange: bloc.changeFirstName,
               contoller: firstController,
 
@@ -226,7 +219,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
              labelText: allTranslations.text('phone'),
 
-                errorText: snapshot.error,
+                errorText: snapshot.error as String?,
 
               onChange: bloc.changeEmail,
               contoller: phoneContorller,
@@ -252,7 +245,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 _showCountryD();
               },
               labelText: allTranslations.text('country'),
-                errorText: snapshot.error,
+                errorText: snapshot.error as String?,
                 suffixIcon:  Icon(Icons.arrow_drop_down),
 
 
@@ -270,7 +263,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
           return AuthInputWidget(
          labelText: allTranslations.text('password'),
-                errorText: snapshot.error,
+                errorText: snapshot.error as String?,
 
               invisbleText: true,
               onChange: bloc.changePassword,
@@ -290,7 +283,7 @@ class _RegisterPageState extends State<RegisterPage> {
           return AuthInputWidget(
 
        labelText: allTranslations.text('pass_confirm'),
-                errorText: snapshot.error,
+                errorText: snapshot.error as String?,
 
 
               onSaved: (val) => _password = val,
@@ -328,7 +321,7 @@ class _RegisterPageState extends State<RegisterPage> {
               decoration: InputDecoration(labelText: allTranslations.text('sec_name'),filled: true,
                 fillColor: Colors.black12,
                 border: InputBorder.none,
-                errorText: snapshot.error,
+                errorText: snapshot.error as String?,
 
               ),
               onChanged: bloc.changeSecondName,
@@ -364,7 +357,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 borderRadius: new BorderRadius.circular(10.0),
               ),
               child:  Stack(children:<Widget>[
-                Align( child: new Text(allTranslations.text('register'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
+                Align( child: new Text(allTranslations.text('register')!, style: new TextStyle(fontSize: 18.0, color: Colors.white),)
                   ,alignment: Alignment.centerRight,),
 
                 Align( child:                 Icon(
@@ -389,15 +382,15 @@ class _RegisterPageState extends State<RegisterPage> {
         context,
         label: allTranslations.text('choose_country'),
     selectedValue: CountryEntity(),
-    items: List(),
+    items: List.empty(),
     onChange: (CountryEntity selected) {
           setState(() {
-            _countrytextController.text=allTranslations.isEnglish?selected.englishDescription.toString():selected.arabicDescription;
+            _countrytextController.text=allTranslations.isEnglish?selected.englishDescription.toString():selected.arabicDescription!;
             countryId=selected.countryId;});
           });
 
   }
-   Widget _showCountryD(){
+   Widget? _showCountryD(){
      Alert(
          context: context,
          title: allTranslations.text('choose_country'),
@@ -410,25 +403,25 @@ class _RegisterPageState extends State<RegisterPage> {
                        RadioListTile(
                          value: 1,
                          groupValue: val,
-                         onChanged: (value) {
+                         onChanged: (dynamic value) {
                            setState(() {
                              val = value;
-                             _countrytextController.text =allTranslations.text('egypt');
+                             _countrytextController.text =allTranslations.text('egypt')!;
                            });
                          },
-                         title: Text(allTranslations.text('egypt')),
+                         title: Text(allTranslations.text('egypt')!),
                        ),
                        SizedBox(height: 20,),
                        RadioListTile(
                          value: 2,
                          groupValue: val,
-                         onChanged: (value) {
+                         onChanged: (dynamic value) {
                            setState(() {
                              val = value;
-                             _countrytextController.text =allTranslations.text('kuwait');
+                             _countrytextController.text =allTranslations.text('kuwait')!;
                            });
                          },
-                         title: Text(allTranslations.text('kuwait')),
+                         title: Text(allTranslations.text('kuwait')!),
                        ),
 
                      ]
@@ -442,7 +435,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
              },
              child: Text(
-             allTranslations.text('ok'),
+             allTranslations.text('ok')!,
              style: TextStyle(color: Colors.white, fontSize: 20),
            ),
            )
@@ -460,7 +453,7 @@ class _RegisterPageState extends State<RegisterPage> {
       buttons: [
         DialogButton(
           child: Text(
-            allTranslations.text('ok'),
+            allTranslations.text('ok')!,
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: () {

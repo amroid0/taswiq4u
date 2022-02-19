@@ -15,7 +15,7 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-AppBar appBar;
+AppBar? appBar;
 TextEditingController firstController = TextEditingController();
 TextEditingController phoneContorller = TextEditingController();
 bool isupdated=false;
@@ -34,19 +34,19 @@ bool isupdated=false;
         break;
       case Status.COMPLETED:
 
-         UserInfo info=data.data;
+         UserInfo? info=data.data;
          if(info!=null){
-           phoneContorller.text=info.phone;
-           String name=info.firstName;
-           if(info.secondName!=null&&info.secondName.isNotEmpty){
-             name+=" ${info.secondName}";
+           phoneContorller.text=info.phone!;
+           String? name=info.firstName;
+           if(info.secondName!=null&&info.secondName!.isNotEmpty){
+             name=name!+" ${info.secondName}";
            }
-           firstController.text=name;
+           firstController.text=name!;
          }
            if(isupdated) {
              DialogBuilder(context).hideOpenDialog();
              Fluttertoast.showToast(
-                 msg: allTranslations.text('Success_update'),
+                 msg: allTranslations.text('Success_update')!,
                  toastLength: Toast.LENGTH_SHORT,
                  gravity: ToastGravity.CENTER,
                  timeInSecForIosWeb: 1,
@@ -82,7 +82,7 @@ bool isupdated=false;
   Widget build(BuildContext context) {
     appBar=AppBar(
       title: Center(
-        child: Text(allTranslations.text('personal_info'),textAlign: TextAlign.center,style: TextStyle(
+        child: Text(allTranslations.text('personal_info')!,textAlign: TextAlign.center,style: TextStyle(
             color:
             Colors.black38
 
@@ -129,7 +129,7 @@ bool isupdated=false;
                 SizedBox(height: 24,),
                 _BuildProifleImage(100,100),
                 SizedBox(height: 8,),
-                Text(allTranslations.text('change_profile'),style: TextStyle(color: Colors.black87,fontSize: 18,            decoration: TextDecoration.underline,
+                Text(allTranslations.text('change_profile')!,style: TextStyle(color: Colors.black87,fontSize: 18,            decoration: TextDecoration.underline,
                 ),),
                 SizedBox(height: 24,),
                 
@@ -146,7 +146,7 @@ bool isupdated=false;
                  decoration: InputDecoration(
                      filled: true,
                      fillColor: Colors.white,
-                     errorText: snapshot.error,
+                     errorText: snapshot.error as String?,
 
                      hintText: allTranslations.text('first_name'),
                      isDense: true,
@@ -184,7 +184,7 @@ bool isupdated=false;
                           fillColor: Colors.white,
                           hintText: allTranslations.text('phone'),
                           isDense: true,
-                          errorText: snapshot.error,
+                          errorText: snapshot.error as String?,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 20.0),
                           border: OutlineInputBorder(
@@ -232,7 +232,7 @@ bool isupdated=false;
                 borderRadius: new BorderRadius.circular(8.0),
               ),
               child:  Stack(children:<Widget>[
-                Align( child: new Text(allTranslations.text('save_change'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
+                Align( child: new Text(allTranslations.text('save_change')!, style: new TextStyle(fontSize: 18.0, color: Colors.white),)
                   ,alignment: Alignment.center,),
 
 

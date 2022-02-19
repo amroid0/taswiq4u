@@ -17,7 +17,7 @@ class LoginBloc extends Validators implements Bloc {
 final _client = AuthClient();
 final _profileClient=ProfileClient();
 
-final _controller = BehaviorSubject<LoginApiResponse<bool>>();
+final _controller = BehaviorSubject<LoginApiResponse<bool>?>();
 final _logincontroller = BehaviorSubject<bool>();
 
 final _emailController = BehaviorSubject<String>();
@@ -25,12 +25,12 @@ final _passwordController = BehaviorSubject<String>();
 
   bool mIsLogged=false;
   bool isfirstPopupAd=true;
-Stream<LoginApiResponse<bool>> get stream => _controller.stream;
+Stream<LoginApiResponse<bool>?> get stream => _controller.stream;
 Stream<bool> get Sessionstream => _logincontroller.stream;
 
 Stream<String> get email => _emailController.stream.transform(validateEmpty);
 Stream<String> get password => _passwordController.stream.transform(validateEmpty);
-Stream<bool> get submitValid => CombineLatestStream.combine2(email, password, (e, p) => true);
+Stream<bool> get submitValid => CombineLatestStream.combine2(email, password, (dynamic e, dynamic p) => true);
 Function(String) get changeEmail => _emailController.sink.add;
 Function(String) get changePassword => _passwordController.sink.add;
 bool isLogged() => mIsLogged==null?false:mIsLogged;
@@ -56,7 +56,7 @@ bool isLogged() => mIsLogged==null?false:mIsLogged;
 
     Stream.fromFuture(_client.login(UserCredit(validEmail,validPassword)))
         .flatMap((value)  {
-      if(value){
+      if(value!=null){
        return Stream.fromFuture(_client.checkVerfiyPhone());
       }
       return Stream.error(UnauthorisedException());

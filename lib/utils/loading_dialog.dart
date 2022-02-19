@@ -7,7 +7,7 @@ class DialogBuilder {
 
   final BuildContext context;
 
-  void showLoadingIndicator([String text]) {
+  void showLoadingIndicator([String? text]) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -36,11 +36,11 @@ class DialogBuilder {
 class LoadingIndicator extends StatelessWidget{
   LoadingIndicator({this.text = ''});
 
-  final String text;
+  final String? text;
 
   @override
   Widget build(BuildContext context) {
-    var displayedText = text;
+    var displayedText = text!;
 
     return Container(
         padding: EdgeInsets.all(16),
@@ -74,7 +74,7 @@ class LoadingIndicator extends StatelessWidget{
     return
       Padding(
           child: Text(
-            allTranslations.text('wait'),
+            allTranslations.text('wait')!,
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 16

@@ -14,7 +14,7 @@ description: A new Flutter application.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -23,41 +23,42 @@ dependencies:
     sdk: flutter
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
-  json_annotation: ^2.4.0
-  http: ^0.12.0
-  dots_indicator: ^0.0.4
-  shared_preferences: ^0.4.2
-  carousel_slider: ^1.3.0
-  dio: 3.0.0 #latest version
-  image_picker: 0.6.2
-  image_cropper: 1.1.0
+  cupertino_icons: ^1.0.4
+  json_annotation: ^4.4.0
+  http: ^0.13.4
+  dots_indicator: ^2.1.0
+  shared_preferences: ^2.0.13
+  carousel_slider: ^4.0.0
+  dio: ^4.0.4 #latest version
+  image_picker: ^0.8.4+8
+  image_cropper: ^1.4.1
   #google_maps_flutter: ^0.4.0
-  google_maps_flutter: ^0.5.28+1
-  geolocator: ^5.1.4+2
-  google_map_location_picker: ^3.3.2
-  intl: ^0.16.0
-  rxdart: ^0.23.1
-  bmprogresshud: ^0.0.5
-  url_launcher: ^5.2.5
-  progress_dialog: ^1.2.4
-  rflutter_alert: ^1.0.2
-  fluttertoast: ^4.0.1
-  empty_widget: ^0.0.1-dev.1
-  cached_network_image: ^2.3.2+1
-  flutter_staggered_grid_view: ^0.3.4
-  multi_image_picker: ^4.6.5
-  flutter_share: ^1.0.5
-  flutter_speed_dial: ^2.1.1
-  ars_progress_dialog: ^0.1.2
-  photo_view: 0.10.3
-  animate_do: ^1.7.4
-  webview_flutter: ^1.0.5
-  shimmer: ^1.1.2
-  auto_direction: any
-  material_design_icons_flutter: any
+  google_maps_flutter: ^2.1.1
+  geolocator: ^8.1.1
+  #google_map_location_picker: any
+  place_picker: ^0.9.19
 
-  device_preview: any
+  intl: ^0.17.0
+  rxdart: ^0.27.3
+  bmprogresshud: ^1.0.1
+  url_launcher: ^6.0.20
+  rflutter_alert: ^2.0.4
+  fluttertoast: ^8.0.8
+  empty_widget: ^0.0.5
+  cached_network_image: ^3.2.0
+  flutter_staggered_grid_view: ^0.4.0
+  multi_image_picker: ^4.8.01
+  flutter_share: ^2.0.0
+  flutter_speed_dial: ^5.0.0+1
+  ars_dialog: ^1.0.8
+  photo_view: ^0.13.0
+  animate_do: ^2.1.0
+  webview_flutter: ^3.0.0
+  shimmer: ^2.0.0
+  auto_direction: ^0.0.5
+  material_design_icons_flutter: ^5.0.6595
+
+  #device_preview: ^1.0.0
 
 
 
@@ -73,8 +74,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  build_runner: ^1.0.0
-  json_serializable: ^3.0.0
+  build_runner: ^2.1.7
+  json_serializable: ^6.1.4
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
 

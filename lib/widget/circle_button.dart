@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class CircleButton extends StatelessWidget {
-  final GestureTapCallback onTap;
-  final IconData iconData;
-  final double size,iconSize;
+  final GestureTapCallback? onTap;
+  final IconData? iconData;
+  final double? size,iconSize;
 
-  const CircleButton({Key key,this.size,this.iconSize, this.onTap, this.iconData}) : super(key: key);
+  const CircleButton({Key? key,this.size,this.iconSize, this.onTap, this.iconData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

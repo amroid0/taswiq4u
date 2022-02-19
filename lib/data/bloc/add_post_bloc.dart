@@ -19,7 +19,7 @@ class AddPostBloc implements Bloc{
 
   AddPostBloc();
 
-  void getAddFieldsByCatID(int catId) async {
+  void getAddFieldsByCatID(int? catId) async {
     final results = await _client.getPropertiesByCat(catId);
 
     _controller.sink.add(results);
@@ -42,7 +42,7 @@ class AddPostBloc implements Bloc{
       final results = await _client.PostNewAds(obj);
       _addController.sink.add(ApiResponse.completed(results));
     }catch(e){
-      _addController.sink.add(ApiResponse.error(e));
+      _addController.sink.add(ApiResponse.error(e.toString()));
 
     }
 

@@ -44,45 +44,45 @@ class AdsPostEntity {
   List<Advertisment_SpecificationBean> AdvertismentSpecification;
   */
   @JsonKey(name: "Id",includeIfNull: false)
-  int id;
+  int? id;
   @JsonKey(name: "Title")
-  String title;
+  String? title;
   @JsonKey(name: "ArabicDescription")
-  String arabicDescription;
+  String? arabicDescription;
   @JsonKey(name: "EnglishDescription")
-  String englishDescription;
+  String? englishDescription;
   @JsonKey(name: "Price")
-  int price;
+  int? price;
   @JsonKey(name: "Phone")
-  String phone;
+  String? phone;
   @JsonKey(name: "Email")
-  String email;
+  String? email;
   @JsonKey(name: "IsNogitable")
-  bool isNogitable;
+  bool? isNogitable;
   @JsonKey(name: "CategoryId")
-  int categoryId;
+  int? categoryId;
   @JsonKey(name: "CountryId")
-  int countryId;
+  int? countryId;
   @JsonKey(name: "CityId")
-  int cityId;
+  int? cityId;
   @JsonKey(name: "StateId")
-  int stateId;
+  int? stateId;
   @JsonKey(name: "LocationLongtude")
-  int locationLongtude;
+  int? locationLongtude;
   @JsonKey(name: "LocationLatitude")
-  int locationLatitude;
+  int? locationLatitude;
   @JsonKey(name: "UserId")
-  String userId;
+  String? userId;
   @JsonKey(name: "IsNew")
-  bool isNew;
+  bool? isNew;
   @JsonKey(name: "ContactMe")
-  int contactMe;
+  int? contactMe;
   @JsonKey(name: "IsFree")
-  bool isFree;
+  bool? isFree;
   @JsonKey(name: "Photos")
-  List<PhotosBean> photos;
+  List<PhotosBean>? photos;
   @JsonKey(name: "AdvertismentSpecification")
-  List<Advertisment_SpecificationBean> advertismentSpecification;
+  List<Advertisment_SpecificationBean?>? advertismentSpecification;
 
   AdsPostEntity({
       this.id,
@@ -119,11 +119,11 @@ class AdsPostEntity {
 
 class Advertisment_SpecificationBean {
   @JsonKey(name: "Id")
-  int id;
+  int? id;
   @JsonKey(name: "CustomValue")
-  String customValue;
+  String? customValue;
   @JsonKey(name: "AdvertismentSpecificatioOptions")
-  List<int> advertismentSpecificatioOptions;
+  List<int?>? advertismentSpecificatioOptions;
   factory Advertisment_SpecificationBean.fromJson(Map<String, dynamic> json) => _$Advertisment_SpecificationBeanFromJson(json);
   Map<String, dynamic> toJson() => _$Advertisment_SpecificationBeanToJson(this);
 
@@ -135,9 +135,9 @@ class Advertisment_SpecificationBean {
 
 class PhotosBean {
   @JsonKey(name: "Url")
-  String url;
+  String? url;
   @JsonKey(name: "Id")
-  int id;
+  int? id;
 
 factory PhotosBean.fromJson(Map<String, dynamic> json) => _$PhotosBeanFromJson(json);
 

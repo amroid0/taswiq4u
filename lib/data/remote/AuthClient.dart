@@ -14,7 +14,7 @@ class AuthClient{
 
 
 
-  Future<bool> login(UserCredit credit) async {
+  Future<bool?> login(UserCredit credit) async {
   final results = await NetworkCommon().dio.post(APIConstants.LOGIN,
   data: 'grant_type=password&username=${ await preferences.getCountryID()}-${credit.userName}&password=${credit
       .password}',
@@ -27,17 +27,17 @@ class AuthClient{
   }
   }
 
-  Future<bool> checkVerfiyPhone() async {
+  Future<bool?> checkVerfiyPhone() async {
     final results = await NetworkCommon().dio.post(APIConstants.CHECK_VERIFY,
 
     );
     if (results.statusCode == 200) {
       if (results.data != null)
-        return results.data as bool;
+        return results.data as bool?;
     }
   }
 
-  Future<bool> updateToken(UserCredit credit) async {
+  Future<bool?> updateToken(UserCredit credit) async {
   final results = await NetworkCommon().dio.post(APIConstants.LOGIN,
   data: 'grant_type=password&username=${ await preferences.getCountryID()}-${credit.userName}&password=${credit.password}',
 
@@ -49,7 +49,7 @@ class AuthClient{
 
   }
 
-  Future<List<CateogryEntity>> getCateogryList( ) async {
+  Future<List<CateogryEntity>?> getCateogryList( ) async {
   final results = await NetworkCommon()
       .dio
       .get(
@@ -65,7 +65,7 @@ class AuthClient{
   }
   }
 
-  Future<List<CountryEntity>> getCountryList( ) async {
+  Future<List<CountryEntity>?> getCountryList( ) async {
     final results = await NetworkCommon()
         .dio
         .get(

@@ -1,5 +1,5 @@
 class Counter{
-  int count;
+  int? count;
   bool isEanbled;
 
   Counter(this.count, this.isEanbled);

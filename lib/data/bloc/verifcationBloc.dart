@@ -21,7 +21,7 @@ Stream<ApiResponse<bool>> get resendStream => _resendController.stream;
 
 VerifcationBloc();
 
-verifyPhone(String code, String userPhone, int countryID) async{
+verifyPhone(String code, String? userPhone, int? countryID) async{
 
   _controller.add(ApiResponse.loading('loading'));
   try {
@@ -30,7 +30,7 @@ verifyPhone(String code, String userPhone, int countryID) async{
     final requestCountryId = countryID??1;
 
     final results = await _client.verifyPhone(code,requestPhone,requestCountryId);
-    if(results){
+    if(results!=null){
       // Not reset verification
       if(userPhone==null){
        preferences.setAccountAcivation(true);
@@ -44,14 +44,14 @@ verifyPhone(String code, String userPhone, int countryID) async{
 }
 
 
-resendCode(int countryId,String userPhone) async{
+resendCode(int? countryId,String? userPhone) async{
 
 
     _resendController.add(ApiResponse.loading('loading'));
     try {
 
       final results = await _resetClient.forgetPassword(userPhone,countryId);
-      if(results){
+      if(results!=null){
         _resendController.sink.add(ApiResponse.completed(results));
       }
     }catch(e){

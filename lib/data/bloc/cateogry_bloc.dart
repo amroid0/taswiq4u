@@ -18,7 +18,7 @@ class CategoryBloc implements Bloc {
   final _AdsCleint= AdsClient();
   final _controller = BehaviorSubject<List<CateogryEntity>>();
   final _subcontroller = BehaviorSubject<List<List<CateogryEntity>>>();
-  final _cateogryStack =List<List<CateogryEntity>>();
+  final List<List<CateogryEntity>> _cateogryStack =[];
   final _popupSubject=BehaviorSubject<ApiResponse<List<PopupAdsEntityList>>>();
   List<CateogryEntity> cateogyTitle=[];
   final _mainSliderSubject=BehaviorSubject<ApiResponse<List<PopupAdsEntityList>>>();
@@ -35,17 +35,19 @@ class CategoryBloc implements Bloc {
 
   void submitQuery(String query) async {
     cateogyTitle.clear();
-    List<CateogryEntity> results = null ;//await preferences.getCateogryList();
+    List<CateogryEntity>? results = null ;//await preferences.getCateogryList();
     Stream.fromFuture(preferences.getCateogryList())
         .onErrorResumeNext(Stream.fromFuture(_client.getCateogryList()))
         .doOnData((event) { preferences.saveCateogryList(event);}).listen((event) {
-        var res= event.where((element) => element.isActive).toList();
+        var res= event!.where((element) => element.isActive!).toList();
           _cateogryStack.clear();
 
       _cateogryStack.add(res);
       _controller.sink.add(res);
       _subcontroller.sink.add(_cateogryStack);
-    },onError: (){});
+    },onError: (object){
+
+    });
 
 
 
@@ -89,7 +91,7 @@ class CategoryBloc implements Bloc {
 
 
   void addCateogryToStack(CateogryEntity cateogry)  {
-   var res=cateogry.subCategories.where((element) => element.isActive).toList();
+   var res=cateogry.subCategories!.where((element) => element.isActive!).toList();
     cateogyTitle.add(cateogry);
    _cateogryStack.add(res);
     _controller.sink.add(res);
@@ -97,7 +99,7 @@ class CategoryBloc implements Bloc {
 
   }
   void addSubCateogry(int level ,List<CateogryEntity> cateogry)  {
-  var res=  cateogry.where((element) => element.isActive).toList();
+  var res=  cateogry.where((element) => element.isActive!).toList();
     _cateogryStack.removeRange(level+1, _cateogryStack.length);
     _cateogryStack.add(res);
     _subcontroller.sink.add(_cateogryStack);

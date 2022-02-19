@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 class VerificationCodeInput extends StatefulWidget {
-  final ValueChanged<String> onCompleted;
+  final ValueChanged<String>? onCompleted;
   final TextInputType keyboardType;
   final int length;
   final double itemSize;
-  final BoxDecoration itemDecoration;
+  final BoxDecoration? itemDecoration;
   final TextStyle textStyle;
   final bool autofocus;
   VerificationCodeInput(
-      {Key key,
+      {Key? key,
       this.onCompleted,
       this.keyboardType = TextInputType.number,
       this.length = 4,
@@ -31,7 +31,7 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
   final List<FocusNode> _listFocusNode = <FocusNode>[];
   final List<TextEditingController> _listControllerText =
       <TextEditingController>[];
-  List<String> _code = List();
+  List<String> _code = List.empty();
   int _currentIdex = 0;
   @override
   void initState() {
@@ -75,7 +75,7 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
         if (value.length > 1 && index < widget.length ||
             index == 0 && value.isNotEmpty) {
           if (index == widget.length - 1) {
-            widget.onCompleted(_getInputVerify());
+            widget.onCompleted!(_getInputVerify());
             return;
           }
           if (_listControllerText[index + 1].value.text.isEmpty) {
@@ -119,7 +119,7 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
       setState(() {
         _currentIdex = index + 1;
       });
-      SchedulerBinding.instance.addPostFrameCallback((_) {
+      SchedulerBinding.instance!.addPostFrameCallback((_) {
         FocusScope.of(context).requestFocus(_listFocusNode[index + 1]);
       });
     }
@@ -133,14 +133,14 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
         }
         _currentIdex = index - 1;
       });
-      SchedulerBinding.instance.addPostFrameCallback((_) {
+      SchedulerBinding.instance!.addPostFrameCallback((_) {
         FocusScope.of(context).requestFocus(_listFocusNode[index - 1]);
       });
     }
   }
 
   List<Widget> _buildListWidget() {
-    List<Widget> listWidget = List();
+    List<Widget> listWidget = List.empty();
     for (int index = 0; index < widget.length; index++) {
       double left = (index == 0) ? 0.0 : (widget.itemSize / 10);
       listWidget.add(Container(

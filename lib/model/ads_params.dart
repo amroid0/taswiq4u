@@ -4,9 +4,9 @@ part 'ads_params.g.dart';
 @JsonSerializable()
 class AdsParams {
 
-  int CountryId;
-  int CityId;
-  int CategoryId;
+  int? CountryId;
+  int? CityId;
+  int? CategoryId;
 
 	AdsParams({this.CountryId, this.CityId, this.CategoryId});
 

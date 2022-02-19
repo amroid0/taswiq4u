@@ -25,12 +25,12 @@ class FavroitePage extends StatefulWidget {
    int _sortSelectedValue=1;
    ScrollController _scrollController = new ScrollController();
    int page=1;
-   FavoriteModel ads;
+   FavoriteModel? ads;
 
    var _gridItemCount=1;
    var bloc;
-   int lang;
-   String countryId;
+   int? lang;
+   String? countryId;
 
    @override
    void initState() {
@@ -65,7 +65,7 @@ class FavroitePage extends StatefulWidget {
 
      _scrollController.addListener(() {
        if (_scrollController.position.pixels ==
-           _scrollController.position.maxScrollExtent&&ads.isLoadMore==null) {
+           _scrollController.position.maxScrollExtent&&ads!.isLoadMore==null) {
          //todo paging
          /*    if(ads.advertisementList.page==1)
           BlocProvider.of<AdsBloc>(context).submitQuery(params
@@ -93,7 +93,7 @@ class FavroitePage extends StatefulWidget {
 
      return Scaffold(
        backgroundColor: AppColors.appBackground,
-       body: BlocProvider<FavroiteBloc>(
+       body: BlocProvider<FavroiteBloc?>(
          bloc: bloc,
          child: Column(
            children: <Widget>[
@@ -130,7 +130,7 @@ class FavroitePage extends StatefulWidget {
                  stream: bloc.stream,
                  builder:(context,snap){
                    if(snap.data!=null)
-                   switch(snap.data.status) {
+                   switch(snap.data!.status) {
                      case Status.LOADING:
                        if(page==1)
                          return new Center(
@@ -143,17 +143,17 @@ class FavroitePage extends StatefulWidget {
                        break;
 
                      case Status.COMPLETED:
-                       ads=snap.data.data as FavoriteModel;
-                       return _buildAdsList(ads);
+                       ads=snap.data!.data as FavoriteModel?;
+                       return _buildAdsList(ads!);
                        break;
                      case Status.ERROR:
-                       return EmptyListWidget(
+                       return EmptyWidget(
 
                            title: 'Error',
                            subTitle: 'Something Went Wrong',
                            image: 'images/error.png',
-                           titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
-                           subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
+                           titleTextStyle: Theme.of(context).typography.dense.displayMedium!.copyWith(color: Color(0xff9da9c7)),
+                           subtitleTextStyle: Theme.of(context).typography.dense.bodySmall!.copyWith(color: Color(0xffabb8d6))
                        );
                        break;
                    }
@@ -174,19 +174,19 @@ class FavroitePage extends StatefulWidget {
 
    }
    Widget _buildAdsList(FavoriteModel ads){
-     for(int i=0;i<ads.list.length;i++){
-       ads.list[i].IsFavorite=true;
+     for(int i=0;i<ads.list!.length;i++){
+       ads.list![i].IsFavorite=true;
      }
 
-     if(ads.list.isEmpty)
+     if(ads.list!.isEmpty)
 
-       return EmptyListWidget(
+       return EmptyWidget(
 
            title: 'Empty Ads',
            subTitle: 'No  Ads available yet',
            image: 'images/ads_empty.png',
-           titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
-           subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
+           titleTextStyle: Theme.of(context).typography.dense.displayMedium!.copyWith(color: Color(0xff9da9c7)),
+           subtitleTextStyle: Theme.of(context).typography.dense.bodySmall!.copyWith(color: Color(0xffabb8d6))
        );
 
      else
@@ -196,24 +196,24 @@ class FavroitePage extends StatefulWidget {
            childAspectRatio: 0.70,),
          controller: _scrollController,
          shrinkWrap: true,
-         itemCount: ads.list.length,
+         itemCount: ads.list!.length,
          itemBuilder: (BuildContext context,int index){
 
 
              int adsIndex=index;
 
-             if(ads.list[adsIndex]==null){
+             if(ads.list![adsIndex]==null){
                return _buildLoaderListItem();
 
              }else {
-               List<AdvertismentImage> imageList = ads.list[adsIndex]
+               List<AdvertismentImage>? imageList = ads.list![adsIndex]
                    .AdvertismentImages;
                /*if (imageList.isNotEmpty && imageList[0].base64Image == null &&
                  imageList[0].isLoading == null)
                BlocProvider.of<AdsBloc>(context).GetImage(
                    imageList[0].Url, adsIndex, false);*/
 
-               return AdsCardWidget(model:ads.list[adsIndex],language: lang,);
+               return AdsCardWidget(model:ads.list![adsIndex],language: lang,);
 
 
              }
@@ -225,16 +225,16 @@ class FavroitePage extends StatefulWidget {
        return ListView.builder(
          controller: _scrollController,
          shrinkWrap: true,
-         itemCount: ads.list.length,
+         itemCount: ads.list!.length,
          itemBuilder: (BuildContext context,int index){
 
              int adsIndex=index;
 
-             if(ads.list[adsIndex]==null){
+             if(ads.list![adsIndex]==null){
                return _buildLoaderListItem();
 
              }else {
-               List<AdvertismentImage> imageList = ads.list
+               List<AdvertismentImage>? imageList = ads.list!
                [adsIndex]
                    .AdvertismentImages;
                /*     if (imageList.isNotEmpty && imageList[0].base64Image == null &&
@@ -242,7 +242,7 @@ class FavroitePage extends StatefulWidget {
                   BlocProvider.of<AdsBloc>(context).GetImage(
                       imageList[0].Url, adsIndex, false);*/
 
-               return AdsRowWidget(model: ads.list[adsIndex],language:lang,);
+               return AdsRowWidget(model: ads.list![adsIndex],language:lang,);
 
 
 
@@ -266,7 +266,7 @@ class FavroitePage extends StatefulWidget {
    }
    void getGroupId() async{
      countryId = await preferences.getCountryID() ;
-     lang = int.parse(countryId);
+     lang = int.parse(countryId!);
      print("group  value"+lang.toString());
 
    }

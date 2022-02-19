@@ -7,7 +7,7 @@ class RegisterValidators {
 
   final validateEmail =
   StreamTransformer<String, String>.fromHandlers(handleData: (email, sink) async{
-    String countryId = await preferences.getCountryID() ;
+    String countryId = await (preferences.getCountryID() as FutureOr<String>) ;
     int c = int.parse(countryId) ;
     String pattern = r"\b([\-]?\d[\-]?){11}\b";
     RegExp regExp = new RegExp(pattern);
@@ -17,10 +17,10 @@ class RegisterValidators {
     }
 
     else if (!regExp.hasMatch(email)) {
-      sink.addError(c==1 ?allTranslations.text('err_email'):allTranslations.text('err_numk'));
+      sink.addError(c==1 ?allTranslations.text('err_email')!:allTranslations.text('err_numk')!);
 
     }else {
-      sink.addError(c==1 ?allTranslations.text('err_email'):allTranslations.text('err_numk'));
+      sink.addError(c==1 ?allTranslations.text('err_email')!:allTranslations.text('err_numk')!);
 
     }
   });
@@ -30,7 +30,7 @@ class RegisterValidators {
         if (password.length > 5) {
           sink.add(password);
         } else {
-          sink.addError(allTranslations.text('err_pass'));
+          sink.addError(allTranslations.text('err_pass')!);
         }
       });
 
@@ -39,7 +39,7 @@ class RegisterValidators {
         if (password.length > 5) {
           sink.add(password);
         } else {
-          sink.addError(allTranslations.text('err_pass_confirm'));
+          sink.addError(allTranslations.text('err_pass_confirm')!);
         }
       });
 
@@ -50,7 +50,7 @@ class RegisterValidators {
         final String name = firstName.replaceAll(RegExp(r'\u{200e}', unicode: true), '');
 
         if(firstName.isEmpty){
-          sink.addError(allTranslations.text('err_fname'));
+          sink.addError(allTranslations.text('err_fname')!);
         }
 
         if(nameRegExp.hasMatch(name.trim().toString())){
@@ -60,7 +60,7 @@ class RegisterValidators {
         else {
           print("false");
 
-          sink.addError(allTranslations.text('err_fname'));
+          sink.addError(allTranslations.text('err_fname')!);
         }
       });
   final validateSeocndName = StreamTransformer<String, String>.fromHandlers(
@@ -68,12 +68,12 @@ class RegisterValidators {
         if (secondName.length >= 3) {
           sink.add(secondName);
         }else if(secondName.length==0){
-          sink.addError(allTranslations.text('empty_field'));
+          sink.addError(allTranslations.text('empty_field')!);
         }
 
 
         else {
-          sink.addError(allTranslations.text('err_lname'));
+          sink.addError(allTranslations.text('err_lname')!);
         }
       });
   final validateCountry = StreamTransformer<String, String>.fromHandlers(
@@ -81,12 +81,12 @@ class RegisterValidators {
         if (secondName.length >= 3) {
           sink.add(secondName);
         }else if(secondName.length==0){
-          sink.addError(allTranslations.text('empty_field'));
+          sink.addError(allTranslations.text('empty_field')!);
         }
 
 
         else {
-          sink.addError(allTranslations.text('err_lname'));
+          sink.addError(allTranslations.text('err_lname')!);
         }
       });
 

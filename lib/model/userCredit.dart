@@ -6,8 +6,8 @@ part 'userCredit.g.dart';
 
 @JsonSerializable()
 class UserCredit{
-  String userName;
-  String password;
+  String? userName;
+  String? password;
 
   UserCredit(this.userName, this.password);
   factory UserCredit.fromJson(Map<String, dynamic> json) => _$UserCreditFromJson(json);

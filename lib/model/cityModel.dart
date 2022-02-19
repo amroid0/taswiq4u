@@ -5,17 +5,17 @@ part 'cityModel.g.dart';
 
 class CityModel{
   @JsonKey(name: "Id")
-  int id;
+  int? id;
   @JsonKey(name: "CountryId")
-  int countryId;
+  int? countryId;
   @JsonKey(name: "ArabicName")
-  String arabicDescription;
+  String? arabicDescription;
   @JsonKey(name: "EnglishName")
-  String englishDescription;
+  String? englishDescription;
   @JsonKey(name: "Name")
-  String name;
+  String? name;
   @JsonKey(name: "Flag")
-  String flag;
+  String? flag;
 
 
   CityModel(

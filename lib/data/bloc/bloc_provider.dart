@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:olx/data/bloc/bloc.dart';
 
 // 1
-class BlocProvider<T extends Bloc> extends StatefulWidget {
+class BlocProvider<T extends Bloc?> extends StatefulWidget {
   final Widget child;
   final T bloc;
 
-  const BlocProvider({Key key, @required this.bloc, @required this.child})
+  const BlocProvider({Key? key, required this.bloc, required this.child})
       : super(key: key);
 
   // 2
   static T of<T extends Bloc>(BuildContext context) {
     final type = _providerType<BlocProvider<T>>();
-    final BlocProvider<T> provider = context.ancestorWidgetOfExactType(type);
+    final BlocProvider<T> provider = context.findAncestorWidgetOfExactType<BlocProvider<T>>()!;
     return provider.bloc;
   }
 
@@ -33,7 +33,7 @@ class _BlocProviderState extends State<BlocProvider> {
   // 5
   @override
   void dispose() {
-    widget.bloc.dispose();
+    widget.bloc?.dispose();
     super.dispose();
   }
 }

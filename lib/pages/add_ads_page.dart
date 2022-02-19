@@ -27,11 +27,9 @@ import 'package:olx/utils/loading_dialog.dart';
 import 'package:olx/widget/check_box_withlabel.dart';
 import 'package:olx/widget/city_list_dialog.dart';
 import 'package:olx/widget/map_widget.dart';
-import 'package:google_map_location_picker/google_map_location_picker.dart';
 import 'package:olx/widget/multi_select_dialog.dart';
 import 'package:olx/widget/multi_select_form.dart';
 import 'package:olx/widget/mutli_select_chip_dialog.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 
 import '../data/bloc/bloc_provider.dart';
 import '../data/bloc/cateogry_bloc.dart';
@@ -43,14 +41,14 @@ class AddAdvertisment extends StatefulWidget {
 }
 
 class _AddAdvertismentState extends State<AddAdvertisment> {
-  AddPostBloc bloc=null;
-  List<int> _selectedFieldValue=[];
-  List<Color> _colorFieldValue=[];
+  AddPostBloc? bloc=null;
+  List<int?> _selectedFieldValue=[];
+  List<Color?> _colorFieldValue=[];
   AdsPostEntity adsPostEntity=AdsPostEntity();
   final _formKey = GlobalKey<FormState>();
   bool isNeogtiable=false;
-  String countryId ;
-  int cId ;
+  String? countryId ;
+  int? cId ;
   List<String> adsStateList=["جديد","مستعمل"];
   String selectedAdsStates="جديد";
    final TextEditingController _cattextController = TextEditingController();
@@ -59,19 +57,18 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   final TextEditingController _nametextController = TextEditingController();
   final TextEditingController _pricetextController = TextEditingController();
   final TextEditingController _desctextController = TextEditingController();
-  Color adNameColor,descColor,priceColor,categoryColor,cityColor,phoneColor=Colors.grey;
-  GoogleMapController _mapController;
+  Color? adNameColor,descColor,priceColor,categoryColor,cityColor,phoneColor=Colors.grey;
+  GoogleMapController? _mapController;
   final Set<Marker> _markers = {};
-  List<TextEditingController>contollers=List();
-  CateogryEntity _selectedcataogry;
+  List<TextEditingController?>contollers=List.empty();
+  CateogryEntity? _selectedcataogry;
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  UploadImageBloc uploadBloc;
+  UploadImageBloc? uploadBloc;
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
 
-  ProgressDialog progressDialog;
 
-  List<List> _multiselectedFieldValue=List<List<FieldProprtiresSpecificationoption>>();
+  List<List?> _multiselectedFieldValue=List<List<FieldProprtiresSpecificationoption>>.empty();
 
 
 @override
@@ -83,12 +80,12 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_){_showDialog();});
+    WidgetsBinding.instance!.addPostFrameCallback((_){_showDialog();});
    bloc=AddPostBloc();
    uploadBloc =UploadImageBloc();
     getCountryId();
     getUserNumber();
-    bloc.addStream.listen((data) {
+    bloc!.addStream.listen((data) {
       // Redirect to another view, given your conditi on
       switch (data.status) {
         case Status.LOADING:
@@ -103,7 +100,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
 
 
           var isLogged=data as ApiResponse<bool>;
-          var isss=isLogged.data;
+          var isss=isLogged.data!;
           if(isss){
 
             Fluttertoast.showToast(
@@ -123,7 +120,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
         case Status.ERROR:
           DialogBuilder(context).hideOpenDialog();
           ToastUtils.showErrorMessage(allTranslations.
-          text('err_wrong'));
+          text('err_wrong')!);
           break;
       }
     });
@@ -179,14 +176,14 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
       context,
       label: allTranslations.text('choose_category'),
       selectedValue: CateogryEntity(),
-      items: List(),
+      items: List.empty(),
       onChange: (CateogryEntity selected) {
         _cattextController.text=allTranslations.isEnglish?
         selected.englishDescription.toString()
             :selected.arabicDescription.toString();
         _selectedFieldValue=[];
         _colorFieldValue=[];
-        bloc.getAddFieldsByCatID(selected.id);
+        bloc!.getAddFieldsByCatID(selected.id);
           _selectedcataogry=selected;
           adsPostEntity.categoryId=selected.id;
 
@@ -198,9 +195,9 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
       context,
       label: allTranslations.text('choose_govrnment'),
       selectedValue: CityModel(),
-      items: List(),
+      items: List.empty(),
       onChange: (CityModel selected) {
-        _citytextController.text=allTranslations.isEnglish?selected.englishDescription.toString():selected.arabicDescription;
+        _citytextController.text=allTranslations.isEnglish?selected.englishDescription.toString():selected.arabicDescription!;
         adsPostEntity.stateId=selected.id;
         adsPostEntity.cityId=selected.id;
 
@@ -215,7 +212,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
       key: scaffoldKey,
       appBar: AppBar(
         title: Center(
-          child: Text(allTranslations.text('ads_add'),textAlign: TextAlign.center,style: TextStyle(
+          child: Text(allTranslations.text('ads_add')!,textAlign: TextAlign.center,style: TextStyle(
               color:
           Colors.black38
 
@@ -251,7 +248,7 @@ body: Padding(
 
        Padding(
          padding: const EdgeInsets.only(left:8.0),
-         child: Text(allTranslations.text('add_image')),
+         child: Text(allTranslations.text('add_image')!),
        ),
       BlocProvider(
       bloc: uploadBloc,child:ImageInput()),//add image list
@@ -321,9 +318,9 @@ body: Padding(
       controller: _pricetextController,
 
         keyboardType: TextInputType.numberWithOptions(decimal: true),
-        inputFormatters: [WhitelistingTextInputFormatter.digitsOnly,LengthLimitingTextInputFormatter((20))],
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly,LengthLimitingTextInputFormatter((20))],
       onSaved: (val){
-        adsPostEntity.price=int.tryParse(val)??0;
+        adsPostEntity.price=int.tryParse(val!)??0;
       },
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.check_circle,color: AppColors.validValueColor,),
@@ -339,19 +336,19 @@ body: Padding(
             SizedBox(height: 8,),
 
             StreamBuilder<FieldPropReponse>(
-            stream: bloc.stream,
+            stream: bloc!.stream,
             builder: (context, snapshot) {
-              if (snapshot.data!=null &&snapshot.data.isSucess==false)
+              if (snapshot.data!=null &&snapshot.data!.isSucess==false)
                 return Visibility(child: Text(""),visible: false,);
               else if (!snapshot.hasData)
                 return  SizedBox.shrink();
-              var fields=snapshot.data.data;
-             if(_selectedFieldValue.isEmpty) _selectedFieldValue=List(snapshot.data.data.length);
-              if(_colorFieldValue.isEmpty) _colorFieldValue=List(snapshot.data.data.length);
-              if(_multiselectedFieldValue.isEmpty) _multiselectedFieldValue=List(snapshot.data.data.length);
-              if(contollers.isEmpty) contollers=List(snapshot.data.data.length);
+              var fields=snapshot.data!.data!;
+             if(_selectedFieldValue.isEmpty) _selectedFieldValue=List.filled(snapshot.data!.data!.length,null);
+              if(_colorFieldValue.isEmpty) _colorFieldValue=List.filled(snapshot.data!.data!.length,null);
+              if(_multiselectedFieldValue.isEmpty) _multiselectedFieldValue=List.filled(snapshot.data!.data!.length,null);
+              if(contollers.isEmpty) contollers=List.filled(snapshot.data!.data!.length,null);
               if(adsPostEntity.advertismentSpecification==null){
-                adsPostEntity.advertismentSpecification=List(snapshot.data.data.length);
+                adsPostEntity.advertismentSpecification=List.filled(snapshot.data!.data!.length,null);
               }
               return ListView.builder(
 
@@ -362,19 +359,19 @@ body: Padding(
                   var item = fields[index];
 
                   //if(item.CustomValue==null)
-                  if((item.MuliSelect==null||!item.MuliSelect)&&item.SpecificationOptions.isNotEmpty)
+                  if((item.MuliSelect==null||!item.MuliSelect!)&&item.SpecificationOptions!.isNotEmpty)
                     return Padding(
                       padding: const EdgeInsets.only(bottom:8.0),
                       child: FormField<String>(
 
-                        autovalidate: item.Required,
-                          validator:item.Required?_emptyValidate:null,
+                        autovalidateMode: item.Required!?AutovalidateMode.always:AutovalidateMode.disabled,
+                          validator:item.Required!?_emptyValidate:null,
                           onSaved: (val){
                           var vv=Advertisment_SpecificationBean();
                           vv.id=item.Id;
-                          int itemval=int.tryParse(val) ?? 0;
+                          int itemval=int.tryParse(val!) ?? 0;
                           vv.advertismentSpecificatioOptions=[itemval];
-                          adsPostEntity.advertismentSpecification[index]=vv;
+                          adsPostEntity.advertismentSpecification![index]=vv;
 
                           },
                           builder: (FormFieldState<String> state) {
@@ -404,14 +401,14 @@ body: Padding(
                                   hint: Text('${allTranslations.text('choose')} ${allTranslations.isEnglish?item.EnglishName:item.ArabicName}'),
                                   value:_selectedFieldValue[index],
                                   isDense: true,
-                                  items: item.SpecificationOptions.map((FieldProprtiresSpecificationoption value){
+                                  items: item.SpecificationOptions!.map((FieldProprtiresSpecificationoption value){
                                     return DropdownMenuItem(
                                       value: value.Id,
-                                      child: Text(allTranslations.isEnglish?value.EnglishName:value.ArabicName),
+                                      child: Text(allTranslations.isEnglish?value.EnglishName!:value.ArabicName!),
                                     );
                                   }).toList(),
 
-                                     onChanged: (int newValue){
+                                     onChanged: (int? newValue){
                                        item.Value=newValue;
                                        setState(() {
                                       _selectedFieldValue[index]=newValue;
@@ -430,7 +427,7 @@ body: Padding(
                     );
 
 
-                  else if(item.MuliSelect)
+                  else if(item.MuliSelect!)
                        //if(item.MuliSelect!=null&&item.MuliSelect)
                     /*return Padding(
                       padding: const EdgeInsets.only(bottom:8.0),
@@ -496,21 +493,21 @@ body: Padding(
                       child: TextFormField(
                         controller: contollers[index],
                           onTap:() {
-                            WidgetsBinding.instance.addPostFrameCallback((_){_showReportDialog(index, allTranslations.isEnglish ?item.EnglishName:item.ArabicName, item.SpecificationOptions);});
+                            WidgetsBinding.instance!.addPostFrameCallback((_){_showReportDialog(index, allTranslations.isEnglish ?item.EnglishName:item.ArabicName, item.SpecificationOptions);});
                             },
                           readOnly: true,
                           enableInteractiveSelection: true,
 
 
-                          autovalidate: item.Required,
-                          validator: item.Required?_emptyValidate:null,
+                          autovalidateMode: item.Required!?AutovalidateMode.always:AutovalidateMode.disabled,
+                          validator: item.Required!?_emptyValidate:null,
                           onSaved: (val){
 
                             var vv=Advertisment_SpecificationBean();
                             vv.id=item.Id;
                             //int itemval=item.Value as int ?? 0;
                             vv.customValue=val;
-                            adsPostEntity.advertismentSpecification[index]=vv;
+                            adsPostEntity.advertismentSpecification![index]=vv;
                             },
                           decoration: InputDecoration(
                             filled: true,
@@ -518,7 +515,7 @@ body: Padding(
 
                             labelText: allTranslations.isEnglish?item.EnglishName:item.ArabicName,
                             hintText:allTranslations.isEnglish?item.EnglishName:item.ArabicName,
-                            prefixIcon: item.Required?Icon(Icons.check_circle,color: _colorFieldValue[index],):null,
+                            prefixIcon: item.Required!?Icon(Icons.check_circle,color: _colorFieldValue[index],):null,
                             suffixIcon:  Icon(Icons.arrow_drop_down),
                             border: new OutlineInputBorder(
                                 borderRadius: new BorderRadius.circular(10.0)),
@@ -533,7 +530,7 @@ body: Padding(
                          padding: const EdgeInsets.only(bottom:8.0),
                          child: TextFormField(
                              controller: contollers[index],
-                           autovalidate: true,
+                           autovalidateMode:AutovalidateMode.always,
                            validator: _emptyValidate,
                              onSaved: (val){
 
@@ -542,7 +539,7 @@ body: Padding(
                                vv.customValue=val;
                                //int itemval=item.Value as int ?? 0;
                                //vv.AdvertismentSpecificatioOptions=[val];
-                               adsPostEntity.advertismentSpecification[index]=vv;
+                               adsPostEntity.advertismentSpecification![index]=vv;
 
                              },
                              decoration: InputDecoration(
@@ -550,7 +547,7 @@ body: Padding(
                               fillColor: Colors.white,
                               labelText: allTranslations.isEnglish?item.EnglishName:item.ArabicName,
                               hintText:allTranslations.isEnglish?item.EnglishName:item.ArabicName,
-                               prefixIcon: item.Required?Icon(Icons.check_circle,color: _colorFieldValue[index],):null,
+                               prefixIcon: item.Required!?Icon(Icons.check_circle,color: _colorFieldValue[index],):null,
 
 
                               border: new OutlineInputBorder(
@@ -583,7 +580,7 @@ body: Padding(
               keyboardType:TextInputType.phone,
                 controller: _phonetextController,
                 validator: _phoneValidate,
-                autovalidate: phoneColor==AppColors.validValueColor||phoneColor==AppColors.errorValueColor,
+                autovalidateMode: phoneColor==AppColors.validValueColor||phoneColor==AppColors.errorValueColor?AutovalidateMode.always:AutovalidateMode.disabled,
                 onSaved: (val){
                   adsPostEntity.phone=val;
                 },
@@ -609,9 +606,9 @@ body: Padding(
                   onMapCreated: _onMapCreated,
                   markers: _markers,
                 onTap: (lat) async {
-                  LocationResult result = await showLocationPicker(context, "AIzaSyC57DQKo0jhnTJtdZX1Lp7LAIFmAFhZiNQ",
-                  );
-                  print("result = $result");
+              /*    LocationResult result = await showLocationPicker(context, "AIzaSyC57DQKo0jhnTJtdZX1Lp7LAIFmAFhZiNQ",
+                  );*/
+                 /* print("result = $result");
                   setState(() {
                     _markers.clear();
                     final marker = Marker(
@@ -629,7 +626,7 @@ body: Padding(
                       ),
                     );
                   });
-
+*/
                 },
               ),
             ),
@@ -641,7 +638,7 @@ body: Padding(
                   value: isNeogtiable,
                   onChanged: (newValue) {
                     setState(() {
-                      isNeogtiable=newValue;
+                      isNeogtiable=newValue!;
                       adsPostEntity.isNogitable=newValue;
                     });
                   },
@@ -654,16 +651,16 @@ body: Padding(
               ,child: RaisedButton(
                 color:  Colors.green,
                 onPressed: (){
-                  if (_formKey.currentState.validate()) {
-                    _formKey.currentState.save();
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
                     int count=0;
                     var images=<PhotosBean>[];
                     bool isuploaded=true;
-                    List<ImageListItem>uploadedimges=uploadBloc.getUploadImageList;
+                    List<ImageListItem>uploadedimges=uploadBloc!.getUploadImageList;
                     for(var image in uploadedimges){
 
                       if(image is UploadedImage&& image.state != StateEnum.LOADING){
-                        if(image.remoteUrl!=null&& image.remoteUrl.isNotEmpty){
+                        if(image.remoteUrl!=null&& image.remoteUrl!.isNotEmpty){
                         PhotosBean photo=new PhotosBean(image.remoteUrl.toString(),count);
                         images.add(photo);
                         count++;
@@ -674,23 +671,23 @@ body: Padding(
                       }
                     }
                     if(isuploaded){
-                      adsPostEntity.photos=List<PhotosBean>();
-                      adsPostEntity.photos.addAll(images);
+                      adsPostEntity.photos=List<PhotosBean>.empty();
+                      adsPostEntity.photos!.addAll(images);
                     }else{
-                      scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('images not all uploaded')));
+                      scaffoldKey.currentState!.showSnackBar(SnackBar(content: Text('images not all uploaded')));
                       return;
                     }
                     adsPostEntity.locationLatitude=0 /*_markers.elementAt(0).position.latitude as int*/;
                     adsPostEntity.locationLongtude=0 /*_markers.elementAt(0).position.longitude as int*/;
-                    bloc.postAds(adsPostEntity);
+                    bloc!.postAds(adsPostEntity);
 
 
                   }else{
-                    ToastUtils.showWarningMessage(allTranslations.text("missing_fields"));
+                    ToastUtils.showWarningMessage(allTranslations.text("missing_fields")!);
                   }
 
                 },
-                child: Center(child: Text(allTranslations.text('ads_add'))),textColor: Colors.white,),)
+                child: Center(child: Text(allTranslations.text('ads_add')!)),textColor: Colors.white,),)
 ,
 
 
@@ -713,14 +710,14 @@ body: Padding(
   }
 
 
-  Widget _BuildRoundedTextField({ String labelText,TextEditingController controller=null,String hintText,iswithArrowIcon=false,
-      Function onClickAction}){
+  Widget _BuildRoundedTextField({ String? labelText,TextEditingController? controller=null,String? hintText,iswithArrowIcon=false,
+      Function? onClickAction}){
    return TextFormField(
      validator: _emptyValidate,
-       autovalidate: categoryColor==AppColors.validValueColor||categoryColor==AppColors.errorValueColor,
+       autovalidateMode: categoryColor==AppColors.validValueColor||categoryColor==AppColors.errorValueColor?AutovalidateMode.always:AutovalidateMode.disabled,
      controller: controller,
      onTap: (){
-         onClickAction();
+         onClickAction!();
      },
        readOnly: true,
        enableInteractiveSelection: true,
@@ -740,17 +737,17 @@ body: Padding(
 
   }
 
-  Widget _BuildCityRoundedTextField({ String labelText,TextEditingController controller=null,String hintText,iswithArrowIcon=false,
-    Function onClickAction}){
+  Widget _BuildCityRoundedTextField({ String? labelText,TextEditingController? controller=null,String? hintText,iswithArrowIcon=false,
+    Function? onClickAction}){
     return TextFormField(
       readOnly: true,
         enableInteractiveSelection: true,
 
         validator: _emptyValidate,
-        autovalidate: cityColor==AppColors.validValueColor||cityColor==AppColors.errorValueColor,
+        autovalidateMode: cityColor==AppColors.validValueColor||cityColor==AppColors.errorValueColor?AutovalidateMode.always:AutovalidateMode.disabled,
         controller: controller,
         onTap: (){
-          onClickAction();
+          onClickAction!();
         },
         decoration: InputDecoration(
           suffixIcon: iswithArrowIcon? Icon(Icons.arrow_drop_down):null,
@@ -773,7 +770,7 @@ body: Padding(
   }
 
   void _getLocation() async {
-    var currentLocation = await Geolocator()
+    /*var currentLocation = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
 
     setState(() {
@@ -791,10 +788,10 @@ body: Padding(
             zoom: 20.0,
           ),
         ),
-      );    });
+      );    });*/
   }
-  String _titleAdsValidate(String value){
-     if(value.isEmpty){
+  String? _titleAdsValidate(String? value){
+     if(value!.isEmpty){
        return allTranslations.text('empty_field');
      }
      else if(value.length<3){
@@ -803,8 +800,8 @@ body: Padding(
        return null;
      }
   }
-  String _descAdsValidate(String value){
-    if(value.isEmpty){
+  String? _descAdsValidate(String? value){
+    if(value!.isEmpty){
       return allTranslations.text('empty_field');
     }
     else if(value.length<30){
@@ -814,7 +811,7 @@ body: Padding(
     }
   }
 
-  String _emptyValidate(String value){
+  String? _emptyValidate(String? value){
 
     if(value==null||value.isEmpty){
       return allTranslations.text('empty_field');
@@ -824,13 +821,13 @@ body: Padding(
     }
   }
 
-  _showReportDialog(int index,String title,List<FieldProprtiresSpecificationoption> list) {
+  _showReportDialog(int index,String? title,List<FieldProprtiresSpecificationoption>? list) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           //Here we will build the content of the dialog
           return AlertDialog(
-            title: Text(title),
+            title: Text(title!),
             content: MultiSelectChip(
               list,
               onSelectionChanged: (selectedList) {
@@ -838,7 +835,7 @@ body: Padding(
                   contollers[index]=TextEditingController();}
                 String text="";
                 selectedList.forEach((val)=>text+="${allTranslations.isEnglish ?val.EnglishName :val.ArabicName} ,");
-                contollers[index].text=text;
+                contollers[index]!.text=text;
                 setState(() {
 
                   _multiselectedFieldValue[index] = selectedList;
@@ -869,11 +866,11 @@ body: Padding(
   }
 
 
-  String _phoneValidate(String value){
+  String? _phoneValidate(String? value){
 
     String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
     RegExp regExp=RegExp(patttern);
-    if(value.isEmpty){
+    if(value!.isEmpty){
       return allTranslations.text('empty_field');
     }
 
@@ -885,12 +882,12 @@ body: Padding(
   }
    Future getUserNumber ()async{
      UserInfo userInfo = await preferences.getUserInfo();
-     _phonetextController.text = userInfo.phone;
+     _phonetextController.text = userInfo.phone!;
 
   }
   void getCountryId() async{
     countryId = await preferences.getCountryID() ;
-    cId = int.parse(countryId);
+    cId = int.parse(countryId!);
   }
 }
 

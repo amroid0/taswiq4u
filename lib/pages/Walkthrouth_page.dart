@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Walkthrougth extends StatelessWidget {
-  final String textContent,textDetail;
-  final String imagePath;
-  Walkthrougth({Key key, @required this.textContent,this.imagePath, this.textDetail}) : super(key: key);
+  final String? textContent,textDetail;
+  final String? imagePath;
+  Walkthrougth({Key? key, required this.textContent,this.imagePath, this.textDetail}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -15,11 +15,11 @@ class Walkthrougth extends StatelessWidget {
         children:
       <Widget>[
         
-        Image.asset(imagePath,width: 100,height: 100,),
+        Image.asset(imagePath!,width: 100,height: 100,),
         SizedBox(height: 10,),
-        Text(textContent,style: TextStyle(fontWeight: FontWeight.bold),),
+        Text(textContent!,style: TextStyle(fontWeight: FontWeight.bold),),
         SizedBox(height: 10,),
-        Text(textDetail,style: TextStyle(color:Colors.grey),)
+        Text(textDetail!,style: TextStyle(color:Colors.grey),)
         
         
         

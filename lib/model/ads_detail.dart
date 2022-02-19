@@ -5,40 +5,40 @@ part 'ads_detail.g.dart';
 @JsonSerializable()
 class AdsDetail {
 
-  int Id;
-  String ArabicDescription;
-  String EnglishDescription;
-  bool IsNogitable;
-  double Price;
-  int CategoryId;
-  String CategoryName;
-  String UserId;
-  String UserName;
-  String UserPhone;
-  String ArabicDescriptionUrl;
-  String EnglishDescriptionUrl;
-  String ArabicTitle;
-  String EnglishTitle;
-  int CountryId;
-  String CountryNameEnglish;
-  String CountryNameArabic;
-  double LocationLatitude;
-  double LocationLongtude;
-  bool IsDisplayed;
-  bool IsDeleted;
-  String CreationTime;
-  String UpdateTime;
-  int ViewCount;
-  int CityId;
-  String CityNameEnglish;
-  String CityNameArabic;
-  int StateId;
-  String StateNameArabic;
-  String StateNameEnglish;
-  bool IsFavorite;
-  bool IsActive;
-  List<AdvertismentSpecification> Advertisment_Specification;
-  List<AdvertismentImage> AdvertismentImages;
+  int? Id;
+  String? ArabicDescription;
+  String? EnglishDescription;
+  bool? IsNogitable;
+  double? Price;
+  int? CategoryId;
+  String? CategoryName;
+  String? UserId;
+  String? UserName;
+  String? UserPhone;
+  String? ArabicDescriptionUrl;
+  String? EnglishDescriptionUrl;
+  String? ArabicTitle;
+  String? EnglishTitle;
+  int? CountryId;
+  String? CountryNameEnglish;
+  String? CountryNameArabic;
+  double? LocationLatitude;
+  double? LocationLongtude;
+  bool? IsDisplayed;
+  bool? IsDeleted;
+  String? CreationTime;
+  String? UpdateTime;
+  int? ViewCount;
+  int? CityId;
+  String? CityNameEnglish;
+  String? CityNameArabic;
+  int? StateId;
+  String? StateNameArabic;
+  String? StateNameEnglish;
+  bool? IsFavorite;
+  bool? IsActive;
+  List<AdvertismentSpecification>? Advertisment_Specification;
+  List<AdvertismentImage>? AdvertismentImages;
 
 	AdsDetail({this.Id, this.ArabicDescription, this.EnglishDescription,
 			this.IsNogitable, this.Price, this.CategoryId, this.CategoryName,
@@ -57,16 +57,16 @@ class AdsDetail {
 @JsonSerializable()
 class AdvertismentSpecification {
 
-	int Id;
-	int CategoryId;
-	int AdvertismentId;
-	int CategorySpecificationId;
-	String NameEnglish;
-	String NameArabic;
-	String CustomValue;
-	List<AdsSpecificatioOptions> AdvertismentSpecificatioOptions;
-	String CategorySpecificationVM;
-	String AdvertismentSpecificationOptions;
+	int? Id;
+	int? CategoryId;
+	int? AdvertismentId;
+	int? CategorySpecificationId;
+	String? NameEnglish;
+	String? NameArabic;
+	String? CustomValue;
+	List<AdsSpecificatioOptions>? AdvertismentSpecificatioOptions;
+	String? CategorySpecificationVM;
+	String? AdvertismentSpecificationOptions;
 
 	AdvertismentSpecification({this.Id, this.CategoryId, this.AdvertismentId,
 			this.CategorySpecificationId, this.NameEnglish, this.NameArabic,
@@ -80,11 +80,11 @@ class AdvertismentSpecification {
 @JsonSerializable()
 class AdsSpecificatioOptions {
 
-	int Id;
-	String AdvertismentSpecificationId;
-	String NameEnglish;
-	String NameArabic;
-	int SpecificationOptionId;
+	int? Id;
+	String? AdvertismentSpecificationId;
+	String? NameEnglish;
+	String? NameArabic;
+	int? SpecificationOptionId;
 
 	AdsSpecificatioOptions({this.Id, this.AdvertismentSpecificationId,
 			this.NameEnglish, this.NameArabic, this.SpecificationOptionId});

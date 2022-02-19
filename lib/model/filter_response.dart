@@ -4,19 +4,19 @@ part 'filter_response.g.dart';
 
 @JsonSerializable()
 class FilterParamsEntity {
-	double priceMin;
-	double priceMax;
-	bool isNew;
-	int countryId;
-	int cityId;
-	int stateId;
-	int categoryId;
-	String key;
+	double? priceMin;
+	double? priceMax;
+	bool? isNew;
+	int? countryId;
+	int? cityId;
+	int? stateId;
+	int? categoryId;
+	String? key;
 	@JsonKey(ignore: true)
-	String cateName;
-	List<Params> params;
+	String? cateName;
+	List<Params?>? params;
 	@JsonKey(ignore: true)
-  String cityName;
+  String? cityName;
 
 	FilterParamsEntity(
 			{this.priceMin,
@@ -34,13 +34,13 @@ class FilterParamsEntity {
 }
 @JsonSerializable()
 class Params {
-	int specificationId;
-	List<int> options;
-	bool hasOptions;
-	String value;
-	bool hasRange;
-	int min;
-	int max;
+	int? specificationId;
+	List<int?>? options;
+	bool? hasOptions;
+	String? value;
+	bool? hasRange;
+	int? min;
+	int? max;
 
 	Params(
 			{this.specificationId,

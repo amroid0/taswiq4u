@@ -7,33 +7,33 @@ import 'cateogry_entity.dart';
 
 class CountryEntity{
    @JsonKey(name: "Id")
-   int id;
+   int? id;
    @JsonKey(name: "CountryId")
-   int countryId;
+   int? countryId;
    @JsonKey(name: "ArabicDescription")
-   String arabicDescription;
+   String? arabicDescription;
    @JsonKey(name: "EnglishDescription")
-   String englishDescription;
+   String? englishDescription;
    @JsonKey(name: "Name")
-   String name;
+   String? name;
    @JsonKey(name: "Flag")
-   String flag;
+   String? flag;
    @JsonKey(name: "FeaturedAdCost")
-   double featuredAdCost;
+   double? featuredAdCost;
    @JsonKey(name: "FreeAdCount")
-   int freeAdCount;
+   int? freeAdCount;
    @JsonKey(name: "PhoneKey")
-   String phoneKey;
+   String? phoneKey;
    @JsonKey(name: "imageId")
-   int imageId;
+   int? imageId;
    @JsonKey(name: "Currency")
-   Currency currency;
+   Currency? currency;
    @JsonKey(name: "Language")
-   Language language;
+   Language? language;
    @JsonKey(name: "Abbr")
-   String abbr;
+   String? abbr;
    @JsonKey(name: "Categories")
-   List<CateogryEntity> categories;
+   List<CateogryEntity>? categories;
 
    CountryEntity(
    {this.id,
@@ -59,11 +59,11 @@ class CountryEntity{
 
  class Currency {
    @JsonKey(name: "Id")
-   int id;
+   int? id;
    @JsonKey(name: "Name")
-   String name;
+   String? name;
    @JsonKey(name: "Abbr")
-   String abbr;
+   String? abbr;
 
    Currency({ this.id, this.name, this.abbr});
 
@@ -74,11 +74,11 @@ class CountryEntity{
 
  class Language {
    @JsonKey(name: "Id")
-   int id;
+   int? id;
    @JsonKey(name: "Name")
-   String name;
+   String? name;
    @JsonKey(name: "Active")
-   bool active;
+   bool? active;
    Language({this.id, this.name, this.active});
 
    factory Language.fromJson(Map<String, dynamic> json) => _$LanguageFromJson(json);

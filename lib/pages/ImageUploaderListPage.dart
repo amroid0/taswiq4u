@@ -29,7 +29,7 @@ class ImageInput extends StatefulWidget {
 class _ImageInput extends State<ImageInput> {
   // To store the file provided by the image_picker
 
-var _bloc;
+late var _bloc;
   @override
   void initState() {
 
@@ -38,8 +38,8 @@ var _bloc;
     _bloc = BlocProvider.of<UploadImageBloc>(context);
   }
   void _getImage(BuildContext context, ImageSource source) async {
-    File image = await ImagePicker.pickImage(source: source,imageQuality: 50,);
-    _bloc.uploadImage(image.path);
+    XFile? image = await ImagePicker().pickImage(source: source,imageQuality: 50,);
+    _bloc.uploadImage(image!.path);
     // Closes the bottom sheet
     Navigator.pop(context);
   }
@@ -88,7 +88,7 @@ var _bloc;
       child: StreamBuilder<List<ImageListItem>>(
           stream: _bloc.stream,
           builder: (context, snapshot) {
-            return _buildImageList(snapshot.data);
+            return _buildImageList(snapshot.data!);
           }
       ),
     );
@@ -123,12 +123,12 @@ var _bloc;
                   ),
                   ),onTap:() async{
               //  _openImagePickerModal(context);
-                List<Asset> resultList;
+                late List<Asset> resultList;
                 String error;
 
                 try {
                   resultList = await MultiImagePicker.pickImages(
-                    maxImages: 9- _bloc.getUploadImageList.length,
+                    maxImages: 9- _bloc.getUploadImageList.length as int,
                     enableCamera: true
                   );
                 } on Exception catch (e) {
@@ -185,14 +185,14 @@ var _bloc;
                       color: AppColors.appBackground,
                     ),
                     child:item.localPath!=null? Image.memory(
-                    item.localPath,
+                    item.localPath as Uint8List,
                       fit: BoxFit.fill,
                     ):CachedNetworkImage(
                       fit: BoxFit.fill,
 
                       placeholder: (context, url) => Image.asset("images/logo.png"),
                       errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                      imageUrl: APIConstants.getFullImageUrl(item.remoteUrl.isEmpty?"":item.remoteUrl,ImageType.ADS),
+                      imageUrl: APIConstants.getFullImageUrl(item.remoteUrl!.isEmpty?"":item.remoteUrl,ImageType.ADS),
                     ),
                       
                   ),state,
@@ -220,7 +220,9 @@ var _bloc;
                 ],
               ),
             );
+
           }
+          return Container();
         },
       ),
    );

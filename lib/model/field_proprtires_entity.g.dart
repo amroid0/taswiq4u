@@ -7,28 +7,25 @@ part of 'field_proprtires_entity.dart';
 // **************************************************************************
 
 FieldProprtiresEntity _$FieldProprtiresEntityFromJson(
-    Map<String, dynamic> json) {
-  return FieldProprtiresEntity(
-    CategoryId: json['CategoryId'] as int,
-    Category: json['Category'],
-    Required: json['Required'] as bool,
-    SpeceficationId: json['SpeceficationId'] as int,
-    SpecificationOptions: (json['SpecificationOptions'] as List)
-        ?.map((e) => e == null
-            ? null
-            : FieldProprtiresSpecificationoption.fromJson(
-                e as Map<String, dynamic>))
-        ?.toList(),
-    Id: json['Id'] as int,
-    HasRange: json['HasRange'] as bool,
-    MuliSelect: json['MuliSelect'] as bool,
-    CustomValue: json['CustomValue'],
-    EnglishName: json['EnglishName'] as String,
-    ArabicName: json['ArabicName'] as String,
-    Value: json['Value'],
-    IsCustomValue: json['IsCustomValue'],
-  );
-}
+        Map<String, dynamic> json) =>
+    FieldProprtiresEntity(
+      CategoryId: json['CategoryId'] as int?,
+      Category: json['Category'],
+      Required: json['Required'] as bool?,
+      SpeceficationId: json['SpeceficationId'] as int?,
+      SpecificationOptions: (json['SpecificationOptions'] as List<dynamic>?)
+          ?.map((e) => FieldProprtiresSpecificationoption.fromJson(
+              e as Map<String, dynamic>))
+          .toList(),
+      Id: json['Id'] as int?,
+      HasRange: json['HasRange'] as bool?,
+      MuliSelect: json['MuliSelect'] as bool?,
+      CustomValue: json['CustomValue'],
+      EnglishName: json['EnglishName'] as String?,
+      ArabicName: json['ArabicName'] as String?,
+      Value: json['Value'],
+      IsCustomValue: json['IsCustomValue'],
+    );
 
 Map<String, dynamic> _$FieldProprtiresEntityToJson(
         FieldProprtiresEntity instance) =>
@@ -49,14 +46,13 @@ Map<String, dynamic> _$FieldProprtiresEntityToJson(
     };
 
 FieldProprtiresSpecificationoption _$FieldProprtiresSpecificationoptionFromJson(
-    Map<String, dynamic> json) {
-  return FieldProprtiresSpecificationoption(
-    json['IsSelected'] as bool,
-    json['Id'] as int,
-    json['ArabicName'] as String,
-    json['EnglishName'] as String,
-  );
-}
+        Map<String, dynamic> json) =>
+    FieldProprtiresSpecificationoption(
+      json['IsSelected'] as bool?,
+      json['Id'] as int?,
+      json['ArabicName'] as String?,
+      json['EnglishName'] as String?,
+    );
 
 Map<String, dynamic> _$FieldProprtiresSpecificationoptionToJson(
         FieldProprtiresSpecificationoption instance) =>

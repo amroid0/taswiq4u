@@ -38,7 +38,7 @@ class NetworkCommon {
   }
 */
   dynamic _returnResponse(Response response) {
-    int status=response.statusCode;
+    int? status=response.statusCode;
     switch (status) {
       case 200:
         return response;
@@ -55,7 +55,7 @@ class NetworkCommon {
   }
 
   dynamic _returnError(DioError error) {
-    int status=error.response.statusCode;
+    int? status=error.response!.statusCode;
     switch (status) {
 
       case 400:
@@ -81,10 +81,10 @@ class NetworkCommon {
     dio.options.receiveTimeout = 20000;
 
     dio.interceptors
-        .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
+        .add(InterceptorsWrapper(onRequest: (RequestOptions options,RequestInterceptorHandler handler) async {
 
       // set the token
-      String token = await preferences.getToken();
+      String? token = await preferences.getToken();
       if (token != null) {
         options.headers["Authorization"] = "Bearer " + token;
       }
@@ -102,21 +102,22 @@ class NetworkCommon {
       print("Pre request:${options.queryParameters.toString()}");
 
 
-      return options; //continue
+      return handler.next(options); //continue
     },
-        onError: (DioError error) async{
+        onError: (DioError error,ErrorInterceptorHandler handler) async{
+           Response? response;
           print(
-              "<-- ${error.response.statusCode}  ${error.response.request.path}");
+              "<-- ${error.response!.statusCode}  ${error.response!.requestOptions.path}");
           if (error.response?.statusCode == 401 && error.response?.data['sub_status'] == 42) {
-            RequestOptions options = error.request;
+            RequestOptions options = error.requestOptions;
 
             // If the token has been updated, repeat directly.
-            String accessToken = await preferences.getToken();
+            String? accessToken = await preferences.getToken();
 
             String token = "Bearer $accessToken";
             if (token != options.headers["Authorization"]) {
               options.headers["Authorization"] = token;
-              return dio.request(options.path, options: options);
+            response =await dio.fetch(options);
             }
             // Lock to block the incoming request until the token updated
             dio.lock();
@@ -137,19 +138,22 @@ class NetworkCommon {
               //update token based on the new refresh token
               options.headers["Authorization"] = "Bearer ${userResponse.accessToken}";
               // Save the new token on shared or LocalStorage
-              await preferences.setToken(userResponse);
+               preferences.setToken(userResponse);
 
               dio.unlock();
               dio.interceptors.responseLock.unlock();
               dio.interceptors.errorLock.unlock();
 
               // repeat the request with a new options
-              return dio.request(options.path, options: options);
+                 response=await dio.fetch(options);
+               return handler.resolve(response);
+
 
             } catch (e) {
             }
+            return handler.next(error);
+
           }
-          return error;
 
 
 
@@ -157,29 +161,29 @@ class NetworkCommon {
 
 
 
-        onResponse: (Response response) async {
+        onResponse: (Response response,ResponseInterceptorHandler handler) async {
 
-      final int statusCode = response.statusCode;
+      final int? statusCode = response.statusCode;
       print(
-          "<-- ${response.statusCode} ${response.request.method} ${response.request.path}");
+          "<-- ${response.statusCode} ${response.requestOptions.method} ${response.requestOptions.path}");
       // handel response for some endpoints
       if (statusCode == 200 || statusCode == 201) {
-        if (response.request.path == "login/" ||
-            response.request.path == "signup/" ||
-            response.request.path == APIConstants.LOGIN ||
-            response.request.path == "login-google/" ||
-            response.request.path == "login-facebook/") {
+        if (response.requestOptions.path == "login/" ||
+            response.requestOptions.path == "signup/" ||
+            response.requestOptions.path == APIConstants.LOGIN ||
+            response.requestOptions.path == "login-google/" ||
+            response.requestOptions.path == "login-facebook/") {
 
           final JsonDecoder _decoder = new JsonDecoder();
           final resultContainer = _decoder.convert(response.toString());
            preferences.setToken(LoginResponse.fromJson(resultContainer));
         }
-        if (response.request.path == "profile/") {
+        if (response.requestOptions.path == "profile/") {
           final SharedPreferences prefs = await SharedPreferences.getInstance();
           final JsonDecoder _decoder = new JsonDecoder();
           final JsonEncoder _encoder = new JsonEncoder();
           final resultContainer = _decoder.convert(response.toString());
-          prefs.setString("user", _encoder.convert((resultContainer as Map)));
+          prefs.setString("user", _encoder.convert((resultContainer as Map?)));
         }
       }else if(response.statusCode==401 &&response.statusCode==403){
 
@@ -200,10 +204,10 @@ class NetworkCommon {
 
       // log response
       print(
-          "Response From:${response.request.method},${response.request.baseUrl}${response.request.path}");
+          "Response From:${response.requestOptions.method},${response.requestOptions.baseUrl}${response.requestOptions.path}");
       print("Response From:${response.toString()}");
       _returnResponse(response);
-      return response; // continue
+      return handler.next(response); // continue
     }
 
 

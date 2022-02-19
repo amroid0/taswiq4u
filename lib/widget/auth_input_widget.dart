@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
 class AuthInputWidget extends StatelessWidget {
-  final FocusNode focusNode;
-  final Function(String) onFieldSubmitted;
-  final Function(String) onChange;
-  final Function(String) onSaved;
-  final String labelText;
-  final String errorText;
-  final TextInputType keyboardType;
-  final TextInputAction textInputAction;
+  final FocusNode? focusNode;
+  final Function(String)? onFieldSubmitted;
+  final Function(String)? onChange;
+  final Function(String)? onSaved;
+  final String? labelText;
+  final String? errorText;
+  final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
   final bool invisbleText;
-  final TextEditingController contoller;
+  final TextEditingController? contoller;
   final bool readOnly;
-  final Icon suffixIcon;
-  final Function onTap;
+  final Icon? suffixIcon;
+  final Function? onTap;
 
   AuthInputWidget(
       {this.labelText,
@@ -47,7 +47,7 @@ class AuthInputWidget extends StatelessWidget {
       child: TextFormField(
         focusNode: focusNode,
         readOnly: readOnly,
-        onTap: onTap,
+        onTap: onTap as void Function()?,
 
         keyboardType:keyboardType,
         decoration: InputDecoration(

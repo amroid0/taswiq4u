@@ -6,18 +6,18 @@ typedef void MyCallback(LatLng latLng);
 
 class MapWidget extends StatelessWidget {
   const MapWidget({
-    @required this.center,
-    @required this.mapController,
-    @required this.onMapCreated,
-    @required this.markers,
-    @required this.onTap,
-    Key key,
+    required this.center,
+    required this.mapController,
+    required this.onMapCreated,
+    required this.markers,
+    required this.onTap,
+    Key? key,
   })  : assert(center != null),
         assert(onMapCreated != null),
         super(key: key);
 
   final LatLng center;
-  final GoogleMapController mapController;
+  final GoogleMapController? mapController;
   final ArgumentCallback<GoogleMapController> onMapCreated;
   final MyCallback  onTap;
   final Set<Marker> markers;

@@ -3,43 +3,43 @@ part 'popup_ads_entity_entity.g.dart';
 
 @JsonSerializable()
 class PopupAdsEntityList  {
-	String $id;
+	String? $id;
 	@JsonKey(name: "Id")
-	int id;
-	int imageId;
+	int? id;
+	int? imageId;
 	@JsonKey(name: "Type")
-	int type;
+	int? type;
 	@JsonKey(name: "Description")
-	String description;
+	String? description;
 	@JsonKey(name: "Link")
-	String link;
+	String? link;
 	@JsonKey(name: "CreationDate")
-	String creationDate;
+	String? creationDate;
 	@JsonKey(name: "EndDate")
-	String endDate;
+	String? endDate;
 	@JsonKey(name: "Active")
-	bool active;
+	bool? active;
 	@JsonKey(name: "Notification")
-	int notification;
+	int? notification;
 	@JsonKey(name: "CountryId")
-	int countryId;
+	int? countryId;
 	@JsonKey(name: "ViewsCount")
-	int viewsCount;
+	int? viewsCount;
 	@JsonKey(name: "Likes")
-	int likes;
+	int? likes;
 	@JsonKey(name: "CategoryId")
-	int categoryId;
+	int? categoryId;
 	@JsonKey(name: "InstagramLink")
-	String instagramLink;
+	String? instagramLink;
 	@JsonKey(name: "PhoneNumber")
-	String phoneNumber;
+	String? phoneNumber;
 
 	@JsonKey(name: "Category")
-	PopupAdsEntityListCategory category;
+	PopupAdsEntityListCategory? category;
 	@JsonKey(name: "SystemDataFile")
-	PopupAdsEntityListSystemDataFile systemDataFile;
+	PopupAdsEntityListSystemDataFile? systemDataFile;
 	@JsonKey(name: "CommercialAdsUsers")
-	List<dynamic> commercialAdsUsers;
+	List<dynamic>? commercialAdsUsers;
 
 	PopupAdsEntityList(this.$id, this.id, this.imageId, this.type,
 			this.description, this.link, this.creationDate, this.endDate, this.active,
@@ -51,13 +51,13 @@ class PopupAdsEntityList  {
 }
 @JsonSerializable()
 class PopupAdsEntityListCategory {
-	String $id;
+	String? $id;
 	@JsonKey(name: "Id")
-	int id;
+	int? id;
 	@JsonKey(name: "Name")
-	String name;
+	String? name;
 	@JsonKey(name: "CategoryLogo")
-	String categoryLogo;
+	String? categoryLogo;
 
 	PopupAdsEntityListCategory(this.$id, this.id, this.name, this.categoryLogo);
 	factory PopupAdsEntityListCategory.fromJson(Map<String, dynamic> json) => _$PopupAdsEntityListCategoryFromJson(json);
@@ -65,21 +65,21 @@ class PopupAdsEntityListCategory {
 }
 @JsonSerializable()
 class PopupAdsEntityListSystemDataFile {
-	String $id;
+	String? $id;
 	@JsonKey(name: "Id")
-	int id;
+	int? id;
 	@JsonKey(name: "Url")
-	String url;
+	String? url;
 	@JsonKey(name: "Size")
-	double size;
+	double? size;
 	@JsonKey(name: "Extention")
-	String extention;
+	String? extention;
 	@JsonKey(name: "Type")
-	int type;
+	int? type;
 	@JsonKey(name: "CreationDate")
-	String creationDate;
+	String? creationDate;
 	@JsonKey(name: "IsDeleted")
-	bool isDeleted;
+	bool? isDeleted;
 	@JsonKey(name: "IsAssinged")
 	dynamic isAssinged;
 

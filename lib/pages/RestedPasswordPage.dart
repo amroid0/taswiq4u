@@ -1,4 +1,4 @@
-import 'package:ars_progress_dialog/ars_progress_dialog.dart';
+import 'package:ars_dialog/ars_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,9 +14,9 @@ import 'package:olx/widget/auth_input_widget.dart';
 import 'package:olx/widget/country_list_dialog.dart';
 
 class ResetPasswordScreen extends  StatefulWidget {
-  final int countryId;
+  final int? countryId;
   final String token;
-  final String phone;
+  final String? phone;
   ResetPasswordScreen(this. countryId,this. token,this. phone);
 
   @override
@@ -26,29 +26,24 @@ class ResetPasswordScreen extends  StatefulWidget {
 class _ResetPassPageState extends State<ResetPasswordScreen> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final formKey = GlobalKey<FormState>();
-  ArsProgressDialog progressDialog;
+  late CustomProgressDialog progressDialog;
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
   var _bloc;
 
   var _countrytextController=TextEditingController();
 
-  int countryId;
+  int? countryId;
 
   var count=0;
 
   @override
   void initState() {
     _bloc=ResetPasswordBloc();
-    progressDialog = ArsProgressDialog(
-        context,
-        blur: 2,
-        backgroundColor: Color(0x33000000),
-        animationDuration: Duration(milliseconds: 500));
+    progressDialog = CustomProgressDialog(context,blur: 10);
     _bloc.resetPasswordStream.listen((snap) {
-      if(progressDialog.isShowing){
         progressDialog.dismiss();
-      }
+
       switch (snap.status) {
         case Status.LOADING:
           progressDialog.show();
@@ -61,7 +56,7 @@ class _ResetPassPageState extends State<ResetPasswordScreen> {
 
           ToastUtils.
           showErrorMessage(
-              allTranslations.text('err_wrong'));
+              allTranslations.text('err_wrong')!);
 
 
           break;
@@ -69,8 +64,8 @@ class _ResetPassPageState extends State<ResetPasswordScreen> {
         case Status.COMPLETED:
 
           ToastUtils.
-          showSuccessMessage(allTranslations.text('success_reset_pass'));
-          WidgetsBinding.instance.addPostFrameCallback((_) =>  Navigator.popUntil(context, (route) {
+          showSuccessMessage(allTranslations.text('success_reset_pass')!);
+          WidgetsBinding.instance!.addPostFrameCallback((_) =>  Navigator.popUntil(context, (route) {
             return count++ == 3;
           }));
 
@@ -90,7 +85,7 @@ class _ResetPassPageState extends State<ResetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ResetPasswordBloc>(
+    return BlocProvider<ResetPasswordBloc?>(
       bloc: _bloc,
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -104,8 +99,8 @@ class _ResetPassPageState extends State<ResetPasswordScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Align(alignment:Alignment.center,
-                    child: Text(allTranslations.text('password_recovery'),
-                      style: Theme.of(context).textTheme.headline5.copyWith(fontWeight: FontWeight.bold),)),
+                    child: Text(allTranslations.text('password_recovery')!,
+                      style: Theme.of(context).textTheme.headline5!.copyWith(fontWeight: FontWeight.bold),)),
 
                 SizedBox(height: 10,),
                 password(_bloc),
@@ -131,7 +126,7 @@ class _ResetPassPageState extends State<ResetPasswordScreen> {
 
           return AuthInputWidget(
             labelText: allTranslations.text('new_password'),
-            errorText: snapshot.error,
+            errorText: snapshot.error as String?,
 
             invisbleText: true,
             onChange: bloc.changePassword,
@@ -150,7 +145,7 @@ class _ResetPassPageState extends State<ResetPasswordScreen> {
           return AuthInputWidget(
 
             labelText: allTranslations.text('pass_confirm'),
-            errorText: snapshot.error,
+            errorText: snapshot.error as String?,
             invisbleText: true,
             onChange: bloc.chnageConfrimPassword,
 
@@ -168,7 +163,7 @@ class _ResetPassPageState extends State<ResetPasswordScreen> {
 
           return GestureDetector(onTap: (){
             SystemChannels.textInput.invokeMethod('TextInput.hide');
-            if(snapshot.data!=null&&snapshot.data)
+            if(snapshot.data!=null)
               bloc.resetPassword(widget.token,widget.countryId,widget.phone);
 
           },
@@ -180,7 +175,7 @@ class _ResetPassPageState extends State<ResetPasswordScreen> {
                   borderRadius: new BorderRadius.circular(10.0),
                 ),
                 child:  Stack(children:<Widget>[
-                  Align( child: new Text(allTranslations.text('password_recovery'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
+                  Align( child: new Text(allTranslations.text('password_recovery')!, style: new TextStyle(fontSize: 18.0, color: Colors.white),)
                     ,alignment: Alignment.centerRight,),
 
                   Align( child: Icon(
@@ -210,7 +205,7 @@ class _ResetPassPageState extends State<ResetPasswordScreen> {
       duration: Duration(milliseconds: 1000),
 
     );
-    scaffoldKey.currentState.showSnackBar(snackBar);
+    scaffoldKey.currentState!.showSnackBar(snackBar);
   }
 
 

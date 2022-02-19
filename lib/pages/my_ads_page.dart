@@ -28,12 +28,12 @@ class _MyAdsPageState extends State<MyAdsPage> {
   int _sortSelectedValue=1;
   ScrollController _scrollController = new ScrollController();
   int page=1;
-  List<AdsModel> ads;
-  int lang ;
-  String countryId;
+  List<AdsModel>? ads;
+  int? lang ;
+  String? countryId;
 
   var _gridItemCount=1;
-  var bloc;
+  late var bloc;
  AdsBloc _bloc= AdsBloc();
 
   @override
@@ -59,7 +59,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
         case Status.COMPLETED:
         // TODO: Handle this case.
           var isLogged=data as ApiResponse<bool>;
-          var isss=isLogged.data;
+          var isss=isLogged.data!;
           if(isss) {
             Fluttertoast.showToast(
                 msg: "Favorite",
@@ -160,7 +160,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
               stream: _bloc.myAdsstream,
               builder:(context,snap){
                 if(snap.data!=null)
-                switch(snap.data.status) {
+                switch(snap.data!.status) {
                   case Status.LOADING:
                     if(page==1)
                       return new Center(
@@ -173,17 +173,18 @@ class _MyAdsPageState extends State<MyAdsPage> {
                     break;
 
                   case Status.COMPLETED:
-                    ads=snap.data.data as List<AdsModel>;
-                    return BlocProvider(bloc:_bloc,child: _buildAdsList(ads));
+                    ads=snap.data!.data as List<AdsModel>?;
+                    return BlocProvider(bloc:_bloc,child: _buildAdsList(ads!));
                     break;
                   case Status.ERROR:
-                    return EmptyListWidget(
+                    return EmptyWidget(
 
                         title: 'Error',
                         subTitle: 'Something Went Wrong',
                         image: 'images/error.png',
-                        titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
-                        subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
+                        titleTextStyle: Theme.of(context).typography.dense.displayMedium!
+                            .copyWith(color: Color(0xff9da9c7)),
+                        subtitleTextStyle: Theme.of(context).typography.dense.bodySmall!.copyWith(color: Color(0xffabb8d6))
                     );
                     break;
                 }
@@ -205,13 +206,13 @@ class _MyAdsPageState extends State<MyAdsPage> {
   Widget _buildAdsList(List<AdsModel> ads){
     if(ads.isEmpty)
 
-      return EmptyListWidget(
+      return EmptyWidget(
 
           title: 'Empty Ads',
           subTitle: 'No  Ads available yet',
           image: 'images/ads_empty.png',
-          titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
-          subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
+          titleTextStyle: Theme.of(context).typography.dense.displayMedium!.copyWith(color: Color(0xff9da9c7)),
+          subtitleTextStyle: Theme.of(context).typography.dense.bodySmall!.copyWith(color: Color(0xffabb8d6))
       );
 
     else
@@ -254,7 +255,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
               return _buildLoaderListItem();
 
             }else {
-              List<AdvertismentImage> imageList = ads
+              List<AdvertismentImage>? imageList = ads
               [adsIndex]
                   .AdvertismentImages;
 

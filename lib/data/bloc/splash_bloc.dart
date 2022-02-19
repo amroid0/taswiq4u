@@ -28,10 +28,10 @@ getCountryist().flatMap((value) => getCategoryList())
     .listen((event) {_controller.add(ApiResponse.completed(true));}
     ,onError:(e){_controller.add(ApiResponse.error(e.toString()));} );
  }
- Stream<List<CateogryEntity>> getCategoryList(){
+ Stream<List<CateogryEntity>?> getCategoryList(){
    return Stream.fromFuture(_client.getCateogryList()).doOnData((event) {preferences.saveCateogryList(event);});
  }
- Stream<List<CountryEntity>> getCountryist(){
+ Stream<List<CountryEntity>?> getCountryist(){
    return Stream.fromFuture(_client.getCountryList()).doOnData((event) {preferences.saveAllCountry(event);});
  }
 
@@ -43,8 +43,8 @@ getCountryist().flatMap((value) => getCategoryList())
    }else {
      try {
        final results = await _client.updateToken(await sessionManager.getUserCredit());
-       if(results){
-         final verifyResults = await _client.checkVerfiyPhone();
+       if(results!=null){
+         final verifyResults = await (_client.checkVerfiyPhone() as FutureOr<bool>);
          if(verifyResults){
        await _cateogryCleint.getCateogryList();
        _controller.sink.add(ApiResponse.completed(true));

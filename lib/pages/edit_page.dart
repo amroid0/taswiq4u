@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_map_location_picker/google_map_location_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/edit_bloc.dart';
@@ -32,7 +31,7 @@ import 'ImageUploaderListPage.dart';
 import 'cateogry_dailog.dart';
 
 class EditPage extends StatefulWidget {
-  AdsDetail detail;
+  AdsDetail? detail;
   EditPage(this.detail);
 
   @override
@@ -40,12 +39,12 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-  EditBloc bloc=null;
-  List<int> _selectedFieldValue=[];
-  List<Color> _colorFieldValue=[];
+  EditBloc? bloc=null;
+  List<int?> _selectedFieldValue=[];
+  List<Color?> _colorFieldValue=[];
   AdsPostEntity adsPostEntity=AdsPostEntity();
   final _formKey = GlobalKey<FormState>();
-  bool isNeogtiable=false;
+  bool? isNeogtiable=false;
   List<String> adsStateList=["جديد","مستعمل"];
   String selectedAdsStates="جديد";
   final TextEditingController _cattextController = TextEditingController();
@@ -56,18 +55,18 @@ class _EditPageState extends State<EditPage> {
   final TextEditingController _desctextController = TextEditingController();
   final TextEditingController _citytextController = TextEditingController();
 
-  Color adNameColor,descColor,priceColor,emailColor,phoneColor,categoryColor,cityColor=Colors.grey;
-  GoogleMapController _mapController;
+  Color? adNameColor,descColor,priceColor,emailColor,phoneColor,categoryColor,cityColor=Colors.grey;
+  GoogleMapController? _mapController;
   final Set<Marker> _markers = {};
-  List<TextEditingController>contollers=List();
+  List<TextEditingController?>contollers=List.empty();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  UploadImageBloc uploadBloc;
+  UploadImageBloc? uploadBloc;
 
-  ProgressDialog progressDialog;
+  ProgressDialog? progressDialog;
 
-  List<List> _multiselectedFieldValue=List<List<FieldProprtiresSpecificationoption>>();
+  List<List?> _multiselectedFieldValue=List<List<FieldProprtiresSpecificationoption>>.empty();
 
-  AdsDetail adsObj;
+  AdsDetail? adsObj;
 
   bool isFirst=true;
 
@@ -82,7 +81,7 @@ class _EditPageState extends State<EditPage> {
     super.initState();
     bloc=EditBloc();
     uploadBloc =UploadImageBloc();
-    bloc.addStream.listen((data) {
+    bloc!.addStream.listen((data) {
       // Redirect to another view, given your condition
       switch (data.status) {
         case Status.LOADING:
@@ -97,7 +96,7 @@ class _EditPageState extends State<EditPage> {
 
 
           var isLogged=data as ApiResponse<bool>;
-          var isss=isLogged.data;
+          var isss=isLogged.data!;
           if(isss){
 
             Fluttertoast.showToast(
@@ -158,20 +157,20 @@ class _EditPageState extends State<EditPage> {
     });
     adsObj=widget.detail;
 
-    _nametextController.text=allTranslations.isEnglish?adsObj.EnglishTitle:adsObj.ArabicTitle;
-    _desctextController.text=    allTranslations.isEnglish?adsObj.EnglishDescription:adsObj.ArabicDescription;
-    _pricetextController.text=    adsObj.Price==0?"":adsObj.Price.toString();
-    _phonetextController.text=adsObj.UserPhone!=null&&adsObj.UserPhone.isNotEmpty?adsObj.UserPhone:"";
+    _nametextController.text=allTranslations.isEnglish?adsObj!.EnglishTitle!:adsObj!.ArabicTitle!;
+    _desctextController.text=    allTranslations.isEnglish?adsObj!.EnglishDescription!:adsObj!.ArabicDescription!;
+    _pricetextController.text=    adsObj!.Price==0?"":adsObj!.Price.toString();
+    _phonetextController.text=adsObj!.UserPhone!=null&&adsObj!.UserPhone!.isNotEmpty?adsObj!.UserPhone!:"";
 
 
 
     //bloc.getAddFieldsByCatID(adsObj.CategoryId);
-    bloc.getEditFieldsByCatID(adsObj.Id.toString());
-    _cattextController.text=adsObj.CategoryName.toString();
-    _citytextController.text=allTranslations.isEnglish?adsObj.CityNameEnglish.toString():adsObj.CityNameArabic.toString();
+    bloc!.getEditFieldsByCatID(adsObj!.Id.toString());
+    _cattextController.text=adsObj!.CategoryName.toString();
+    _citytextController.text=allTranslations.isEnglish?adsObj!.CityNameEnglish.toString():adsObj!.CityNameArabic.toString();
 
-    isNeogtiable=adsObj.IsNogitable;
-    uploadBloc.addListImage(adsObj.AdvertismentImages);
+    isNeogtiable=adsObj!.IsNogitable;
+    uploadBloc!.addListImage(adsObj!.AdvertismentImages!);
 
   }
 
@@ -183,12 +182,12 @@ class _EditPageState extends State<EditPage> {
       context,
       label: allTranslations.text('choose_category'),
       selectedValue: CateogryEntity(),
-      items: List(),
+      items: List.empty(),
       onChange: (CateogryEntity selected) {
         _cattextController.text=selected.name.toString();
         _selectedFieldValue=[];
         _colorFieldValue=[];
-        bloc.getEditFieldsByCatID("");
+        bloc!.getEditFieldsByCatID("");
 
       },);
   }
@@ -201,7 +200,7 @@ class _EditPageState extends State<EditPage> {
       key: scaffoldKey,
       appBar: AppBar(
         title: Center(
-          child: Text(allTranslations.text('edit_ads'),textAlign: TextAlign.center,style: TextStyle(
+          child: Text(allTranslations.text('edit_ads')!,textAlign: TextAlign.center,style: TextStyle(
               color:
               Colors.black38
 
@@ -237,7 +236,7 @@ class _EditPageState extends State<EditPage> {
 
                   Padding(
                     padding: const EdgeInsets.only(left:8.0),
-                    child: Text(allTranslations.text('add_image')),
+                    child: Text(allTranslations.text('add_image')!),
                   ),
                   BlocProvider(
                       bloc: uploadBloc,child:ImageInput()),//add image list
@@ -308,9 +307,9 @@ class _EditPageState extends State<EditPage> {
                   TextFormField(
                       controller: _pricetextController,
                       keyboardType: TextInputType.numberWithOptions(decimal: true),
-                      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly,LengthLimitingTextInputFormatter((20))],
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly,LengthLimitingTextInputFormatter((20))],
                       onSaved: (val){
-                        adsPostEntity.price=int.tryParse(val)??0;
+                        adsPostEntity.price=int.tryParse(val!)??0;
                       },
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.check_circle,color: AppColors.validValueColor,),
@@ -326,19 +325,19 @@ class _EditPageState extends State<EditPage> {
                   SizedBox(height: 8,),
 
                   StreamBuilder<EditFieldProperty>(
-                    stream: bloc.stream,
+                    stream: bloc!.stream,
                     builder: (context, snapshot) {
                       if (snapshot.data==null)
                         return Visibility(child: Text(""),visible: false,);
                       else if (!snapshot.hasData)
                         return  SizedBox.shrink();
-                      var fields=snapshot.data.CategorySpecification;
-                      if(_selectedFieldValue.isEmpty) _selectedFieldValue=List(snapshot.data.CategorySpecification.length);
-                      if(_colorFieldValue.isEmpty) _colorFieldValue=List(snapshot.data.CategorySpecification.length);
-                      if(_multiselectedFieldValue.isEmpty) _multiselectedFieldValue=List(snapshot.data.CategorySpecification.length);
-                      if(contollers.isEmpty) contollers=List(snapshot.data.CategorySpecification.length);
+                      var fields=snapshot.data!.CategorySpecification!;
+                      if(_selectedFieldValue.isEmpty) _selectedFieldValue=List.filled(snapshot.data!.CategorySpecification!.length,null);
+                      if(_colorFieldValue.isEmpty) _colorFieldValue=List.filled(snapshot.data!.CategorySpecification!.length,null);
+                      if(_multiselectedFieldValue.isEmpty) _multiselectedFieldValue=List.filled(snapshot.data!.CategorySpecification!.length,null);
+                      if(contollers.isEmpty) contollers=List.filled(snapshot.data!.CategorySpecification!.length,null);
                       if(adsPostEntity.advertismentSpecification==null){
-                        adsPostEntity.advertismentSpecification=List(snapshot.data.CategorySpecification.length);
+                        adsPostEntity.advertismentSpecification=List.filled(snapshot.data!.CategorySpecification!.length,null);
                       }
                       return ListView.builder(
 
@@ -347,26 +346,26 @@ class _EditPageState extends State<EditPage> {
                         itemCount: fields.length,
                         itemBuilder: (context, index) {
                           var item = fields[index];
-                          if(isFirst &&snapshot.data.AdData.Advertisment_Specification!=null&&snapshot.data.AdData.Advertisment_Specification.isNotEmpty)
+                          if(isFirst &&snapshot.data!.AdData!.Advertisment_Specification!=null&&snapshot.data!.AdData!.Advertisment_Specification!.isNotEmpty)
 
-                            for (var spec in snapshot.data.AdData.Advertisment_Specification) {
+                            for (var spec in snapshot.data!.AdData!.Advertisment_Specification!) {
                             if(spec.CategorySpecificationId==item.Id){
-                      if((item.MuliSelect==null||!item.MuliSelect)&&item.SpecificationOptions.isNotEmpty){
+                      if((item.MuliSelect==null||!item.MuliSelect!)&&item.SpecificationOptions!.isNotEmpty){
 
                                       _selectedFieldValue[index] =
-                                      spec.AdvertismentSpecificatioOptions[0]
+                                      spec.AdvertismentSpecificatioOptions![0]
                                           .SpecificationOptionId;
                                   _colorFieldValue[index]=AppColors.validValueColor;
 
-                              }  else if(item.MuliSelect) {
+                              }  else if(item.MuliSelect!) {
                                 _multiselectedFieldValue[index] = spec.AdvertismentSpecificatioOptions;
                                 String text="";
-                                spec.AdvertismentSpecificatioOptions.forEach((val)=>text+="${val.NameEnglish} ,");
-                                contollers[index].text=text;
+                                spec.AdvertismentSpecificatioOptions!.forEach((val)=>text+="${val.NameEnglish} ,");
+                                contollers[index]!.text=text;
                                 _colorFieldValue[index]=AppColors.validValueColor;
                               }else{
 
-                                contollers[index].text=spec.CustomValue;
+                                contollers[index]!.text=spec.CustomValue!;
                                 _colorFieldValue[index]=AppColors.validValueColor;
 
                               }
@@ -375,21 +374,21 @@ class _EditPageState extends State<EditPage> {
                           }
 
                           //if(item.CustomValue==null)
-                          if((item.MuliSelect==null||!item.MuliSelect)&&item.SpecificationOptions.isNotEmpty)
+                          if((item.MuliSelect==null||!item.MuliSelect!)&&item.SpecificationOptions!.isNotEmpty)
                             return Padding(
                               padding: const EdgeInsets.only(bottom:8.0),
                               child: FormField<String>(
-                                  autovalidate: item.Required&&_selectedFieldValue[index]==null,
-                                  validator:item.Required&&_selectedFieldValue[index]==null?_emptyValidate:null,
+                                  autovalidateMode: item.Required!&&_selectedFieldValue[index]==null?AutovalidateMode.always:AutovalidateMode.disabled,
+                                  validator:item.Required!&&_selectedFieldValue[index]==null?_emptyValidate:null,
                                   onSaved: (val){
 
                                     var vv=Advertisment_SpecificationBean();
                                     vv.id=item.Id;
 
-                                    int itemval=val==null?_selectedFieldValue[index]:
+                                    int? itemval=val==null?_selectedFieldValue[index]:
                                     int.tryParse(val) ?? 0;
                                     vv.advertismentSpecificatioOptions=[itemval];
-                                    adsPostEntity.advertismentSpecification[index]=vv;
+                                    adsPostEntity.advertismentSpecification![index]=vv;
 
                                   },
                                   builder: (FormFieldState<String> state) {
@@ -416,14 +415,14 @@ class _EditPageState extends State<EditPage> {
                                           hint: Text('${allTranslations.text('choose')} ${allTranslations.isEnglish?item.EnglishName:item.ArabicName}'),
                                           value:_selectedFieldValue[index],
                                           isDense: true,
-                                          items: item.SpecificationOptions.map((FieldProprtiresSpecificationoption value){
+                                          items: item.SpecificationOptions!.map((FieldProprtiresSpecificationoption value){
                                             return DropdownMenuItem(
                                               value: value.Id,
-                                              child: Text(allTranslations.isEnglish?value.EnglishName:value.ArabicName),
+                                              child: Text(allTranslations.isEnglish?value.EnglishName!:value.ArabicName!),
                                             );
                                           }).toList(),
 
-                                          onChanged: (int newValue){
+                                          onChanged: (int? newValue){
                                             item.Value=newValue;
                                             setState(() {
                                               isFirst=false;
@@ -442,7 +441,7 @@ class _EditPageState extends State<EditPage> {
                             );
 
 
-                          else if(item.MuliSelect)
+                          else if(item.MuliSelect!)
 
 
                             return Padding(
@@ -450,19 +449,19 @@ class _EditPageState extends State<EditPage> {
                               child: TextFormField(
                                   controller: contollers[index],
                                   onTap:() {
-                                    WidgetsBinding.instance.addPostFrameCallback((_){_showReportDialog(index, allTranslations.isEnglish ?item.EnglishName:item.ArabicName, item.SpecificationOptions);});
+                                    WidgetsBinding.instance!.addPostFrameCallback((_){_showReportDialog(index, allTranslations.isEnglish ?item.EnglishName:item.ArabicName, item.SpecificationOptions);});
                                   },
                                   readOnly: true,
                                   enableInteractiveSelection: true,
-                                  autovalidate: item.Required,
-                                  validator: item.Required?_emptyValidate:null,
+                                  autovalidateMode: item.Required!?AutovalidateMode.always:AutovalidateMode.disabled,
+                                  validator: item.Required!?_emptyValidate:null,
                                   onSaved: (val){
 
                                     var vv=Advertisment_SpecificationBean();
                                     vv.id=item.Id;
                                     //int itemval=item.Value as int ?? 0;
                                     vv.customValue=val;
-                                    adsPostEntity.advertismentSpecification[index]=vv;
+                                    adsPostEntity.advertismentSpecification![index]=vv;
                                   },
                                   decoration: InputDecoration(
                                     filled: true,
@@ -470,7 +469,7 @@ class _EditPageState extends State<EditPage> {
 
                                     labelText: allTranslations.isEnglish?item.EnglishName:item.ArabicName,
                                     hintText:allTranslations.isEnglish?item.EnglishName:item.ArabicName,
-                                    prefixIcon: item.Required?Icon(Icons.check_circle,color: _colorFieldValue[index],):null,
+                                    prefixIcon: item.Required!?Icon(Icons.check_circle,color: _colorFieldValue[index],):null,
                                     suffixIcon:  Icon(Icons.arrow_drop_down),
                                     border: new OutlineInputBorder(
                                         borderRadius: new BorderRadius.circular(10.0)),
@@ -485,7 +484,7 @@ class _EditPageState extends State<EditPage> {
                               padding: const EdgeInsets.only(bottom:8.0),
                               child: TextFormField(
                                   controller: contollers[index],
-                                  autovalidate: true,
+                                  autovalidateMode: AutovalidateMode.always,
                                   validator: _emptyValidate,
                                   onSaved: (val){
 
@@ -494,7 +493,7 @@ class _EditPageState extends State<EditPage> {
                                     //int itemval=item.Value as int ?? 0;
                                     //vv.AdvertismentSpecificatioOptions=[val];
                                     vv.customValue=val;
-                                    adsPostEntity.advertismentSpecification[index]=vv;
+                                    adsPostEntity.advertismentSpecification![index]=vv;
 
                                   },
                                   decoration: InputDecoration(
@@ -502,7 +501,7 @@ class _EditPageState extends State<EditPage> {
                                     fillColor: Colors.white,
                                     labelText: allTranslations.isEnglish?item.EnglishName:item.ArabicName,
                                     hintText:allTranslations.isEnglish?item.EnglishName:item.ArabicName,
-                                    prefixIcon: item.Required?Icon(Icons.check_circle,color: _colorFieldValue[index],):null,
+                                    prefixIcon: item.Required!?Icon(Icons.check_circle,color: _colorFieldValue[index],):null,
 
 
                                     border: new OutlineInputBorder(
@@ -534,7 +533,7 @@ class _EditPageState extends State<EditPage> {
                   TextFormField(
                       controller: _phonetextController,
                       validator: _phoneValidate,
-                      autovalidate: phoneColor==AppColors.validValueColor||phoneColor==AppColors.errorValueColor,
+                      autovalidateMode: phoneColor==AppColors.validValueColor||phoneColor==AppColors.errorValueColor?AutovalidateMode.always:AutovalidateMode.disabled,
                       onSaved: (val){
                         adsPostEntity.phone=val;
                       },
@@ -560,7 +559,7 @@ class _EditPageState extends State<EditPage> {
                         onMapCreated: _onMapCreated,
                         markers: _markers,
                         onTap: (lat) async {
-                          LocationResult result = await showLocationPicker(context, "AIzaSyC57DQKo0jhnTJtdZX1Lp7LAIFmAFhZiNQ",
+                     /*     LocationResult result = await showLocationPicker(context, "AIzaSyC57DQKo0jhnTJtdZX1Lp7LAIFmAFhZiNQ",
                           );
                           print("result = $result");
                           setState(() {
@@ -580,7 +579,7 @@ class _EditPageState extends State<EditPage> {
                               ),
                             );
                           });
-
+*/
                         },
                       ),
                     ),
@@ -605,15 +604,15 @@ class _EditPageState extends State<EditPage> {
                     ,child: RaisedButton(
                       color:  Colors.green,
                       onPressed: (){
-                        if (_formKey.currentState.validate()) {
-                          _formKey.currentState.save();
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
                           int count=0;
                           var images=<PhotosBean>[];
                           bool isuploaded=true;
-                          for(var image in uploadBloc.getUploadImageList){
+                          for(var image in uploadBloc!.getUploadImageList){
 
                             if(image is UploadedImage&& image.state != StateEnum.LOADING){
-                              if(image.remoteUrl!=null&& image.remoteUrl.isNotEmpty){
+                              if(image.remoteUrl!=null&& image.remoteUrl!.isNotEmpty){
                                 PhotosBean photo=new PhotosBean(image.remoteUrl.toString(),count);
                                 images.add(photo);
                                 count++;
@@ -624,22 +623,22 @@ class _EditPageState extends State<EditPage> {
                             }
                           }
                           if(isuploaded){
-                            adsPostEntity.photos=List<PhotosBean>();
-                            adsPostEntity.photos.addAll(images);
+                            adsPostEntity.photos=List<PhotosBean>.empty();
+                            adsPostEntity.photos!.addAll(images);
                           }else{
-                            scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('images not all uploaded')));
+                            scaffoldKey.currentState!.showSnackBar(SnackBar(content: Text('images not all uploaded')));
                             return;
                           }
-                          adsPostEntity.id=adsObj.Id;
+                          adsPostEntity.id=adsObj!.Id;
                           adsPostEntity.locationLatitude=0 /*_markers.elementAt(0).position.latitude as int*/;
                           adsPostEntity.locationLongtude=0 /*_markers.elementAt(0).position.longitude as int*/;
-                          bloc.editAdvertisment(adsPostEntity);
+                          bloc!.editAdvertisment(adsPostEntity);
 
 
                         }
 
                       },
-                      child: Center(child: Text(allTranslations.text('edit_ads'))),textColor: Colors.white,),)
+                      child: Center(child: Text(allTranslations.text('edit_ads')!)),textColor: Colors.white,),)
                   ,
 
 
@@ -662,16 +661,16 @@ class _EditPageState extends State<EditPage> {
   }
 
 
-  Widget _BuildRoundedTextField({ String labelText,TextEditingController controller=null,String hintText,iswithArrowIcon=false,
-    Function onClickAction}){
+  Widget _BuildRoundedTextField({ String? labelText,TextEditingController? controller=null,String? hintText,iswithArrowIcon=false,
+    Function? onClickAction}){
     return TextFormField(
         validator: _emptyValidate,
         readOnly: true,
         enableInteractiveSelection: true,
-        autovalidate: categoryColor==AppColors.validValueColor||categoryColor==AppColors.errorValueColor,
+        autovalidateMode: categoryColor==AppColors.validValueColor||categoryColor==AppColors.errorValueColor?AutovalidateMode.always:AutovalidateMode.disabled,
         controller: controller,
         onTap: (){
-          onClickAction();
+          onClickAction!();
         },
         decoration: InputDecoration(
           suffixIcon: iswithArrowIcon? Icon(Icons.arrow_drop_down):null,
@@ -694,7 +693,7 @@ class _EditPageState extends State<EditPage> {
   }
 
   void _getLocation() async {
-    var currentLocation = await Geolocator()
+    /*var currentLocation = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
 
     setState(() {
@@ -712,9 +711,9 @@ class _EditPageState extends State<EditPage> {
             zoom: 20.0,
           ),
         ),
-      );    });
+      );    });*/
   }
-  String _titleAdsValidate(String value){
+  String? _titleAdsValidate(String value){
     if(value.isEmpty){
       return allTranslations.text('empty_field');
     }
@@ -725,11 +724,11 @@ class _EditPageState extends State<EditPage> {
     }
   }
 
-  String _phoneValidate(String value){
+  String? _phoneValidate(String? value){
 
     String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
     RegExp regExp=RegExp(patttern);
-    if(value.isEmpty){
+    if(value!.isEmpty){
       return allTranslations.text('empty_field');
     }
 
@@ -739,7 +738,7 @@ class _EditPageState extends State<EditPage> {
       return null;
     }
   }
-  String _emailValidate(String value){
+  String? _emailValidate(String value){
 
     String patttern = r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
     RegExp regExp=RegExp(patttern);
@@ -753,7 +752,7 @@ class _EditPageState extends State<EditPage> {
       return null;
     }
   }
-  String _emptyValidate(String value){
+  String? _emptyValidate(String? value){
 
     if(value==null||value.isEmpty){
       return allTranslations.text('empty_field');
@@ -763,13 +762,13 @@ class _EditPageState extends State<EditPage> {
     }
   }
 
-  _showReportDialog(int index,String title,List<FieldProprtiresSpecificationoption> list) {
+  _showReportDialog(int index,String? title,List<FieldProprtiresSpecificationoption>? list) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           //Here we will build the content of the dialog
           return AlertDialog(
-            title: Text(title),
+            title: Text(title!),
             content: MultiSelectChip(
               list,
               onSelectionChanged: (selectedList) {
@@ -777,7 +776,7 @@ class _EditPageState extends State<EditPage> {
                   contollers[index]=TextEditingController();}
                 String text="";
                 selectedList.forEach((val)=>text+="${val.EnglishName} ,");
-                contollers[index].text=text;
+                contollers[index]!.text=text;
                 setState(() {
 
                   _multiselectedFieldValue[index] = selectedList;
@@ -796,7 +795,7 @@ class _EditPageState extends State<EditPage> {
         });
   }
 
-  String _descAdsValidate(String value){
+  String? _descAdsValidate(String value){
     if(value.isEmpty){
       return allTranslations.text('empty_field');
     }
@@ -806,16 +805,16 @@ class _EditPageState extends State<EditPage> {
       return null;
     }
   }
-  Widget _BuildCityRoundedTextField({ String labelText,TextEditingController controller=null,String hintText,iswithArrowIcon=false,
-    Function onClickAction}){
+  Widget _BuildCityRoundedTextField({ String? labelText,TextEditingController? controller=null,String? hintText,iswithArrowIcon=false,
+    Function? onClickAction}){
     return TextFormField(
         validator: _emptyValidate,
         readOnly: true,
         enableInteractiveSelection: true,
-        autovalidate: cityColor==AppColors.validValueColor||cityColor==AppColors.errorValueColor,
+        autovalidateMode: cityColor==AppColors.validValueColor||cityColor==AppColors.errorValueColor?AutovalidateMode.always:AutovalidateMode.disabled,
         controller: controller,
         onTap: (){
-          onClickAction();
+          onClickAction!();
         },
         decoration: InputDecoration(
           suffixIcon: iswithArrowIcon? Icon(Icons.arrow_drop_down):null,
@@ -837,9 +836,9 @@ class _EditPageState extends State<EditPage> {
       context,
       label: allTranslations.text('choose_city'),
       selectedValue: CityModel(),
-      items: List(),
+      items: List.empty(),
       onChange: (CityModel selected) {
-        _citytextController.text=allTranslations.isEnglish?selected.englishDescription.toString():selected.arabicDescription;
+        _citytextController.text=allTranslations.isEnglish?selected.englishDescription.toString():selected.arabicDescription!;
         adsPostEntity.stateId=selected.id;
         adsPostEntity.cityId=selected.id;
 

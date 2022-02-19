@@ -33,7 +33,7 @@ class FavroiteBloc implements Bloc {
 
 
 
-  void changeFavoriteState(bool isFavorite,int adsId) async {
+  void changeFavoriteState(bool isFavorite,int? adsId) async {
     _favoriteStatecontroller.sink.add(ApiResponse.loading('loading'));
     try {
       final results = await _client.changeFavroiteState(isFavorite,adsId);

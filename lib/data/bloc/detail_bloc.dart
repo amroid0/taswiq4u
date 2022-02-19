@@ -17,7 +17,7 @@ class DetailBloc extends Bloc{
   final _deleteStatecontroller = BehaviorSubject<ApiResponse<bool>>();
   final _distnctStatecontroller = BehaviorSubject<ApiResponse<bool>>();
 
-  AdsDetail detail=null;
+  AdsDetail? detail=null;
   final _viewController = PublishSubject<Counter>();
   final _translateController = BehaviorSubject<bool>();
   Stream<ApiResponse<bool>> get deleteStateStream => _deleteStatecontroller.stream;
@@ -64,25 +64,25 @@ void deleteAds(String adsID)async{
   }
   void viewAds() async {
     try {
-      List<String> ids=await preferences.getViewedCommericalList();
-      detail.ViewCount=detail.ViewCount==null?0:detail.ViewCount;
+      List<String>? ids=await preferences.getViewedCommericalList();
+      detail!.ViewCount=detail!.ViewCount==null?0:detail!.ViewCount;
       if(ids!=null)
         for(String id in ids){
-          if(id==detail.Id.toString()){
-            _viewController.sink.add(Counter(detail.ViewCount,false));
+          if(id==detail!.Id.toString()){
+            _viewController.sink.add(Counter(detail!.ViewCount,false));
             return;
           }
         }
-      final results = await _client.viewAds(detail.Id.toString());
-      if(results) {
-        await preferences.saveViewCommericalList(detail.Id.toString());
-        detail.ViewCount = detail.ViewCount + 1;
-        _viewController.sink.add(Counter(detail.ViewCount, false));
+      final results = await _client.viewAds(detail!.Id.toString());
+      if(results!=null) {
+         preferences.saveViewCommericalList(detail!.Id.toString());
+        detail!.ViewCount = detail!.ViewCount! + 1;
+        _viewController.sink.add(Counter(detail!.ViewCount, false));
       }else{
-        _viewController.sink.add(Counter(detail.ViewCount,true));
+        _viewController.sink.add(Counter(detail!.ViewCount,true));
       }
     }catch(e) {
-      _viewController.sink.add(Counter(detail.ViewCount,true));
+      _viewController.sink.add(Counter(detail!.ViewCount,true));
     }}
 
 
@@ -97,12 +97,12 @@ void deleteAds(String adsID)async{
 
   void GetImage(int index,String imageId) async {
     try {
-      detail.AdvertismentImages[index].isLoading=true;
+      detail!.AdvertismentImages![index].isLoading=true;
       final results = await _client.getImageAds(imageId);
       if(detail!=null) {
 
-          detail.AdvertismentImages[index].isLoading=null;
-          detail.AdvertismentImages[index].base64Image =
+          detail!.AdvertismentImages![index].isLoading=null;
+          detail!.AdvertismentImages![index].base64Image =
               results;
 
            }
@@ -110,7 +110,7 @@ void deleteAds(String adsID)async{
 
     }catch(e) {
 
-        detail.AdvertismentImages[index].isLoading=null;
+        detail!.AdvertismentImages![index].isLoading=null;
 
 
     }}
@@ -119,7 +119,7 @@ void deleteAds(String adsID)async{
 
   void GetImageSlider(int index,List<AdvertismentImage> images) async {
     try {
-      detail.AdvertismentImages[index].isLoading=true;
+      detail!.AdvertismentImages![index].isLoading=true;
       final results = await _client.getImageAds(images[index].Url);
       if(detail!=null) {
 

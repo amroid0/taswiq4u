@@ -41,8 +41,8 @@ class ProfileBloc  extends Bloc with RegisterValidators{
   Stream<String> get newpassword => _newPasswordController.stream.transform(validatePassword);
   Stream<String> get confirmpassword => _confrmPasswordController.stream.transform(validatePassword);
 
-  Stream<bool> get submitValid => CombineLatestStream.combine2(email,firstName, (e, p) => true);
-  Stream<bool> get updatePasswordValid => CombineLatestStream.combine3(curpassword,newpassword,confirmpassword, (e, p,c) => true);
+  Stream<bool> get submitValid => CombineLatestStream.combine2(email,firstName, (dynamic e, dynamic p) => true);
+  Stream<bool> get updatePasswordValid => CombineLatestStream.combine3(curpassword,newpassword,confirmpassword, (dynamic e, dynamic p,dynamic c) => true);
   Function(String) get changeEmail => _phoneController.sink.add;
   Function(String) get changeFirstName => _firstNameController.sink.add;
   Function(String) get changeSecondName => _secondNameController.sink.add;
@@ -62,7 +62,7 @@ class ProfileBloc  extends Bloc with RegisterValidators{
 
 
     Stream.fromFuture(preferences.getUserInfo())
-        .onErrorResume((error) => Stream.fromFuture(_client.getUserData()) .doOnData((event) {preferences.saveUserData(event);}))
+        .onErrorResume((error,stack) => Stream.fromFuture(_client.getUserData()) .doOnData((event) {preferences.saveUserData(event);}))
 
         .doOnListen(() {        _controller.sink.add(ApiResponse.loading('loading'));
     }).listen((event) {
@@ -90,7 +90,7 @@ class ProfileBloc  extends Bloc with RegisterValidators{
       userInfo.email=currentInfo.email;
       userInfo.countryId=userInfo.countryId;
     Stream.fromFuture(_client.updateUserData(userInfo))
-        .flatMap((response) => Stream.fromFuture(_client.getUserData()) .doOnData((event) {preferences.saveUserData(event);}))
+        .flatMap((response) => Stream.fromFuture(_client.getUserData()) .doOnData((event) {preferences.saveUserData(event!);}))
 
         .doOnListen(() {        _updatecontroller.sink.add(ApiResponse.loading('loading'));
     }).listen((event) {
@@ -127,7 +127,7 @@ void getSavedLocalUserInfo()async{
   }
 
   void passordNotMatch() {
-    _confrmPasswordController.sink.addError(allTranslations.text("not_match"));
+    _confrmPasswordController.sink.addError(allTranslations.text("not_match")!);
   }
 
   updatePassword() async {

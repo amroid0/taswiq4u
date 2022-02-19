@@ -10,9 +10,9 @@ part 'password_request_entity.g.dart';
 
 @JsonSerializable()
 class PasswordRequest {
-  String OldPassword;
-  String NewPassword;
-  String ConfirmPassword;
+  String? OldPassword;
+  String? NewPassword;
+  String? ConfirmPassword;
 
 
   PasswordRequest({this.OldPassword, this.NewPassword, this.ConfirmPassword});

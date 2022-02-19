@@ -40,17 +40,17 @@ class SearchAnnounceListScreen extends StatefulWidget {
 }
 
 class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
-  int _sortSelectedValue=2;
+  int? _sortSelectedValue=2;
   ScrollController _scrollController = new ScrollController();
    int page=1;
-  AdsEntity ads;
+  AdsEntity? ads;
   FilterParamsEntity params=new FilterParamsEntity();
-  int lang ;
-  String countryId;
+  int? lang ;
+  String? countryId;
 
   var _gridItemCount=1;
 
-  FavroiteBloc favbloc;
+  FavroiteBloc? favbloc;
 
   @override
   void initState() {
@@ -63,7 +63,7 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent&&ads.isLoadMore==null) {
+          _scrollController.position.maxScrollExtent&&ads!.isLoadMore==null) {
         page++;
         BlocProvider.of<AdsBloc>(context).submitQuery(params,_sortSelectedValue,page);
 
@@ -72,7 +72,7 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
     });
     favbloc=new FavroiteBloc();
 
-    favbloc.stateStream.listen((data) {
+    favbloc!.stateStream.listen((data) {
       // Redirect to another view, given your condition
 
       switch (data.status) {
@@ -89,7 +89,7 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
         // TODO: Handle this case.
           var isLogged=data as ApiResponse<bool>;
           var isss=isLogged.data;
-          favbloc.getFavroite(1);
+          favbloc!.getFavroite(1);
           break;
 
       }
@@ -114,7 +114,7 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
       backgroundColor: AppColors.appBackground,
       appBar: AppBar(
         backgroundColor: AppColors.appBackground,
-        title: Text(allTranslations.isEnglish?widget.category.englishDescription:widget.category.arabicDescription,style: TextStyles.appBarTitle,),
+        title: Text(allTranslations.isEnglish?widget.category.englishDescription!:widget.category.arabicDescription!,style: TextStyles.appBarTitle,),
         centerTitle: true,
         actions: <Widget>[
           Icon(Icons.search,color: Colors.black,size: 30,),
@@ -127,14 +127,14 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
         elevation: 0,
 
       ),//appbar
-      body: BlocProvider<FavroiteBloc>(
+      body: BlocProvider<FavroiteBloc?>(
         bloc: favbloc,
         child: Column(
           children: <Widget>[
             Row(
               mainAxisAlignment:MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Text(allTranslations.text('filter_by')),
+                Text(allTranslations.text('filter_by')!),
               InkWell(
                 onTap: () async {
                  var retunObject= await Navigator.push(
@@ -160,7 +160,7 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
                     child: Icon(Icons.filter),),
               ),
 
-                Text(allTranslations.text('sort')),
+                Text(allTranslations.text('sort')!),
                 InkWell(
                   onTap: (){
                     _newSortModalBottomSheet(context);
@@ -203,13 +203,13 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
             StreamBuilder<ApiResponse<AdsEntity>>(
               stream: BlocProvider.of<AdsBloc>(context).stream,
               builder:(context,snap){
-                switch(snap.data.status) {
+                switch(snap.data?.status) {
                   case Status.LOADING:
                     if(page==1)
                     return  Expanded(
                       child: Shimmer.fromColors(
-                          baseColor: Colors.grey[300],
-                          highlightColor: Colors.grey[100],
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
                           enabled: true,
                         child: ListView.builder(
                           itemBuilder: (_, __) => Container(
@@ -269,17 +269,17 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
                     break;
 
                   case Status.COMPLETED:
-                     ads=snap.data.data as AdsEntity;
-                    return _buildAdsList(ads);
+                     ads=snap.data!.data as AdsEntity?;
+                    return _buildAdsList(ads!);
                     break;
                   case Status.ERROR:
-                    return EmptyListWidget(
+                    return EmptyWidget(
 
                         title: 'Error',
                         subTitle: 'Something Went Wrong',
                         image: 'images/error.png',
-                        titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
-                        subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
+                        titleTextStyle: Theme.of(context).typography.dense.displayMedium!.copyWith(color: Color(0xff9da9c7)),
+                        subtitleTextStyle: Theme.of(context).typography.dense.bodySmall!.copyWith(color: Color(0xffabb8d6))
                     );
                     break;
                 }
@@ -299,15 +299,15 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
 
   }
   Widget _buildAdsList(AdsEntity ads){
-    if(ads.advertisementList.isEmpty)
+    if(ads.advertisementList!.isEmpty)
 
-    return EmptyListWidget(
+    return EmptyWidget(
 
         title: 'Empty Ads',
         subTitle: 'No  Ads available yet',
         image: 'images/ads_empty.png',
-        titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
-        subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
+        titleTextStyle: Theme.of(context).typography.dense.displayMedium!.copyWith(color: Color(0xff9da9c7)),
+        subtitleTextStyle: Theme.of(context).typography.dense.bodySmall!.copyWith(color: Color(0xffabb8d6))
     );
 
     else
@@ -320,18 +320,18 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
             shrinkWrap: true,
 
             crossAxisCount:_gridItemCount , //as per your requirement
-            itemCount: ads.advertisementList.length +(ads.advertisementList.length/6).toInt(),
+            itemCount: ads.advertisementList!.length +(ads.advertisementList!.length/6).toInt(),
             itemBuilder: (BuildContext context, int index) {
               if (index!=0&&index % 6 == 0) { //for even row
                 int comIndex=(index/6-1).toInt();
                 return GestureDetector(
                   onTap: (){
-                    if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
+                    if(ads.commercialAdsList!.isNotEmpty&&comIndex<ads.commercialAdsList!.length){
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => FullComerialScreen()
-                            ,settings: RouteSettings(arguments: ads.commercialAdsList[comIndex])),
+                            ,settings: RouteSettings(arguments: ads.commercialAdsList![comIndex])),
                       );
 
                     }
@@ -345,18 +345,18 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
                       borderRadius: BorderRadius.circular(20),
                       color:Colors.black12,
                     ),
-                    child: _BuildImageWidget(ads.commercialAdsList,comIndex)
+                    child: _BuildImageWidget(ads.commercialAdsList!,comIndex)
 
                     ,
                   ),
                 );
               } else { //for odd row
                 int adsIndex=index-(index/6).toInt();
-                if(ads.advertisementList[adsIndex]==null){
+                if(ads.advertisementList![adsIndex]==null){
                   return _buildLoaderListItem();
 
                 }
-                      return AdsCardWidget(model:ads.advertisementList[adsIndex],language:lang);
+                      return AdsCardWidget(model:ads.advertisementList![adsIndex],language:lang);
                   }
 
 
@@ -376,26 +376,26 @@ else {
             child: ListView.builder(
               controller: _scrollController,
               shrinkWrap: true,
-              itemCount: ads.advertisementList.length +(ads.advertisementList.length/6).toInt(),
+              itemCount: ads.advertisementList!.length +(ads.advertisementList!.length/6).toInt(),
               itemBuilder: (BuildContext context,int index){
 
                 if(index!=0&& index%6==0){
                   int comIndex=(index/6-1).toInt();
-                  String commercialAdsItem="";
-                  if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
-                    commercialAdsItem=ads.commercialAdsList[comIndex].Link;
+                  String? commercialAdsItem="";
+                  if(ads.commercialAdsList!.isNotEmpty&&comIndex<ads.commercialAdsList!.length){
+                    commercialAdsItem=ads.commercialAdsList![comIndex].Link;
 /*
                     if( ads.commercialAdsList[comIndex].base74Image==null&& ads.commercialAdsList[comIndex].isLoading==null)
                       BlocProvider.of<AdsBloc>(context).GetImage(commercialAdsItem,comIndex,true);*/
                   }
                   return GestureDetector(
                     onTap: (){
-                      if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
+                      if(ads.commercialAdsList!.isNotEmpty&&comIndex<ads.commercialAdsList!.length){
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => FullComerialScreen()
-                              ,settings: RouteSettings(arguments: ads.commercialAdsList[comIndex])),
+                              ,settings: RouteSettings(arguments: ads.commercialAdsList![comIndex])),
                         );
 
                       }
@@ -414,8 +414,8 @@ else {
                        fit: BoxFit.fill,
                        placeholder: (context, url) => Image.asset("images/logo.png"),
                        errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                        imageUrl: APIConstants.getFullImageUrl(ads.commercialAdsList.isEmpty||comIndex>=ads.commercialAdsList.length?"":
-                        ads.commercialAdsList[comIndex].systemDataFile.Url,ImageType.COMMAD),
+                        imageUrl: APIConstants.getFullImageUrl(ads.commercialAdsList!.isEmpty||comIndex>=ads.commercialAdsList!.length?"":
+                        ads.commercialAdsList![comIndex].systemDataFile!.Url,ImageType.COMMAD),
                       )
 
                     ),
@@ -424,12 +424,12 @@ else {
                 }else {
                   int adsIndex=index-(index/6).toInt();
 
-                  if(ads.advertisementList[adsIndex]==null){
+                  if(ads.advertisementList![adsIndex]==null){
                     return _buildLoaderListItem();
 
                   }else {
 
-                          return AdsRowWidget(model:ads.advertisementList[adsIndex],language:lang);
+                          return AdsRowWidget(model:ads.advertisementList![adsIndex],language:lang);
 
 
 
@@ -450,7 +450,7 @@ else {
 
 
 
-void _OnSelectSort(int val){
+void _OnSelectSort(int? val){
   _sortSelectedValue=val;
   page=1;
   BlocProvider.of<AdsBloc>(context).submitQuery(params,val,page);
@@ -470,8 +470,8 @@ void _OnSelectSort(int val){
                   child: RadioListTile(
                     value: 2,
                     groupValue: _sortSelectedValue,
-                    title: Text(allTranslations.text('hightest_price'),style: TextStyle(color: Colors.black),),
-                    onChanged: (val) {
+                    title: Text(allTranslations.text('hightest_price')!,style: TextStyle(color: Colors.black),),
+                    onChanged: (dynamic val) {
                       _OnSelectSort(val);
                     },
 
@@ -484,8 +484,8 @@ void _OnSelectSort(int val){
                   child: RadioListTile(
                     value: 1,
                     groupValue: _sortSelectedValue,
-                    title: Text(allTranslations.text('lowest_price'),style: TextStyle(color: Colors.black)),
-                    onChanged: (val) {
+                    title: Text(allTranslations.text('lowest_price')!,style: TextStyle(color: Colors.black)),
+                    onChanged: (dynamic val) {
                       _OnSelectSort(val);
 
                     },
@@ -499,8 +499,8 @@ void _OnSelectSort(int val){
                   child: RadioListTile(
                     value: 3,
                     groupValue: _sortSelectedValue,
-                    title: Text(allTranslations.text('recently_added'),style: TextStyle(color: Colors.black)),
-                    onChanged: (val) {
+                    title: Text(allTranslations.text('recently_added')!,style: TextStyle(color: Colors.black)),
+                    onChanged: (dynamic val) {
                       _OnSelectSort(val);
                     },
 
@@ -520,12 +520,12 @@ void _OnSelectSort(int val){
     );
   }
   Widget _BuildImageWidget(List<CommercialAdsList> list,int index){
-    if(list.isNotEmpty&&list[0].systemDataFile.Url!=null&&list[0].systemDataFile.Url.isNotEmpty)
+    if(list.isNotEmpty&&list[0].systemDataFile!.Url!=null&&list[0].systemDataFile!.Url!.isNotEmpty)
       return  CachedNetworkImage(
         fit: BoxFit.fill,
         placeholder: (context, url) => Image.asset("images/logo.png"),
         errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-        imageUrl: APIConstants.getFullImageUrl(list[0].systemDataFile.Url,ImageType.ADS),
+        imageUrl: APIConstants.getFullImageUrl(list[0].systemDataFile!.Url,ImageType.ADS),
       );
     else
       return  Image.asset("images/logo.png",fit: BoxFit.fill,);
@@ -534,7 +534,7 @@ void _OnSelectSort(int val){
 
   Widget _buildCategoryList(List<CateogryEntity> category){
     return Visibility(
-      visible: category[0].hasHorizontal!=null&&category[0].hasHorizontal,
+      visible: category[0].hasHorizontal!=null&&category[0].hasHorizontal!,
       child: Container(
         height: 80,
         child: ListView.builder(
@@ -549,8 +549,8 @@ void _OnSelectSort(int val){
                   child:     Container(
                     margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
                     child: ChoiceChip(
-                      label: Text(category[index].name),
-                      selected:category[index].isSelected==null?false:category[index].isSelected||category[index].id==widget.category.id,
+                      label: Text(category[index].name!),
+                      selected:category[index].isSelected==null?false:category[index].isSelected!||category[index].id==widget.category.id,
                       onSelected: (select){
 
                         category.forEach((item){
@@ -589,7 +589,7 @@ void _OnSelectSort(int val){
   }
 void getGroupId() async{
   countryId = await preferences.getCountryID() ;
-  lang = int.parse(countryId);
+  lang = int.parse(countryId!);
   print("group  value"+lang.toString());
 
 }

@@ -24,7 +24,7 @@ class CountryPage extends StatefulWidget {
 class _CountryPageState extends State<CountryPage> {
 
 
-  CountryBloc bloc;
+  late CountryBloc bloc;
   @override
   void initState() {
     preferences.clearCity();
@@ -55,7 +55,7 @@ class _CountryPageState extends State<CountryPage> {
                       stream: bloc.stream,
                       builder: (context,snapshot){
                         if(snapshot.data!=null){
-                          switch(snapshot.data.status){
+                          switch(snapshot.data!.status){
                             case Status.LOADING:
                               return new Center(
                                 child: new CircularProgressIndicator(
@@ -66,7 +66,7 @@ class _CountryPageState extends State<CountryPage> {
                               break;
                             case Status.COMPLETED:
                             // TODO: Handle this case.
-                            List<CountryEntity> list=snapshot.data.data;
+                            List<CountryEntity> list=snapshot.data!.data!;
                             return SlideInUp(
                               child: ListView.separated(
                                 itemCount: list.length,
@@ -104,7 +104,7 @@ class _CountryPageState extends State<CountryPage> {
                                             ),
                                           ),
                                         ),
-                                         Align(alignment: Alignment.bottomCenter,child: Text(allTranslations.isEnglish?list[index].englishDescription.toString():list[index].arabicDescription, style: new TextStyle(fontSize: 20.0,),))
+                                         Align(alignment: Alignment.bottomCenter,child: Text(allTranslations.isEnglish?list[index].englishDescription.toString():list[index].arabicDescription!, style: new TextStyle(fontSize: 20.0,),))
                                   ]
                                   ),
 
@@ -124,12 +124,12 @@ class _CountryPageState extends State<CountryPage> {
                               break;
                             case Status.ERROR:
 
-                              return EmptyListWidget(
+                              return EmptyWidget(
                                   title: 'Error',
                                   subTitle: 'Something Went Wrong',
                                   image: 'images/error.png',
-                                  titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
-                                  subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
+                                  titleTextStyle: Theme.of(context).typography.dense.displayMedium!.copyWith(color: Color(0xff9da9c7)),
+                                  subtitleTextStyle: Theme.of(context).typography.dense.bodySmall!.copyWith(color: Color(0xffabb8d6))
 
                               );
                               break;

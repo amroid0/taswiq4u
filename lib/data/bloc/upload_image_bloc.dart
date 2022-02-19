@@ -13,7 +13,7 @@ import '../remote/UploadImageClient.dart';
 class UploadImageBloc implements Bloc {
   final _client = UploadImageClient();
   final _controller = StreamController<List<ImageListItem>>();
-   final _ImageList=List<ImageListItem>();
+   final _ImageList=List<ImageListItem>.empty();
 
   Stream<List<ImageListItem>> get stream => _controller.stream;
   List<ImageListItem> get getUploadImageList => _ImageList;
@@ -30,8 +30,8 @@ class UploadImageBloc implements Bloc {
     _ImageList.add(image);
     _controller.sink.add(_ImageList);
     final results = await _client.uploadAdsImage(path, image.id);
-    if(results.id<_ImageList.length){
-    _ImageList[results.id]=results;
+    if(results.id!<_ImageList.length){
+    _ImageList[results.id!]=results;
     _controller.sink.add(_ImageList);
     }
   }
@@ -71,7 +71,7 @@ class UploadImageBloc implements Bloc {
     image.state=StateEnum.LOADING;
     _ImageList[index]=image;
     _controller.sink.add(_ImageList);
-    final results = await _client.uploadAdsImage(image.localPath, image.id);
+    final results = await _client.uploadAdsImage(image.localPath!, image.id);
     if(index < _ImageList.length) {
       _ImageList[index] = results;
       _controller.sink.add(_ImageList);

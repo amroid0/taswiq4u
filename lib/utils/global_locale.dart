@@ -9,8 +9,8 @@ const List<String> _kSupportedLanguages = ["en","ar"];
 const String _kDefaultLanguage = "en";
 
 class GlobalTranslations {
-  Locale _locale;
-  Map<dynamic, dynamic> _localizedValues;
+  Locale? _locale;
+  Map<dynamic, dynamic>? _localizedValues;
   Map<String, String> _cache = {};
 
   ///
@@ -23,7 +23,7 @@ class GlobalTranslations {
   ///
   /// The [key] might be a sequence of [key].[sub-key].[sub-key]
   ///
-  String text(String key) {
+  String? text(String key) {
     // Return the requested string
     String string = '** $key not found';
 
@@ -35,14 +35,14 @@ class GlobalTranslations {
 
       // Iterate the key until found or not
       bool found = true;
-      Map<dynamic, dynamic> _values = _localizedValues;
+      Map<dynamic, dynamic>? _values = _localizedValues;
       List<String> _keyParts = key.split('.');
       int _keyPartsLen = _keyParts.length;
       int index = 0;
       int lastIndex = _keyPartsLen - 1;
 
       while(index < _keyPartsLen && found){
-        var value = _values[_keyParts[index]];
+        var value = _values![_keyParts[index]];
 
         if (value == null) {
           // Not found => STOP
@@ -67,9 +67,9 @@ class GlobalTranslations {
     return string;
   }
 
-  String get currentLanguage => _locale == null ? '' : _locale.languageCode;
+  String get currentLanguage => _locale == null ? '' : _locale!.languageCode;
   bool get isEnglish => currentLanguage=='en';
-  Locale get locale => _locale;
+  Locale? get locale => _locale;
 
   ///
   /// One-time initialization
@@ -84,8 +84,8 @@ class GlobalTranslations {
   ///
   /// Routine to change the language
   ///
-  Future<Null> setNewLanguage([String newLanguage]) async {
-    String language = newLanguage;
+  Future<Null> setNewLanguage([String? newLanguage]) async {
+    String? language = newLanguage;
     if (language == null){
       language = await preferences.getLang();
     }
@@ -107,10 +107,10 @@ class GlobalTranslations {
     }
 
     // Set the Locale
-    _locale = Locale(language, "");
+    _locale = Locale(language!, "");
 
     // Load the language strings
-    String jsonContent = await rootBundle.loadString("assets/locale/locale_${_locale.languageCode}.json");
+    String jsonContent = await rootBundle.loadString("assets/locale/locale_${_locale!.languageCode}.json");
     _localizedValues = json.decode(jsonContent);
 
     // Clear the cache

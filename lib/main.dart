@@ -1,5 +1,4 @@
 import 'package:bmprogresshud/progresshud.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,10 +17,7 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await allTranslations.init();
 
-  runApp(
-      DevicePreview(
-        enabled: false,
-        builder: (context) => Application()));}
+  runApp(Application());}
 
 
 class Application extends StatefulWidget {
@@ -30,7 +26,7 @@ class Application extends StatefulWidget {
 }
 
 class ApplicationState extends State<Application> {
-  TranslationsBloc translationsBloc;
+  TranslationsBloc? translationsBloc;
 
   @override
   void initState() {
@@ -47,19 +43,18 @@ class ApplicationState extends State<Application> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<TranslationsBloc>(
-      bloc: translationsBloc,
+      bloc: translationsBloc!,
       child: BlocProvider<LoginBloc>(
         bloc: new LoginBloc(),
         child: BlocProvider<ProfileBloc>(
           bloc: new ProfileBloc(),
-          child: StreamBuilder<Locale>(
-              stream: translationsBloc.currentLocale,
+          child: StreamBuilder<Locale?>(
+              stream: translationsBloc!.currentLocale,
               initialData: allTranslations.locale,
-              builder: (BuildContext context, AsyncSnapshot<Locale> snapshot) {
+              builder: (BuildContext context, AsyncSnapshot<Locale?> snapshot) {
 
                 return MaterialApp(
                   title: 'Taswiq4U',
-                  builder: DevicePreview.appBuilder, // Add the builder here
                    debugShowCheckedModeBanner: false,
                   theme: ThemeData(
 
@@ -113,7 +108,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: allTranslations.text("page.title"),
+      title: allTranslations.text("page.title")!,
       theme: ThemeData(
 
         primarySwatch: Colors.green,
@@ -128,7 +123,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -139,7 +134,7 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
+  final String? title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -171,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(widget.title!),
       ),
       body: ProgressHud(
         child: Center(
@@ -199,7 +194,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Text(
                 '$_counter',
-                style: Theme.of(context).textTheme.display1,
               ),
             ],
           ),

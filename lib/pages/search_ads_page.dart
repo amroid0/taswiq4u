@@ -20,14 +20,14 @@ import 'package:olx/widget/favroite_widget.dart';
 import 'detail_page.dart';
 import 'full_commerical_ads_screen.dart';
 
-class DummyDelegate extends SearchDelegate<String> {
-  int _sortSelectedValue=1;
+class DummyDelegate extends SearchDelegate<String?> {
+  int? _sortSelectedValue=1;
   AdsBloc _bloc=AdsBloc();
   int page=1;
-  AdsEntity ads;
+  AdsEntity? ads;
   ScrollController _scrollController = new ScrollController();
-  String countryId ;
-  int lang ;
+  String? countryId ;
+  int? lang ;
 
   var _gridItemCount=1;
   var favbloc;
@@ -76,7 +76,7 @@ class DummyDelegate extends SearchDelegate<String> {
         case Status.COMPLETED:
         // TODO: Handle this case.
           var isLogged=data as ApiResponse<bool>;
-          var isss=isLogged.data;
+          var isss=isLogged.data!;
           if(isss) {
             Fluttertoast.showToast(
                 msg: "Favorite",
@@ -107,7 +107,7 @@ class DummyDelegate extends SearchDelegate<String> {
       }
     });
 
-    return BlocProvider<FavroiteBloc>(
+    return BlocProvider<FavroiteBloc?>(
       bloc: favbloc,
       child: Padding(
         padding: const EdgeInsets.only(top:8.0),
@@ -117,13 +117,13 @@ class DummyDelegate extends SearchDelegate<String> {
               mainAxisAlignment:MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 ShowListWidget(value: 1,onvalueChange: (val){
-                    _gridItemCount=val;
+                    _gridItemCount=val!;
                     //_buildAdsList(ads,context);
                   _bloc.refreshData();
 
                 },)
                ,
-                Text(allTranslations.text('sort')),
+                Text(allTranslations.text('sort')!),
                 InkWell(
                   onTap: (){
                     _newSortModalBottomSheet(context);
@@ -148,7 +148,7 @@ class DummyDelegate extends SearchDelegate<String> {
               child: StreamBuilder<ApiResponse<AdsEntity>>(
                 stream: _bloc.stream,
                 builder:(context,snap){
-                  switch(snap.data.status) {
+                  switch(snap.data!.status) {
                     case Status.LOADING:
                       if(page==1)
                         return new Center(
@@ -161,17 +161,17 @@ class DummyDelegate extends SearchDelegate<String> {
                       break;
 
                     case Status.COMPLETED:
-                      ads=snap.data.data as AdsEntity;
-                      return _buildAdsList(ads,context);
+                      ads=snap.data!.data as AdsEntity?;
+                      return _buildAdsList(ads!,context);
                       break;
                     case Status.ERROR:
-                      return EmptyListWidget(
+                      return EmptyWidget(
 
                           title: 'Error',
                           subTitle: 'Something Went Wrong',
                           image: 'images/error.png',
-                          titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
-                          subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
+                          titleTextStyle: Theme.of(context).typography.dense.displayMedium!.copyWith(color: Color(0xff9da9c7)),
+                          subtitleTextStyle: Theme.of(context).typography.dense.bodySmall!.copyWith(color: Color(0xffabb8d6))
                       );
                       break;
                   }
@@ -195,15 +195,15 @@ class DummyDelegate extends SearchDelegate<String> {
 
 
   Widget _buildAdsList(AdsEntity ads, BuildContext context){
-    if(ads.advertisementList.isEmpty)
+    if(ads.advertisementList!.isEmpty)
 
-      return EmptyListWidget(
+      return EmptyWidget(
 
           title: 'Empty Ads',
           subTitle: 'No  Ads available yet',
           image: 'images/ads_empty.png',
-          titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
-          subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
+          titleTextStyle: Theme.of(context).typography.dense.displayMedium!.copyWith(color: Color(0xff9da9c7)),
+          subtitleTextStyle: Theme.of(context).typography.dense.bodySmall!.copyWith(color: Color(0xffabb8d6))
       );
 
     else
@@ -213,18 +213,18 @@ class DummyDelegate extends SearchDelegate<String> {
           controller: _scrollController,
           shrinkWrap: true,
           crossAxisCount:_gridItemCount , //as per your requirement
-          itemCount: ads.advertisementList.length +(ads.advertisementList.length/6).toInt(),
+          itemCount: ads.advertisementList!.length +(ads.advertisementList!.length/6).toInt(),
           itemBuilder: (BuildContext context, int index) {
             if (index % 7 == 0) { //for even row
               int comIndex=(index/7-1).toInt();
               return GestureDetector(
                 onTap: (){
-                  if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
+                  if(ads.commercialAdsList!.isNotEmpty&&comIndex<ads.commercialAdsList!.length){
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => FullComerialScreen()
-                          ,settings: RouteSettings(arguments: ads.commercialAdsList[comIndex])),
+                          ,settings: RouteSettings(arguments: ads.commercialAdsList![comIndex])),
                     );
 
                   }
@@ -237,14 +237,14 @@ class DummyDelegate extends SearchDelegate<String> {
                   decoration: BoxDecoration(
                     color:Colors.black12,
                   ),
-                  child: _BuildImageWidget(ads.commercialAdsList,comIndex)
+                  child: _BuildImageWidget(ads.commercialAdsList!,comIndex)
 
                   ,
                 ),
               );
             } else { //for odd row
               int adsIndex=index-(index/7).toInt();
-              return AdsCardWidget(model:ads.advertisementList[adsIndex]);
+              return AdsCardWidget(model:ads.advertisementList![adsIndex]);
 
 
             }
@@ -257,26 +257,26 @@ class DummyDelegate extends SearchDelegate<String> {
       return ListView.builder(
         controller: _scrollController,
         shrinkWrap: true,
-        itemCount: ads.advertisementList.length +(ads.advertisementList.length/6).toInt(),
+        itemCount: ads.advertisementList!.length +(ads.advertisementList!.length/6).toInt(),
         itemBuilder: (BuildContext context,int index){
 
           if(index!=0&& index%6==0){
             int comIndex=(index/6-1).toInt();
-            String commercialAdsItem="";
-            if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
-              commercialAdsItem=ads.commercialAdsList[comIndex].Link;
+            String? commercialAdsItem="";
+            if(ads.commercialAdsList!.isNotEmpty&&comIndex<ads.commercialAdsList!.length){
+              commercialAdsItem=ads.commercialAdsList![comIndex].Link;
 /*
                 if( ads.commercialAdsList[comIndex].base64Image==null&& ads.commercialAdsList[comIndex].isLoading==null)
                   BlocProvider.of<AdsBloc>(context).GetImage(commercialAdsItem,comIndex,true);*/
             }
             return GestureDetector(
               onTap: (){
-                if(ads.commercialAdsList.isNotEmpty&&comIndex<ads.commercialAdsList.length){
+                if(ads.commercialAdsList!.isNotEmpty&&comIndex<ads.commercialAdsList!.length){
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => FullComerialScreen()
-                        ,settings: RouteSettings(arguments: ads.commercialAdsList[comIndex])),
+                        ,settings: RouteSettings(arguments: ads.commercialAdsList![comIndex])),
                   );
 
                 }
@@ -293,8 +293,8 @@ class DummyDelegate extends SearchDelegate<String> {
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Image.asset("images/logo.png"),
                     errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                    imageUrl: APIConstants.getFullImageUrl(ads.commercialAdsList.isEmpty||comIndex>=ads.commercialAdsList.length?"":
-                    ads.commercialAdsList[comIndex].systemDataFile.Url,ImageType.COMMAD),
+                    imageUrl: APIConstants.getFullImageUrl(ads.commercialAdsList!.isEmpty||comIndex>=ads.commercialAdsList!.length?"":
+                    ads.commercialAdsList![comIndex].systemDataFile!.Url,ImageType.COMMAD),
                   )
 
               ),
@@ -303,11 +303,11 @@ class DummyDelegate extends SearchDelegate<String> {
           }else {
             int adsIndex=index-(index/6).toInt();
 
-            if(ads.advertisementList[adsIndex]==null){
+            if(ads.advertisementList![adsIndex]==null){
               return _buildLoaderListItem();
 
             }else {
-              return AdsRowWidget(model:ads.advertisementList[adsIndex]);
+              return AdsRowWidget(model:ads.advertisementList![adsIndex]);
 
 
             }
@@ -319,7 +319,7 @@ class DummyDelegate extends SearchDelegate<String> {
 
   }
 
-  void _OnSelectSort(int val,BuildContext context){
+  void _OnSelectSort(int? val,BuildContext context){
     _sortSelectedValue=val;
     _bloc.searchWithKey(query,val);
     Navigator.of(context).pop();
@@ -338,8 +338,8 @@ class DummyDelegate extends SearchDelegate<String> {
                   child: RadioListTile(
                     value: 1,
                     groupValue: _sortSelectedValue,
-                    title: Text(allTranslations.text('hightest_price'),style: TextStyle(color: Colors.black),),
-                    onChanged: (val) {
+                    title: Text(allTranslations.text('hightest_price')!,style: TextStyle(color: Colors.black),),
+                    onChanged: (dynamic val) {
                       _OnSelectSort(val,context);
                     },
 
@@ -352,8 +352,8 @@ class DummyDelegate extends SearchDelegate<String> {
                   child: RadioListTile(
                     value: 2,
                     groupValue: _sortSelectedValue,
-                    title: Text(allTranslations.text('lowest_price'),style: TextStyle(color: Colors.black)),
-                    onChanged: (val) {
+                    title: Text(allTranslations.text('lowest_price')!,style: TextStyle(color: Colors.black)),
+                    onChanged: (dynamic val) {
                       _OnSelectSort(val,context);
 
                     },
@@ -367,8 +367,8 @@ class DummyDelegate extends SearchDelegate<String> {
                   child: RadioListTile(
                     value: 3,
                     groupValue: _sortSelectedValue,
-                    title: Text(allTranslations.text('recently_added'),style: TextStyle(color: Colors.black)),
-                    onChanged: (val) {
+                    title: Text(allTranslations.text('recently_added')!,style: TextStyle(color: Colors.black)),
+                    onChanged: (dynamic val) {
                       _OnSelectSort(val,context);
                     },
 
@@ -390,12 +390,12 @@ class DummyDelegate extends SearchDelegate<String> {
   }
 
   Widget _BuildImageWidget(List<CommercialAdsList> list,int index){
-    if(list.isNotEmpty&&list[0].systemDataFile.Url!=null&&list[0].systemDataFile.Url.isNotEmpty)
+    if(list.isNotEmpty&&list[0].systemDataFile!.Url!=null&&list[0].systemDataFile!.Url!.isNotEmpty)
       return  CachedNetworkImage(
         fit: BoxFit.cover,
         placeholder: (context, url) => Image.asset("images/logo.png"),
         errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-        imageUrl: APIConstants.getFullImageUrl(list[0].systemDataFile.Url,ImageType.ADS),
+        imageUrl: APIConstants.getFullImageUrl(list[0].systemDataFile!.Url,ImageType.ADS),
       );
     else
       return  Image.asset("images/logo.png",fit: BoxFit.cover,);
@@ -403,7 +403,7 @@ class DummyDelegate extends SearchDelegate<String> {
   }
   void getGroupId() async{
     countryId = await preferences.getCountryID() ;
-    lang = int.parse(countryId);
+    lang = int.parse(countryId!);
     print("group  value"+lang.toString());
 
   }

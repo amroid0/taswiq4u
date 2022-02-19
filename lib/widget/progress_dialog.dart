@@ -7,8 +7,8 @@ class ProgressDialog extends StatefulWidget {
   Color color;
   Color containerColor;
   double borderRadius;
-  String text;
-  ProgressDialogState progressDialogState;
+  String? text;
+  late ProgressDialogState progressDialogState;
 
   ProgressDialog(
       {this.backgroundColor = Colors.black54,
@@ -53,7 +53,7 @@ class ProgressDialogState extends State<ProgressDialog> {
   Color color;
   Color containerColor;
   double borderRadius;
-  String text;
+  String? text;
   bool _opacity = false;
 
   ProgressDialogState(
@@ -91,7 +91,7 @@ class ProgressDialogState extends State<ProgressDialog> {
   }
 
   Widget _getCenterContent() {
-    if (text == null || text.isEmpty) {
+    if (text == null || text!.isEmpty) {
       return _getCircularProgress();
     }
 
@@ -103,7 +103,7 @@ class ProgressDialogState extends State<ProgressDialog> {
           new Container(
             margin: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
             child: new Text(
-              text,
+              text!,
               style: new TextStyle(color: color),
             ),
           )

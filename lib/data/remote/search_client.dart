@@ -14,7 +14,7 @@ class SearchClient{
             .toList(growable: false);
         return FieldPropReponse(list, true);
       }else{
-        return FieldPropReponse(List(), false);
+        return FieldPropReponse(List.empty(), false);
 
  }
   }

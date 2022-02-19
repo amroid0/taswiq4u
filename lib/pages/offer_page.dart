@@ -25,9 +25,9 @@ class OfferPage extends StatefulWidget {
 }
 
 class _OfferPageState extends State<OfferPage> {
-  CategoryBloc  _bloc;
-  List<CateogryEntity>totalCateogryList;
-  OfferBloc offerBloc;
+  CategoryBloc?  _bloc;
+  List<CateogryEntity>?totalCateogryList;
+  OfferBloc? offerBloc;
 
 
 
@@ -42,7 +42,7 @@ class _OfferPageState extends State<OfferPage> {
     super.initState();
 
     offerBloc=OfferBloc();
-    offerBloc.getOfferCategory("");
+    offerBloc!.getOfferCategory("");
 
 
   }
@@ -57,16 +57,16 @@ class _OfferPageState extends State<OfferPage> {
       body: Container(
         padding: EdgeInsets.symmetric(vertical:0,horizontal:8),
         child: StreamBuilder<List<CateogryEntity>>(
-           stream: offerBloc.categoryStream,
+           stream: offerBloc!.categoryStream,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(child: CircularProgressIndicator());
             }
-            List<CateogryEntity>categories=snapshot.data;
+            List<CateogryEntity>categories=snapshot.data!;
             if(first&&categories.isNotEmpty){
               first=false;
               categories[0].isSelected=true;
-              offerBloc.getOfferLsit(categories[0].id.toString());
+              offerBloc!.getOfferLsit(categories[0].id.toString());
 
             }
 
@@ -96,10 +96,10 @@ class _OfferPageState extends State<OfferPage> {
   Widget _buildOfferList(){
 
      return  StreamBuilder<ApiResponse<List<PopupAdsEntityList>>>(
-          stream: offerBloc.stream,
+          stream: offerBloc!.stream,
           builder:(context,snap){
             if(snap.hasData)
-            switch(snap.data.status) {
+            switch(snap.data!.status) {
 
               case Status.LOADING:
                   return Padding(
@@ -115,7 +115,7 @@ class _OfferPageState extends State<OfferPage> {
                 break;
 
               case Status.COMPLETED:
-                var offerObj=snap.data.data ;
+                var offerObj=snap.data!.data! ;
                  if(offerObj.length!=0)
                 return   GridView.count(
                   shrinkWrap: true,
@@ -128,23 +128,23 @@ class _OfferPageState extends State<OfferPage> {
                   }),
                 );
                  else
-                   return EmptyListWidget(
+                   return EmptyWidget(
 
                        title: 'Empty Offers',
                        subTitle: 'No  Offers available yet',
                        image: 'images/offer_empty.png',
-                       titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
-                       subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
+                       titleTextStyle: Theme.of(context).typography.dense.displayMedium!.copyWith(color: Color(0xff9da9c7)),
+                       subtitleTextStyle: Theme.of(context).typography.dense.bodySmall!.copyWith(color: Color(0xffabb8d6))
                    );
                 break;
               case Status.ERROR:
-                return EmptyListWidget(
+                return EmptyWidget(
 
                     title: 'Error',
                     subTitle: 'Something Went Wrong',
                     image: 'images/error.png',
-                    titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
-                    subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
+                    titleTextStyle: Theme.of(context).typography.dense.displayMedium!.copyWith(color: Color(0xff9da9c7)),
+                    subtitleTextStyle: Theme.of(context).typography.dense.bodySmall!.copyWith(color: Color(0xffabb8d6))
                 );
                 break;
             }
@@ -174,8 +174,8 @@ class _OfferPageState extends State<OfferPage> {
               child:     Container(
             margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
             child: ChoiceChip(
-              label: Text(allTranslations.isEnglish?category[index].englishDescription:category[index].arabicDescription),
-              selected:category[index].isSelected!=null&&category[index].isSelected,
+              label: Text(allTranslations.isEnglish?category[index].englishDescription!:category[index].arabicDescription!),
+              selected:category[index].isSelected!=null&&category[index].isSelected!,
               onSelected: (select){
 
                 category.forEach((item){
@@ -184,7 +184,7 @@ class _OfferPageState extends State<OfferPage> {
                 category[index].isSelected=true;
                 setState(() {
 
-                  offerBloc.getOfferLsit(category[index].id.toString());
+                  offerBloc!.getOfferLsit(category[index].id.toString());
                 });
 
 
@@ -249,7 +249,7 @@ class _OfferPageState extends State<OfferPage> {
                             fit: BoxFit.fill,
                             placeholder: (context, url) => Image.asset("images/logo.png"),
                             errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                           imageUrl: APIConstants.getFullImageUrl(Item.systemDataFile==null?"":Item.systemDataFile.url==null|| Item.systemDataFile.url.isEmpty?"":Item.systemDataFile.url, ImageType.COMMAD)
+                           imageUrl: APIConstants.getFullImageUrl(Item.systemDataFile==null?"":Item.systemDataFile!.url==null|| Item.systemDataFile!.url!.isEmpty?"":Item.systemDataFile!.url, ImageType.COMMAD)
                         ),
                       )
                   ),

@@ -8,7 +8,7 @@ import 'package:olx/model/field_proprtires_entity.dart';
 import 'package:olx/utils/Constants.dart';
 
 class EditClient{
-  Future<EditFieldProperty>getEditFieldByAddID(String addID) async{
+  Future<EditFieldProperty?>getEditFieldByAddID(String addID) async{
     final results = await NetworkCommon().dio.get(APIConstants.EDIT_FIELD+addID.toString(),
     );
     if(results.statusCode==200) {
@@ -43,11 +43,11 @@ class EditClient{
             .toList(growable: false);
         return FieldPropReponse(list, true);
       }else{
-        return FieldPropReponse(List(), false);
+        return FieldPropReponse(List.empty(), false);
 
       }
     }catch(e){
-      return FieldPropReponse(List(), false);
+      return FieldPropReponse(List.empty(), false);
     }
   }
 }

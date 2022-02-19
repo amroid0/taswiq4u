@@ -1,4 +1,4 @@
-import 'package:ars_progress_dialog/ars_progress_dialog.dart';
+import 'package:ars_dialog/ars_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:olx/data/bloc/verifcationBloc.dart';
@@ -13,8 +13,8 @@ import 'main_page.dart';
 
 class VerificationScreen extends StatefulWidget {
   final bool naviagteToResetPassword;
-  final String phone;
-  final int countryId;
+  final String? phone;
+  final int? countryId;
 
   VerificationScreen(
       {this.naviagteToResetPassword=false, this.phone, this.countryId});
@@ -27,26 +27,21 @@ class VerificationScreen extends StatefulWidget {
 
 
 class _VerificationScreenState extends State<VerificationScreen> {
-  VerifcationBloc bloc;
+  late VerifcationBloc bloc;
 
   String _code="";
 
   var count=0;
-  var progressDialog;
+  late CustomProgressDialog progressDialog;
 
   
   @override
   void initState() {
-    progressDialog = ArsProgressDialog(
-        context,
-        blur: 2,
-        backgroundColor: Color(0x33000000),
-        animationDuration: Duration(milliseconds: 500));
+    progressDialog = CustomProgressDialog(context,blur: 10);
     bloc =VerifcationBloc();
     bloc.resendStream.listen((snap) {
-      if(progressDialog.isShowing){
         progressDialog.dismiss();
-      }
+
       switch (snap.status) {
         case Status.LOADING:
           progressDialog.show();
@@ -56,7 +51,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
         case Status.ERROR:
 
           Fluttertoast.showToast(
-              msg: allTranslations.text('err_wrong'),
+              msg: allTranslations.text('err_wrong')!,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
@@ -71,7 +66,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
         case Status.COMPLETED:
           Fluttertoast.showToast(
-              msg: allTranslations.text('code_sent'),
+              msg: allTranslations.text('code_sent')!,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
@@ -86,9 +81,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
       }
     });
     bloc.stream.listen((data) {
-      if(progressDialog.isShowing){
         progressDialog.dismiss();
-      }
+
       // Redirect to another view, given your condition
       switch (data.status) {
         case Status.LOADING:
@@ -97,10 +91,10 @@ class _VerificationScreenState extends State<VerificationScreen> {
         case Status.COMPLETED:
 
           var isVerify=data as ApiResponse<bool>;
-          if(isVerify.data){
+          if(isVerify.data!){
 
             Fluttertoast.showToast(
-                msg: allTranslations.text('verify_acc'),
+                msg: allTranslations.text('verify_acc')!,
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
@@ -117,7 +111,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 )));
             }
             else
-            WidgetsBinding.instance.addPostFrameCallback((_) =>  Navigator.popUntil(context, (route) {
+            WidgetsBinding.instance!.addPostFrameCallback((_) =>  Navigator.popUntil(context, (route) {
               return count++ == 2;
             }));
             
@@ -127,7 +121,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
           break;
         case Status.ERROR:
           Fluttertoast.showToast(
-              msg: allTranslations.text('err_verify'),
+              msg: allTranslations.text('err_verify')!,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
@@ -162,7 +156,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 children: <Widget>[
             Container(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(allTranslations.text('verify_label'),
+            child: Text(allTranslations.text('verify_label')!,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.black, fontSize: 26, fontWeight: FontWeight.w500))
         ),
@@ -192,7 +186,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                borderRadius: new BorderRadius.circular(8.0),
              ),
              child:  Stack(children:<Widget>[
-               Align( child: new Text(allTranslations.text('verify'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
+               Align( child: new Text(allTranslations.text('verify')!, style: new TextStyle(fontSize: 18.0, color: Colors.white),)
                  ,alignment: Alignment.center,),
 
 
@@ -207,14 +201,14 @@ class _VerificationScreenState extends State<VerificationScreen> {
            mainAxisAlignment: MainAxisAlignment.center,
            children: [
              Text(
-               allTranslations.text('recive_code')
+               allTranslations.text('recive_code')!
              ),
              TextButton(onPressed:(){
                bloc.resendCode(widget.countryId,widget.phone);
 
              } ,
                child: Text(
-                 allTranslations.text('send_code'),
+                 allTranslations.text('send_code')!,
                  style: TextStyle(color: Colors.green),
                ),
              ),

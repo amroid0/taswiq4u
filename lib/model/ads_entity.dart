@@ -7,14 +7,14 @@ part 'ads_entity.g.dart';
 
 class AdsEntity {
 
-  String $id;
+  String? $id;
 
   @JsonKey(name: "AdvertisementList")
-  List<AdsModel> advertisementList;
+  List<AdsModel?>? advertisementList;
   @JsonKey(name: "CommercialAdsList")
-  List<CommercialAdsList> commercialAdsList;
+  List<CommercialAdsList>? commercialAdsList;
 
-  bool isLoadMore;
+  bool? isLoadMore;
 
   AdsEntity({this.$id,
   this.advertisementList,
@@ -27,39 +27,39 @@ class AdsEntity {
 
 @JsonSerializable()
   class AdsModel {
-  int Id;
-  String Title;
-  String ArabicDescription;
-  String EnglishDescription;
-  bool IsNogitable;
-  double Price;
-  int CategoryId;
-  String CategoryName;
-  String UserId;
-  String UserName;
-  String UserPhone;
-  String ArabicDescriptionUrl;
-  String EnglishDescriptionUrl;
-  String ArabicTitle;
-  String EnglishTitle;
-  int CountryId;
-  String CountryNameEnglish;
-  String CountryNameArabic;
-  double LocationLatitude;
-  double LocationLongtude;
-  bool IsDisplayed;
-  bool IsDeleted;
-  DateTime CreationTime;
-  int ViewCount;
-  int CityId;
-  String CityNameEnglish;
-  String CityNameArabic;
-  int StateId;
-  String StateNameArabic;
-  String StateNameEnglish;
-  bool IsFeatured;
-  bool IsFavorite;
-  List<AdvertismentImage> AdvertismentImages;
+  int? Id;
+  String? Title;
+  String? ArabicDescription;
+  String? EnglishDescription;
+  bool? IsNogitable;
+  double? Price;
+  int? CategoryId;
+  String? CategoryName;
+  String? UserId;
+  String? UserName;
+  String? UserPhone;
+  String? ArabicDescriptionUrl;
+  String? EnglishDescriptionUrl;
+  String? ArabicTitle;
+  String? EnglishTitle;
+  int? CountryId;
+  String? CountryNameEnglish;
+  String? CountryNameArabic;
+  double? LocationLatitude;
+  double? LocationLongtude;
+  bool? IsDisplayed;
+  bool? IsDeleted;
+  DateTime? CreationTime;
+  int? ViewCount;
+  int? CityId;
+  String? CityNameEnglish;
+  String? CityNameArabic;
+  int? StateId;
+  String? StateNameArabic;
+  String? StateNameEnglish;
+  bool? IsFeatured;
+  bool? IsFavorite;
+  List<AdvertismentImage>? AdvertismentImages;
 
   AdsModel(
       {this.Id,
@@ -101,13 +101,13 @@ class AdsEntity {
   }
 @JsonSerializable()
   class AdvertismentImage {
-  int Id;
-  String Url;
-  double Size;
-  bool IsImage;
-  DateTime CreationDate;
-  String base64Image="";
-  bool isLoading=false;
+  int? Id;
+  String? Url;
+  double? Size;
+  bool? IsImage;
+  DateTime? CreationDate;
+  String? base64Image="";
+  bool? isLoading=false;
 
   AdvertismentImage(this.Id, this.Url, this.Size, this.IsImage,
       this.CreationDate,this.base64Image);
@@ -118,27 +118,27 @@ class AdsEntity {
 @JsonSerializable()
 
   class CommercialAdsList {
-  int Id;
-  int ImageId;
-  int Type;
-  String Description;
-  String Link;
-  DateTime CreationDate;
-  DateTime EndDate;
-  bool Active;
-  int Notification;
-  int CountryId;
-  int ViewsCount;
-  int Likes;
-  bool isLiked;
-  bool isViewed;
-  int CommercialAdsCategoryId;
+  int? Id;
+  int? ImageId;
+  int? Type;
+  String? Description;
+  String? Link;
+  DateTime? CreationDate;
+  DateTime? EndDate;
+  bool? Active;
+  int? Notification;
+  int? CountryId;
+  int? ViewsCount;
+  int? Likes;
+  bool? isLiked;
+  bool? isViewed;
+  int? CommercialAdsCategoryId;
   @JsonKey(name:"CommercialAdsCategory" )
-  CommercialAdsCategory commercialAdsCategory;
+  CommercialAdsCategory? commercialAdsCategory;
   @JsonKey(name:"SystemDataFile" )
-  SystemDataFile systemDataFile;
-  String base64Image;
-  bool isLoading=false;
+  SystemDataFile? systemDataFile;
+  String? base64Image;
+  bool? isLoading=false;
 
   CommercialAdsList(this.Id, this.ImageId, this.Type, this.Description,
       this.Link, this.CreationDate, this.EndDate, this.Active,
@@ -153,10 +153,10 @@ class AdsEntity {
 }
 @JsonSerializable()
   class CommercialAdsCategory {
-  String NameAr;
-  String NameEn;
-  int CountryId;
-  List<ComercialAd> ComercialAds;
+  String? NameAr;
+  String? NameEn;
+  int? CountryId;
+  List<ComercialAd>? ComercialAds;
 
   CommercialAdsCategory(this.NameAr, this.NameEn, this.CountryId,
       this.ComercialAds);
@@ -173,15 +173,15 @@ class AdsEntity {
   }
 @JsonSerializable()
   class SystemDataFile {
-  int Id;
-  String Url;
-  double Size;
-  String Extention;
-  int Type;
-  DateTime CreationDate;
-  bool IsDeleted;
-  bool IsAssinged;
-  List<ComercialAd> ComercialAds;
+  int? Id;
+  String? Url;
+  double? Size;
+  String? Extention;
+  int? Type;
+  DateTime? CreationDate;
+  bool? IsDeleted;
+  bool? IsAssinged;
+  List<ComercialAd>? ComercialAds;
 
   SystemDataFile(this.Id, this.Url, this.Size, this.Extention, this.Type,
       this.CreationDate, this.IsDeleted, this.IsAssinged, this.ComercialAds);

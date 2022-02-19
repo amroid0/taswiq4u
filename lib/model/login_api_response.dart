@@ -1,7 +1,7 @@
 class LoginApiResponse<T> {
   Status status;
-  T data;
-  String message;
+  T? data;
+  String? message;
 
   LoginApiResponse.loading(this.message) : status = Status.LOADING;
   LoginApiResponse.authenticate(this.message) : status = Status.AUTHNTICATED;

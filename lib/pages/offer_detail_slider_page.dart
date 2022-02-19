@@ -23,9 +23,9 @@ class OfferSliderPage extends StatefulWidget {
 
 
 class _OfferSliderPageState extends State<OfferSliderPage> {
-  PageController _pageController;
-  List< PopupAdsEntityList>  list ;
-   int currentPage=0;
+  PageController? _pageController;
+  List< PopupAdsEntityList>?  list ;
+   int? currentPage=0;
    int ImageIndex=0 ;
    bool isFirstLoad=true;
    @override
@@ -37,13 +37,13 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
   Widget build(BuildContext context) {
 
 
-    final Map arguments = ModalRoute.of(context).settings.arguments as Map;
+    final Map? arguments = ModalRoute.of(context)!.settings.arguments as Map?;
     if (arguments != null&&isFirstLoad) {
       isFirstLoad=false;
-      list = arguments["list"] as List< PopupAdsEntityList> ;
-      currentPage=arguments["index"]as int;
+      list = arguments["list"] as List< PopupAdsEntityList>? ;
+      currentPage=arguments["index"]as int?;
     }
-    _pageController=PageController(initialPage: currentPage,viewportFraction:1, keepPage: true,);
+    _pageController=PageController(initialPage: currentPage!,viewportFraction:1, keepPage: true,);
 
    // _pageController.jumpToPage(currentPage);
          return Scaffold(
@@ -52,12 +52,12 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
              children: [
 
                PhotoViewGallery.builder(
-                 itemCount: list.length,
+                 itemCount: list!.length,
                  builder: (context, index) {
-                   var item=list[index];
+                   var item=list![index];
                    return PhotoViewGalleryPageOptions(
                      imageProvider: NetworkImage(
-                         APIConstants.getFullImageUrl(item.systemDataFile!=null ?item.systemDataFile.url:"", ImageType.COMMAD)
+                         APIConstants.getFullImageUrl(item.systemDataFile!=null ?item.systemDataFile!.url:"", ImageType.COMMAD)
                      ),
                      // Contained = the smallest possible size to fit one dimension of the screen
                      minScale: PhotoViewComputedScale.contained * 0.8,
@@ -83,7 +83,7 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
                      child: CircularProgressIndicator(
                        value: event == null
                            ? 0
-                           : event.cumulativeBytesLoaded / event.expectedTotalBytes,
+                           : event.cumulativeBytesLoaded / event.expectedTotalBytes!,
                      ),
                    ),
                  ),
@@ -125,17 +125,17 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
                      children: <Widget>[
 
                        SizedBox(height: 4,),
-                       Text(list[currentPage].description==null?"":list[currentPage].description,style: TextStyle(color: Colors.white),),
+                       Text(list![currentPage!].description==null?"":list![currentPage!].description!,style: TextStyle(color: Colors.white),),
                        SizedBox(height: 16,),
 
                        Row(
                          mainAxisAlignment: MainAxisAlignment.center,
                          children: <Widget>[
-                           _buildLikeWidget(currentPage,list[currentPage]),
+                           _buildLikeWidget(currentPage,list![currentPage!]),
 
                            InkWell(
                                onTap: ()async{
-                           var whatsappUrl ="whatsapp://send?phone=${list[currentPage].phoneNumber}";
+                           var whatsappUrl ="whatsapp://send?phone=${list![currentPage!].phoneNumber}";
                            await canLaunch(whatsappUrl)? launch(whatsappUrl):ToastUtils.showErrorMessage("رقم الهاتف غير صحيح");
 
                            },
@@ -155,7 +155,7 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
                            SizedBox(width: 12,),
                            InkWell(
                                onTap: ()async{
-                                 var url = list[currentPage].instagramLink;
+                                 var url = list![currentPage!].instagramLink!;
                                  if (await canLaunch(url))
                                    await launch(url);
                                  else
@@ -167,7 +167,7 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
                            SizedBox(width: 12,),
                            InkWell(
                                onTap: ()async{
-                                 var url = list[currentPage].phoneNumber;
+                                 var url = list![currentPage!].phoneNumber;
                                  if (await canLaunch('tel:$url'))
                                    await launch('tel:$url');
                                  else
@@ -177,7 +177,7 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
                                child: Icon(MdiIcons.phone,color: Colors.white,size: 36,)),
 
 
-                           _buildViewWidget(currentPage,list[currentPage])
+                           _buildViewWidget(currentPage,list![currentPage!])
                          ],)
 
                      ],
@@ -193,20 +193,20 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
          );
   }
 
- Widget _buildViewWidget(int pos,PopupAdsEntityList item){
+ Widget _buildViewWidget(int? pos,PopupAdsEntityList item){
 
  return   StreamBuilder<Counter>(
    initialData:Counter(item.viewsCount,true) ,
       stream: BlocProvider.of<OfferBloc>(context).viewstream,
       builder: (context,snapshot){
-        Counter viewCounter=Counter(0,true);
+        Counter? viewCounter=Counter(0,true);
         if(snapshot.hasData)
           viewCounter=snapshot.data;
 
         return Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text(viewCounter.count.toString(),style: TextStyle(color: Colors.white),),
+              Text(viewCounter!.count.toString(),style: TextStyle(color: Colors.white),),
               FlatButton(onPressed:(){
                 BlocProvider.of<OfferBloc>(context).likeAds(pos,true);
 
@@ -219,20 +219,20 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
 
   }
 
-  Widget _buildLikeWidget(int pos,PopupAdsEntityList item){
+  Widget _buildLikeWidget(int? pos,PopupAdsEntityList item){
 
     return   StreamBuilder<Counter>(
       initialData:Counter(item.likes,true) ,
       stream: BlocProvider.of<OfferBloc>(context).Likestream,
       builder: (context,snapshot){
-        Counter likeCounter=Counter(0,true);
+        Counter? likeCounter=Counter(0,true);
         if(snapshot.hasData)
           likeCounter=snapshot.data;
         return  Column(mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text(likeCounter.count.toString(),style: TextStyle(color: Colors.white),),
+              Text(likeCounter!.count.toString(),style: TextStyle(color: Colors.white),),
               FlatButton(onPressed:(){
-                if(likeCounter.isEanbled)
+                if(likeCounter!.isEanbled)
                 BlocProvider.of<OfferBloc>(context).likePopUpAds(item,true);
 
               },child: Icon(likeCounter.isEanbled?Icons.favorite_border:Icons.favorite,color: Colors.white,)),

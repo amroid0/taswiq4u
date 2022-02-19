@@ -20,7 +20,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   Color gradientStart = Colors.black12; //Change start gradient color here
   Color gradientEnd = Colors.black12;
-  SplashBloc _bloc;
+  late SplashBloc _bloc;
 
   @override
   void initState() {
@@ -59,14 +59,14 @@ class _SplashScreenState extends State<SplashScreen> {
                   stream: _bloc.stream,
                   builder: (context,snapshot){
                     if (snapshot.hasData) {
-                      switch (snapshot.data.status) {
+                      switch (snapshot.data!.status) {
                         case Status.LOADING:
                           return Container();
                           break;
                         case Status.COMPLETED:
-                          var val=snapshot.data as ApiResponse<bool>;
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            if(val.data){
+                          var val=snapshot.data as ApiResponse<bool>?;
+                          WidgetsBinding.instance!.addPostFrameCallback((_) {
+                            if(val!.data!){
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(builder: (context) =>  ChooseLanguagePage())
@@ -82,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           break;
                         case Status.ERROR
                             :
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                          WidgetsBinding.instance!.addPostFrameCallback((_) {
 
                             Navigator.pushReplacement(
                               context,

@@ -10,7 +10,7 @@ import 'package:http_parser/http_parser.dart';
 
 
 class UploadImageClient{
-  Future<UploadedImage> uploadAdsImage(List<int> imagePath,int id) async {
+  Future<UploadedImage> uploadAdsImage(List<int> imagePath,int? id) async {
     try {
 
       final results = await NetworkCommon()

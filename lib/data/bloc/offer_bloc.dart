@@ -18,7 +18,7 @@ class OfferBloc extends Bloc{
   final _likeController = StreamController<Counter>.broadcast();
   final _viewController = StreamController<Counter>.broadcast();
   final _imageController = StreamController<String>.broadcast();
-  List<PopupAdsEntityList> commercialAds=null;
+  List<PopupAdsEntityList>? commercialAds=null;
   Stream<ApiResponse<List<PopupAdsEntityList>>> get stream => _controller.stream;
   Stream<Counter> get Likestream => _likeController.stream;
   Stream<Counter> get viewstream => _viewController.stream;
@@ -28,10 +28,10 @@ class OfferBloc extends Bloc{
 
 
   void getOfferCategory(String query) async {
-    List<CateogryEntity> results = null ;//await preferences.getCateogryList();
+    List<CateogryEntity>? results = null ;//await preferences.getCateogryList();
     if(results==null||results.isEmpty)
       results = await _client.getCateogryList();
-    var res= results.where((element) => element.isActive).toList();
+    var res= results!.where((element) => element.isActive!).toList();
 
     _cateogryController.sink.add(res);
   }
@@ -54,7 +54,7 @@ class OfferBloc extends Bloc{
 void getOfferLsit(String categoryID) async {
   _controller.sink.add(ApiResponse.loading('loading'));
   try {
-    String countryId=await preferences.getCountryID();
+    String countryId=await (preferences.getCountryID() as FutureOr<String>);
      commercialAds = await _client.getOfferList(categoryID,countryId);
     _controller.sink.add(ApiResponse.completed(commercialAds));
 
@@ -64,39 +64,39 @@ void getOfferLsit(String categoryID) async {
 
 
 }
-  void likeAds(int index,isClicked) async {
+  void likeAds(int? index,isClicked) async {
     try {
 
       if(isClicked){
-        final results = await _client.LikeAds(commercialAds[index].id.toString());
-        if(results) {
-          await preferences.saveLikedCommericalList(commercialAds[index].id.toString());
-          commercialAds[index].likes = commercialAds[index].likes + 1;
-          _likeController.sink.add(Counter(commercialAds[index].likes, false));
+        final results = await _client.LikeAds(commercialAds![index!].id.toString());
+        if(results!=null) {
+           preferences.saveLikedCommericalList(commercialAds![index].id.toString());
+          commercialAds![index].likes = commercialAds![index].likes! + 1;
+          _likeController.sink.add(Counter(commercialAds![index].likes, false));
         }else{
-          _likeController.sink.add(Counter(commercialAds[index].likes,true));
+          _likeController.sink.add(Counter(commercialAds![index].likes,true));
         }}else{
-        _likeController.sink.add(Counter(commercialAds[index].likes,true));
+        _likeController.sink.add(Counter(commercialAds![index!].likes,true));
       }
     }catch(e) {
-      _likeController.sink.add(Counter(commercialAds[index].likes,true));
+      _likeController.sink.add(Counter(commercialAds![index!].likes,true));
     }}
-  void likePopUpAds(PopupAdsEntityList item,isClicked) async {
+  void likePopUpAds(PopupAdsEntityList? item,isClicked) async {
     try {
 
       if(isClicked){
-        final results = await _client.LikeAds(item.id.toString());
-        if(results) {
-          await preferences.saveLikedCommericalList(item.id.toString());
-          item.likes = item.likes + 1;
+        final results = await _client.LikeAds(item!.id.toString());
+        if(results!=null) {
+           preferences.saveLikedCommericalList(item.id.toString());
+          item.likes = item.likes! + 1;
           _likeController.sink.add(Counter(item.likes, false));
         }else{
           _likeController.sink.add(Counter(item.likes,true));
         }}else{
-        _likeController.sink.add(Counter(item.likes,true));
+        _likeController.sink.add(Counter(item!.likes,true));
       }
     }catch(e) {
-      _likeController.sink.add(Counter(item.likes,true));
+      _likeController.sink.add(Counter(item!.likes,true));
     }}
 
 
@@ -113,16 +113,16 @@ void getOfferLsit(String categoryID) async {
             return;
           }
         }*/
-      final results = await _client.viewAds(commercialAds[index].id.toString());
-      if(results) {
-        await preferences.saveViewCommericalList(commercialAds[index].id.toString());
-        commercialAds[index].viewsCount = commercialAds[index].viewsCount + 1;
-        _viewController.sink.add(Counter(commercialAds[index].viewsCount, false));
+      final results = await _client.viewAds(commercialAds![index].id.toString());
+      if(results!=null) {
+         preferences.saveViewCommericalList(commercialAds![index].id.toString());
+        commercialAds![index].viewsCount = commercialAds![index].viewsCount! + 1;
+        _viewController.sink.add(Counter(commercialAds![index].viewsCount, false));
       }else{
-        _viewController.sink.add(Counter(commercialAds[index].viewsCount,true));
+        _viewController.sink.add(Counter(commercialAds![index].viewsCount,true));
       }
     }catch(e) {
-      _viewController.sink.add(Counter(commercialAds[index].viewsCount,true));
+      _viewController.sink.add(Counter(commercialAds![index].viewsCount,true));
     }}
 
 

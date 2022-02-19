@@ -3,17 +3,17 @@ part 'field_proprtires_entity.g.dart';
 
 @JsonSerializable()
 class FieldProprtiresEntity {
-	int CategoryId;
+	int? CategoryId;
 	dynamic Category;
-	bool Required;
-	int SpeceficationId;
-	List<FieldProprtiresSpecificationoption> SpecificationOptions;
-	int Id;
-	bool HasRange;
-	bool MuliSelect;
+	bool? Required;
+	int? SpeceficationId;
+	List<FieldProprtiresSpecificationoption>? SpecificationOptions;
+	int? Id;
+	bool? HasRange;
+	bool? MuliSelect;
 	dynamic CustomValue;
-	String EnglishName;
-	String ArabicName;
+	String? EnglishName;
+	String? ArabicName;
 	dynamic Value;
 	dynamic IsCustomValue;
 
@@ -26,10 +26,10 @@ class FieldProprtiresEntity {
 }
 @JsonSerializable()
 class FieldProprtiresSpecificationoption {
-	bool IsSelected;
-	int Id;
-	String ArabicName;
-	String EnglishName;
+	bool? IsSelected;
+	int? Id;
+	String? ArabicName;
+	String? EnglishName;
 
 	FieldProprtiresSpecificationoption(this.IsSelected, this.Id, this.ArabicName,
 			this.EnglishName);

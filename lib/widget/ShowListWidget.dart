@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ShowListWidget extends StatefulWidget {
-int value = 1;
+int? value = 1;
 
-final Function(int) onvalueChange;
+final Function(int?)? onvalueChange;
 
 ShowListWidget({this.onvalueChange,this.value});
 
@@ -26,7 +26,7 @@ return     IconButton(
 
   }
 
-  widget.onvalueChange(widget.value);
+  widget.onvalueChange!(widget.value);
 
   },
   );

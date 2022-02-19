@@ -7,12 +7,12 @@ class Validators {
 
   final validateEmail =
   StreamTransformer<String, String>.fromHandlers(handleData: (email, sink)  async {
-    String countryId = await preferences.getCountryID() ;
+    String countryId = await (preferences.getCountryID() as FutureOr<String>) ;
     int c = int.parse(countryId) ;
     if (email.length>10&&c==1 ||email.length>7&&c==2) {
       sink.add(email);
     } else {
-      sink.addError(c==1 ?allTranslations.text('err_email'):allTranslations.text('err_numk'));
+      sink.addError(c==1 ?allTranslations.text('err_email')!:allTranslations.text('err_numk')!);
     }
   });
   final validateEmpty =
@@ -20,7 +20,7 @@ class Validators {
     if (email.length>0) {
       sink.add(email);
     } else {
-      sink.addError(allTranslations.text('err_empty'));
+      sink.addError(allTranslations.text('err_empty')!);
     }
   });
 
@@ -29,7 +29,7 @@ class Validators {
         if (password.length > 5) {
           sink.add(password);
         } else {
-          sink.addError(allTranslations.text('err_pass'));
+          sink.addError(allTranslations.text('err_pass')!);
         }
       });
   final validateFirstName = StreamTransformer<String, String>.fromHandlers(
@@ -37,15 +37,15 @@ class Validators {
         if (firstName.length >= 3) {
           sink.add(firstName);
         }else if(firstName.length==0) {
-          sink.addError(allTranslations.text('err_fname'));
+          sink.addError(allTranslations.text('err_fname')!);
         }else if(firstName.split(" ").length<=1){
-          sink.addError(allTranslations.text('err_secondname'));
+          sink.addError(allTranslations.text('err_secondname')!);
 
         }
 
 
         else {
-          sink.addError(allTranslations.text('err_fname'));
+          sink.addError(allTranslations.text('err_fname')!);
         }
       });
   final validateSeocndName = StreamTransformer<String, String>.fromHandlers(
@@ -53,11 +53,11 @@ class Validators {
         if (secondName.length >= 3) {
           sink.add(secondName);
         } else if(secondName.length==0) {
-        sink.addError(allTranslations.text('err_fname'));
+        sink.addError(allTranslations.text('err_fname')!);
         }
 
         else {
-          sink.addError(allTranslations.text('err_lname'));
+          sink.addError(allTranslations.text('err_lname')!);
         }
       });
 

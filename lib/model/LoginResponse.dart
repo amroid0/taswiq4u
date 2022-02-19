@@ -5,21 +5,21 @@ part 'LoginResponse.g.dart';
 
 class LoginResponse {
    @JsonKey(name:"access_token")
-  String accessToken;
+  String? accessToken;
    @JsonKey(name:"token_type")
 
-   String tokenType;
+   String? tokenType;
    @JsonKey(name:"expires_in")
-   int expiresIn;
-  String userName;
+   int? expiresIn;
+  String? userName;
    @JsonKey(name:".issued")
-   String issued;
+   String? issued;
    @JsonKey(name:".expires")
-   String expires;
+   String? expires;
    @JsonKey(name:"error")
-   String error;
+   String? error;
    @JsonKey(name:"error_description")
-   String errorDescription;
+   String? errorDescription;
 
 
   LoginResponse(this.accessToken, this.tokenType, this.expiresIn,

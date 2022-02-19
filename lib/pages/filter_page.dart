@@ -16,7 +16,6 @@ import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/check_box_withlabel.dart';
 import 'package:olx/widget/city_list_dialog.dart';
 import 'package:olx/widget/mutli_select_chip_dialog.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'cateogry_dailog.dart';
@@ -27,16 +26,16 @@ class FilterPage extends StatefulWidget {
  }
 
  class _FilterPageState extends State<FilterPage> {
-   FilterBloc _bloc;
+   FilterBloc? _bloc;
    final _filterformKey = GlobalKey<FormState>();
    final _filterscaffoldKey = GlobalKey<ScaffoldState>();
 
-   List<int> _selectedFieldValue=[];
+   List<int?> _selectedFieldValue=[];
 
 
-   AddPostBloc bloc;
-   List<Color> _colorFieldValue=[];
-   FilterParamsEntity filterParamsEntity=FilterParamsEntity();
+   late AddPostBloc bloc;
+   List<Color?> _colorFieldValue=[];
+   FilterParamsEntity? filterParamsEntity=FilterParamsEntity();
    bool isNeogtiable=false;
    List<String> adsStateList=["جديد","مستعمل"];
    String selectedAdsStates="جديد";
@@ -44,14 +43,13 @@ class FilterPage extends StatefulWidget {
    final TextEditingController _nametextController = TextEditingController();
    final TextEditingController _pricetextController = TextEditingController();
    final TextEditingController _citytextController = TextEditingController();
-   Color adNameColor,descColor,priceColor,emailColor,phoneColor,categoryColor=Colors.grey;
-   List<TextEditingController>contollers=List();
+   Color? adNameColor,descColor,priceColor,emailColor,phoneColor,categoryColor=Colors.grey;
+   List<TextEditingController?>contollers=List.empty();
    final scaffoldKey = GlobalKey<ScaffoldState>();
-   Color cityColor;
+   Color? cityColor;
 
-   ProgressDialog progressDialog;
 
-   List<List<FieldProprtiresSpecificationoption>> _multiselectedFieldValue=List<List<FieldProprtiresSpecificationoption>>();
+   List<List<FieldProprtiresSpecificationoption>?> _multiselectedFieldValue=List<List<FieldProprtiresSpecificationoption>>.empty();
 
    TextEditingController _fromController=TextEditingController();
    TextEditingController _toController=TextEditingController();
@@ -96,21 +94,21 @@ class FilterPage extends StatefulWidget {
      Future.delayed(Duration.zero,()
      {
        filterParamsEntity = ModalRoute
-           .of(context)
+           .of(context)!
            .settings
-           .arguments;
-       _cattextController.text = filterParamsEntity.cateName!=null?filterParamsEntity.cateName:"";
-       _citytextController.text=filterParamsEntity.cityName!=null?filterParamsEntity.cityName:"";
-       if (filterParamsEntity.priceMin != null &&
-           filterParamsEntity.priceMax != null) {
-         if (filterParamsEntity.priceMin != 0 &&
-             filterParamsEntity.priceMax != 0)
-           _fromController.text = filterParamsEntity.priceMin.toString();
-         _toController.text = filterParamsEntity.priceMax.toString();
+           .arguments as FilterParamsEntity?;
+       _cattextController.text = filterParamsEntity!.cateName!=null?filterParamsEntity!.cateName!:"";
+       _citytextController.text=filterParamsEntity!.cityName!=null?filterParamsEntity!.cityName!:"";
+       if (filterParamsEntity!.priceMin != null &&
+           filterParamsEntity!.priceMax != null) {
+         if (filterParamsEntity!.priceMin != 0 &&
+             filterParamsEntity!.priceMax != 0)
+           _fromController.text = filterParamsEntity!.priceMin.toString();
+         _toController.text = filterParamsEntity!.priceMax.toString();
          _pricetextController.text =
          "${_fromController.text}-${_toController.text}";
        }
-       bloc.getAddFieldsByCatID(filterParamsEntity.categoryId);
+       bloc.getAddFieldsByCatID(filterParamsEntity!.categoryId);
      });
 
    }
@@ -124,7 +122,7 @@ class FilterPage extends StatefulWidget {
        appBar: AppBar(
          centerTitle: true,
          title: Center(
-           child: Text(allTranslations.text('filter'),textAlign: TextAlign.center,style: TextStyle(
+           child: Text(allTranslations.text('filter')!,textAlign: TextAlign.center,style: TextStyle(
                color:
                Colors.black38
 
@@ -214,10 +212,10 @@ class FilterPage extends StatefulWidget {
 
                        },
                        keyboardType: TextInputType.number,
-                       inputFormatters: [WhitelistingTextInputFormatter.digitsOnly,LengthLimitingTextInputFormatter((20))],
+                       inputFormatters: [FilteringTextInputFormatter.digitsOnly,LengthLimitingTextInputFormatter((20))],
                        onSaved: (val){
-                         filterParamsEntity.priceMin=double.tryParse(minValue)??0;
-                         filterParamsEntity.priceMax=double.tryParse(maxValue)??0;
+                         filterParamsEntity!.priceMin=double.tryParse(minValue)??0;
+                         filterParamsEntity!.priceMax=double.tryParse(maxValue)??0;
 
                          },
                        decoration: InputDecoration(
@@ -243,17 +241,17 @@ class FilterPage extends StatefulWidget {
                    StreamBuilder<FieldPropReponse>(
                      stream: bloc.stream,
                      builder: (context, snapshot) {
-                       if (snapshot.data!=null &&snapshot.data.isSucess==false)
+                       if (snapshot.data!=null &&snapshot.data!.isSucess==false)
                          return Visibility(child: Text(""),visible: false,);
                        else if (!snapshot.hasData)
                          return  SizedBox.shrink();
-                       var fields=snapshot.data.data;
-                       if(_selectedFieldValue.isEmpty) _selectedFieldValue=List(snapshot.data.data.length);
-                       if(_colorFieldValue.isEmpty) _colorFieldValue=List(snapshot.data.data.length);
-                       if(_multiselectedFieldValue.isEmpty) _multiselectedFieldValue=List(snapshot.data.data.length);
-                       if(contollers.isEmpty) contollers=List(snapshot.data.data.length);
-                       if(filterParamsEntity.params==null){
-                         filterParamsEntity.params=List(snapshot.data.data.length);
+                       var fields=snapshot.data!.data!;
+                       if(_selectedFieldValue.isEmpty) _selectedFieldValue=List.filled(snapshot.data!.data!.length,null);
+                       if(_colorFieldValue.isEmpty) _colorFieldValue=List.filled(snapshot.data!.data!.length,null);
+                       if(_multiselectedFieldValue.isEmpty) _multiselectedFieldValue=List.filled(snapshot.data!.data!.length,null);
+                       if(contollers.isEmpty) contollers=List.filled(snapshot.data!.data!.length,null);
+                       if(filterParamsEntity!.params==null){
+                         filterParamsEntity!.params=List.filled(snapshot.data!.data!.length,null);
                        }
 
                        return ListView.builder(
@@ -263,35 +261,35 @@ class FilterPage extends StatefulWidget {
                          itemCount: fields.length,
                          itemBuilder: (context, index) {
                            var item = fields[index];
-                           if(isFirst &&filterParamsEntity.params!=null&&filterParamsEntity.params.isNotEmpty)
-                           for (var spec in filterParamsEntity.params) {
+                           if(isFirst &&filterParamsEntity!.params!=null&&filterParamsEntity!.params!.isNotEmpty)
+                           for (var spec in filterParamsEntity!.params!) {
                              if(spec!=null&&spec.specificationId!=null)
                                if(spec.specificationId==item.Id){
-                                 if((item.MuliSelect==null||!item.MuliSelect)&&item.SpecificationOptions.isNotEmpty){
+                                 if((item.MuliSelect==null||!item.MuliSelect!)&&item.SpecificationOptions!.isNotEmpty){
 
-                                   if(spec.options[0]!=0)
+                                   if(spec.options![0]!=0)
                                    _selectedFieldValue[index] =
-                                       spec.options[0];
-                               } else if(item.MuliSelect) {
+                                       spec.options![0];
+                               } else if(item.MuliSelect!) {
                                  //_multiselectedFieldValue[index] = spec.options;
                                  String text="";
-                                 var selectedList= item.SpecificationOptions.where((element) =>spec.options.contains(element.Id) );
+                                 var selectedList= item.SpecificationOptions!.where((element) =>spec.options!.contains(element.Id) );
                                  selectedList.forEach((element) {text+="${allTranslations.isEnglish?element.EnglishName:element.ArabicName??element.EnglishName},";});
-                                 _multiselectedFieldValue[index] = selectedList;
+                                 _multiselectedFieldValue[index] = selectedList as List<FieldProprtiresSpecificationoption>?;
 
                                  if(contollers[index]==null)contollers[index]=new TextEditingController();
-                                 contollers[index].text=text;
+                                 contollers[index]!.text=text;
 
                                }else{
                                  if(contollers[index]==null)contollers[index]=new TextEditingController();
-                                 contollers[index].text=spec.value;
+                                 contollers[index]!.text=spec.value!;
 
                                }
                                break;
                              }
                            }
                            //if(item.CustomValue==null)
-                           if((item.MuliSelect==null||!item.MuliSelect)&&item.SpecificationOptions.isNotEmpty)
+                           if((item.MuliSelect==null||!item.MuliSelect!)&&item.SpecificationOptions!.isNotEmpty)
                              return Padding(
                                padding: const EdgeInsets.only(bottom:8.0),
                                child: FormField<String>(
@@ -304,7 +302,7 @@ class FilterPage extends StatefulWidget {
                                        //vv.hasRange=false;
                                        int itemval = int.tryParse(val) ?? 0;
                                        vv.options = [itemval];
-                                       filterParamsEntity.params[index] = vv;
+                                       filterParamsEntity!.params![index] = vv;
                                      }
                                    },
                                    builder: (FormFieldState<String> state) {
@@ -332,14 +330,14 @@ class FilterPage extends StatefulWidget {
                                              hint: Text('${allTranslations.text('choose')} ${allTranslations.isEnglish?item.EnglishName:item.ArabicName}'),
                                              value:_selectedFieldValue[index],
                                              isDense: true,
-                                             items: item.SpecificationOptions.map((FieldProprtiresSpecificationoption value){
+                                             items: item.SpecificationOptions!.map((FieldProprtiresSpecificationoption value){
                                                return DropdownMenuItem(
                                                  value: value.Id,
-                                                 child: Text(allTranslations.isEnglish?value.EnglishName:value.ArabicName),
+                                                 child: Text(allTranslations.isEnglish?value.EnglishName!:value.ArabicName!),
                                                );
                                              }).toList(),
 
-                                             onChanged: (int newValue){
+                                             onChanged: (int? newValue){
                                                item.Value=newValue;
                                                setState(() {
                                                 isFirst=false;
@@ -359,7 +357,7 @@ class FilterPage extends StatefulWidget {
                              );
 
 
-                           else if(item.MuliSelect)
+                           else if(item.MuliSelect!)
 
 
                              return Padding(
@@ -367,17 +365,17 @@ class FilterPage extends StatefulWidget {
                                child: TextFormField(
                                    controller: contollers[index],
                                    onTap:() {
-                                     WidgetsBinding.instance.addPostFrameCallback((_){_showReportDialog(index, allTranslations.isEnglish ?item.EnglishName:item.ArabicName, item.SpecificationOptions);});
+                                     WidgetsBinding.instance!.addPostFrameCallback((_){_showReportDialog(index, allTranslations.isEnglish ?item.EnglishName:item.ArabicName, item.SpecificationOptions);});
                                    },
                                     readOnly: true,
                                     onSaved: (val){
-                           if(val.isNotEmpty) {
+                           if(val!.isNotEmpty) {
 
                                       var vv=Params();
                                      vv.specificationId=item.Id;
                                      //int itemval=item.Value as int ?? 0;
-                                     vv.options=_multiselectedFieldValue[index].map((e) => e.Id).toList();
-                                     filterParamsEntity.params[index]=vv;
+                                     vv.options=_multiselectedFieldValue[index]!.map((e) => e.Id).toList();
+                                     filterParamsEntity!.params![index]=vv;
                            }
                                    },
                                    decoration: InputDecoration(
@@ -386,7 +384,7 @@ class FilterPage extends StatefulWidget {
 
                                      labelText: allTranslations.isEnglish?item.EnglishName:item.ArabicName,
                                      hintText:allTranslations.isEnglish?item.EnglishName:item.ArabicName,
-                                     prefixIcon: item.Required?Icon(Icons.check_circle,color: _colorFieldValue[index],):null,
+                                     prefixIcon: item.Required!?Icon(Icons.check_circle,color: _colorFieldValue[index],):null,
                                      suffixIcon:  Icon(Icons.arrow_drop_down),
                                      border: new OutlineInputBorder(
                                          borderRadius: new BorderRadius.circular(10.0)),
@@ -405,7 +403,7 @@ class FilterPage extends StatefulWidget {
                                      vv.specificationId=item.Id;
                                      //int itemval=item.Value as int ?? 0;
                                      //vv.options=[val];
-                                     filterParamsEntity.params[index]=vv;
+                                     filterParamsEntity!.params![index]=vv;
 
                                    },
                                    decoration: InputDecoration(
@@ -413,7 +411,7 @@ class FilterPage extends StatefulWidget {
                                      fillColor: Colors.white,
                                      labelText: allTranslations.isEnglish?item.EnglishName:item.ArabicName,
                                      hintText:allTranslations.isEnglish?item.EnglishName:item.ArabicName,
-                                     prefixIcon: item.Required?Icon(Icons.check_circle,color: _colorFieldValue[index],):null,
+                                     prefixIcon: item.Required!?Icon(Icons.check_circle,color: _colorFieldValue[index],):null,
 
 
                                      border: new OutlineInputBorder(
@@ -441,11 +439,11 @@ class FilterPage extends StatefulWidget {
                        color:  Colors.green,
                        onPressed: (){
 
-                             _filterformKey.currentState.save();
+                             _filterformKey.currentState!.save();
                              Navigator.pop(context,filterParamsEntity);
 
                        },
-                       child: Center(child: Text(allTranslations.text('ads_filter'))),textColor: Colors.white,),)
+                       child: Center(child: Text(allTranslations.text('ads_filter')!)),textColor: Colors.white,),)
 
 
 
@@ -467,13 +465,13 @@ class FilterPage extends StatefulWidget {
    }
 
 
-   Widget _BuildRoundedTextField({ String labelText,TextEditingController controller=null,String hintText,iswithArrowIcon=false,
-     Function onClickAction,bool enabled=true}){
+   Widget _BuildRoundedTextField({ String? labelText,TextEditingController? controller=null,String? hintText,iswithArrowIcon=false,
+     Function? onClickAction,bool enabled=true}){
      return TextFormField(
        enabled: enabled,
          controller: controller,
          onTap: (){
-           onClickAction();
+           onClickAction!();
          },
          decoration: InputDecoration(
            suffixIcon: iswithArrowIcon? Icon(Icons.arrow_drop_down):null,
@@ -491,7 +489,7 @@ class FilterPage extends StatefulWidget {
 
    }
 
-   String _emptyValidate(String value){
+   String? _emptyValidate(String? value){
 
      if(value==null||value.isEmpty){
        return allTranslations.text('empty_field');
@@ -501,13 +499,13 @@ class FilterPage extends StatefulWidget {
      }
    }
 
-   _showReportDialog(int index,String title,List<FieldProprtiresSpecificationoption> list) {
+   _showReportDialog(int index,String? title,List<FieldProprtiresSpecificationoption>? list) {
      showDialog(
          context: context,
          builder: (BuildContext context) {
            //Here we will build the content of the dialog
            return AlertDialog(
-             title: Text(title),
+             title: Text(title!),
              content: MultiSelectChip(
                list,
                onSelectionChanged: (selectedList) {
@@ -515,7 +513,7 @@ class FilterPage extends StatefulWidget {
                    contollers[index]=TextEditingController();}
                  String text="";
                  selectedList.forEach((val)=>text+="${allTranslations.isEnglish?val.EnglishName:val.ArabicName??val.EnglishName} ,");
-                 contollers[index].text=text;
+                 contollers[index]!.text=text;
                  setState(() {
 
                    _multiselectedFieldValue[index] = selectedList;
@@ -540,26 +538,26 @@ class FilterPage extends StatefulWidget {
        context,
        label: allTranslations.text('choose_govrnment'),
        selectedValue: CityModel(),
-       items: List(),
+       items: List.empty(),
        onChange: (CityModel selected) {
          _citytextController.text=allTranslations.isEnglish?selected.englishDescription.toString():selected.arabicDescription.toString();
-         filterParamsEntity.stateId=selected.id;
-         filterParamsEntity.cityId=selected.id;
-         filterParamsEntity.cityName=selected.name.toString();
+         filterParamsEntity!.stateId=selected.id;
+         filterParamsEntity!.cityId=selected.id;
+         filterParamsEntity!.cityName=selected.name.toString();
 
 
 
 
        },);
    }
-   Widget _BuildCityRoundedTextField({ String labelText,TextEditingController controller=null,String hintText,iswithArrowIcon=false,
-     Function onClickAction}){
+   Widget _BuildCityRoundedTextField({ String? labelText,TextEditingController? controller=null,String? hintText,iswithArrowIcon=false,
+     Function? onClickAction}){
      return TextFormField(
          validator: _emptyValidate,
-         autovalidate: cityColor==AppColors.validValueColor,
+         autovalidateMode: cityColor==AppColors.validValueColor?AutovalidateMode.always:AutovalidateMode.disabled,
          controller: controller,
          onTap: (){
-           onClickAction();
+           onClickAction!();
          },
          decoration: InputDecoration(
            suffixIcon: iswithArrowIcon? Icon(Icons.arrow_drop_down):null,

@@ -7,7 +7,7 @@ import 'NetworkCommon.dart';
 class CountryClient{
 
 
-  Future<List<CountryEntity>> getCountryList( ) async {
+  Future<List<CountryEntity>?> getCountryList( ) async {
     final results = await NetworkCommon()
         .dio
         .get(
@@ -21,7 +21,7 @@ class CountryClient{
       new CountryEntity(name: "");
     }
   }
-  Future<List<CityModel>> getCityList( int countryID) async {
+  Future<List<CityModel>?> getCityList( int countryID) async {
     final results = await NetworkCommon()
         .dio
         .get(
