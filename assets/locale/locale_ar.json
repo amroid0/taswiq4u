@@ -162,7 +162,8 @@
   "safety": "قواعد السلامه",
   "missing_fields": "يجب إكمال جميع الحقول المطلوبة",
   "success_delete_ads": "تم حذف الاعلان بنجاح",
-  "success_distincit_ads": "تم تمييز الاعلان بنجاح"
+  "success_distincit_ads": "تم تمييز الاعلان بنجاح",
+  "zone": "المنطقه"
 
 
 

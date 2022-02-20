@@ -20,7 +20,7 @@ class CitiesListDialog<T> extends StatefulWidget {
   final Future<List<T>> Function(String text) onFind;
   final SelectOneItemBuilderType<T> itemBuilder;
   final InputDecoration searchBoxDecoration;
-  final int id ;
+  final int c_id ;
 
   const CitiesListDialog({
     Key key,
@@ -31,13 +31,14 @@ class CitiesListDialog<T> extends StatefulWidget {
     this.onFind,
     this.itemBuilder,
     this.searchBoxDecoration,
-    this.id
+    this.c_id
   }) : super(key: key);
 
   static Future<T> showModal<T>(
       BuildContext context, {
         List<T> items,
         String label,
+        int id ,
         T selectedValue,
         bool showSearchBox,
         Future<List<T>> Function(String text) onFind,
@@ -59,6 +60,7 @@ class CitiesListDialog<T> extends StatefulWidget {
             selectedValue: selectedValue,
             itemsList: items,
             onChange: onChange,
+            c_id: id,
             onFind: onFind,
             showSearchBox: showSearchBox,
             itemBuilder: itemBuilder,
@@ -96,7 +98,7 @@ class _SelectDialogState<T> extends State<CitiesListDialog<T>> {
     super.initState();
     bloc = CountryBloc();
 
-    bloc.getAllCities(widget.id);
+    bloc.getAllCities(widget.c_id);
   }
 
   @override

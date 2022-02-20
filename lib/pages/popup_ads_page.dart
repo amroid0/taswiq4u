@@ -89,7 +89,7 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
                 children: <Widget>[
                   SizedBox(height: 8,),
 
-                  Text("result.category.name.toString()",style: TextStyle(color: Colors.white),),
+                  Text("Ads Category",style: TextStyle(color: Colors.white),),
                   SizedBox(height: 16,),
                   Text(result.description,style: TextStyle(color: Colors.white),),
                   SizedBox(height: 16,),

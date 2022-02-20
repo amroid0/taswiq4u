@@ -95,9 +95,9 @@ class APIConstants {
   static Future<String> getPolicyUrl()async{
     String url ;
     if (allTranslations.isEnglish){
-      url = "http://beta.taswiq4u.com/StaticMobilePages/PrivacyMobile?appcountryid=${await preferences.getCountryID()}&language=en#step-1" ;
+      url = "http://beta.taswiq4u.com/StaticMobilePages/PrivacyMobile?appcountryid=${await preferences.getCountryID()}&appLangId=en" ;
     } else {
-      url = "http://beta.taswiq4u.com/StaticMobilePages/PrivacyMobile?appcountryid=${await preferences.getCountryID()}&language=ar#step-1" ;
+      url = "http://beta.taswiq4u.com/StaticMobilePages/PrivacyMobile?appcountryid=${await preferences.getCountryID()}&appLangId=ar" ;
     }
     return url ;
   }
@@ -108,27 +108,27 @@ class APIConstants {
    // return url ;
     String url ;
     if (allTranslations.isEnglish){
-      url = "http://beta.taswiq4u.com/StaticMobilePages/TermsOfUseMobile?appcountryid=${await preferences.getCountryID()}&language=en#step-1" ;
+      url = "http://beta.taswiq4u.com/StaticMobilePages/TermsOfUseMobile?appcountryid=${await preferences.getCountryID()}&appLangId=en" ;
     } else {
-      url = "http://beta.taswiq4u.com/StaticMobilePages/TermsOfUseMobile?appcountryid=${await preferences.getCountryID()}&language=ar#step-1" ;
+      url = "http://beta.taswiq4u.com/StaticMobilePages/TermsOfUseMobile?appcountryid=${await preferences.getCountryID()}&appLangId=ar" ;
     }
     return url ;
   }
   static Future<String> getContactUrl()async{
     String url ;
     if (allTranslations.isEnglish){
-      url = "http://beta.taswiq4u.com/StaticMobilePages/ContactMobile?appcountryid=${await preferences.getCountryID()}&language=en#step-1" ;
+      url = "http://beta.taswiq4u.com/StaticMobilePages/ContactMobile?appcountryid=${await preferences.getCountryID()}&appLangId=en" ;
     } else {
-      url = "http://beta.taswiq4u.com/StaticMobilePages/ContactMobile?appcountryid=${await preferences.getCountryID()}&language=ar#step-1" ;
+      url = "http://beta.taswiq4u.com/StaticMobilePages/ContactMobile?appcountryid=${await preferences.getCountryID()}&appLangId=ar" ;
     }
     return url ;
   }
   static Future<String> getAboutUsUrl()async{
     String url ;
     if (allTranslations.isEnglish){
-      url = "http://beta.taswiq4u.com/StaticMobilePages/AboutUsMobile?appcountryid=${await preferences.getCountryID()}&language=en#step-1" ;
+      url = "http://beta.taswiq4u.com/StaticMobilePages/AboutUsMobile?appcountryid=${await preferences.getCountryID()}&appLangId=en" ;
     } else {
-      url = "http://beta.taswiq4u.com/StaticMobilePages/AboutUsMobile?appcountryid=${await preferences.getCountryID()}&language=ar#step-1" ;
+      url = "http://beta.taswiq4u.com/StaticMobilePages/AboutUsMobile?appcountryid=${await preferences.getCountryID()}&appLangId=ar" ;
     }
     return url ;
   }
@@ -136,18 +136,18 @@ class APIConstants {
   static Future<String> getFAQUsUrl()async{
     String url ;
     if (allTranslations.isEnglish){
-      url = "http://beta.taswiq4u.com/StaticMobilePages/FAQMobile?appcountryid=${await preferences.getCountryID()}&language=en#step-1" ;
+      url = "http://beta.taswiq4u.com/StaticMobilePages/FAQMobile?appcountryid=${await preferences.getCountryID()}&appLangId=en" ;
     } else {
-      url = "http://beta.taswiq4u.com/StaticMobilePages/FAQMobile?appcountryid=${await preferences.getCountryID()}&language=ar#step-1" ;
+      url = "http://beta.taswiq4u.com/StaticMobilePages/FAQMobile?appcountryid=${await preferences.getCountryID()}&appLangId=ar" ;
     }
     return url ;
   }
   static Future<String> getSafetyUsUrl()async{
     String url ;
     if (allTranslations.isEnglish){
-      url = "http://beta.taswiq4u.com/StaticMobilePages/SafetyRulesMobile?appcountryid=${await preferences.getCountryID()}&language=en#step-1" ;
+      url = "http://beta.taswiq4u.com/StaticMobilePages/SafetyRulesMobile?appcountryid=${await preferences.getCountryID()}&appLangId=en" ;
     } else {
-      url = "http://beta.taswiq4u.com/StaticMobilePages/SafetyRulesMobile?appcountryid=${await preferences.getCountryID()}&language=ar#step-1" ;
+      url = "http://beta.taswiq4u.com/StaticMobilePages/SafetyRulesMobile?appcountryid=${await preferences.getCountryID()}&appLangId=ar" ;
     }
     return url ;
   }

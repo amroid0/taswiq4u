@@ -23,9 +23,9 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool isSwitched = false;
 
-  var _langSelectedValue=1;
+  var _langSelectedValue = 1;
 
-  var _countrySelectedValue=1;
+  var _countrySelectedValue = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -33,172 +33,191 @@ class _SettingsPageState extends State<SettingsPage> {
         backgroundColor: AppColors.appBackground,
         appBar: AppBar(
           title: Center(
-            child: Text(allTranslations.text('setting'),textAlign: TextAlign.center,style: TextStyle(fontSize:18,
-                color:
-                Colors.black38
-
-            ),),
+            child: Text(
+              allTranslations.text('setting'),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18, color: Colors.black38),
+            ),
           ),
-
           backgroundColor: Colors.transparent,
           bottomOpacity: 0.0,
           elevation: 0.0,
           automaticallyImplyLeading: false,
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.arrow_forward_ios,color: Colors.black38,),
+              icon: Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.black38,
+              ),
               onPressed: () {
                 Navigator.pop(context);
-
               },
               tooltip: 'back',
             ),
           ],
         ),
-        body:
-        _buildSettings()
-
-    );
-
+        body: _buildSettings());
   }
-  Widget _buildSettings( ){
-    return                Padding(
-      padding:EdgeInsets.fromLTRB(8, 8, 8, 8),
+
+  Widget _buildSettings() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
       child: SingleChildScrollView(
-
-
         child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start
-        ,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 24,),
-            Padding(
-              padding: const EdgeInsets.only(right:8.0,left:8.0),
-              child: Text(allTranslations.text('account_setting'),style: TextStyle(color: Colors.green,fontSize: 24),),
+            SizedBox(
+              height: 24,
             ),
-            ListTile(leading: Icon(Icons.person),
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+              child: Text(
+                allTranslations.text('account_setting'),
+                style: TextStyle(color: Colors.green, fontSize: 24),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.person),
               title: Text(allTranslations.text('personal_info')),
-                trailing: Icon(Icons.arrow_forward_ios),
-
-            onTap: (){
-              Navigator.push(context,MaterialPageRoute(builder: (context) => EditProfileScreen() ,));
-
-            },
-            ),
-            ListTile(leading: Icon(Icons.vpn_key),
-              title: Text(allTranslations.text('change_pass')),
-                trailing: Icon(Icons.arrow_forward_ios),
-
-                onTap: (){
-                  Navigator.push(context,MaterialPageRoute(builder: (context) => ChnagePassScreen() ,));
-
-                }),
-            SizedBox(height: 16,),
-            Padding(
-              padding: const EdgeInsets.only(right:8.0,left:8.0),
-              child: Text(allTranslations.text('other'),style: TextStyle(color: Colors.green,fontSize: 24),),
-            ),
-            ListTile(leading: Icon(Icons.notifications),title: Text(allTranslations.text('notification')),
-              trailing: CupertinoSwitch(
-              value: isSwitched,
-              onChanged: (value){
-                setState(() {
-                  isSwitched=value;
-                  print(isSwitched);
-                });
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditProfileScreen(),
+                    ));
               },
-              trackColor: Colors.grey,
-              activeColor: Colors.green,
-            ),),
-            ListTile(leading: Icon(Icons.language),
+            ),
+            ListTile(
+                leading: Icon(Icons.vpn_key),
+                title: Text(allTranslations.text('change_pass')),
+                trailing: Icon(Icons.arrow_forward_ios),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChnagePassScreen(),
+                      ));
+                }),
+            SizedBox(
+              height: 16,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+              child: Text(
+                allTranslations.text('other'),
+                style: TextStyle(color: Colors.green, fontSize: 24),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.notifications),
+              title: Text(allTranslations.text('notification')),
+              trailing: CupertinoSwitch(
+                value: isSwitched,
+                onChanged: (value) {
+                  setState(() {
+                    isSwitched = value;
+                    print(isSwitched);
+                  });
+                },
+                trackColor: Colors.grey,
+                activeColor: Colors.green,
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.language),
               title: Text(allTranslations.text('lang')),
               trailing: Icon(Icons.arrow_forward_ios),
-            onTap: ()async{
-              String lan=await preferences.getLang();
-              _langSelectedValue=lan=='en'?1:2;
-              Alert(
+              onTap: () async {
+                String lan = await preferences.getLang();
+                _langSelectedValue = lan == 'en' ? 1 : 2;
+                showDialog(
                   context: context,
-                  title: "",
-                  buttons: [],
-                  content: Container(
-                    width: MediaQuery.of(context).size.width * .9,
-                    height: MediaQuery.of(context).size.height * .3,
-                    child: Column(
-                      children: <Widget>[
-
-                        Directionality(textDirection: TextDirection.rtl,
-
-                          child: RadioListTile(
+                  child: AlertDialog(
+                    //    context: context,
+                    //  title: "",
+                    //   buttons: [],
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    actions: [
+                      FlatButton(
+                        child: Text(allTranslations.text('cancel')),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      )
+                    ],
+                    title: Text(
+                      allTranslations.text('choose'),
+                    ),
+                    content: Container(
+                      width: MediaQuery.of(context).size.width * .8,
+                      height: MediaQuery.of(context).size.height * .2,
+                      child: Column(
+                        children: <Widget>[
+                          RadioListTile(
                             value: 1,
                             groupValue: _langSelectedValue,
-                            title: Text("English",style: TextStyle(color: Colors.black,fontSize: 20),),
+                            title: Text(
+                              "English",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 20),
+                            ),
                             onChanged: (val) {
-                              _langSelectedValue=val;
-                              BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
-                                  "en");
+                              _langSelectedValue = val;
+                              BlocProvider.of<TranslationsBloc>(context)
+                                  .setNewLanguage("en");
                               Navigator.of(context).pop();
                             },
-
                             selected: true,
                           ),
-                        ),
-                      //  Divider(height: 2,color: Colors.black,thickness:1,),
-                        Directionality(textDirection: TextDirection.rtl,
-
-                          child: RadioListTile(
+                          // Divider(height: 2,color: Colors.black,thickness: 1,),
+                          RadioListTile(
                             value: 2,
                             groupValue: _langSelectedValue,
-                            title: Text("اللغه العربيه",style: TextStyle(color: Colors.black,fontSize: 20)),
+                            title: Text("اللغه العربيه",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
                             onChanged: (val) {
-                              BlocProvider.of<TranslationsBloc>(context).setNewLanguage(
-                                  "ar");
-                                _langSelectedValue=val;
-                                Navigator.of(context).pop();
+                              BlocProvider.of<TranslationsBloc>(context)
+                                  .setNewLanguage("ar");
+                              _langSelectedValue = val;
+                              Navigator.of(context).pop();
                             },
-
                             selected: true,
-
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                 ).show();
-            },
+                );
+              },
             ),
-            ListTile(leading: Icon(Icons.language),
+            ListTile(
+              leading: Icon(Icons.language),
               title: Text(allTranslations.text('country')),
               trailing: Icon(Icons.arrow_forward_ios),
-              onTap: (){
+              onTap: () {
                 _showCountryDialog();
-              },)
-
-
+              },
+            )
           ],
         ),
       ),
     );
-
-
-
-
   }
+
   _showCountryDialog() async {
-    await CountryListDialog.showModal<CountryEntity>(
-        context,
+    await CountryListDialog.showModal<CountryEntity>(context,
         label: allTranslations.text('choose_country'),
         selectedValue: CountryEntity(),
-        items: List(),
-        onChange: (CountryEntity selected) {
-          preferences.saveCountryID(selected.countryId.toString());
-          preferences.saveCountry(selected);
-          preferences.clearCateogry();
-          BlocProvider.of<CategoryBloc>(context).submitQuery("");
-          _countrySelectedValue = selected.countryId;
-        });
+        items: List(), onChange: (CountryEntity selected) {
+      preferences.saveCountryID(selected.countryId.toString());
+      preferences.saveCountry(selected);
+      preferences.clearCateogry();
+      BlocProvider.of<CategoryBloc>(context).submitQuery("");
+      _countrySelectedValue = selected.countryId;
+    });
   }
-
-
-
 }
