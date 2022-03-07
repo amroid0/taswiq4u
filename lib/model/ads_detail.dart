@@ -17,6 +17,8 @@ class AdsDetail {
   String UserPhone;
   String ArabicDescriptionUrl;
   String EnglishDescriptionUrl;
+  String TextShareEn;
+  String TextShareAr;
   String ArabicTitle;
   String EnglishTitle;
   int CountryId;
@@ -43,7 +45,7 @@ class AdsDetail {
 	AdsDetail({this.Id, this.ArabicDescription, this.EnglishDescription,
 			this.IsNogitable, this.Price, this.CategoryId, this.CategoryName,
 			this.UserId, this.UserName, this.UserPhone, this.ArabicDescriptionUrl,
-			this.EnglishDescriptionUrl, this.ArabicTitle, this.EnglishTitle,
+			this.EnglishDescriptionUrl,this.TextShareEn,this.TextShareAr, this.ArabicTitle, this.EnglishTitle,
 			this.CountryId, this.CountryNameEnglish, this.CountryNameArabic,
 			this.LocationLatitude, this.LocationLongtude, this.IsDisplayed,
 			this.IsDeleted, this.CreationTime, this.UpdateTime, this.ViewCount,

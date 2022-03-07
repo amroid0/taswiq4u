@@ -54,6 +54,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   bool isNeogtiable=false;
   String countryId ;
   int cId ;
+  String userId ="" ;
   List<String> adsStateList=["جديد","مستعمل"];
   String selectedAdsStates="جديد";
    final TextEditingController _cattextController = TextEditingController();
@@ -94,6 +95,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
    uploadBloc =UploadImageBloc();
     getCountryId();
     getUserNumber();
+    getUserID();
     bloc.addStream.listen((data) {
       // Redirect to another view, given your conditi on
       switch (data.status) {
@@ -690,7 +692,7 @@ body: Padding(
                   onChanged: (newValue) {
                     setState(() {
                       isNeogtiable=newValue;
-                      adsPostEntity.isNogitable=newValue;
+                      adsPostEntity.isNogitable=isNeogtiable;
                     });
                   },
                 ),
@@ -730,6 +732,7 @@ body: Padding(
                     }
                     adsPostEntity.locationLatitude=0 /*_markers.elementAt(0).position.latitude as int*/;
                     adsPostEntity.locationLongtude=0 /*_markers.elementAt(0).position.longitude as int*/;
+                    adsPostEntity.userId = userId ;
                     bloc.postAds(adsPostEntity);
 
 
@@ -844,7 +847,7 @@ body: Padding(
      if(value.isEmpty){
        return allTranslations.text('empty_field');
      }
-     else if(value.length<25){
+     else if(value.length<5 ||value.length>60){
        return allTranslations.text('err_short');
      }else{
        return null;
@@ -854,7 +857,7 @@ body: Padding(
     if(value.isEmpty){
       return allTranslations.text('empty_field');
     }
-    else if(value.length<30){
+    else if(value.length<10){
       return allTranslations.text('err_short');
     }else{
       return null;
@@ -922,17 +925,22 @@ body: Padding(
     RegExp regExp=RegExp(patttern);
     if(value.isEmpty){
       return allTranslations.text('empty_field');
-    }
-
-    else if(value.length<8 ){
-      return allTranslations.text('err_phone');
+    } else if(cId==2 && value.length<8 ){
+      return allTranslations.text('err_numk');
+    }else if(cId==1&& value.length<11){
+      return allTranslations.text('err_email');;
     }else{
-      return null;
+      return null ;
     }
   }
    Future getUserNumber ()async{
      UserInfo userInfo = await preferences.getUserInfo();
      _phonetextController.text = userInfo.phone;
+
+  }
+  Future getUserID ()async{
+    UserInfo userInfo = await preferences.getUserInfo();
+   userId = userInfo.id;
 
   }
   void getCountryId() async{

@@ -1,22 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/offer_bloc.dart';
 import 'package:olx/model/Counter.dart';
-import 'package:olx/model/api_response_entity.dart';
-import 'package:olx/model/offfer_entity.dart';
 import 'package:olx/utils/Constants.dart';
-import 'package:olx/widget/base64_image.dart';
 import 'package:olx/model/popup_ads_entity_entity.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 
 import 'offer_detail_slider_page.dart';
 
 class OfferSliderScreen extends StatefulWidget {
+  int ImageIndex=0;
+
+  OfferSliderScreen(this.ImageIndex);
+
   @override
   _OfferSliderScreenState createState() => _OfferSliderScreenState();
 }
@@ -26,7 +24,7 @@ class _OfferSliderScreenState extends State<OfferSliderScreen> {
   PageController _pageController;
   List< PopupAdsEntityList>  list ;
   int currentPage=0;
-  int ImageIndex=0 ;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -72,7 +70,7 @@ class _OfferSliderScreenState extends State<OfferSliderScreen> {
                   pauseAutoPlayOnTouch: Duration(seconds: 3),
                   scrollDirection: Axis.horizontal,
                   onPageChanged: (index) {
-                    ImageIndex=index;
+                    widget.ImageIndex=index;
 
                     // _bloc.updateImageSliderNumber(index);
                   },
@@ -91,7 +89,7 @@ class _OfferSliderScreenState extends State<OfferSliderScreen> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => BlocProvider(bloc: new OfferBloc(),child: OfferSliderPage())
-                                      ,settings: RouteSettings(arguments:{"list":list,"index":ImageIndex})));
+                                      ,settings: RouteSettings(arguments:{"list":list,"index":widget.ImageIndex})));
 
                             },
                             child: CachedNetworkImage(

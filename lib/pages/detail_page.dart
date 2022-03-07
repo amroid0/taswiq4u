@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -37,10 +38,9 @@ import 'image_viewer_page.dart';
 import 'offer_detail_slider_page.dart';
 
 class DetailPage extends StatefulWidget {
- bool isEditable;
+  bool isEditable;
 
-
- DetailPage(this.isEditable);
+  DetailPage(this.isEditable);
 
   @override
   _DetailPageState createState() => _DetailPageState();
@@ -49,9 +49,9 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   DetailBloc _bloc;
   GoogleMapController _mapController;
-  AdsReportBloc _reportBloc ;
-  final detailScaffoldMessengerKey = GlobalKey<ScaffoldState>();
+  AdsReportBloc _reportBloc;
 
+  final detailScaffoldMessengerKey = GlobalKey<ScaffoldState>();
 
   final Set<Marker> _markers = {};
   AdsModel detailArgs;
@@ -59,10 +59,19 @@ class _DetailPageState extends State<DetailPage> {
   FavroiteBloc favbloc;
 
   AdsDetail detail;
-  PostReport _postReport ;
-  List <String> reportReasons =[allTranslations.text('report_ressons1'),allTranslations.text('report_ressons2'),allTranslations.text('report_ressons3'),allTranslations.text('report_ressons4'),allTranslations.text('report_ressons5')];
-  String _select_Types ;
-  bool reportDiolag = false ;
+  PostReport _postReport;
+
+  List<String> reportReasons = [
+    allTranslations.text('report_ressons1'),
+    allTranslations.text('report_ressons2'),
+    allTranslations.text('report_ressons3'),
+    allTranslations.text('report_ressons4'),
+    allTranslations.text('report_ressons5')
+  ];
+  String _select_Types;
+
+  bool reportDiolag = false;
+
   TextEditingController message = TextEditingController();
 
   ArsProgressDialog progressDialog;
@@ -73,27 +82,23 @@ class _DetailPageState extends State<DetailPage> {
     _bloc = DetailBloc();
     _reportBloc = AdsReportBloc();
 
-    favbloc=new FavroiteBloc();
+    favbloc = new FavroiteBloc();
 
     favbloc.stateStream.listen((data) {
       // Redirect to another view, given your condition
 
       switch (data.status) {
         case Status.LOADING:
-
           break;
-
-
 
         case Status.ERROR:
-
           break;
         case Status.COMPLETED:
-        // TODO: Handle this case.
-          var isLogged=data as ApiResponse<bool>;
-          var isss=isLogged.data;
-          if(isss) {
-     /*       Fluttertoast.showToast(
+          // TODO: Handle this case.
+          var isLogged = data as ApiResponse<bool>;
+          var isss = isLogged.data;
+          if (isss) {
+            /*       Fluttertoast.showToast(
                 msg: "Favorite",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
@@ -102,9 +107,8 @@ class _DetailPageState extends State<DetailPage> {
                 textColor: Colors.white,
                 fontSize: 16.0
             );*/
-          }else{
-
-      /*      Fluttertoast.showToast(
+          } else {
+            /*      Fluttertoast.showToast(
                 msg: "UnFavorite",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
@@ -114,21 +118,17 @@ class _DetailPageState extends State<DetailPage> {
                 fontSize: 16.0
             );*/
 
-
-
           }
           break;
-
       }
     });
 
-    progressDialog = ArsProgressDialog(
-        context,
+    progressDialog = ArsProgressDialog(context,
         blur: 2,
         backgroundColor: Color(0x33000000),
         animationDuration: Duration(milliseconds: 500));
     _bloc.deleteStateStream.listen((snap) {
-      if(progressDialog.isShowing){
+      if (progressDialog.isShowing) {
         progressDialog.dismiss();
       }
       switch (snap.status) {
@@ -136,32 +136,24 @@ class _DetailPageState extends State<DetailPage> {
           progressDialog.show();
           break;
 
-
         case Status.ERROR:
-
-
-
-          ToastUtils.
-          showErrorMessage(
-              allTranslations.text('err_wrong'));
-
+          ToastUtils.showErrorMessage(allTranslations.text('err_wrong'));
 
           break;
 
         case Status.COMPLETED:
-
-          ToastUtils.
-          showSuccessMessage(allTranslations.text('success_delete_ads'));
-          WidgetsBinding.instance.addPostFrameCallback((_)  {
+          ToastUtils.showSuccessMessage(
+              allTranslations.text('success_delete_ads'));
+          WidgetsBinding.instance.addPostFrameCallback((_) {
             BlocProvider.of<AdsBloc>(context).getMyAdsListe(1);
-              Navigator.pop(context);
+            Navigator.pop(context);
           });
 
           break;
       }
     });
     _bloc.distnictStateStream.listen((snap) {
-      if(progressDialog.isShowing){
+      if (progressDialog.isShowing) {
         progressDialog.dismiss();
       }
       switch (snap.status) {
@@ -169,36 +161,18 @@ class _DetailPageState extends State<DetailPage> {
           progressDialog.show();
           break;
 
-
         case Status.ERROR:
-
-
-
-          ToastUtils.
-          showErrorMessage(
-              allTranslations.text('err_wrong'));
-
+          ToastUtils.showErrorMessage(allTranslations.text('err_wrong'));
 
           break;
 
         case Status.COMPLETED:
-
-          ToastUtils.
-          showSuccessMessage(allTranslations.text('success_distincit_ads'));
+          ToastUtils.showSuccessMessage(
+              allTranslations.text('success_distincit_ads'));
 
           break;
       }
     });
-
-
-
-
-
-
-
-
-
-
 
     super.initState();
   }
@@ -211,10 +185,7 @@ class _DetailPageState extends State<DetailPage> {
       bloc: _bloc,
       child: Scaffold(
         key: detailScaffoldMessengerKey,
-
-
-        floatingActionButton:
-        SpeedDial(
+        floatingActionButton: SpeedDial(
           /// both default to 16
           marginEnd: 18,
           marginBottom: 20,
@@ -233,9 +204,11 @@ class _DetailPageState extends State<DetailPage> {
           /// The below button size defaults to 56 itself, its the FAB size + It also affects relative padding and other elements
           buttonSize: 56.0,
           visible: true,
+
           /// If true user is forced to close dial manually
           /// by tapping main button and overlay is not rendered.
           closeManually: false,
+
           /// If true overlay will render no matter what.
           renderOverlay: false,
           curve: Curves.bounceIn,
@@ -255,57 +228,66 @@ class _DetailPageState extends State<DetailPage> {
           // childMarginTop: 2,
           children: [
             SpeedDialChild(
-              child: Icon(Icons.textsms,color: Colors.white,),
+              child: Icon(
+                Icons.textsms,
+                color: Colors.white,
+              ),
               backgroundColor: Colors.green,
               label: allTranslations.text('conversation'),
               labelBackgroundColor: Colors.white,
-
               labelStyle: TextStyle(fontSize: 18.0),
-              onTap: () =>_textMe(),
+              onTap: () => _textMe(),
               onLongPress: () => print('FIRST CHILD LONG PRESS'),
             ),
             SpeedDialChild(
-              child: Icon(Icons.call,color: Colors.white,),
+              child: Icon(
+                Icons.call,
+                color: Colors.white,
+              ),
               backgroundColor: Colors.green,
               label: allTranslations.text('calling'),
               labelStyle: TextStyle(fontSize: 18.0),
               labelBackgroundColor: Colors.white,
-              onTap: (){
+              onTap: () {
                 _makePhoneCall('tel:${detailArgs.UserPhone}');
               },
               onLongPress: () => print('SECOND CHILD LONG PRESS'),
             ),
             SpeedDialChild(
-              child: Icon(Icons.copy,color: Colors.white,),
+              child: Icon(
+                Icons.copy,
+                color: Colors.white,
+              ),
               backgroundColor: Colors.green,
               label: allTranslations.text('copy_num'),
               labelBackgroundColor: Colors.white,
               labelStyle: TextStyle(fontSize: 18.0),
-              onTap: () =>  Clipboard.setData(new ClipboardData(text: detailArgs.UserPhone)).then((_){
-                detailScaffoldMessengerKey.currentState.showSnackBar(
-                    SnackBar(content:Text(allTranslations.text('copied_num'))));
+              onTap: () => Clipboard.setData(
+                      new ClipboardData(text: detailArgs.UserPhone))
+                  .then((_) {
+                detailScaffoldMessengerKey.currentState.showSnackBar(SnackBar(
+                    content: Text(allTranslations.text('copied_num'))));
               }),
               onLongPress: () => print('THIRD CHILD LONG PRESS'),
             ),
           ],
         ),
-
-
         body: StreamBuilder<ApiResponse<AdsDetail>>(
           stream: _bloc.stream,
           builder: (context, snapshot) {
-            if(snapshot.data==null) return    Container(
-              child: Center(child: CircularProgressIndicator()),
-            );
+            if (snapshot.data == null)
+              return Container(
+                child: Center(child: CircularProgressIndicator()),
+              );
             switch (snapshot.data.status) {
               case Status.LOADING:
-                return  Container(
+                return Container(
                   child: Center(child: CircularProgressIndicator()),
                 );
                 break;
               case Status.COMPLETED:
                 var value = snapshot.data.data;
-                 detail = value as AdsDetail;
+                detail = value as AdsDetail;
                 //_bloc.viewAds();
                 return ListView(
                   shrinkWrap: true,
@@ -320,53 +302,46 @@ class _DetailPageState extends State<DetailPage> {
                               child: Container(
                                 alignment: AlignmentDirectional.topStart,
                                 child: InkWell(
-                                  onTap: (){
+                                  onTap: () {
                                     Navigator.pop(context);
                                   },
                                   child: CircleAvatar(
                                     radius: 18,
-
-                                    backgroundColor: Colors.black.withOpacity(.4),
+                                    backgroundColor:
+                                        Colors.black.withOpacity(.4),
                                     child: Center(
                                       child: Icon(
                                         Icons.arrow_back_ios,
                                         color: Colors.white,
                                       ),
                                     ),
-
                                   ),
                                 ),
                               ),
                             ),
-
                             SizedBox(
                               width: 10,
                             ),
-
                             Visibility(
                               visible: widget.isEditable,
                               child: GestureDetector(
-
-                                onTap: (){
-
+                                onTap: () {
                                   Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => BlocProvider(bloc: AdsBloc(),child:EditPage(detail),),
-                                          settings: RouteSettings(arguments:detail)
-
-                                      ));
-
-
-
-
-
-
+                                      MaterialPageRoute(
+                                          builder: (context) => BlocProvider(
+                                                bloc: AdsBloc(),
+                                                child: EditPage(detail),
+                                              ),
+                                          settings: RouteSettings(
+                                              arguments: detail)));
                                 },
                                 child: Container(
-
                                     decoration: BoxDecoration(
-                                        color: Color(0xffECECEC).withOpacity(0.6),
-                                        borderRadius: BorderRadius.circular(20)),
+                                        color:
+                                            Color(0xffECECEC).withOpacity(0.6),
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
                                     child: Icon(
                                       Icons.edit,
                                       size: 30.0,
@@ -380,22 +355,15 @@ class _DetailPageState extends State<DetailPage> {
                             Visibility(
                               visible: widget.isEditable,
                               child: GestureDetector(
-
-                                onTap: (){
-
+                                onTap: () {
                                   _bloc.deleteAds(detail.Id.toString());
-
-
-
-
-
-
                                 },
                                 child: Container(
-
                                     decoration: BoxDecoration(
-                                        color: Color(0xffECECEC).withOpacity(0.6),
-                                        borderRadius: BorderRadius.circular(20)),
+                                        color:
+                                            Color(0xffECECEC).withOpacity(0.6),
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
                                     child: Icon(
                                       Icons.delete,
                                       size: 30.0,
@@ -405,21 +373,19 @@ class _DetailPageState extends State<DetailPage> {
                             ),
                             SizedBox(
                               width: 10,
-                            ), Visibility(
+                            ),
+                            Visibility(
                               visible: widget.isEditable,
                               child: GestureDetector(
-
-                                onTap: (){
-
+                                onTap: () {
                                   _bloc.distinictAds(detail.Id.toString());
-
-
                                 },
                                 child: Container(
-
                                     decoration: BoxDecoration(
-                                        color: Color(0xffECECEC).withOpacity(0.6),
-                                        borderRadius: BorderRadius.circular(20)),
+                                        color:
+                                            Color(0xffECECEC).withOpacity(0.6),
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
                                     child: Icon(
                                       Icons.star,
                                       size: 30.0,
@@ -427,43 +393,53 @@ class _DetailPageState extends State<DetailPage> {
                                     )),
                               ),
                             ),
-
                           ],
                         ),
                       ),
                       Align(
                         child: Container(
-                          margin:EdgeInsets.only(top:305,left:12.0,right: 12.0),
+                          margin: EdgeInsets.only(
+                              top: 305, left: 12.0, right: 12.0),
                           child: Row(
-                            mainAxisAlignment:MainAxisAlignment.end ,
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Container(
-                                 // margin:EdgeInsets.only(top:300,left:12.0,right: 12.0),
+                                  // margin:EdgeInsets.only(top:300,left:12.0,right: 12.0),
                                   decoration: BoxDecoration(
                                       color: Color(0xffECECEC).withOpacity(0.6),
                                       borderRadius: BorderRadius.circular(20)),
-                                  child:FavroiteWidget(onFavChange:(val){
-                                    if(BlocProvider.of<LoginBloc>(context).isLogged())
-                                      favbloc.changeFavoriteState(val,detail.Id);
-                                    else
-                                      Navigator.push(
-                                          context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
-                                  },value: detail.IsFavorite,)),
-                              SizedBox(width:20,),
+                                  child: FavroiteWidget(
+                                    onFavChange: (val) {
+                                      if (BlocProvider.of<LoginBloc>(context)
+                                          .isLogged())
+                                        favbloc.changeFavoriteState(
+                                            val, detail.Id);
+                                      else
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ParentAuthPage()));
+                                    },
+                                    value: detail.IsFavorite,
+                                  )),
+                              SizedBox(
+                                width: 20,
+                              ),
                               GestureDetector(
                                 onTap: () async {
-                              /*    await FlutterShare.share(
+                                      await FlutterShare.share(
                                       title: 'Taswiq share',
-                                      text: detail.ArabicDescription,
-                                      linkUrl: detail.ArabicDescriptionUrl,
-                                      chooserTitle: 'taswiq Chooser Title');*/
-                                }                ,
+                                      linkUrl: detail.TextShareEn,
+                                      chooserTitle: 'taswiq Chooser Title');
+                                },
                                 child: Container(
-                                  height:35,
-                                   // margin:EdgeInsets.only(top: 300 ,left:50,right: 50),
+                                    height: 35,
+                                    // margin:EdgeInsets.only(top: 300 ,left:50,right: 50),
                                     decoration: BoxDecoration(
                                         color: Colors.white,
-                                        borderRadius: BorderRadius.circular(15)),
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
                                     child: Icon(
                                       Icons.share,
                                       size: 30.0,
@@ -471,22 +447,17 @@ class _DetailPageState extends State<DetailPage> {
                                     )),
                               ),
                             ],
-
                           ),
                         ),
                       ),
-
-
                     ]),
                     SizedBox(
                       height: 10,
                     ),
                     Container(
                       padding: EdgeInsets.all(8),
-
                       decoration: BoxDecoration(color: Colors.white),
                       child: Column(
-
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: _buildDetailWidgets(detail)),
                     ),
@@ -519,7 +490,6 @@ class _DetailPageState extends State<DetailPage> {
             height: 400.0,
             aspectRatio: 1,
             viewportFraction: 1.0,
-
             itemBuilder: (context, index) {
 /*
             if(items[index].base64Image == null &&
@@ -544,11 +514,14 @@ class _DetailPageState extends State<DetailPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => BlocProvider(bloc:_bloc ,child: SliderFullImageViewer())
-                                ,settings: RouteSettings(arguments:{"list":items,"index":index,"length":items.length})));
-
-
-
+                                builder: (context) => BlocProvider(
+                                    bloc: _bloc,
+                                    child: SliderFullImageViewer()),
+                                settings: RouteSettings(arguments: {
+                                  "list": items,
+                                  "index": index,
+                                  "length": items.length
+                                })));
                       }));
             },
           ));
@@ -566,26 +539,29 @@ class _DetailPageState extends State<DetailPage> {
   List<Widget> _buildDetailWidgets(AdsDetail detail) {
     List<Widget> widgets = [];
     final title = Column(
-
       children: <Widget>[
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               child: Text(
-                allTranslations.isEnglish ? detail.EnglishTitle : detail.ArabicTitle,
-                style: TextStyle(fontSize: 18),maxLines: 1,
+                allTranslations.isEnglish
+                    ? detail.EnglishTitle
+                    : detail.ArabicTitle,
+                style: TextStyle(fontSize: 18),
+                maxLines: 1,
               ),
             ),
             Text(
-              detail.Price == null ? "" : '${detail.Price}  ${allTranslations.text('cuurency')}',
+              detail.Price == null
+                  ? ""
+                  : '${detail.Price}  ${allTranslations.text('cuurency')}',
               style: TextStyle(fontSize: 20, color: Colors.green),
             ),
-
           ],
         ),
         Align(
-          alignment:Alignment.topRight ,
+          alignment: Alignment.topRight,
           child: Text(
               "${allTranslations.isEnglish ? detail.StateNameEnglish : detail.StateNameArabic}"),
         )
@@ -594,9 +570,8 @@ class _DetailPageState extends State<DetailPage> {
     final viewCount = Container(
       padding: EdgeInsets.symmetric(horizontal: 8),
       height: 40,
-      decoration: BoxDecoration(color: Color(0xffe6e6e6)
-      ,
-      borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+          color: Color(0xffe6e6e6), borderRadius: BorderRadius.circular(10)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -621,66 +596,67 @@ class _DetailPageState extends State<DetailPage> {
     widgets.add(SizedBox(
       height: 8,
     ));
-    widgets.add(Text(allTranslations.text("properties"),style:TextStyle(fontSize: 20,fontWeight: FontWeight.bold)));
+    widgets.add(Text(allTranslations.text("properties"),
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
 
-     bool isEvenRow=true;
+    bool isEvenRow = true;
 
     for (var spec in detail.Advertisment_Specification) {
       if (spec.AdvertismentSpecificatioOptions != null &&
           spec.AdvertismentSpecificatioOptions.length > 0) {
         String value = "";
         for (var option in spec.AdvertismentSpecificatioOptions) {
-          value += allTranslations.isEnglish?option.NameEnglish.toString():option.NameArabic.toString();
+          value += allTranslations.isEnglish
+              ? option.NameEnglish.toString()
+              : option.NameArabic.toString();
         }
 
         widgets.add(ListTile(
-
-          tileColor: isEvenRow?Colors.white:Colors.grey.shade200,
-     leading: Text(allTranslations.isEnglish?spec.NameEnglish:spec.NameArabic,style: TextStyle(fontWeight: FontWeight.bold),),
-        trailing: Text(value),
-        )
-        );
-
+          tileColor: isEvenRow ? Colors.white : Colors.grey.shade200,
+          leading: Text(
+            allTranslations.isEnglish ? spec.NameEnglish : spec.NameArabic,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          trailing: Text(value),
+        ));
       } else {
         if (spec.CustomValue != null) {
-          widgets.add(
-            ListTile(
-              tileColor: isEvenRow?Colors.white:Colors.grey.shade200,
-              leading:Text(
-                "${allTranslations.isEnglish?spec.NameEnglish:spec.NameArabic}",
-                  style: TextStyle(fontWeight: FontWeight.bold)    ) ,
-              trailing: Text(
-                "${spec.CustomValue}",
-              ),
-
-
-            )
-          );
-
+          widgets.add(ListTile(
+            tileColor: isEvenRow ? Colors.white : Colors.grey.shade200,
+            leading: Text(
+                "${allTranslations.isEnglish ? spec.NameEnglish : spec.NameArabic}",
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            trailing: Text(
+              "${spec.CustomValue}",
+            ),
+          ));
         }
       }
-      isEvenRow=!isEvenRow;
+      isEvenRow = !isEvenRow;
     }
-    widgets.add(Text(allTranslations.text('details'),style:TextStyle(fontSize: 20,fontWeight: FontWeight.bold)));
+    widgets.add(Text(allTranslations.text('details'),
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
     widgets.add(Row(
       children: [
         Expanded(
           child: StreamBuilder<bool>(
-            stream: _bloc.translatestream,
-            initialData: false,
-            builder:(ctx,snap){
-              String text=allTranslations.isEnglish ?
-              !snap.data? detail.EnglishDescription:detail.ArabicDescription
-                  :
-              !snap.data? detail.ArabicDescription:detail.EnglishDescription;
-              return AutoDirection(
-              text:text ,
-              child: Text(
-                  "$text",
-
-              ),
-            );}
-          ),
+              stream: _bloc.translatestream,
+              initialData: false,
+              builder: (ctx, snap) {
+                String text = allTranslations.isEnglish
+                    ? !snap.data
+                        ? detail.EnglishDescription
+                        : detail.ArabicDescription
+                    : !snap.data
+                        ? detail.ArabicDescription
+                        : detail.EnglishDescription;
+                return AutoDirection(
+                  text: text,
+                  child: Text(
+                    "$text",
+                  ),
+                );
+              }),
         ),
       ],
     ));
@@ -688,159 +664,158 @@ class _DetailPageState extends State<DetailPage> {
       height: 8,
     ));
 
-
-    widgets.add ( FlatButton.icon(onPressed: (){
-      _bloc.translateAds();
-
-
-
-    }, icon:
-    Icon(Icons.translate,color: Colors.blueAccent,), label: Text(allTranslations.text('translate')))
-    );
+    widgets.add(FlatButton.icon(
+        onPressed: () {
+          _bloc.translateAds();
+        },
+        icon: Icon(
+          Icons.translate,
+          color: Colors.blueAccent,
+        ),
+        label: Text(allTranslations.text('translate'))));
 
     final actions = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-
-    FlatButton.icon(onPressed: (){
-      navigateTo(detail.LocationLatitude,detail.LocationLongtude);
-
-    }, icon: Icon(Icons.map,color: Colors.green,), label: Text(allTranslations.text('map'))),
-        FlatButton.icon(onPressed:(){
-          // setState(() {
-          //   reportDiolag = true ;
-          // });
-          Alert(
-              context: context,
-              title: allTranslations.text('report'),
-              content: StatefulBuilder(
-                builder:(BuildContext context,
-                    void Function(void Function()) setState) =>
-                    Container(
-                child: Column(
-                  children: <Widget>[
-                DropdownButton<String>(
-                                    hint:  Text(allTranslations.text('reason'), style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),),
-                                    value: _select_Types,
-                                    onChanged: (String Value) {
-                                      setState(() {
-                                        _select_Types = Value;
-                                      });
-                                    },
-                                    items: reportReasons.map((String types) {
-                                      return  DropdownMenuItem<String>(
-                                        value: types,
-                                        child: Row(
-                                          children: <Widget>[
-                                            reportReasons.length > 0  ? Text(
-                                            types,
-                                              style:  TextStyle(color: Colors.black),
-                                            )
-                                                : Text(
-                                              'no data',
-                                              style:  TextStyle(color: Colors.black),
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
-                                  SizedBox(height: 20,),
-                                  Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(8.0),
-                                          color:Colors.white10.withOpacity(0.5)
-                                      ),
-                                      height: 100,
-                                      //  color:Colors.black12,
-                                      margin: EdgeInsets.all(20),
-
-                                      child: TextField(
-                                        controller:message,
-                                          decoration :  new InputDecoration(
-                                            labelText: allTranslations.text('message'),
-                                            labelStyle:TextStyle(color:Colors.black),
-                                            border: new OutlineInputBorder(
-                                              borderRadius: const BorderRadius.all(
-                                                const Radius.circular(8.0),
-                                              ),
-                                            ),
-                                          )),
-                                    ),
-
-                ]
-                ),
-                    ),
-              ),
-              buttons: [
-                DialogButton(
-                  onPressed: (){
-                    BlocProvider.of<LoginBloc>(context).isLogged() ?
-                                         _reportBloc.adsReport(
-                                            PostReport(
-                                              countryId:1,
-                                              adId: detailArgs.Id,
-                                              message:message.text,
-                                              reason:_select_Types
-
-                                            ),
-                                          )
-                                         : Navigator.push(
-                                              context, MaterialPageRoute(builder: (context) => ParentAuthPage()));
-                    _reportBloc.addStream.listen((data) {
-                      switch (data.status) {
-                        case Status.LOADING:
-                          Future.delayed(Duration.zero, () {
-
-                          });
-                          break;
-                        case Status.COMPLETED:
-                          var isLogged=data as ApiResponse<bool>;
-                          var isss=isLogged.data;
-                          if(isss){
-
-                            Fluttertoast.showToast(
-                                msg: allTranslations.text('send_success'),
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.green,
-                                textColor: Colors.white,
-                                fontSize: 16.0
+        FlatButton.icon(
+            onPressed: () {
+              navigateTo(detail.LocationLatitude, detail.LocationLongtude);
+            },
+            icon: Icon(
+              Icons.map,
+              color: Colors.green,
+            ),
+            label: Text(allTranslations.text('map'))),
+        FlatButton.icon(
+            onPressed: () {
+              // setState(() {
+              //   reportDiolag = true ;
+              // });
+              Alert(
+                  context: context,
+                  title: allTranslations.text('report'),
+                  content: StatefulBuilder(
+                    builder: (BuildContext context,
+                            void Function(void Function()) setState) =>
+                        Container(
+                      child: Column(children: <Widget>[
+                        DropdownButton<String>(
+                          hint: Text(
+                            allTranslations.text('reason'),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          value: _select_Types,
+                          onChanged: (String Value) {
+                            setState(() {
+                              _select_Types = Value;
+                            });
+                          },
+                          items: reportReasons.map((String types) {
+                            return DropdownMenuItem<String>(
+                              value: types,
+                              child: Row(
+                                children: <Widget>[
+                                  reportReasons.length > 0
+                                      ? Text(
+                                          types,
+                                          style: TextStyle(color: Colors.black),
+                                        )
+                                      : Text(
+                                          'no data',
+                                          style: TextStyle(color: Colors.black),
+                                        )
+                                ],
+                              ),
                             );
-                            Navigator.pop(context);
+                          }).toList(),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              color: Colors.white10.withOpacity(0.5)),
+                          height: 100,
+                          //  color:Colors.black12,
+                          margin: EdgeInsets.all(20),
 
+                          child: TextField(
+                              controller: message,
+                              decoration: new InputDecoration(
+                                labelText: allTranslations.text('message'),
+                                labelStyle: TextStyle(color: Colors.black),
+                                border: new OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(8.0),
+                                  ),
+                                ),
+                              )),
+                        ),
+                      ]),
+                    ),
+                  ),
+                  buttons: [
+                    DialogButton(
+                      onPressed: () {
+                        BlocProvider.of<LoginBloc>(context).isLogged()
+                            ? _reportBloc.adsReport(
+                                PostReport(
+                                    countryId: 1,
+                                    adId: detailArgs.Id,
+                                    message: message.text,
+                                    reason: _select_Types),
+                              )
+                            : Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ParentAuthPage()));
+                        _reportBloc.addStream.listen((data) {
+                          switch (data.status) {
+                            case Status.LOADING:
+                              Future.delayed(Duration.zero, () {});
+                              break;
+                            case Status.COMPLETED:
+                              var isLogged = data as ApiResponse<bool>;
+                              var isss = isLogged.data;
+                              if (isss) {
+                                Fluttertoast.showToast(
+                                    msg: allTranslations.text('send_success'),
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.green,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                                Navigator.pop(context);
+                              }
+
+                              break;
+                            case Status.ERROR:
+                              ToastUtils.showErrorMessage(
+                                  allTranslations.text('err_wrong'));
+                              break;
                           }
-
-                          break;
-                        case Status.ERROR:
-                          ToastUtils.showErrorMessage(allTranslations.
-                          text('err_wrong'));
-                          break;
-                      }
-                    });
-
-                  },                                 child: Text(
-                  allTranslations.text('send'),
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-                )
-              ]
-              ).show();
-
-        }, icon:  Icon(Icons.flag,color: Colors.red,), label: Text(allTranslations.text('report'))),
-
-
-
-    ],
+                        });
+                      },
+                      child: Text(
+                        allTranslations.text('send'),
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                    )
+                  ]).show();
+            },
+            icon: Icon(
+              Icons.flag,
+              color: Colors.red,
+            ),
+            label: Text(allTranslations.text('report'))),
+      ],
     );
-
-
-
 
     widgets.add(actions);
     widgets.add(SizedBox(
@@ -874,6 +849,7 @@ class _DetailPageState extends State<DetailPage> {
       throw 'Could not launch $url';
     }
   }
+
   _textMe() async {
     if (Platform.isAndroid) {
       String uri = 'sms:${detailArgs.UserPhone}?body=hello%20there';
@@ -885,7 +861,7 @@ class _DetailPageState extends State<DetailPage> {
     }
   }
 
-   void navigateTo(double lat, double lng) async {
+  void navigateTo(double lat, double lng) async {
     var uri = Uri.parse("google.navigation:q=$lat,$lng&mode=d");
     if (await canLaunch(uri.toString())) {
       await launch(uri.toString());
@@ -893,6 +869,7 @@ class _DetailPageState extends State<DetailPage> {
       throw 'Could not launch ${uri.toString()}';
     }
   }
+
   bool AddReport() {
 //     return Container(
 //       margin:EdgeInsets.only(top:100),
@@ -1046,5 +1023,4 @@ class _DetailPageState extends State<DetailPage> {
 //               ),
 //             )));
   }
-
 }

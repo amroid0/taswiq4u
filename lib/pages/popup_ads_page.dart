@@ -35,7 +35,7 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
           Align(
             child: Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height*0.6,
+              height: MediaQuery.of(context).size.height*0.7,
               child:  FadeInImage.assetNetwork(
                                       fit: BoxFit.fill,
 
@@ -88,9 +88,6 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   SizedBox(height: 8,),
-
-                  Text("Ads Category",style: TextStyle(color: Colors.white),),
-                  SizedBox(height: 16,),
                   Text(result.description,style: TextStyle(color: Colors.white),),
                   SizedBox(height: 16,),
 
@@ -101,7 +98,7 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
                       InkWell(
                           onTap: ()async{
                             var whatsappUrl ="whatsapp://send?phone=${result.phoneNumber}";
-                            await canLaunch(whatsappUrl)? launch(whatsappUrl):ToastUtils.showErrorMessage("رقم الهاتف غير صحيح");;
+                            await canLaunch(whatsappUrl)? launch(whatsappUrl):ToastUtils.showErrorMessage("رقم الهاتف غير صحيح");
 
                           },
 

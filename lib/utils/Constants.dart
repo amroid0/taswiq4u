@@ -86,7 +86,7 @@ class APIConstants {
   static Future<String>  getUserNameLogin()async{
 
       UserInfo userInfo = await preferences.getUserInfo();
-    String  userName = userInfo.firstName;
+    String  userName = userInfo.firstName +" "+userInfo.secondName;
       print(userName+"rrrrrr");
       return userName ;
 
@@ -148,6 +148,35 @@ class APIConstants {
       url = "http://beta.taswiq4u.com/StaticMobilePages/SafetyRulesMobile?appcountryid=${await preferences.getCountryID()}&appLangId=en" ;
     } else {
       url = "http://beta.taswiq4u.com/StaticMobilePages/SafetyRulesMobile?appcountryid=${await preferences.getCountryID()}&appLangId=ar" ;
+    }
+    return url ;
+  }
+
+  static Future<String> getFaceBookUsUrl()async{
+    String url ;
+    String state = await preferences.getCountryID();
+    if (state.contains("1")){
+      url = "https://www.facebook.com/taswiq4u.eg/" ;
+    } else {
+      url = "https://www.facebook.com/Taswiq4u/" ;
+    }
+    return url ;
+  }
+  static Future<String> getTwitterUsUrl()async{
+    String url ;
+    if (await preferences.getCountryID()==1){
+      url = "https://twitter.com/Taswiq4uEG" ;
+    } else {
+      url = "https://mobile.twitter.com/taswiq4ukw?lang=en" ;
+    }
+    return url ;
+  }
+  static Future<String> getInstaUsUrl()async{
+    String url ;
+    if (await preferences.getCountryID()==1){
+      url = "https://www.instagram.com/taswiq4u.eg/?hl=en/" ;
+    } else {
+      url = "https://www.instagram.com/taswiq4u.kw/?utm_medium=copy_link" ;
     }
     return url ;
   }
