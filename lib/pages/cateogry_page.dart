@@ -53,7 +53,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
 
   _bloc = BlocProvider.of<CategoryBloc>(context);
 
-  _bloc!.popupStream..listen((data){
+  _bloc.popupStream..listen((data){
     switch (data.status) {
       case Status.LOADING:
 
@@ -92,7 +92,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
 
             Expanded(
               child: StreamBuilder<List<CateogryEntity>>(
-                stream: _bloc!.stream,
+                stream: _bloc.stream,
                 builder: (context, snapshot) {
 
                   if (!snapshot.hasData) {
@@ -152,7 +152,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
 
                   }
                   if(imgList.isEmpty){
-                    _bloc!.getMainSliderAds();
+                    _bloc.getMainSliderAds();
                   }
                   return _buildCategoryList(snapshot.data!);
                 }
@@ -170,7 +170,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
 
   Widget _buildMainSlider(CategoryBloc? bloc){
    return StreamBuilder<ApiResponse<List<PopupAdsEntityList>>>(
-        stream: _bloc!.mainSliderStreaam,
+        stream: _bloc.mainSliderStreaam,
         builder: (context, snapshot) {
           if(snapshot.hasData)
           switch (snapshot.data!.status) {
@@ -182,7 +182,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
               break;
             case Status.COMPLETED:
               if(BlocProvider.of<LoginBloc>(context).isfirstPopupAd){
-              _bloc!.getPopupAds();
+              _bloc.getPopupAds();
               BlocProvider.of<LoginBloc>(context).isfirstPopupAd=false;
               }
               var response = snapshot.data;
@@ -215,7 +215,7 @@ options: CarouselOptions(
   onPageChanged: (index,changeReason) {
     ImageIndex=index;
 
-    _bloc!.updateImageSliderNumber(index);
+    _bloc.updateImageSliderNumber(index);
   },
 ),
 
@@ -287,7 +287,7 @@ options: CarouselOptions(
             child: FittedBox(
               alignment: AlignmentDirectional.centerStart,
               child: Row(
-                children: _bloc!.cateogyTitle.map((e) => Text(allTranslations.isEnglish ?"${e.englishDescription}  |  ":"${e.arabicDescription}  |  ",style: TextStyle(fontSize: 13),)).toList(),
+                children: _bloc.cateogyTitle.map((e) => Text(allTranslations.isEnglish ?"${e.englishDescription}  |  ":"${e.arabicDescription}  |  ",style: TextStyle(fontSize: 13),)).toList(),
               ),
             ),
           ),
@@ -302,7 +302,7 @@ options: CarouselOptions(
                   child: new InkWell(
                     onTap: (){
                       if(category[index].hasSub!){
-                        _bloc!.addCateogryToStack(category[index]);
+                        _bloc.addCateogryToStack(category[index]);
                       }else{
                       Navigator.push(
                         context,

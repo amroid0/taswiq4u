@@ -90,7 +90,7 @@ class ProfileBloc  extends Bloc with RegisterValidators{
       userInfo.email=currentInfo.email;
       userInfo.countryId=userInfo.countryId;
     Stream.fromFuture(_client.updateUserData(userInfo))
-        .flatMap((response) => Stream.fromFuture(_client.getUserData()) .doOnData((event) {preferences.saveUserData(event!);}))
+        .flatMap((response) => Stream.fromFuture(_client.getUserData()) .doOnData((event) {preferences.saveUserData(event);}))
 
         .doOnListen(() {        _updatecontroller.sink.add(ApiResponse.loading('loading'));
     }).listen((event) {

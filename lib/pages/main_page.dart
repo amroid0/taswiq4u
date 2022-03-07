@@ -572,18 +572,18 @@ class _MainScreenState extends State<MainScreen> {
                 body:WillPopScope(
                   onWillPop: () async {
                     if(bloc.currentScreen==NavigationScreen.HOME){
-                      if(_cateogyBloc!.isStackIsEmpty()){
+                      if(_cateogyBloc.isStackIsEmpty()){
                         // ignore: missing_return
                         SystemNavigator.pop();
                       }else {
                         // ignore: missing_return
-                        _cateogyBloc!.removeCateogryFromStack();
+                        _cateogyBloc.removeCateogryFromStack();
                       }
-                      return true;
+                      return false;
                     }
                     else
 
-                    return false;
+                    return true;
                   },
                   child: StreamBuilder<NavigationScreen>(
                     initialData: NavigationScreen.HOME,

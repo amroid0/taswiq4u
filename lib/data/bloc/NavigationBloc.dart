@@ -4,8 +4,10 @@ import 'package:rxdart/rxdart.dart';
 class NaviagtionBloc extends Bloc{
   final _contoller = BehaviorSubject<NavigationScreen>();
   Stream<NavigationScreen> get stream => _contoller.stream;
-  NavigationScreen get currentScreen=>_contoller.value??NavigationScreen.HOME;
-
+  NavigationScreen get currentScreen=>_contoller.value;
+  NaviagtionBloc(){
+    _contoller.add(NavigationScreen.HOME);
+  }
 
   void navigateToScreen(NavigationScreen screenEnum){
     _contoller.sink.add(screenEnum);

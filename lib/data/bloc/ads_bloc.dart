@@ -30,11 +30,11 @@ class AdsBloc implements Bloc {
 
     }
     try {
-      String countryId=await (preferences.getCountryID() as FutureOr<String>);
+      String? countryId=await preferences.getCountryID();
 //      AdsParams params=AdsParams( CategoryId:int.parse(catId),CityId: 1,CountryId: int.tryParse(countryId) );
       FilterParamsEntity entity=new FilterParamsEntity();
       entity.stateId=paramsEntity.cityId;
-      entity.countryId=int.tryParse(countryId) ;
+      entity.countryId=int.tryParse(countryId!) ;
       entity.cityId=paramsEntity.cityId;
       entity.isNew=paramsEntity.isNew;
       entity.priceMax=paramsEntity.priceMax;
@@ -86,8 +86,8 @@ class AdsBloc implements Bloc {
   void searchWithKey(String query,int? orderby) async {
     _controller.sink.add(ApiResponse.loading('loading'));
     try {
-      String countryId=await (preferences.getCountryID() as FutureOr<String>);
-      AdsEntity? res = await _client.searchWithKey(query,int.parse(countryId),orderby);
+      String? countryId=await preferences.getCountryID();
+      AdsEntity? res = await _client.searchWithKey(query,int.parse(countryId!),orderby);
       ads=res!;
       _controller.sink.add(ApiResponse.completed(ads));
 

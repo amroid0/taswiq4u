@@ -54,8 +54,8 @@ class OfferBloc extends Bloc{
 void getOfferLsit(String categoryID) async {
   _controller.sink.add(ApiResponse.loading('loading'));
   try {
-    String countryId=await (preferences.getCountryID() as FutureOr<String>);
-     commercialAds = await _client.getOfferList(categoryID,countryId);
+    String? countryId=await preferences.getCountryID();
+     commercialAds = await _client.getOfferList(categoryID,countryId!);
     _controller.sink.add(ApiResponse.completed(commercialAds));
 
   }catch(e) {

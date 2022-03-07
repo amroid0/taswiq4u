@@ -187,18 +187,6 @@ class NetworkCommon {
         }
       }else if(response.statusCode==401 &&response.statusCode==403){
 
-
-
-
-
-
-
-
-
-
-
-
-
       }
 
 

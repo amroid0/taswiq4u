@@ -87,6 +87,7 @@ class ApplicationState extends State<Application> {
                   ///
                   locale: snapshot.data ?? allTranslations.locale,
                   localizationsDelegates: [
+                    GlobalCupertinoLocalizations.delegate,
                     GlobalMaterialLocalizations.delegate,
                     GlobalWidgetsLocalizations.delegate,
                   ],

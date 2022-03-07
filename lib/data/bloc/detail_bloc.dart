@@ -141,7 +141,7 @@ void deleteAds(String adsID)async{
     }}
 
   void translateAds() {
-    bool istranslate=_translateController.value??false;
+    bool istranslate=_translateController.value;
     _translateController.sink.add(!istranslate);
 
   }

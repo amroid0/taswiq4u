@@ -203,6 +203,7 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
             StreamBuilder<ApiResponse<AdsEntity>>(
               stream: BlocProvider.of<AdsBloc>(context).stream,
               builder:(context,snap){
+                if(snap.data!=null)
                 switch(snap.data?.status) {
                   case Status.LOADING:
                     if(page==1)

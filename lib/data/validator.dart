@@ -7,8 +7,8 @@ class Validators {
 
   final validateEmail =
   StreamTransformer<String, String>.fromHandlers(handleData: (email, sink)  async {
-    String countryId = await (preferences.getCountryID() as FutureOr<String>) ;
-    int c = int.parse(countryId) ;
+    String? countryId = await preferences.getCountryID() ;
+    int c = int.parse(countryId!) ;
     if (email.length>10&&c==1 ||email.length>7&&c==2) {
       sink.add(email);
     } else {

@@ -149,7 +149,7 @@ Future<String?> getToken() async {
   }
 Future<String?> getCountryID()async{
   SharedPreferences instance =await _prefs;
- return instance.getString(KEY_COUNTRY_ID);
+ return instance.getString(KEY_COUNTRY_ID)??"1";
 }
 
   void saveLangauge(String lang)async{
