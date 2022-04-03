@@ -20,10 +20,7 @@ class Walkthrougth extends StatelessWidget {
         Text(textContent,style: TextStyle(fontWeight: FontWeight.bold),),
         SizedBox(height: 10,),
         Text(textDetail,style: TextStyle(color:Colors.grey),)
-        
-        
-        
-        
+
         
       ],)),
     );

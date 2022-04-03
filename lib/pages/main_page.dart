@@ -5,24 +5,19 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:olx/data/bloc/NavigationBloc.dart';
-import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/cateogry_bloc.dart';
-import 'package:olx/data/bloc/favroite_bloc.dart';
 import 'package:olx/data/bloc/languge_bloc.dart';
 import 'package:olx/data/bloc/login_bloc.dart';
-import 'package:olx/data/bloc/profile_bloc.dart';
 import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/model/user_info.dart';
 import 'package:olx/pages/add_ads_page.dart';
 import 'package:olx/pages/favroite_page.dart';
 import 'package:olx/pages/general_settings.dart';
-import 'package:olx/pages/login_page.dart';
 import 'package:olx/pages/offer_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/pages/profile_page.dart';
 import 'package:olx/pages/search_ads_page.dart';
-import 'package:olx/pages/settings_page.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/global_locale.dart';
@@ -52,6 +47,7 @@ class _MainScreenState extends State<MainScreen> {
   SharedPreferences sharedPreferences;
   NaviagtionBloc bloc;
   String userName = "";
+  bool isFirst;
 
   int countryId = 1;
 
@@ -164,6 +160,7 @@ class _MainScreenState extends State<MainScreen> {
                 )));
       }
     });
+    setIsFirst();
 
     super.initState();
   }
@@ -774,7 +771,7 @@ class _MainScreenState extends State<MainScreen> {
   Future getUserName() async {
     if (BlocProvider.of<LoginBloc>(context).isLogged()) {
       UserInfo userInfo = await preferences.getUserInfo();
-      userName = userInfo.firstName +" "+ userInfo.secondName;
+      userName = userInfo.firstName + " " + userInfo.secondName;
       //  _controller.sink.add(userName);
       print(userName + "rrrrrr");
     } else {
@@ -802,5 +799,9 @@ class _MainScreenState extends State<MainScreen> {
     } else {
       throw 'Could not launch $link';
     }
+  }
+
+  Future setIsFirst() async {
+    await preferences.saveIsFirstTime(false);
   }
 }
