@@ -25,6 +25,8 @@ class CategoryBloc implements Bloc {
 
   final _imageNumberSubject=BehaviorSubject<int>.seeded(0);
 
+  bool _hasMenu=false;
+
   Stream<List<CateogryEntity>> get stream => _controller.stream;
   List<List<CateogryEntity>> get categoryStack =>_cateogryStack;
   Stream<List<List<CateogryEntity>>> get subCatstream => _subcontroller.stream;
@@ -90,6 +92,9 @@ class CategoryBloc implements Bloc {
 
   void addCateogryToStack(CateogryEntity cateogry)  {
    var res=cateogry.subCategories.where((element) => element.isActive).toList();
+   if(cateogry.hasSub){
+     _hasMenu=cateogry.hasHorizontal;
+   }
     cateogyTitle.add(cateogry);
    _cateogryStack.add(res);
     _controller.sink.add(res);
@@ -113,6 +118,9 @@ class CategoryBloc implements Bloc {
   }
   List<CateogryEntity>getCurrentCategory(){
  return   _cateogryStack.last;
+  }
+  bool hasHorizontlMenu(){
+    return _hasMenu;
   }
   bool isStackIsEmpty(){
     return _cateogryStack.isEmpty;

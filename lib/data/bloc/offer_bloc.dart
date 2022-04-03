@@ -32,7 +32,8 @@ class OfferBloc extends Bloc{
     if(results==null||results.isEmpty)
       results = await _client.getCateogryList();
     var res= results.where((element) => element.isActive).toList();
-
+    var allCat=CateogryEntity(id: 0,isActive: true,arabicDescription: "الكل",englishDescription: "All");
+    res.insert(0, allCat);
     _cateogryController.sink.add(res);
   }
 
