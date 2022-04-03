@@ -534,7 +534,7 @@ void _OnSelectSort(int val){
 
   Widget _buildCategoryList(List<CateogryEntity> category){
     return Visibility(
-      visible: true,
+      visible: BlocProvider.of<CategoryBloc>(context).hasHorizontlMenu(),
       child: Container(
         height: 80,
         child: ListView.builder(

@@ -30,7 +30,7 @@ class CateogryEntity {
 	String name;
 	@JsonKey(name:"HasSub")
 	bool hasSub;
-	@JsonKey(name:"hasHorizontal")
+	@JsonKey(name:"HasHorizontalMenu")
 	bool hasHorizontal;
 
 	bool isSelected=false;
