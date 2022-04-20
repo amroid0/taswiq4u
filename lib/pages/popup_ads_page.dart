@@ -35,12 +35,12 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
           Align(
             child: Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height*0.6,
+              height: MediaQuery.of(context).size.height*0.7,
               child:  FadeInImage.assetNetwork(
                                       fit: BoxFit.fill,
 
                 placeholder: 'images/logo.png',
-                image: APIConstants.getFullImageUrl(result.systemDataFile!=null ?result.systemDataFile.url:"", ImageType.COMMAD)
+                image: APIConstants.getFullImageUrl(result.systemDataFile1!=null ?result.systemDataFile1.url:"", ImageType.COMMAD)
               ),
               margin:EdgeInsets.only(top:70,left:20,right: 20),
 
@@ -88,9 +88,6 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   SizedBox(height: 8,),
-
-                  Text(result.category.name.toString(),style: TextStyle(color: Colors.white),),
-                  SizedBox(height: 16,),
                   Text(result.description,style: TextStyle(color: Colors.white),),
                   SizedBox(height: 16,),
 
@@ -101,7 +98,7 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
                       InkWell(
                           onTap: ()async{
                             var whatsappUrl ="whatsapp://send?phone=${result.phoneNumber}";
-                            await canLaunch(whatsappUrl)? launch(whatsappUrl):ToastUtils.showErrorMessage("رقم الهاتف غير صحيح");;
+                            await canLaunch(whatsappUrl)? launch(whatsappUrl):ToastUtils.showErrorMessage("رقم الهاتف غير صحيح");
 
                           },
 

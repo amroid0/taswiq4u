@@ -34,7 +34,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
 
   var _gridItemCount=1;
   var bloc;
- AdsBloc _bloc= AdsBloc();
+  AdsBloc _bloc= AdsBloc();
 
   @override
   void initState() {
@@ -160,33 +160,33 @@ class _MyAdsPageState extends State<MyAdsPage> {
               stream: _bloc.myAdsstream,
               builder:(context,snap){
                 if(snap.data!=null)
-                switch(snap.data.status) {
-                  case Status.LOADING:
-                    if(page==1)
-                      return new Center(
-                        child: new CircularProgressIndicator(
-                          backgroundColor: Colors.deepOrangeAccent,
-                          strokeWidth: 5.0,
-                        ),
+                  switch(snap.data.status) {
+                    case Status.LOADING:
+                      if(page==1)
+                        return new Center(
+                          child: new CircularProgressIndicator(
+                            backgroundColor: Colors.deepOrangeAccent,
+                            strokeWidth: 5.0,
+                          ),
+                        );
+
+                      break;
+
+                    case Status.COMPLETED:
+                      ads=snap.data.data as List<AdsModel>;
+                      return BlocProvider(bloc:_bloc,child: _buildAdsList(ads));
+                      break;
+                    case Status.ERROR:
+                      return EmptyListWidget(
+
+                          title: 'Error',
+                          subTitle: 'Something Went Wrong',
+                          image: 'images/error.png',
+                          titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
+                          subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
                       );
-
-                    break;
-
-                  case Status.COMPLETED:
-                    ads=snap.data.data as List<AdsModel>;
-                    return BlocProvider(bloc:_bloc,child: _buildAdsList(ads));
-                    break;
-                  case Status.ERROR:
-                    return EmptyListWidget(
-
-                        title: 'Error',
-                        subTitle: 'Something Went Wrong',
-                        image: 'images/error.png',
-                        titleTextStyle: Theme.of(context).typography.dense.display1.copyWith(color: Color(0xff9da9c7)),
-                        subtitleTextStyle: Theme.of(context).typography.dense.body2.copyWith(color: Color(0xffabb8d6))
-                    );
-                    break;
-                }
+                      break;
+                  }
                 return Container();
 
 

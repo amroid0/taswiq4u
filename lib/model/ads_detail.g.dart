@@ -20,6 +20,8 @@ AdsDetail _$AdsDetailFromJson(Map<String, dynamic> json) {
     UserPhone: json['UserPhone'] as String,
     ArabicDescriptionUrl: json['ArabicDescriptionUrl'] as String,
     EnglishDescriptionUrl: json['EnglishDescriptionUrl'] as String,
+    TextShareEn: json['TextShareEn'] as String,
+    TextShareAr: json['TextShareAr'] as String,
     ArabicTitle: json['ArabicTitle'] as String,
     EnglishTitle: json['EnglishTitle'] as String,
     CountryId: json['CountryId'] as int,

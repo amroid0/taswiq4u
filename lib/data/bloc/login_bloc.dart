@@ -9,6 +9,8 @@ import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/app_exception.dart';
 import 'package:olx/model/login_api_response.dart';
 import 'package:olx/model/userCredit.dart';
+import 'package:olx/utils/Constants.dart';
+import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -19,14 +21,17 @@ final _profileClient=ProfileClient();
 
 final _controller = BehaviorSubject<LoginApiResponse<bool>>();
 final _logincontroller = BehaviorSubject<bool>();
-
+final _userName = BehaviorSubject<String>();
 final _emailController = BehaviorSubject<String>();
 final _passwordController = BehaviorSubject<String>();
 
   bool mIsLogged=false;
   bool isfirstPopupAd=true;
+  static String nameLogin ;
 Stream<LoginApiResponse<bool>> get stream => _controller.stream;
 Stream<bool> get Sessionstream => _logincontroller.stream;
+Stream<String> get userNameStream => _userName.stream;
+
 
 Stream<String> get email => _emailController.stream.transform(validateEmpty);
 Stream<String> get password => _passwordController.stream.transform(validateEmpty);
@@ -43,6 +48,7 @@ bool isLogged() => mIsLogged==null?false:mIsLogged;
   void checkAuth() async{
     mIsLogged=await preferences.isLoggedIn();
     _logincontroller.sink.add(mIsLogged);
+
 
   }
 
@@ -75,7 +81,13 @@ bool isLogged() => mIsLogged==null?false:mIsLogged;
       _controller.sink.add(LoginApiResponse.authenticate(""));
       _logincontroller.sink.add(true);
       mIsLogged=true;
+
+       //_userName.sink.add(_userName.toString());
+
+
+
        _controller.sink.add(null);
+       //getusernameee();
 
     },onError: (e){
       if(e is UnVerfiedException){
@@ -110,6 +122,8 @@ _logincontroller.close();*/
     mIsLogged=false;
     _logincontroller.sink.add(false);
     _controller.sink.add(null);
+    nameLogin = null ;
     preferences.logout();
   }
+
 }

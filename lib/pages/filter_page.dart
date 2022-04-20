@@ -184,6 +184,10 @@ class FilterPage extends StatefulWidget {
                                      labelText: '${allTranslations.text('min')}',
 
                                    ),
+                                   inputFormatters:<TextInputFormatter> [
+                                     FilteringTextInputFormatter.digitsOnly
+
+                                   ],
                                  ),
                                  TextField(
                                    controller: _toController,
@@ -191,6 +195,10 @@ class FilterPage extends StatefulWidget {
                                    decoration: InputDecoration(
                                      labelText: '${allTranslations.text('max')}',
                                    ),
+                                   inputFormatters:<TextInputFormatter> [
+                                     FilteringTextInputFormatter.digitsOnly
+
+                                   ],
                                  ),
                                ],
                              ),

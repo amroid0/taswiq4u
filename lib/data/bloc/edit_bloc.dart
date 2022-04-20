@@ -42,7 +42,7 @@ class EditBloc implements Bloc{
       obj.contactMe = 1;
       obj.isNew = true;
       obj.isFree = false;
-      obj.userId = "";
+    //  obj.userId = "";
       obj.arabicDescription = obj.englishDescription;
 
       final results = await _client.editAds(obj);

@@ -14,6 +14,7 @@ class addPostClient{
     );
     if(results.statusCode==200){
       final suggestions = results.data;
+      print("ss"+results.data.toString());
       var list= suggestions
           .map<FieldProprtiresEntity>((json) => FieldProprtiresEntity.fromJson(json))
           .toList(growable: false);

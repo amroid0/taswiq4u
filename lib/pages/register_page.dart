@@ -90,7 +90,10 @@ class _RegisterPageState extends State<RegisterPage> {
           // TODO: Handle this case.
           WidgetsBinding.instance.addPostFrameCallback((_) =>  Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => VerificationScreen())
+              MaterialPageRoute(builder: (context) => VerificationScreen(
+                countryId: 1,
+                phone: phoneContorller.text
+              ))
           ));
 
           break;
@@ -364,14 +367,20 @@ class _RegisterPageState extends State<RegisterPage> {
                 borderRadius: new BorderRadius.circular(10.0),
               ),
               child:  Stack(children:<Widget>[
-                Align( child: new Text(allTranslations.text('register'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
-                  ,alignment: Alignment.centerRight,),
+                Align(
+                  alignment:Alignment.centerLeft,
+                  child: Row(
+                    children: [
 
-                Align( child:                 Icon(
-                  allTranslations.isEnglish?Icons.arrow_back:Icons.arrow_forward,
-                  color: Colors.white,
-                )    ,alignment: Alignment.centerLeft,),
-
+                      Icon(
+                        allTranslations.isEnglish?
+                        Icons.arrow_back: Icons.arrow_forward,
+                        color: Colors.white,
+                      ),
+                      new Text(allTranslations.text('register'), style: new TextStyle(fontSize: 18.0, color: Colors.white),),
+                    ],
+                  ),
+                ),
 
               ]
 

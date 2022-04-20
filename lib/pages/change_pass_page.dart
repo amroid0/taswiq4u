@@ -247,11 +247,20 @@ class _ChnagePassScreenState extends State<ChnagePassScreen> {
               borderRadius: new BorderRadius.circular(8.0),
             ),
             child:  Stack(children:<Widget>[
-              Align( child: new Text(allTranslations.text('save_change'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
-                ,alignment: Alignment.center,),
+              Align(
+                alignment:Alignment.centerLeft,
+                child: Row(
+                  children: [
 
-
-
+                    Icon(
+                      allTranslations.isEnglish?
+                      Icons.arrow_back: Icons.arrow_forward,
+                      color: Colors.white,
+                    ),
+                    new Text(allTranslations.text('save_change'), style: new TextStyle(fontSize: 18.0, color: Colors.white),),
+                  ],
+                ),
+              )
             ]
 
             ),

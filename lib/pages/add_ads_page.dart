@@ -7,6 +7,7 @@ import 'package:olx/data/bloc/add_post_bloc.dart';
 import 'package:olx/data/bloc/upload_image_bloc.dart';
 import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/generated/i18n.dart';
+import 'package:olx/model/Cities.dart';
 import 'package:olx/model/FieldproprtieyReposne.dart';
 import 'package:olx/model/StateEnum.dart';
 import 'package:olx/model/ads_post_entity.dart';
@@ -24,6 +25,7 @@ import 'package:olx/utils/ToastUtils.dart';
 import 'package:olx/utils/dailogs.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/loading_dialog.dart';
+import 'package:olx/widget/CitiesDialog.dart';
 import 'package:olx/widget/check_box_withlabel.dart';
 import 'package:olx/widget/city_list_dialog.dart';
 import 'package:olx/widget/map_widget.dart';
@@ -44,6 +46,7 @@ class AddAdvertisment extends StatefulWidget {
 
 class _AddAdvertismentState extends State<AddAdvertisment> {
   AddPostBloc bloc=null;
+
   List<int> _selectedFieldValue=[];
   List<Color> _colorFieldValue=[];
   AdsPostEntity adsPostEntity=AdsPostEntity();
@@ -51,6 +54,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   bool isNeogtiable=false;
   String countryId ;
   int cId ;
+  String userId ="" ;
   List<String> adsStateList=["جديد","مستعمل"];
   String selectedAdsStates="جديد";
    final TextEditingController _cattextController = TextEditingController();
@@ -59,6 +63,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   final TextEditingController _nametextController = TextEditingController();
   final TextEditingController _pricetextController = TextEditingController();
   final TextEditingController _desctextController = TextEditingController();
+  final TextEditingController _citiestextController = TextEditingController();
   Color adNameColor,descColor,priceColor,categoryColor,cityColor,phoneColor=Colors.grey;
   GoogleMapController _mapController;
   final Set<Marker> _markers = {};
@@ -66,6 +71,8 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   CateogryEntity _selectedcataogry;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   UploadImageBloc uploadBloc;
+  int cityID =0;
+  bool isVisiable = false ;
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
 
@@ -88,6 +95,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
    uploadBloc =UploadImageBloc();
     getCountryId();
     getUserNumber();
+    getUserID();
     bloc.addStream.listen((data) {
       // Redirect to another view, given your conditi on
       switch (data.status) {
@@ -161,6 +169,12 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
         cityColor=isvalid?AppColors.validValueColor:AppColors.errorValueColor;
       });
     });
+    _citiestextController.addListener((){
+      bool isvalid=_emptyValidate(_citiestextController.value.text)==null;
+      setState(() {
+        cityColor=isvalid?AppColors.validValueColor:AppColors.errorValueColor;
+      });
+    });
 
 
     _pricetextController.addListener((){
@@ -203,6 +217,32 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
         _citytextController.text=allTranslations.isEnglish?selected.englishDescription.toString():selected.arabicDescription;
         adsPostEntity.stateId=selected.id;
         adsPostEntity.cityId=selected.id;
+        _citiestextController.clear();
+        cityID = selected.id ;
+
+        setState(() {
+          isVisiable = true ;
+        });
+
+
+
+
+
+      },);
+  }
+  _showCiiesDialog(int cityId) async{
+    await  CitiesListDialog.showModal<Cities>(
+      context,
+      id: cityId,
+      label: allTranslations.text('zone'),
+      selectedValue: Cities(),
+      items: List(),
+      onChange: (Cities selected) {
+        _citiestextController.text=allTranslations.isEnglish?selected.englishName.toString():selected.arabicName;
+        adsPostEntity.stateId=selected.cityId;
+       // adsPostEntity.cityId=selected.id;
+
+
 
 
       },);
@@ -296,6 +336,16 @@ body: Padding(
                   _showCityDialog();
                 }),
             SizedBox(height: 8,),
+            Visibility(
+              visible:isVisiable,
+              child: _BuildCityRoundedTextField(labelText: allTranslations.text('zone'),
+                  hintText: allTranslations.text('zone'),
+                  controller: _citiestextController,
+                  iswithArrowIcon: true,onClickAction: (){
+                    _showCiiesDialog(cityID);
+                  }),
+            ),
+            SizedBox(height: 8,),
 
             TextFormField(
               validator: _descAdsValidate,
@@ -386,7 +436,7 @@ body: Padding(
 
                               filled: true,
                               fillColor: Colors.white,
-                              labelText: item.ArabicName,
+                              labelText: allTranslations.isEnglish?item.EnglishName:item.ArabicName,
                               errorText: state.hasError?state.errorText:null,
 
                               prefixIcon: Icon(Icons.check_circle,color: _colorFieldValue[index],),
@@ -504,6 +554,7 @@ body: Padding(
 
                           autovalidate: item.Required,
                           validator: item.Required?_emptyValidate:null,
+
                           onSaved: (val){
 
                             var vv=Advertisment_SpecificationBean();
@@ -515,7 +566,6 @@ body: Padding(
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.white,
-
                             labelText: allTranslations.isEnglish?item.EnglishName:item.ArabicName,
                             hintText:allTranslations.isEnglish?item.EnglishName:item.ArabicName,
                             prefixIcon: item.Required?Icon(Icons.check_circle,color: _colorFieldValue[index],):null,
@@ -642,7 +692,7 @@ body: Padding(
                   onChanged: (newValue) {
                     setState(() {
                       isNeogtiable=newValue;
-                      adsPostEntity.isNogitable=newValue;
+                      adsPostEntity.isNogitable=isNeogtiable;
                     });
                   },
                 ),
@@ -682,6 +732,7 @@ body: Padding(
                     }
                     adsPostEntity.locationLatitude=0 /*_markers.elementAt(0).position.latitude as int*/;
                     adsPostEntity.locationLongtude=0 /*_markers.elementAt(0).position.longitude as int*/;
+                    adsPostEntity.userId = userId ;
                     bloc.postAds(adsPostEntity);
 
 
@@ -716,8 +767,7 @@ body: Padding(
   Widget _BuildRoundedTextField({ String labelText,TextEditingController controller=null,String hintText,iswithArrowIcon=false,
       Function onClickAction}){
    return TextFormField(
-     validator: _emptyValidate,
-       autovalidate: categoryColor==AppColors.validValueColor||categoryColor==AppColors.errorValueColor,
+     validator: _emptyValidate, autovalidate: categoryColor==AppColors.validValueColor||categoryColor==AppColors.errorValueColor,
      controller: controller,
      onTap: (){
          onClickAction();
@@ -741,11 +791,11 @@ body: Padding(
   }
 
   Widget _BuildCityRoundedTextField({ String labelText,TextEditingController controller=null,String hintText,iswithArrowIcon=false,
-    Function onClickAction}){
+    Function onClickAction,bool visible}){
     return TextFormField(
-      readOnly: true,
         enableInteractiveSelection: true,
 
+        readOnly: true,
         validator: _emptyValidate,
         autovalidate: cityColor==AppColors.validValueColor||cityColor==AppColors.errorValueColor,
         controller: controller,
@@ -797,7 +847,7 @@ body: Padding(
      if(value.isEmpty){
        return allTranslations.text('empty_field');
      }
-     else if(value.length<3){
+     else if(value.length<5 ||value.length>60){
        return allTranslations.text('err_short');
      }else{
        return null;
@@ -807,7 +857,7 @@ body: Padding(
     if(value.isEmpty){
       return allTranslations.text('empty_field');
     }
-    else if(value.length<30){
+    else if(value.length<10){
       return allTranslations.text('err_short');
     }else{
       return null;
@@ -875,17 +925,22 @@ body: Padding(
     RegExp regExp=RegExp(patttern);
     if(value.isEmpty){
       return allTranslations.text('empty_field');
-    }
-
-    else if(cId==1 &&value.length<=10 || cId==2 && value.length<=8 ){
-      return allTranslations.text('err_phone');
+    } else if(cId==2 && value.length<8 ){
+      return allTranslations.text('err_numk');
+    }else if(cId==1&& value.length<11){
+      return allTranslations.text('err_email');;
     }else{
-      return null;
+      return null ;
     }
   }
    Future getUserNumber ()async{
      UserInfo userInfo = await preferences.getUserInfo();
      _phonetextController.text = userInfo.phone;
+
+  }
+  Future getUserID ()async{
+    UserInfo userInfo = await preferences.getUserInfo();
+   userId = userInfo.id;
 
   }
   void getCountryId() async{

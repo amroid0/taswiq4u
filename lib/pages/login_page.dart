@@ -37,6 +37,13 @@ class _LoginPageState extends State<LoginPage> {
   final FocusNode _passwordFocus = FocusNode();
   final emailContoller=TextEditingController();
   final passwordContoller=TextEditingController();
+ // static String nameLogin ;
+
+  void getusernameee() async{
+    print("streamEnterrr");
+    LoginBloc.nameLogin = await APIConstants.getUserNameLogin();
+    print("stream"+LoginBloc.nameLogin);
+  }
   @override
   void initState() {
 
@@ -57,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
              widget.home==1 ? Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                  MainScreen()), (Route<dynamic> route) => false)
              :  Navigator.pop(context);
+             getusernameee();
 
         break;
 
@@ -208,21 +216,29 @@ class _LoginPageState extends State<LoginPage> {
           borderRadius: new BorderRadius.circular(10.0),
         ),
         child:  Stack(children:<Widget>[
-          Align( child: new Text(allTranslations.text('login'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
-            ,alignment: Alignment.centerRight,),
+          Align(
+            alignment:Alignment.centerLeft,
+            child: Row(
+              children: [
 
-          Align( child: Icon(
-            allTranslations.isEnglish?
-            Icons.arrow_back: Icons.arrow_forward,
-            color: Colors.white,
-          )    ,alignment: Alignment.centerLeft,),
+                Icon(
+                  allTranslations.isEnglish?
+                  Icons.arrow_back: Icons.arrow_forward,
+                  color: Colors.white,
+                ),
+                new Text(allTranslations.text('login'), style: new TextStyle(fontSize: 18.0, color: Colors.white),),
+              ],
+            ),
+          )
+
 
 
         ]
 
         ),
       )
-      );});
+      );
+        });
 
 
 

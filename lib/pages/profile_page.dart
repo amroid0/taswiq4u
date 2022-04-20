@@ -149,7 +149,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   borderRadius: new BorderRadius.circular(10.0),
                 ),
                 child:  Stack(children:<Widget>[
-                  Align( child: new Text(allTranslations.text('settings'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
+                  Align( child: new Text(allTranslations.text('setting'), style: new TextStyle(fontSize: 18.0, color: Colors.white),)
                     ,alignment: Alignment.center,),
 
 

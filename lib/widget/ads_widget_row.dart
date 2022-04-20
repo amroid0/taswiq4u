@@ -146,13 +146,12 @@ class AdsRowWidget extends StatelessWidget {
                               color: Colors.white,
                               child: FavroiteWidgetCard(
                                   onFavChange:(val){
-
                                     if(BlocProvider.of<LoginBloc>(context).isLogged())
                                       BlocProvider.of<FavroiteBloc>(context).changeFavoriteState(val,model.Id);
                                     else
                                       Navigator.push(
                                           context, MaterialPageRoute(builder: (context) => ParentAuthPage()));                          },
-                                  value:                   (BlocProvider.of<LoginBloc>(context).isLogged())?model.IsFavorite:false
+                                  value: (BlocProvider.of<LoginBloc>(context).isLogged())?model.IsFavorite:false
                               )
 
                           ),
