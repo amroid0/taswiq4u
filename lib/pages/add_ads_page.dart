@@ -53,6 +53,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   final _formKey = GlobalKey<FormState>();
   bool isNeogtiable=false;
   String countryId ;
+  int userCountryId ;
   int cId ;
   String userId ="" ;
   List<String> adsStateList=["جديد","مستعمل"];
@@ -361,6 +362,7 @@ body: Padding(
                 ),
               onSaved: (val){
                 adsPostEntity.englishDescription=val;
+                adsPostEntity.arabicDescription=val;
               },
             ),
 
@@ -692,7 +694,6 @@ body: Padding(
                   onChanged: (newValue) {
                     setState(() {
                       isNeogtiable=newValue;
-                      adsPostEntity.isNogitable=isNeogtiable;
                     });
                   },
                 ),
@@ -704,7 +705,7 @@ body: Padding(
               ,child: RaisedButton(
                 color:  Colors.green,
                 onPressed: (){
-                  if (_formKey.currentState.validate()) {
+                  if (_formKey.currentState.validate()&&userCountryId==cId) {
                     _formKey.currentState.save();
                     int count=0;
                     var images=<PhotosBean>[];
@@ -733,6 +734,7 @@ body: Padding(
                     adsPostEntity.locationLatitude=0 /*_markers.elementAt(0).position.latitude as int*/;
                     adsPostEntity.locationLongtude=0 /*_markers.elementAt(0).position.longitude as int*/;
                     adsPostEntity.userId = userId ;
+                    adsPostEntity.isNogitable=isNeogtiable;
                     bloc.postAds(adsPostEntity);
 
 
@@ -847,10 +849,13 @@ body: Padding(
      if(value.isEmpty){
        return allTranslations.text('empty_field');
      }
-     else if(value.length<5 ||value.length>60){
-       return allTranslations.text('err_short');
+     else if(value.length<5){
+       return allTranslations.text('err_short-title');
+     }else if(value.length>60){
+
+       return allTranslations.text('err_long-title');
      }else{
-       return null;
+       return null ;
      }
   }
   String _descAdsValidate(String value){
@@ -858,7 +863,7 @@ body: Padding(
       return allTranslations.text('empty_field');
     }
     else if(value.length<10){
-      return allTranslations.text('err_short');
+      return allTranslations.text('err_short-desc');
     }else{
       return null;
     }
@@ -925,9 +930,9 @@ body: Padding(
     RegExp regExp=RegExp(patttern);
     if(value.isEmpty){
       return allTranslations.text('empty_field');
-    } else if(cId==2 && value.length<8 ){
+    } else if(cId==2 && value.length!=8 ){
       return allTranslations.text('err_numk');
-    }else if(cId==1&& value.length<11){
+    }else if(cId==1&& value.length!=11){
       return allTranslations.text('err_email');;
     }else{
       return null ;
@@ -941,6 +946,7 @@ body: Padding(
   Future getUserID ()async{
     UserInfo userInfo = await preferences.getUserInfo();
    userId = userInfo.id;
+    userCountryId =userInfo.countryId;
 
   }
   void getCountryId() async{

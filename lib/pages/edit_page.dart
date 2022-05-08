@@ -129,6 +129,9 @@ class _EditPageState extends State<EditPage> {
               fontSize: 16.0);
           break;
       }
+      setState(() {
+
+      });
     });
 
     _cattextController.addListener(() {
@@ -352,6 +355,9 @@ class _EditPageState extends State<EditPage> {
                     );
                   else if (!snapshot.hasData) return SizedBox.shrink();
                   var fields = snapshot.data.CategorySpecification;
+                  // setState(() {
+                  //
+                  // });
                   if (_selectedFieldValue.isEmpty)
                     _selectedFieldValue =
                         List(snapshot.data.CategorySpecification.length);
@@ -368,6 +374,7 @@ class _EditPageState extends State<EditPage> {
                     adsPostEntity.advertismentSpecification =
                         List(snapshot.data.CategorySpecification.length);
                   }
+
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
@@ -405,6 +412,7 @@ class _EditPageState extends State<EditPage> {
                             }
                             break;
                           }
+
                         }
 
                       //if(item.CustomValue==null)
@@ -416,15 +424,20 @@ class _EditPageState extends State<EditPage> {
                               autovalidate: item.Required,
                               validator: item.Required ? _emptyValidate : null,
                               onSaved: (val) {
-                                var vv = Advertisment_SpecificationBean();
-                                vv.id = item.Id;
+                                setState(() {
+                                  var vv = Advertisment_SpecificationBean();
+                                  vv.id = item.Id;
 
-                                int itemval = val == null
-                                    ? _selectedFieldValue[index]
-                                    : int.tryParse(val) ?? 0;
-                                vv.advertismentSpecificatioOptions = [itemval];
-                                adsPostEntity.advertismentSpecification[index] =
-                                    vv;
+                                  int itemval = val == null
+                                      ? _selectedFieldValue[index]
+                                      : int.tryParse(val) ?? 0;
+                                  vv.advertismentSpecificatioOptions = [itemval];
+                                  adsPostEntity.advertismentSpecification[index] =
+                                      vv;
+
+                                });
+
+
                               },
                               builder: (FormFieldState<String> state) {
                                 return InputDecorator(
@@ -502,12 +515,15 @@ class _EditPageState extends State<EditPage> {
                               autovalidate: item.Required,
                               validator: item.Required ? _emptyValidate : null,
                               onSaved: (val) {
-                                var vv = Advertisment_SpecificationBean();
-                                vv.id = item.Id;
-                                //int itemval=item.Value as int ?? 0;
-                                vv.customValue = val;
-                                adsPostEntity.advertismentSpecification[index] =
-                                    vv;
+                                setState(() {
+                                  var vv = Advertisment_SpecificationBean();
+                                  vv.id = item.Id;
+                                  //int itemval=item.Value as int ?? 0;
+                                  vv.customValue = val;
+                                  adsPostEntity.advertismentSpecification[index] =
+                                      vv;
+                                });
+
                               },
                               decoration: InputDecoration(
                                 filled: true,
@@ -538,13 +554,16 @@ class _EditPageState extends State<EditPage> {
                               autovalidate: true,
                               validator: _emptyValidate,
                               onSaved: (val) {
-                                var vv = Advertisment_SpecificationBean();
-                                vv.id = item.Id;
-                                //int itemval=item.Value as int ?? 0;
-                                //vv.AdvertismentSpecificatioOptions=[val];
-                                vv.customValue = val;
-                                adsPostEntity.advertismentSpecification[index] =
-                                    vv;
+                                setState(() {
+                                  var vv = Advertisment_SpecificationBean();
+                                  vv.id = item.Id;
+                                  //int itemval=item.Value as int ?? 0;
+                                  //vv.AdvertismentSpecificatioOptions=[val];
+                                  vv.customValue = val;
+                                  adsPostEntity.advertismentSpecification[index] =
+                                      vv;
+                                });
+
                               },
                               decoration: InputDecoration(
                                 filled: true,
@@ -774,23 +793,28 @@ class _EditPageState extends State<EditPage> {
     });
   }
 
-  String _descAdsValidate(String value) {
-    if (value.isEmpty) {
+  String _descAdsValidate(String value){
+    if(value.isEmpty){
       return allTranslations.text('empty_field');
-    } else if (value.length < 30) {
-      return allTranslations.text('err_short');
-    } else {
+    }
+    else if(value.length<10){
+      return allTranslations.text('err_short-desc');
+    }else{
       return null;
     }
   }
 
-  String _titleAdsValidate(String value) {
-    if (value.isEmpty) {
+  String _titleAdsValidate(String value){
+    if(value.isEmpty){
       return allTranslations.text('empty_field');
-    } else if (value.length < 3) {
-      return allTranslations.text('err_short');
-    } else {
-      return null;
+    }
+    else if(value.length<5){
+      return allTranslations.text('err_short-title');
+    }else if(value.length>60){
+
+      return allTranslations.text('err_long-title');
+    }else{
+      return null ;
     }
   }
 
