@@ -68,6 +68,8 @@ Map<String, dynamic> _$AdsDetailToJson(AdsDetail instance) => <String, dynamic>{
       'UserPhone': instance.UserPhone,
       'ArabicDescriptionUrl': instance.ArabicDescriptionUrl,
       'EnglishDescriptionUrl': instance.EnglishDescriptionUrl,
+      'TextShareEn': instance.TextShareEn,
+      'TextShareAr': instance.TextShareAr,
       'ArabicTitle': instance.ArabicTitle,
       'EnglishTitle': instance.EnglishTitle,
       'CountryId': instance.CountryId,

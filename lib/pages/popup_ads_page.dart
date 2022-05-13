@@ -174,7 +174,7 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
 
   Widget _buildLikeWidget(PopupAdsEntityList item) {
     return StreamBuilder<Counter>(
-      initialData: Counter(item.likes, true),
+      initialData: Counter(item.likes, item.isLiked),
       stream: bloc.Likestream,
       builder: (context, snapshot) {
         Counter likeCounter = Counter(0, true);

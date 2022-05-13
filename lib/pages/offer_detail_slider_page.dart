@@ -222,7 +222,7 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
   Widget _buildLikeWidget(int pos,PopupAdsEntityList item){
 
     return   StreamBuilder<Counter>(
-      initialData:Counter(item.likes,true) ,
+      initialData:Counter(item.likes,item.isLiked) ,
       stream: BlocProvider.of<OfferBloc>(context).Likestream,
       builder: (context,snapshot){
         Counter likeCounter=Counter(0,true);

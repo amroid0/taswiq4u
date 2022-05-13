@@ -73,6 +73,7 @@ void getOfferLsit(String categoryID) async {
         if(results) {
           await preferences.saveLikedCommericalList(commercialAds[index].id.toString());
           commercialAds[index].likes = commercialAds[index].likes + 1;
+          commercialAds[index].isLiked=true;
           _likeController.sink.add(Counter(commercialAds[index].likes, false));
         }else{
           _likeController.sink.add(Counter(commercialAds[index].likes,true));
@@ -90,6 +91,7 @@ void getOfferLsit(String categoryID) async {
         if(results) {
           await preferences.saveLikedCommericalList(item.id.toString());
           item.likes = item.likes + 1;
+          item.isLiked=true;
           _likeController.sink.add(Counter(item.likes, false));
         }else{
           _likeController.sink.add(Counter(item.likes,true));
