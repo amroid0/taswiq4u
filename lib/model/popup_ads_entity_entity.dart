@@ -33,6 +33,8 @@ class PopupAdsEntityList  {
 	String instagramLink;
 	@JsonKey(name: "PhoneNumber")
 	String phoneNumber;
+	@JsonKey(name: "isLiked")
+	bool isLiked;
 
 	@JsonKey(name: "Category")
 	PopupAdsEntityListCategory category;
@@ -45,7 +47,7 @@ class PopupAdsEntityList  {
 			this.description, this.link, this.creationDate, this.endDate, this.active,
 			this.notification, this.countryId, this.viewsCount, this.likes,
 			this.categoryId, this.category, this.systemDataFile1,this.instagramLink,this.phoneNumber,
-			this.commercialAdsUsers);
+			this.commercialAdsUsers,this.isLiked);
 	factory PopupAdsEntityList.fromJson(Map<String, dynamic> json) => _$PopupAdsEntityListFromJson(json);
 
 }

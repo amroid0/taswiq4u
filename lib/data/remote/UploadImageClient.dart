@@ -27,6 +27,7 @@ class UploadImageClient{
       var image = UploadedImage();
       image.remoteUrl = results.data["url"];
       image.id = id;
+      image.uplodedID = results.data["id"];
       image.localPath = imagePath;
       image.state = StateEnum.NORMAL;
       return image;

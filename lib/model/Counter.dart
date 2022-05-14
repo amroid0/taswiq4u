@@ -1,7 +1,7 @@
 class Counter{
   int count;
-  bool isEanbled;
+  bool isLiked;
 
-  Counter(this.count, this.isEanbled);
+  Counter(this.count, this.isLiked);
 
 }

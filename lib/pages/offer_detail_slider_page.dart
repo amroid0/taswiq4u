@@ -222,20 +222,20 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
   Widget _buildLikeWidget(int pos,PopupAdsEntityList item){
 
     return   StreamBuilder<Counter>(
-      initialData:Counter(item.likes,true) ,
+      initialData:Counter(item.likes,item.isLiked) ,
       stream: BlocProvider.of<OfferBloc>(context).Likestream,
       builder: (context,snapshot){
-        Counter likeCounter=Counter(0,true);
+        Counter likeCounter=Counter(0,false);
         if(snapshot.hasData)
           likeCounter=snapshot.data;
         return  Column(mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Text(likeCounter.count.toString(),style: TextStyle(color: Colors.white),),
               FlatButton(onPressed:(){
-                if(likeCounter.isEanbled)
+                if(!likeCounter.isLiked)
                 BlocProvider.of<OfferBloc>(context).likePopUpAds(item,true);
 
-              },child: Icon(likeCounter.isEanbled?Icons.favorite_border:Icons.favorite,color: Colors.white,)),
+              },child: Icon(likeCounter.isLiked?Icons.favorite :Icons.favorite_border,color: Colors.white,)),
             ]
         );
       },

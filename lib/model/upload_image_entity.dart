@@ -17,4 +17,5 @@ class AddImage extends ImageListItem{
 }
 abstract class ImageListItem {
   int id;
+  int uplodedID;
 }

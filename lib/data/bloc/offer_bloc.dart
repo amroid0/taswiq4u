@@ -73,14 +73,15 @@ void getOfferLsit(String categoryID) async {
         if(results) {
           await preferences.saveLikedCommericalList(commercialAds[index].id.toString());
           commercialAds[index].likes = commercialAds[index].likes + 1;
-          _likeController.sink.add(Counter(commercialAds[index].likes, false));
+          commercialAds[index].isLiked=true;
+          _likeController.sink.add(Counter(commercialAds[index].likes, commercialAds[index].isLiked));
         }else{
-          _likeController.sink.add(Counter(commercialAds[index].likes,true));
+          _likeController.sink.add(Counter(commercialAds[index].likes,false));
         }}else{
-        _likeController.sink.add(Counter(commercialAds[index].likes,true));
+        _likeController.sink.add(Counter(commercialAds[index].likes,false));
       }
     }catch(e) {
-      _likeController.sink.add(Counter(commercialAds[index].likes,true));
+      _likeController.sink.add(Counter(commercialAds[index].likes,false));
     }}
   void likePopUpAds(PopupAdsEntityList item,isClicked) async {
     try {
@@ -90,14 +91,15 @@ void getOfferLsit(String categoryID) async {
         if(results) {
           await preferences.saveLikedCommericalList(item.id.toString());
           item.likes = item.likes + 1;
-          _likeController.sink.add(Counter(item.likes, false));
+          item.isLiked=true;
+          _likeController.sink.add(Counter(item.likes, item.isLiked));
         }else{
-          _likeController.sink.add(Counter(item.likes,true));
+          _likeController.sink.add(Counter(item.likes,false));
         }}else{
-        _likeController.sink.add(Counter(item.likes,true));
+        _likeController.sink.add(Counter(item.likes,false));
       }
     }catch(e) {
-      _likeController.sink.add(Counter(item.likes,true));
+      _likeController.sink.add(Counter(item.likes,false));
     }}
 
 

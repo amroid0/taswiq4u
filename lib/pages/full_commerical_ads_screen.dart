@@ -106,16 +106,17 @@ class _FullComerialScreenState extends State<FullComerialScreen> {
                                 StreamBuilder<Counter>(
                                   stream: bloc.Likestream,
                                   builder: (context,snapshot){
-                                    Counter likeCounter=Counter(0,true);
+                                    Counter likeCounter=Counter(0,false);
                                      if(snapshot.hasData)
                                      likeCounter=snapshot.data;
                                   return  Column(mainAxisAlignment: MainAxisAlignment.end,
                                         children: <Widget>[
                                           Text(likeCounter.count.toString(),style: TextStyle(color: Colors.white),),
                                           FlatButton(onPressed:(){
-                                            bloc.likeAds(true);
-
-                                          },child: Icon(likeCounter.isEanbled?Icons.favorite_border:Icons.favorite,color: Colors.white,)),
+                                            if(!likeCounter.isLiked) {
+                                              bloc.likeAds(true);
+                                            }
+                                          },child: Icon(likeCounter.isLiked?Icons.favorite:Icons.favorite_border,color: Colors.white,)),
                                         ]
                                     );
                                   },

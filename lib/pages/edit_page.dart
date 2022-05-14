@@ -678,7 +678,7 @@ class _EditPageState extends State<EditPage> {
                           if (image.remoteUrl != null &&
                               image.remoteUrl.isNotEmpty) {
                             PhotosBean photo = new PhotosBean(
-                                image.remoteUrl.toString(), count);
+                                image.remoteUrl.toString(), image.uplodedID);
                             images.add(photo);
                             count++;
                           }

@@ -715,7 +715,7 @@ body: Padding(
 
                       if(image is UploadedImage&& image.state != StateEnum.LOADING){
                         if(image.remoteUrl!=null&& image.remoteUrl.isNotEmpty){
-                        PhotosBean photo=new PhotosBean(image.remoteUrl.toString(),count);
+                        PhotosBean photo=new PhotosBean(image.remoteUrl.toString(),image.uplodedID);
                         images.add(photo);
                         count++;
                         }

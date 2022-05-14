@@ -174,10 +174,10 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
 
   Widget _buildLikeWidget(PopupAdsEntityList item) {
     return StreamBuilder<Counter>(
-      initialData: Counter(item.likes, true),
+      initialData: Counter(item.likes, item.isLiked),
       stream: bloc.Likestream,
       builder: (context, snapshot) {
-        Counter likeCounter = Counter(0, true);
+        Counter likeCounter = Counter(0, false);
         if (snapshot.hasData)
           likeCounter = snapshot.data;
         return Column(mainAxisAlignment: MainAxisAlignment.end,
@@ -185,12 +185,12 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
               Text(likeCounter.count.toString(),
                 style: TextStyle(color: Colors.white),),
               FlatButton(onPressed: () {
-               if( likeCounter.isEanbled)
+               if( !likeCounter.isLiked)
                 bloc.likePopUpAds(result,true);
               },
                   child: Icon(
-                    likeCounter.isEanbled ? Icons.favorite_border : Icons
-                        .favorite, color: Colors.white,)),
+                    likeCounter.isLiked ?Icons
+                        .favorite  :Icons.favorite_border , color: Colors.white,)),
             ]
         );
       },
