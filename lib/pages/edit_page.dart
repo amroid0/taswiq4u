@@ -7,10 +7,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/edit_bloc.dart';
 import 'package:olx/data/bloc/upload_image_bloc.dart';
-import 'package:olx/model/FieldproprtieyReposne.dart';
 import 'package:olx/model/StateEnum.dart';
 import 'package:olx/model/ads_detail.dart';
-import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/ads_post_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/cateogry_entity.dart';
@@ -21,7 +19,6 @@ import 'package:olx/model/upload_image_entity.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/loading_dialog.dart';
-import 'package:olx/widget/base64_image.dart';
 import 'package:olx/widget/check_box_withlabel.dart';
 import 'package:olx/widget/city_list_dialog.dart';
 import 'package:olx/widget/map_widget.dart';
@@ -129,9 +126,7 @@ class _EditPageState extends State<EditPage> {
               fontSize: 16.0);
           break;
       }
-      setState(() {
-
-      });
+      setState(() {});
     });
 
     _cattextController.addListener(() {
@@ -412,7 +407,6 @@ class _EditPageState extends State<EditPage> {
                             }
                             break;
                           }
-
                         }
 
                       //if(item.CustomValue==null)
@@ -431,13 +425,12 @@ class _EditPageState extends State<EditPage> {
                                   int itemval = val == null
                                       ? _selectedFieldValue[index]
                                       : int.tryParse(val) ?? 0;
-                                  vv.advertismentSpecificatioOptions = [itemval];
-                                  adsPostEntity.advertismentSpecification[index] =
-                                      vv;
-
+                                  vv.advertismentSpecificatioOptions = [
+                                    itemval
+                                  ];
+                                  adsPostEntity
+                                      .advertismentSpecification[index] = vv;
                                 });
-
-
                               },
                               builder: (FormFieldState<String> state) {
                                 return InputDecorator(
@@ -520,10 +513,9 @@ class _EditPageState extends State<EditPage> {
                                   vv.id = item.Id;
                                   //int itemval=item.Value as int ?? 0;
                                   vv.customValue = val;
-                                  adsPostEntity.advertismentSpecification[index] =
-                                      vv;
+                                  adsPostEntity
+                                      .advertismentSpecification[index] = vv;
                                 });
-
                               },
                               decoration: InputDecoration(
                                 filled: true,
@@ -560,10 +552,9 @@ class _EditPageState extends State<EditPage> {
                                   //int itemval=item.Value as int ?? 0;
                                   //vv.AdvertismentSpecificatioOptions=[val];
                                   vv.customValue = val;
-                                  adsPostEntity.advertismentSpecification[index] =
-                                      vv;
+                                  adsPostEntity
+                                      .advertismentSpecification[index] = vv;
                                 });
-
                               },
                               decoration: InputDecoration(
                                 filled: true,
@@ -793,37 +784,40 @@ class _EditPageState extends State<EditPage> {
     });
   }
 
-  String _descAdsValidate(String value){
-    if(value.isEmpty){
+  String _descAdsValidate(String value) {
+    if (value.isEmpty) {
       return allTranslations.text('empty_field');
-    }
-    else if(value.length<10){
+    } else if (value.length < 10) {
       return allTranslations.text('err_short-desc');
-    }else{
+    } else {
       return null;
     }
   }
 
-  String _titleAdsValidate(String value){
-    if(value.isEmpty){
+  String _titleAdsValidate(String value) {
+    if (value.isEmpty) {
       return allTranslations.text('empty_field');
-    }
-    else if(value.length<5){
+    } else if (value.length < 5) {
       return allTranslations.text('err_short-title');
-    }else if(value.length>60){
-
+    } else if (value.length > 60) {
       return allTranslations.text('err_long-title');
-    }else{
-      return null ;
+    } else {
+      return null;
     }
   }
 
   String _emptyValidate(String value) {
-    if (value == null || value.isEmpty) {
-      return allTranslations.text('empty_field');
-    } else {
-      return null;
-    }
+    Future.delayed(const Duration(milliseconds: 1500), () {
+// Here you can write your code
+      if (value == null || value.isEmpty) {
+        //  print("rr" + value);
+        return allTranslations.text('empty_field');
+        //  return null;
+      } else {
+        return null;
+      }
+      // Here you can write your code for open new view
+    });
   }
 
   String _phoneValidate(String value) {
