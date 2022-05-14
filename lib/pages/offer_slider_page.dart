@@ -200,27 +200,8 @@ class _OfferSliderScreenState extends State<OfferSliderScreen> {
 
   }
 
-  Widget _buildLikeWidget(int pos,PopupAdsEntityList item){
-
-    return   StreamBuilder<Counter>(
-      initialData:Counter(item.likes,true) ,
-      stream: BlocProvider.of<OfferBloc>(context).Likestream,
-      builder: (context,snapshot){
-        Counter likeCounter=Counter(0,true);
-        if(snapshot.hasData)
-          likeCounter=snapshot.data;
-        return  Column(mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Text(likeCounter.count.toString(),style: TextStyle(color: Colors.white),),
-              FlatButton(onPressed:(){
-                BlocProvider.of<OfferBloc>(context).likeAds(pos,true);
-
-              },child: Icon(likeCounter.isEanbled?Icons.favorite_border:Icons.favorite,color: Colors.white,)),
-            ]
-        );
-      },
-    );
 
 
-  }
+
+
 }
