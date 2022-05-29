@@ -73,6 +73,7 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
                  pageController:_pageController,
                  onPageChanged: (i){
                    currentPage=i;
+                   BlocProvider.of<OfferBloc>(context).refresh(list[currentPage].likes, list[currentPage].viewsCount);
                    setState(() {
                    });
                  },

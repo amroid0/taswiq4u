@@ -26,7 +26,10 @@ class OfferBloc extends Bloc{
   Stream<List<CateogryEntity>> get categoryStream => _cateogryController.stream;
 
 
-
+ void refresh(int likeCount ,int viewCount){
+   _likeController.sink.add(Counter(likeCount,true));
+   _viewController.sink.add(Counter(viewCount,true));
+ }
   void getOfferCategory(String query) async {
     List<CateogryEntity> results = null ;//await preferences.getCateogryList();
     if(results==null||results.isEmpty)

@@ -297,7 +297,17 @@ class CarouselDemoState extends State<CategoryListFragment> {
                   margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
                   child: new InkWell(
                     onTap: (){
-                      if(category[index].hasSub){
+                      if(category[index].hasHorizontal){
+                        _bloc.addCateogryToStack(category[index],false);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => BlocProvider(bloc:_bloc,child: BlocProvider(bloc: AdsBloc(),child:SearchAnnounceListScreen(category[index]),)),
+                              settings: RouteSettings(arguments:category[index] )
+
+                          ),
+                        );
+                      }
+                      else if(category[index].hasSub){
                         _bloc.addCateogryToStack(category[index]);
                       }else{
                       Navigator.push(

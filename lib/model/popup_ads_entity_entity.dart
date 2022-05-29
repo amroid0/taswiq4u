@@ -38,7 +38,7 @@ class PopupAdsEntityList  {
 
 	@JsonKey(name: "Category")
 	PopupAdsEntityListCategory category;
-	@JsonKey(name: "SystemDataFile1")
+	@JsonKey(name: "SystemDataFile")
 	PopupAdsEntityListSystemDataFile systemDataFile1;
 	@JsonKey(name: "CommercialAdsUsers")
 	List<dynamic> commercialAdsUsers;

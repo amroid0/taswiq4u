@@ -90,16 +90,22 @@ class CategoryBloc implements Bloc {
 
 
 
-  void addCateogryToStack(CateogryEntity cateogry)  {
-   var res=cateogry.subCategories.where((element) => element.isActive).toList();
-   if(cateogry.hasSub){
+  void addCateogryToStack(CateogryEntity cateogry,[bool isDisplayed = true])  {
+   if(_hasMenu && !isDisplayed){
+     _hasMenu =false;
+      cateogyTitle.removeLast();
+     _cateogryStack.removeLast();
+   }
+    var res=cateogry.subCategories.where((element) => element.isActive).toList();
+   if(cateogry.hasSub&&!isDisplayed){
      _hasMenu=cateogry.hasHorizontal;
    }
     cateogyTitle.add(cateogry);
    _cateogryStack.add(res);
-    _controller.sink.add(res);
-    _subcontroller.sink.add(_cateogryStack);
-
+   if(isDisplayed) {
+     _controller.sink.add(res);
+     _subcontroller.sink.add(_cateogryStack);
+   }
   }
   void addSubCateogry(int level ,List<CateogryEntity> cateogry)  {
   var res=  cateogry.where((element) => element.isActive).toList();
@@ -109,6 +115,11 @@ class CategoryBloc implements Bloc {
 
   }
   void removeCateogryFromStack()  {
+    if(_hasMenu){
+      _hasMenu =false;
+      cateogyTitle.removeLast();
+      _cateogryStack.removeLast();
+    }
     cateogyTitle.removeLast();
     _cateogryStack.removeLast();
     _controller.sink.add(_cateogryStack[_cateogryStack.length-1]);
