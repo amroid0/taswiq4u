@@ -47,9 +47,11 @@ class _MainScreenState extends State<MainScreen> {
   SharedPreferences sharedPreferences;
   NaviagtionBloc bloc;
   String userName = "";
+  int userCountryId;
   bool isFirst;
+  String cId;
 
-  int countryId = 1;
+  int countryId;
 
   StreamController _controller = StreamController();
 
@@ -168,6 +170,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     getUserName();
+    getCountryId();
     List<FABBottomAppBarItem> bottomItems = [
       FABBottomAppBarItem(
           iconData: Icons.person, text: allTranslations.text('account')),
@@ -242,12 +245,36 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 InkWell(
                   onTap: () => {
-                    if (BlocProvider.of<LoginBloc>(context).isLogged())
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AddAdvertisment()),
-                      )
+                    if (BlocProvider.of<LoginBloc>(context).isLogged() &&
+                        countryId == userCountryId)
+                      {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddAdvertisment()),
+                        )
+                      }
+                    else if (BlocProvider.of<LoginBloc>(context).isLogged() &&
+                        countryId != userCountryId)
+                      {
+                        Alert(
+                          context: context,
+                          title: ('warning'),
+                          desc: ('please choose correct county'),
+                          type: AlertType.warning,
+                          buttons: [
+                            DialogButton(
+                              child: Text(
+                                ('ok'),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                              onPressed: () => Navigator.pop(context),
+                              width: 120,
+                            )
+                          ],
+                        ).show(),
+                      }
                     else
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
@@ -772,8 +799,11 @@ class _MainScreenState extends State<MainScreen> {
     if (BlocProvider.of<LoginBloc>(context).isLogged()) {
       UserInfo userInfo = await preferences.getUserInfo();
       userName = userInfo.firstName + " " + userInfo.secondName;
+      userCountryId = userInfo.countryId;
+
       //  _controller.sink.add(userName);
       print(userName + "rrrrrr");
+      print("usercountryId:${userCountryId}");
     } else {
       userName = "";
     }
@@ -803,5 +833,11 @@ class _MainScreenState extends State<MainScreen> {
 
   Future setIsFirst() async {
     await preferences.saveIsFirstTime(false);
+  }
+
+  void getCountryId() async {
+    cId = await preferences.getCountryID();
+    countryId = int.parse(cId);
+    print("usercountryId:${countryId}");
   }
 }

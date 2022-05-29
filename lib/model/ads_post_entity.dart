@@ -1,5 +1,5 @@
-
 import 'package:json_annotation/json_annotation.dart';
+
 part 'ads_post_entity.g.dart';
 
 /// Id : 0
@@ -43,7 +43,7 @@ class AdsPostEntity {
   List<PhotosBean> Photos;
   List<Advertisment_SpecificationBean> AdvertismentSpecification;
   */
-  @JsonKey(name: "Id",includeIfNull: false)
+  @JsonKey(name: "Id", includeIfNull: false)
   int id;
   @JsonKey(name: "Title")
   String title;
@@ -81,11 +81,11 @@ class AdsPostEntity {
   bool isFree;
   @JsonKey(name: "Photos")
   List<PhotosBean> photos;
-  @JsonKey(name: "AdvertismentSpecification")
+  @JsonKey(name: "Advertisment_Specification")
   List<Advertisment_SpecificationBean> advertismentSpecification;
 
-  AdsPostEntity({
-      this.id,
+  AdsPostEntity(
+      {this.id,
       this.title,
       this.arabicDescription,
       this.englishDescription,
@@ -106,17 +106,15 @@ class AdsPostEntity {
       this.photos,
       this.advertismentSpecification});
 
-  factory AdsPostEntity.fromJson(Map<String, dynamic> json) => _$AdsPostEntityFromJson(json);
+  factory AdsPostEntity.fromJson(Map<String, dynamic> json) =>
+      _$AdsPostEntityFromJson(json);
 
   Map<String, dynamic> toJson() => _$AdsPostEntityToJson(this);
-
-
 }
 
 /// Id : 0
 /// AdvertismentSpecificatioOptions : [0]
 @JsonSerializable()
-
 class Advertisment_SpecificationBean {
   @JsonKey(name: "Id")
   int id;
@@ -124,27 +122,25 @@ class Advertisment_SpecificationBean {
   String customValue;
   @JsonKey(name: "AdvertismentSpecificatioOptions")
   List<int> advertismentSpecificatioOptions;
-  factory Advertisment_SpecificationBean.fromJson(Map<String, dynamic> json) => _$Advertisment_SpecificationBeanFromJson(json);
+  factory Advertisment_SpecificationBean.fromJson(Map<String, dynamic> json) =>
+      _$Advertisment_SpecificationBeanFromJson(json);
   Map<String, dynamic> toJson() => _$Advertisment_SpecificationBeanToJson(this);
 
-  Advertisment_SpecificationBean({
-      this.id, this.customValue, this.advertismentSpecificatioOptions});
+  Advertisment_SpecificationBean(
+      {this.id, this.customValue, this.advertismentSpecificatioOptions});
 }
 
 @JsonSerializable()
-
 class PhotosBean {
   @JsonKey(name: "Url")
   String url;
   @JsonKey(name: "Id")
   int id;
 
-factory PhotosBean.fromJson(Map<String, dynamic> json) => _$PhotosBeanFromJson(json);
-
-
+  factory PhotosBean.fromJson(Map<String, dynamic> json) =>
+      _$PhotosBeanFromJson(json);
 
   PhotosBean(this.url, this.id);
 
   Map<String, dynamic> toJson() => _$PhotosBeanToJson(this);
-
 }

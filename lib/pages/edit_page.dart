@@ -43,6 +43,7 @@ class _EditPageState extends State<EditPage> {
   AdsPostEntity adsPostEntity = AdsPostEntity();
   final _formKey = GlobalKey<FormState>();
   bool isNeogtiable = false;
+  String text = "";
   List<String> adsStateList = ["جديد", "مستعمل"];
   String selectedAdsStates = "جديد";
   final TextEditingController _cattextController = TextEditingController();
@@ -407,6 +408,7 @@ class _EditPageState extends State<EditPage> {
                             }
                             break;
                           }
+                          // setState(() {});
                         }
 
                       //if(item.CustomValue==null)
@@ -418,19 +420,15 @@ class _EditPageState extends State<EditPage> {
                               autovalidate: item.Required,
                               validator: item.Required ? _emptyValidate : null,
                               onSaved: (val) {
-                                setState(() {
-                                  var vv = Advertisment_SpecificationBean();
-                                  vv.id = item.Id;
+                                var vv = Advertisment_SpecificationBean();
+                                vv.id = item.Id;
 
-                                  int itemval = val == null
-                                      ? _selectedFieldValue[index]
-                                      : int.tryParse(val) ?? 0;
-                                  vv.advertismentSpecificatioOptions = [
-                                    itemval
-                                  ];
-                                  adsPostEntity
-                                      .advertismentSpecification[index] = vv;
-                                });
+                                int itemval = val == null
+                                    ? _selectedFieldValue[index]
+                                    : int.tryParse(val) ?? 0;
+                                vv.advertismentSpecificatioOptions = [itemval];
+                                adsPostEntity.advertismentSpecification[index] =
+                                    vv;
                               },
                               builder: (FormFieldState<String> state) {
                                 return InputDecorator(
@@ -508,14 +506,12 @@ class _EditPageState extends State<EditPage> {
                               autovalidate: item.Required,
                               validator: item.Required ? _emptyValidate : null,
                               onSaved: (val) {
-                                setState(() {
-                                  var vv = Advertisment_SpecificationBean();
-                                  vv.id = item.Id;
-                                  //int itemval=item.Value as int ?? 0;
-                                  vv.customValue = val;
-                                  adsPostEntity
-                                      .advertismentSpecification[index] = vv;
-                                });
+                                var vv = Advertisment_SpecificationBean();
+                                vv.id = item.Id;
+                                //int itemval=item.Value as int ?? 0;
+                                vv.customValue = val;
+                                adsPostEntity.advertismentSpecification[index] =
+                                    vv;
                               },
                               decoration: InputDecoration(
                                 filled: true,
@@ -546,15 +542,13 @@ class _EditPageState extends State<EditPage> {
                               autovalidate: true,
                               validator: _emptyValidate,
                               onSaved: (val) {
-                                setState(() {
-                                  var vv = Advertisment_SpecificationBean();
-                                  vv.id = item.Id;
-                                  //int itemval=item.Value as int ?? 0;
-                                  //vv.AdvertismentSpecificatioOptions=[val];
-                                  vv.customValue = val;
-                                  adsPostEntity
-                                      .advertismentSpecification[index] = vv;
-                                });
+                                var vv = Advertisment_SpecificationBean();
+                                vv.id = item.Id;
+                                //int itemval=item.Value as int ?? 0;
+                                //vv.AdvertismentSpecificatioOptions=[val];
+                                vv.customValue = val;
+                                adsPostEntity.advertismentSpecification[index] =
+                                    vv;
                               },
                               decoration: InputDecoration(
                                 filled: true,
@@ -807,17 +801,18 @@ class _EditPageState extends State<EditPage> {
   }
 
   String _emptyValidate(String value) {
-    Future.delayed(const Duration(milliseconds: 1500), () {
+    Future.delayed(const Duration(milliseconds: 50), () {
 // Here you can write your code
       if (value == null || value.isEmpty) {
         //  print("rr" + value);
         return allTranslations.text('empty_field');
-        //  return null;
       } else {
         return null;
       }
+
       // Here you can write your code for open new view
     });
+    //setState(() {});
   }
 
   String _phoneValidate(String value) {
@@ -859,8 +854,9 @@ class _EditPageState extends State<EditPage> {
                 if (contollers[index] == null) {
                   contollers[index] = TextEditingController();
                 }
-                String text = "";
-                selectedList.forEach((val) => text += "${val.EnglishName} ,");
+
+                selectedList.forEach((val) => text +=
+                    "${allTranslations.isEnglish ? val.EnglishName : val.ArabicName} ,");
                 contollers[index].text = text;
                 setState(() {
                   _multiselectedFieldValue[index] = selectedList;

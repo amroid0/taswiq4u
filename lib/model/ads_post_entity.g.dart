@@ -30,7 +30,7 @@ AdsPostEntity _$AdsPostEntityFromJson(Map<String, dynamic> json) {
         ?.map((e) =>
             e == null ? null : PhotosBean.fromJson(e as Map<String, dynamic>))
         ?.toList(),
-    advertismentSpecification: (json['AdvertismentSpecification'] as List)
+    advertismentSpecification: (json['Advertisment_Specification'] as List)
         ?.map((e) => e == null
             ? null
             : Advertisment_SpecificationBean.fromJson(
@@ -67,7 +67,7 @@ Map<String, dynamic> _$AdsPostEntityToJson(AdsPostEntity instance) {
   val['ContactMe'] = instance.contactMe;
   val['IsFree'] = instance.isFree;
   val['Photos'] = instance.photos;
-  val['AdvertismentSpecification'] = instance.advertismentSpecification;
+  val['Advertisment_Specification'] = instance.advertismentSpecification;
   return val;
 }
 

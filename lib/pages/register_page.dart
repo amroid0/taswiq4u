@@ -91,7 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
           WidgetsBinding.instance.addPostFrameCallback((_) =>  Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => VerificationScreen(
-                countryId: 1,
+                countryId: val,
                 phone: phoneContorller.text
               ))
           ));
