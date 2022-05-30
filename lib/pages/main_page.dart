@@ -259,8 +259,8 @@ class _MainScreenState extends State<MainScreen> {
                       {
                         Alert(
                           context: context,
-                          title: ('warning'),
-                          desc: ('please choose correct county'),
+                          title: (allTranslations.text('ads_add')),
+                          desc: (allTranslations.text('err_add_ads')),
                           type: AlertType.warning,
                           buttons: [
                             DialogButton(

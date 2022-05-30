@@ -735,8 +735,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
                 child: RaisedButton(
                   color: Colors.green,
                   onPressed: () {
-                    if (_formKey.currentState.validate() &&
-                        userCountryId == cId) {
+                    if (_formKey.currentState.validate()) {
                       _formKey.currentState.save();
                       int count = 0;
                       var images = <PhotosBean>[];
