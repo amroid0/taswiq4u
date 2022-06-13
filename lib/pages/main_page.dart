@@ -798,7 +798,7 @@ class _MainScreenState extends State<MainScreen> {
   Future getUserName() async {
     if (BlocProvider.of<LoginBloc>(context).isLogged()) {
       UserInfo userInfo = await preferences.getUserInfo();
-      userName = userInfo.firstName + " " + userInfo.secondName;
+      userName = userInfo.firstName;
       userCountryId = userInfo.countryId;
 
       //  _controller.sink.add(userName);

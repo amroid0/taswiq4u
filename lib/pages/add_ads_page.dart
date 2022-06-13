@@ -49,7 +49,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   int userCountryId;
   int cId;
   String userId = "";
-  String text = "";
+  // String text = "";
   List<String> adsStateList = ["جديد", "مستعمل"];
   String selectedAdsStates = "جديد";
   final TextEditingController _cattextController = TextEditingController();
@@ -441,6 +441,8 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
                                 var vv = Advertisment_SpecificationBean();
                                 vv.id = item.Id;
                                 int itemval = int.tryParse(val) ?? 0;
+                                print('idoptionss' + vv.id.toString());
+                                print('optionss' + itemval.toString());
                                 vv.advertismentSpecificatioOptions = [itemval];
                                 adsPostEntity.advertismentSpecification[index] =
                                     vv;
@@ -584,6 +586,10 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
                                 vv.id = item.Id;
                                 //int itemval=item.Value as int ?? 0;
                                 vv.customValue = val;
+                                int valItem = int.tryParse(val) ?? 0;
+                                print('idoptionss2' + vv.id.toString());
+                                print('optionss2' + valItem.toString());
+                                vv.advertismentSpecificatioOptions = [];
                                 adsPostEntity.advertismentSpecification[index] =
                                     vv;
                               },
@@ -619,8 +625,10 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
                                 var vv = Advertisment_SpecificationBean();
                                 vv.id = item.Id;
                                 vv.customValue = val;
-                                //int itemval=item.Value as int ?? 0;
-                                //vv.AdvertismentSpecificatioOptions=[val];
+                                int itemval = item.Value as int ?? 0;
+                                vv.advertismentSpecificatioOptions = [];
+                                print('idoptionss3' + vv.id.toString());
+                                print('optionss3' + itemval.toString());
                                 adsPostEntity.advertismentSpecification[index] =
                                     vv;
                               },
@@ -928,9 +936,9 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
                 if (contollers[index] == null) {
                   contollers[index] = TextEditingController();
                 }
-
+                String text = "";
                 selectedList.forEach((val) => text +=
-                    "${allTranslations.isEnglish ? val.EnglishName : val.ArabicName} ,");
+                    "${allTranslations.isEnglish ? val.EnglishName : val.ArabicName} ");
                 contollers[index].text = text;
                 setState(() {
                   _multiselectedFieldValue[index] = selectedList;

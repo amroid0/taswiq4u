@@ -30,6 +30,7 @@ import 'cateogry_dailog.dart';
 
 class EditPage extends StatefulWidget {
   AdsDetail detail;
+
   EditPage(this.detail);
 
   @override
@@ -192,7 +193,9 @@ class _EditPageState extends State<EditPage> {
       selectedValue: CateogryEntity(),
       items: List(),
       onChange: (CateogryEntity selected) {
-        _cattextController.text = selected.name.toString();
+        _cattextController.text = allTranslations.isEnglish
+            ? selected.name.toString()
+            : selected.arabicDescription;
         _selectedFieldValue = [];
         _colorFieldValue = [];
         bloc.getEditFieldsByCatID("");
@@ -397,7 +400,7 @@ class _EditPageState extends State<EditPage> {
                                   spec.AdvertismentSpecificatioOptions;
                               String text = "";
                               spec.AdvertismentSpecificatioOptions.forEach(
-                                  (val) => text += "${val.NameEnglish} ,");
+                                  (val) => text += "${val.NameEnglish},");
                               contollers[index].text = text;
                               _colorFieldValue[index] =
                                   AppColors.validValueColor;
@@ -508,7 +511,8 @@ class _EditPageState extends State<EditPage> {
                               onSaved: (val) {
                                 var vv = Advertisment_SpecificationBean();
                                 vv.id = item.Id;
-                                //int itemval=item.Value as int ?? 0;
+                                int itemval = item.Value as int ?? 0;
+                                //   vv.advertismentSpecificatioOptions = [];
                                 vv.customValue = val;
                                 adsPostEntity.advertismentSpecification[index] =
                                     vv;
@@ -544,8 +548,8 @@ class _EditPageState extends State<EditPage> {
                               onSaved: (val) {
                                 var vv = Advertisment_SpecificationBean();
                                 vv.id = item.Id;
-                                //int itemval=item.Value as int ?? 0;
-                                //vv.AdvertismentSpecificatioOptions=[val];
+                                int itemval = item.Value as int ?? 0;
+                                //    vv.advertismentSpecificatioOptions = [];
                                 vv.customValue = val;
                                 adsPostEntity.advertismentSpecification[index] =
                                     vv;
@@ -666,14 +670,25 @@ class _EditPageState extends State<EditPage> {
                       int count = 0;
                       var images = <PhotosBean>[];
                       bool isuploaded = true;
+                      int imageId;
                       for (var image in uploadBloc.getUploadImageList) {
                         if (image is UploadedImage &&
                             image.state != StateEnum.LOADING) {
                           if (image.remoteUrl != null &&
                               image.remoteUrl.isNotEmpty) {
-                            PhotosBean photo = new PhotosBean(
-                                image.remoteUrl.toString(), image.uplodedID);
-                            images.add(photo);
+                            imageId = adsObj.AdvertismentImages.indexWhere(
+                                (element) => element.Url == image.remoteUrl);
+                            if (image.uplodedID != null &&
+                                image.uplodedID > 0) {
+                              PhotosBean photo = new PhotosBean(
+                                  image.remoteUrl.toString(), image.uplodedID);
+                              images.add(photo);
+                            } else {
+                              PhotosBean photo = new PhotosBean(
+                                  image.remoteUrl.toString(),
+                                  adsObj.AdvertismentImages[imageId].Id);
+                              images.add(photo);
+                            }
                             count++;
                           }
                         } else if (image is UploadedImage &&
@@ -699,6 +714,10 @@ class _EditPageState extends State<EditPage> {
                       adsPostEntity.stateId = widget.detail.StateId;
                       adsPostEntity.countryId = widget.detail.CountryId;
                       adsPostEntity.categoryId = widget.detail.CategoryId;
+                      adsPostEntity.price = int.parse(_pricetextController.text
+                          .trim()
+                          .toString()
+                          .split('.')[0]);
                       adsPostEntity.isNogitable = isNeogtiable;
                       bloc.editAdvertisment(adsPostEntity);
                     }
@@ -854,9 +873,8 @@ class _EditPageState extends State<EditPage> {
                 if (contollers[index] == null) {
                   contollers[index] = TextEditingController();
                 }
-
                 selectedList.forEach((val) => text +=
-                    "${allTranslations.isEnglish ? val.EnglishName : val.ArabicName} ,");
+                    "${allTranslations.isEnglish ? val.EnglishName : val.ArabicName},");
                 contollers[index].text = text;
                 setState(() {
                   _multiselectedFieldValue[index] = selectedList;

@@ -98,8 +98,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       builder: (_) => ResetPasswordScreen(
                           widget.countryId, _code, widget.phone)));
             } else
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => MainScreen()));
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => MainScreen()),
+                  (Route<dynamic> route) => false);
           }
 
           break;
