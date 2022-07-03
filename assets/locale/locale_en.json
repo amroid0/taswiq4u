@@ -36,9 +36,9 @@
   "password": "Password",
   "logout": "Logout",
   "home": "Home",
-  "favroite": "Favroite",
-  "account": "Account",
-  "offers": "commercial",
+  "favroite": "Favorite",
+  "account": "Profile",
+  "offers": "Offers",
   "sections": "Sections",
   "my_ads": "My Ads",
   "settings": "Settings",
@@ -78,7 +78,7 @@
   "sign_in_up": "Sign in / Register",
   "choose_city": "Choose City",
   "not_match": "password not match!",
-  "choose_country": "choose Country",
+  "choose_country": "Select Country",
   "login_err": "Phone or Password is Wrong",
   "general_err": "something went wrong please try again",
   "server_err": "Server Error",
@@ -162,9 +162,14 @@
   "safety": "Saftey Rules",
   "success_delete_ads": "Ad deleted Successfully",
   "success_distincit_ads": "Ad featured Successfully",
-  "zone": "District"
-
-
-
-
+  "zone": "District",
+"welcome_title":"Welcome Back",
+  "home_sub_title": "Discover what you want",
+  "search_here": "Search here",
+  "select_lang":"Select Language",
+  "select_country": "Select Country",
+"result_count": "Result",
+  "edit": "Edit",
+  "delete": "Delete",
+  "recent_search": "Recent Search"
 }

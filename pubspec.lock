@@ -239,6 +239,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.1"
+  english_words:
+    dependency: "direct main"
+    description:
+      name: english_words
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.5"
   equatable:
     dependency: transitive
     description:
@@ -312,6 +319,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+  flutter_slidable:
+    dependency: "direct main"
+    description:
+      name: flutter_slidable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.7"
   flutter_speed_dial:
     dependency: "direct main"
     description:
@@ -336,6 +350,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_zoom_drawer:
+    dependency: "direct main"
+    description:
+      name: flutter_zoom_drawer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.5"
   fluttertoast:
     dependency: "direct main"
     description:

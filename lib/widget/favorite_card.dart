@@ -35,11 +35,11 @@ class _FavroiteWidgetCardState extends State<FavroiteWidgetCard> {
           ?
       Icon(
         Icons.favorite_rounded,
-        size: 30.0,
-        color: Colors.red,
+        size: 24.0,
+        color: Color(0xffCE0700),
       ): Icon(
-        Icons.favorite_border,
-        size: 30.0,
+        Icons.favorite_outline,
+        size: 24.0,
       ),
     );
   }

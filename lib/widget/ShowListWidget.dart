@@ -1,34 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ShowListWidget extends StatefulWidget {
-int value = 1;
+  int value = 1;
 
-final Function(int) onvalueChange;
+  final Function(int) onvalueChange;
 
-ShowListWidget({this.onvalueChange,this.value});
+  ShowListWidget({this.onvalueChange, this.value});
 
-@override
-_FavroiteWidgetState createState() => _FavroiteWidgetState();
+  @override
+  _FavroiteWidgetState createState() => _FavroiteWidgetState();
 }
 
 class _FavroiteWidgetState extends State<ShowListWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      iconSize: 24,
+      icon: Icon(
+        MdiIcons.viewGrid,
 
-@override
-Widget build(BuildContext context) {
-return     IconButton(
-  iconSize: 36,
-  icon:Icon(Icons.view_list),
-  onPressed: (){
-  if(widget.value==1){
-  widget.value=2;
-  }else{
-  widget.value=1;
+      ),
+      onPressed: () {
+        if (widget.value == 1) {
+          widget.value = 2;
+        } else {
+          widget.value = 1;
+        }
 
+        widget.onvalueChange(widget.value);
+      },
+    );
   }
-
-  widget.onvalueChange(widget.value);
-
-  },
-  );
-}
 }

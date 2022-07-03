@@ -17,7 +17,7 @@ import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:shimmer/shimmer.dart';
-
+import 'package:olx/widget/transparent_route.dart';
 import 'offer_detail_slider_page.dart';
 
 class CategoryListFragment extends StatefulWidget {
@@ -197,7 +197,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
 
               carouselSlider = CarouselSlider(
 
-                height: MediaQuery.of(context).size.height*.28,
+                height: MediaQuery.of(context).size.height*.22,
                 initialPage: 0,
                 enlargeCenterPage: true,
                 aspectRatio: 1,
@@ -249,7 +249,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
               }else {
                 return Container(
                   margin: EdgeInsets.all(8),
-                  height: MediaQuery.of(context).size.height*.25,
+                  height: MediaQuery.of(context).size.height*.22,
                   color: AppColors.appBackground,
                   child:Center(child: Icon(Icons.image,color:Colors.grey,size: 60,)
                   ),
@@ -260,7 +260,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
           }
           return Container(
             margin: EdgeInsets.all(8),
-            height: MediaQuery.of(context).size.height*.25,
+            height: MediaQuery.of(context).size.height*.22,
             color: AppColors.appBackground,
             child:Center(child: Icon(Icons.image,color:Colors.grey,size: 60,)
             ),
@@ -276,7 +276,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
       child: Column(
         children: [
           Container(
-            height: 40,
+            height: 0,
             width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.all(8),
             color: Colors.white,
@@ -294,6 +294,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
 
 
                 return Container(
+                  color: Colors.white,
                   margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
                   child: new InkWell(
                     onTap: (){
@@ -320,61 +321,56 @@ class CarouselDemoState extends State<CategoryListFragment> {
                       }
 
                     },
-                    child: Stack(
-                      alignment: AlignmentDirectional.centerStart,
+                    child: Column(
                       children: [
 
                         Container(
-                          margin: EdgeInsetsDirectional.only(start: 30),
-                          child: new Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)
-                            ),
-                            child: Row(
-                              children: [
-                                SizedBox(width: 20,),
-                                 Expanded(
-                                   child: ListTile(
+                          color: Colors.white,
+                          margin: EdgeInsetsDirectional.only(start: 16),
+                          child: Row(
+                            children: [
+                               Expanded(
+                                 child: ListTile(contentPadding: EdgeInsets.all(0),
+                                   tileColor: Colors.white,
 
-
-                                     title: new Text(allTranslations.isEnglish?category[index]
-                                         .englishDescription:category[index]
-                                         .arabicDescription,style: TextStyle(fontSize: 15),),
-                                     subtitle:RichText(text: TextSpan(
-                                     children: [
-                                       TextSpan(text: '20 ',style: TextStyle(color: Colors.grey)),
-                                       TextSpan(text: allTranslations.text('ads'),style: TextStyle(color: Colors.grey))
-                                     ]
-                                   ),),
-                                    trailing: Icon(Icons.arrow_forward_ios,color: Colors.grey,size: 18,),
-                                ),
+                                   dense: true,
+                                   leading: Container(
+                                     padding: EdgeInsets.all(4),
+                                   height: 40,
+                                   width: 40,
+                                     decoration:  BoxDecoration(
+                                       color: Color(0xFFEFF1F7),
+                                       borderRadius: BorderRadius.all(
+                                         Radius.circular(12.0),
+                                       ),
+                                     ),
+                                   child: CachedNetworkImage(
+                                       fit: BoxFit.cover,
+                                       placeholder: (context, url) => Image.asset("images/logo.png"),
+                                       errorWidget: (context, url,error) => Image.asset("images/logo.png"),
+                                       imageUrl: APIConstants.getFullImageUrl(category[index].categoryLogo, ImageType.CATE)
+                                   ),
                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Card(
-                          elevation: 2,
-                          shape: CircleBorder(),
-                          child: CircleAvatar(
-                            radius: 30,
-                            backgroundColor: Colors.grey.shade300,
 
-                            child: Container(
-                              height: 55,
-                              width: 55,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(55),
-                                child: CachedNetworkImage(
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) => Image.asset("images/logo.png"),
-                                    errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                                    imageUrl: APIConstants.getFullImageUrl(category[index].categoryLogo, ImageType.CATE)
-                                ),
+
+                                   title: new Text(allTranslations.isEnglish?category[index]
+                                       .englishDescription:category[index]
+                                       .arabicDescription,style: TextStyle(fontSize: 15),),
+                                   subtitle:RichText(text: TextSpan(
+                                   children: [
+                                     TextSpan(text: '20 ',style: TextStyle(color: Colors.grey)),
+                                     TextSpan(text: allTranslations.text('ads'),style: TextStyle(color: Colors.grey))
+                                   ]
+                                 ),),
+                                  trailing: Icon(Icons.arrow_forward_ios,color: Color(0xff2D3142),size: 18,),
                               ),
-                            ),
+                               ),
+                            ],
                           ),
                         ),
+                        Divider(
+                            color: Color(0xffececec)
+                        )
                       ],
                     ),
                   ),
@@ -403,7 +399,8 @@ class CarouselDemoState extends State<CategoryListFragment> {
   }
 
   void _openAddEntryDialog(PopupAdsEntityList data) {
-    Navigator.of(context).push(new MaterialPageRoute(
+    Navigator.of(context).push(new MaterialTransparentRoute(
+
         builder: (BuildContext context) {
           return  PopUpAdsPage();
         },settings: RouteSettings(arguments:data),

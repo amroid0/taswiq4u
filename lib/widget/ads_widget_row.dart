@@ -11,6 +11,7 @@ import 'package:olx/model/ads_entity.dart';
 import 'package:olx/pages/detail_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/utils/Constants.dart';
+import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/utils.dart';
 import 'package:olx/widget/favorite_card.dart';
@@ -21,6 +22,8 @@ class AdsRowWidget extends StatelessWidget {
   int language ;
   final bool editable;
   final AdsBloc bloc;
+
+  Radius imageRadius;
   AdsRowWidget({this.model,this.language,this.editable,this.bloc});
 
 
@@ -28,9 +31,9 @@ class AdsRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+ imageRadius=  Radius.circular(12);
     return Padding(
-      padding: const EdgeInsets.only(right:4.5,left:4.5,bottom:0.25,),
+      padding: const EdgeInsets.only(right:4.5,left:4.5,bottom:12,),
       child: Container(
 
         margin: const EdgeInsets.only(right:4.5,left:4.5,bottom:0.25,),
@@ -46,7 +49,7 @@ class AdsRowWidget extends StatelessWidget {
 
           },
           child: new Card(
-            elevation: 2,
+            elevation: 0,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: new Container(
 
@@ -60,25 +63,44 @@ class AdsRowWidget extends StatelessWidget {
                         width: 120,
                         height: 100,
                         decoration: BoxDecoration(
-                          borderRadius:BorderRadius.circular(20) ,
-                         color: Colors.grey.shade300
+                            borderRadius:BorderRadius.circular(20) ,
+                            color: Colors.grey.shade300
                         ),
 
 
 
-                        child: ClipRRect(
-                          borderRadius:BorderRadius.circular(20) ,
-                          child:
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [ClipRRect(
+                            borderRadius:allTranslations.isEnglish?BorderRadius.only(topLeft: imageRadius,bottomLeft: imageRadius):BorderRadius.only(topRight: imageRadius,bottomRight: imageRadius) ,
+                            child:
                             (model.AdvertismentImages.isNotEmpty&&model.AdvertismentImages[0].Url!=null&&model.AdvertismentImages[0].Url.isNotEmpty)?
 
 
-                  CachedNetworkImage(
-                            fit: BoxFit.fill,
-                            placeholder: (context, url) => Image.asset("images/logo.png"),
-                            errorWidget: (context, url,error) => Image.asset("images/logo.png"),
-                            imageUrl: APIConstants.getFullImageUrl(model.AdvertismentImages.isEmpty?"":model.AdvertismentImages[0].Url,ImageType.ADS),
-                          ):      Image.asset("images/logo.png",fit: BoxFit.fill,)
-                  ,
+                            CachedNetworkImage(
+                              fit: BoxFit.fill,
+                              placeholder: (context, url) => Image.asset("images/logo.png"),
+                              errorWidget: (context, url,error) => Image.asset("images/logo.png"),
+                              imageUrl: APIConstants.getFullImageUrl(model.AdvertismentImages.isEmpty?"":model.AdvertismentImages[0].Url,ImageType.ADS),
+                            ):      Image.asset("images/logo.png",fit: BoxFit.fill,)
+                            ,
+                          ),
+                            Align(
+                              alignment: AlignmentDirectional.topStart,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: FavroiteWidgetCard(
+                                    onFavChange:(val){
+                                      if(BlocProvider.of<LoginBloc>(context).isLogged())
+                                        BlocProvider.of<FavroiteBloc>(context).changeFavoriteState(val,model.Id);
+                                      else
+                                        Navigator.push(
+                                            context, MaterialPageRoute(builder: (context) => ParentAuthPage()));                          },
+                                    value: (BlocProvider.of<LoginBloc>(context).isLogged())?model.IsFavorite:false
+                                ),
+                              ),
+                            ),
+                          ]
                         )
                     ),
 
@@ -92,38 +114,35 @@ class AdsRowWidget extends StatelessWidget {
                             children: <Widget>[
                               Text(model.EnglishTitle,maxLines: 2,overflow: TextOverflow.ellipsis,style: TextStyle(
                                 height: 1.2,
+                                color: Color(0xff2D3142),
+                                fontSize: 14
                               ),),
                               Text(language==1 ? "${model.Price}  ${allTranslations.text('cuurency')}" :"${model.Price}  ${allTranslations.text('cuurencyKd')}" ,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
 
-                                style: TextStyle(color: Theme
-                                    .of(context)
-                                    .accentColor),),
+                                style: TextStyle(
+                                  color: Color(0xff2D3142),
+                                  fontWeight: FontWeight.bold
+                                ),),
                               SizedBox(height: 4,),
-                              Divider(height: 1,color: Colors.grey.shade500,thickness: 1,),
                               SizedBox(height: 4,),
 
                               Row(
 
                                 children: <Widget>[
-                                  Icon(Icons.pin_drop_outlined, size: 20,),
-                                  Text(allTranslations.isEnglish ?model.CityNameEnglish :model.CityNameArabic, style: Theme.of(context).textTheme.bodyText2),
-
-                                ],),
-                              SizedBox(height: 4,),
-
-                              Row(
-                                children: <Widget>[
-                                  Icon(Icons.update_outlined, size: 20,),
-
+                                  //Icon(Icons.pin_drop_outlined, size: 20,),
                                   FittedBox(
                                     child: Text( displayTimeAgoFromTimestamp(model.CreationTime),
-                                      style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize: 13),maxLines: 1,overflow: TextOverflow.ellipsis,),
+                                      style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize: 11 ,color: AppColors.secondaryTextColor),maxLines: 1,overflow: TextOverflow.ellipsis,),
                                   ),
-
+                                  Text(" - ",style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize: 11 ,color: AppColors.secondaryTextColor),),
+                                  Text(allTranslations.isEnglish ?model.CityNameEnglish :model.CityNameArabic, style:Theme.of(context).textTheme.subtitle2.copyWith(fontSize: 11 ,color: AppColors.secondaryTextColor)),
 
                                 ],),
+                              SizedBox(height: 4,),
+
+
 
 
                             ],
@@ -133,31 +152,7 @@ class AdsRowWidget extends StatelessWidget {
 
 
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
 
-                          onTap: () {},
-                          child: Container(
-                              margin: EdgeInsets.only(left: 4),
-
-                              alignment: Alignment.center,
-                              color: Colors.white,
-                              child: FavroiteWidgetCard(
-                                  onFavChange:(val){
-                                    if(BlocProvider.of<LoginBloc>(context).isLogged())
-                                      BlocProvider.of<FavroiteBloc>(context).changeFavoriteState(val,model.Id);
-                                    else
-                                      Navigator.push(
-                                          context, MaterialPageRoute(builder: (context) => ParentAuthPage()));                          },
-                                  value: (BlocProvider.of<LoginBloc>(context).isLogged())?model.IsFavorite:false
-                              )
-
-                          ),
-                        ),
-                      ],
-                    ),
 
 
                   ],

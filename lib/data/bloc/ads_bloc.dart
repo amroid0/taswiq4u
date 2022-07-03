@@ -15,7 +15,8 @@ class AdsBloc implements Bloc {
   AdsEntity ads= AdsEntity();
   final _controller = BehaviorSubject<ApiResponse<AdsEntity>>();
   final _myAddController = BehaviorSubject<ApiResponse<List<AdsModel>>>();
-
+  final _deleteStatecontroller = BehaviorSubject<ApiResponse<bool>>();
+  Stream<ApiResponse<bool>> get deleteStateStream => _deleteStatecontroller.stream;
   Stream<ApiResponse<AdsEntity>> get stream => _controller.stream;
   Stream<ApiResponse<List<AdsModel>>> get myAdsstream => _myAddController.stream;
   AdsBloc();
@@ -144,7 +145,16 @@ class AdsBloc implements Bloc {
       }
     }}
 */
+  void deleteAds(String adsID)async{
+    try{
+      _deleteStatecontroller.sink.add(ApiResponse.loading("message"));
+      final results = await _client.deleteAds(adsID);
+      _deleteStatecontroller.sink.add(ApiResponse.completed(results));
+    }catch(e){
+      _deleteStatecontroller.sink.add( ApiResponse.error(e.toString()));
 
+    }
+  }
 
 
   @override

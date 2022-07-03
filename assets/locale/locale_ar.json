@@ -163,7 +163,19 @@
   "missing_fields": "يجب إكمال جميع الحقول المطلوبة",
   "success_delete_ads": "تم حذف الاعلان بنجاح",
   "success_distincit_ads": "تم تمييز الاعلان بنجاح",
-  "zone": "المنطقه"
+  "zone": "المنطقه",
+  "welcome_title":"مرحبا",
+  "home_sub_title": "اكتشف ما تريده",
+"search_here": "ابحث هنا",
+  "select_lang":"اختر اللغة",
+  "select_country": "اختر الدولة",
+  "result_count": "نتيجة",
+  "recent_search": "عمليات البحث الأخيرة"
+
+
+
+
+
 
 
 
