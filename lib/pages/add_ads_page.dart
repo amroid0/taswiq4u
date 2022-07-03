@@ -20,17 +20,19 @@ import 'package:olx/model/user_info.dart';
 import 'package:olx/pages/ImageUploaderListPage.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/ToastUtils.dart';
+import 'package:olx/utils/dailogs.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/loading_dialog.dart';
 import 'package:olx/widget/CitiesDialog.dart';
+import 'package:olx/widget/bottom_sheet.dart';
 import 'package:olx/widget/check_box_withlabel.dart';
 import 'package:olx/widget/city_list_dialog.dart';
 import 'package:olx/widget/map_widget.dart';
 import 'package:olx/widget/mutli_select_chip_dialog.dart';
+import 'package:olx/widget/text_field_decoration.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 import '../data/bloc/bloc_provider.dart';
-import 'cateogry_dailog.dart';
 
 class AddAdvertisment extends StatefulWidget {
   @override
@@ -49,6 +51,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   int userCountryId;
   int cId;
   String userId = "";
+
   // String text = "";
   List<String> adsStateList = ["جديد", "مستعمل"];
   String selectedAdsStates = "جديد";
@@ -186,7 +189,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   }
 
   _showDialog() async {
-    await SelectDialog.showModal<CateogryEntity>(
+    await SelectBottom.showBottom<CateogryEntity>(
       context,
       label: allTranslations.text('choose_category'),
       selectedValue: CateogryEntity(),
@@ -281,120 +284,149 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
                     Widget>[
               Padding(
-                padding: const EdgeInsets.only(left: 8.0),
+                padding:
+                    const EdgeInsets.only(bottom: 8.0, right: 4.0, left: 4.0),
                 child: Text(allTranslations.text('add_image')),
               ),
-              BlocProvider(
-                  bloc: uploadBloc, child: ImageInput()), //add image list
+              BlocProvider(bloc: uploadBloc, child: ImageInput()),
+              //add image list
 
-              TextFormField(
+              Padding(
+                padding:
+                    const EdgeInsets.only(bottom: 8.0, right: 4.0, left: 4.0),
+                child: TextFieldDecoration(
                   validator: _titleAdsValidate,
-                  controller: _nametextController,
-                  inputFormatters: [LengthLimitingTextInputFormatter(70)],
+                  textEditingController: _nametextController,
+                  //  inputFormatters: [LengthLimitingTextInputFormatter(70)],
                   onSaved: (val) {
                     adsPostEntity.title = val;
                   },
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.check_circle,
-                      color: AppColors.validValueColor,
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelText: allTranslations.text('ads_title'),
-                    hintText: allTranslations.text('ads_title'),
-                    border: new OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(10.0)),
-                  )),
+                  //  decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.check_circle,
+                    color: AppColors.validValueColor,
+                  ),
+                  //  filled: true,
+                  fillColor: Colors.white,
+                  labelText: allTranslations.text('ads_title'),
+                  hintText: allTranslations.text('ads_title'),
+                  // border: new OutlineInputBorder(
+                  //     borderRadius: new BorderRadius.circular(10.0)),
+                  //)
+                ),
+              ),
               SizedBox(
                 height: 8,
               ),
 
-              _BuildRoundedTextField(
-                  labelText: allTranslations.text('cateogry'),
-                  hintText: allTranslations.text('cateogry'),
-                  controller: _cattextController,
-                  iswithArrowIcon: true,
-                  onClickAction: () {
-                    _showDialog();
-                  }),
-              SizedBox(
-                height: 8,
-              ),
-
-              _BuildCityRoundedTextField(
-                  labelText: allTranslations.text('govrnment'),
-                  hintText: allTranslations.text('govrnment'),
-                  controller: _citytextController,
-                  iswithArrowIcon: true,
-                  onClickAction: () {
-                    _showCityDialog();
-                  }),
-              SizedBox(
-                height: 8,
-              ),
-              Visibility(
-                visible: isVisiable,
-                child: _BuildCityRoundedTextField(
-                    labelText: allTranslations.text('zone'),
-                    hintText: allTranslations.text('zone'),
-                    controller: _citiestextController,
+              Padding(
+                padding:
+                    const EdgeInsets.only(bottom: 8.0, right: 4.0, left: 4.0),
+                child: _BuildRoundedTextField(
+                    labelText: allTranslations.text('cateogry'),
+                    hintText: allTranslations.text('cateogry'),
+                    controller: _cattextController,
                     iswithArrowIcon: true,
                     onClickAction: () {
-                      _showCiiesDialog(cityID);
+                      _showDialog();
                     }),
               ),
               SizedBox(
                 height: 8,
               ),
 
-              TextFormField(
-                validator: _descAdsValidate,
-                controller: _desctextController,
-                decoration: InputDecoration(
+              Padding(
+                padding:
+                    const EdgeInsets.only(bottom: 8.0, right: 4.0, left: 4.0),
+                child: _BuildCityRoundedTextField(
+                    labelText: allTranslations.text('govrnment'),
+                    hintText: allTranslations.text('govrnment'),
+                    controller: _citytextController,
+                    iswithArrowIcon: true,
+                    onClickAction: () {
+                      _showCityDialog();
+                    }),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Visibility(
+                visible: isVisiable,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 8.0, right: 4.0, left: 4.0),
+                  child: _BuildCityRoundedTextField(
+                      labelText: allTranslations.text('zone'),
+                      hintText: allTranslations.text('zone'),
+                      controller: _citiestextController,
+                      iswithArrowIcon: true,
+                      onClickAction: () {
+                        _showCiiesDialog(cityID);
+                      }),
+                ),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+
+              Padding(
+                padding:
+                    const EdgeInsets.only(bottom: 8.0, right: 4.0, left: 4.0),
+                child: TextFieldDecoration(
+                  validator: _descAdsValidate,
+                  textEditingController: _desctextController,
+                  //   maxLine: 3,
+                  //   decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.check_circle,
                     color: AppColors.validValueColor,
                   ),
-                  filled: true,
+                  //      filled: true,
                   fillColor: Colors.white,
                   labelText: allTranslations.text('description'),
                   hintText: allTranslations.text('description'),
-                  border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(10.0)),
+                  // border: new OutlineInputBorder(
+                  //     borderRadius: new BorderRadius.circular(10.0)),
+                  //  ),
+                  onSaved: (val) {
+                    adsPostEntity.englishDescription = val;
+                    adsPostEntity.arabicDescription = val;
+                  },
                 ),
-                onSaved: (val) {
-                  adsPostEntity.englishDescription = val;
-                  adsPostEntity.arabicDescription = val;
-                },
               ),
 
               SizedBox(
                 height: 8,
               ),
 
-              TextFormField(
-                  controller: _pricetextController,
+              Padding(
+                padding:
+                    const EdgeInsets.only(bottom: 8.0, right: 4.0, left: 4.0),
+                child: TextFieldDecoration(
+                  textEditingController: _pricetextController,
+
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  inputFormatters: [
-                    WhitelistingTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter((20))
-                  ],
+                  // inputFormatters: [
+                  //   WhitelistingTextInputFormatter.digitsOnly,
+                  //   LengthLimitingTextInputFormatter((20))
+                  // ],
                   onSaved: (val) {
                     adsPostEntity.price = int.tryParse(val) ?? 0;
                   },
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.check_circle,
-                      color: AppColors.validValueColor,
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelText: allTranslations.text('price'),
-                    hintText: allTranslations.text('price'),
-                    border: new OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(10.0)),
-                  )),
+                  //   decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.check_circle,
+                    color: AppColors.validValueColor,
+                  ),
+                  //     filled: true,
+                  fillColor: Colors.white,
+                  labelText: allTranslations.text('price'),
+                  hintText: allTranslations.text('price'),
+                  // border: new OutlineInputBorder(
+                  //     borderRadius: new BorderRadius.circular(10.0)),
+                  // )
+                ),
+              ),
 
               SizedBox(
                 height: 8,
@@ -433,7 +465,8 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
                       if ((item.MuliSelect == null || !item.MuliSelect) &&
                           item.SpecificationOptions.isNotEmpty)
                         return Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
+                          padding: const EdgeInsets.only(
+                              bottom: 8.0, right: 4, left: 4),
                           child: FormField<String>(
                               autovalidate: item.Required,
                               validator: item.Required ? _emptyValidate : null,
@@ -450,27 +483,49 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
                               builder: (FormFieldState<String> state) {
                                 return InputDecorator(
                                   decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    labelText: allTranslations.isEnglish
-                                        ? item.EnglishName
-                                        : item.ArabicName,
-                                    errorText:
-                                        state.hasError ? state.errorText : null,
-                                    prefixIcon: Icon(
-                                      Icons.check_circle,
-                                      color: _colorFieldValue[index],
-                                    ),
-                                    border: new OutlineInputBorder(
-                                        borderRadius:
-                                            new BorderRadius.circular(10.0)),
-                                  ),
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      // labelText: allTranslations.isEnglish
+                                      //     ? item.EnglishName
+                                      //     : item.ArabicName,
+                                      errorText: state.hasError
+                                          ? state.errorText
+                                          : null,
+                                      prefixIcon: Icon(
+                                        Icons.check_circle,
+                                        color: _colorFieldValue[index],
+                                      ),
+                                      //      border: InputBorder.none,
+                                      border: InputBorder.none,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(22.0)),
+                                          borderSide: BorderSide(
+                                              color: Color(0xffB5B5B5),
+                                              width: 0.5)),
+                                      errorBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(22.0)),
+                                          borderSide: BorderSide(
+                                              color: Colors.red, width: 0.5))
+                                      // border: new OutlineInputBorder(
+                                      //     borderRadius:
+                                      //         new BorderRadius.circular(22.0),
+                                      //     borderSide: new BorderSide(
+                                      //         width: 0.5,
+                                      //         color: Colors.green,
+                                      //         style: BorderStyle.solid)),
+                                      ),
                                   child: Container(
                                     height: 30,
                                     child: DropdownButtonHideUnderline(
                                       child: DropdownButton(
                                         hint: Text(
-                                            '${allTranslations.text('choose')} ${allTranslations.isEnglish ? item.EnglishName : item.ArabicName}'),
+                                          '${allTranslations.text('choose')} ${allTranslations.isEnglish ? item.EnglishName : item.ArabicName}',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Color(0xffCAD1E0)),
+                                        ),
                                         value: _selectedFieldValue[index],
                                         isDense: true,
                                         items: item.SpecificationOptions.map(
@@ -563,94 +618,96 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
                     );*/
 
                         return Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: TextFormField(
-                              controller: contollers[index],
-                              onTap: () {
-                                WidgetsBinding.instance
-                                    .addPostFrameCallback((_) {
-                                  _showReportDialog(
-                                      index,
-                                      allTranslations.isEnglish
-                                          ? item.EnglishName
-                                          : item.ArabicName,
-                                      item.SpecificationOptions);
-                                });
-                              },
-                              readOnly: true,
-                              enableInteractiveSelection: true,
-                              autovalidate: item.Required,
-                              validator: item.Required ? _emptyValidate : null,
-                              onSaved: (val) {
-                                var vv = Advertisment_SpecificationBean();
-                                vv.id = item.Id;
-                                //int itemval=item.Value as int ?? 0;
-                                vv.customValue = val;
-                                int valItem = int.tryParse(val) ?? 0;
-                                print('idoptionss2' + vv.id.toString());
-                                print('optionss2' + valItem.toString());
-                                vv.advertismentSpecificatioOptions = [];
-                                adsPostEntity.advertismentSpecification[index] =
-                                    vv;
-                              },
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                labelText: allTranslations.isEnglish
-                                    ? item.EnglishName
-                                    : item.ArabicName,
-                                hintText: allTranslations.isEnglish
-                                    ? item.EnglishName
-                                    : item.ArabicName,
-                                prefixIcon: item.Required
-                                    ? Icon(
-                                        Icons.check_circle,
-                                        color: _colorFieldValue[index],
-                                      )
-                                    : null,
-                                suffixIcon: Icon(Icons.arrow_drop_down),
-                                border: new OutlineInputBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(10.0)),
-                              )),
+                          padding: const EdgeInsets.only(
+                              bottom: 8.0, right: 4.0, left: 4.0),
+                          child: TextFieldDecoration(
+                            textEditingController: contollers[index],
+                            onTap: () {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                _showReportDialog(
+                                    index,
+                                    allTranslations.isEnglish
+                                        ? item.EnglishName
+                                        : item.ArabicName,
+                                    item.SpecificationOptions);
+                              });
+                            },
+                            readOnly: true,
+                            //   enableInteractiveSelection: true,
+                            autoValdite: item.Required,
+                            validator: item.Required ? _emptyValidate : null,
+                            onSaved: (val) {
+                              var vv = Advertisment_SpecificationBean();
+                              vv.id = item.Id;
+                              //int itemval=item.Value as int ?? 0;
+                              vv.customValue = val;
+                              int valItem = int.tryParse(val) ?? 0;
+                              print('idoptionss2' + vv.id.toString());
+                              print('optionss2' + valItem.toString());
+                              vv.advertismentSpecificatioOptions = [];
+                              adsPostEntity.advertismentSpecification[index] =
+                                  vv;
+                            },
+                            //   decoration: InputDecoration(
+                            //     filled: true,
+                            fillColor: Colors.white,
+                            labelText: allTranslations.isEnglish
+                                ? item.EnglishName
+                                : item.ArabicName,
+                            hintText: allTranslations.isEnglish
+                                ? item.EnglishName
+                                : item.ArabicName,
+                            prefixIcon: item.Required
+                                ? Icon(
+                                    Icons.check_circle,
+                                    color: _colorFieldValue[index],
+                                  )
+                                : null,
+                            suffixIcon: Icon(Icons.arrow_drop_down),
+                            // border: new OutlineInputBorder(
+                            //     borderRadius: new BorderRadius.circular(10.0)),
+                            //  )
+                          ),
                         );
                       else {
                         return Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: TextFormField(
-                              controller: contollers[index],
-                              autovalidate: true,
-                              validator: _emptyValidate,
-                              onSaved: (val) {
-                                var vv = Advertisment_SpecificationBean();
-                                vv.id = item.Id;
-                                vv.customValue = val;
-                                int itemval = item.Value as int ?? 0;
-                                vv.advertismentSpecificatioOptions = [];
-                                print('idoptionss3' + vv.id.toString());
-                                print('optionss3' + itemval.toString());
-                                adsPostEntity.advertismentSpecification[index] =
-                                    vv;
-                              },
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                labelText: allTranslations.isEnglish
-                                    ? item.EnglishName
-                                    : item.ArabicName,
-                                hintText: allTranslations.isEnglish
-                                    ? item.EnglishName
-                                    : item.ArabicName,
-                                prefixIcon: item.Required
-                                    ? Icon(
-                                        Icons.check_circle,
-                                        color: _colorFieldValue[index],
-                                      )
-                                    : null,
-                                border: new OutlineInputBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(10.0)),
-                              )),
+                          padding: const EdgeInsets.only(
+                              bottom: 8.0, right: 4.0, left: 4.0),
+                          child: TextFieldDecoration(
+                            textEditingController: contollers[index],
+                            autoValdite: true,
+                            validator: _emptyValidate,
+                            onSaved: (val) {
+                              var vv = Advertisment_SpecificationBean();
+                              vv.id = item.Id;
+                              vv.customValue = val;
+                              int itemval = item.Value as int ?? 0;
+                              vv.advertismentSpecificatioOptions = [];
+                              print('idoptionss3' + vv.id.toString());
+                              print('optionss3' + itemval.toString());
+                              adsPostEntity.advertismentSpecification[index] =
+                                  vv;
+                            },
+                            //  decoration: InputDecoration(
+                            //   filled: true,
+                            fillColor: Colors.white,
+                            labelText: allTranslations.isEnglish
+                                ? item.EnglishName
+                                : item.ArabicName,
+                            hintText: allTranslations.isEnglish
+                                ? item.EnglishName
+                                : item.ArabicName,
+                            prefixIcon: item.Required
+                                ? Icon(
+                                    Icons.check_circle,
+                                    color: _colorFieldValue[index],
+                                  )
+                                : null,
+                            // border: new OutlineInputBorder(
+                            //     borderRadius:
+                            //         new BorderRadius.circular(10.0)),
+                            // )
+                          ),
                         );
                       }
                     }, //
@@ -660,27 +717,32 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
               SizedBox(
                 height: 8,
               ),
-              TextFormField(
+              Padding(
+                padding:
+                    const EdgeInsets.only(bottom: 8.0, right: 4.0, left: 4.0),
+                child: TextFieldDecoration(
                   keyboardType: TextInputType.phone,
-                  controller: _phonetextController,
+                  textEditingController: _phonetextController,
                   validator: _phoneValidate,
-                  autovalidate: phoneColor == AppColors.validValueColor ||
+                  autoValdite: phoneColor == AppColors.validValueColor ||
                       phoneColor == AppColors.errorValueColor,
                   onSaved: (val) {
                     adsPostEntity.phone = val;
                   },
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.check_circle,
-                      color: phoneColor,
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelText: allTranslations.text('phone'),
-                    hintText: allTranslations.text('phone'),
-                    border: new OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(10.0)),
-                  )),
+                  //   decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.check_circle,
+                    color: phoneColor,
+                  ),
+                  //    filled: true,
+                  fillColor: Colors.white,
+                  labelText: allTranslations.text('phone'),
+                  hintText: allTranslations.text('phone'),
+                  // border: new OutlineInputBorder(
+                  //     borderRadius: new BorderRadius.circular(10.0)),
+                  //   )
+                ),
+              ),
               SizedBox(
                 height: 8,
               ),
@@ -736,60 +798,107 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
               SizedBox(
                 height: 8,
               ),
-
-              SizedBox(
-                width: double.infinity,
-                height: 60,
-                child: RaisedButton(
-                  color: Colors.green,
-                  onPressed: () {
-                    if (_formKey.currentState.validate()) {
-                      _formKey.currentState.save();
-                      int count = 0;
-                      var images = <PhotosBean>[];
-                      bool isuploaded = true;
-                      List<ImageListItem> uploadedimges =
-                          uploadBloc.getUploadImageList;
-                      for (var image in uploadedimges) {
-                        if (image is UploadedImage &&
-                            image.state != StateEnum.LOADING) {
-                          if (image.remoteUrl != null &&
-                              image.remoteUrl.isNotEmpty) {
-                            PhotosBean photo = new PhotosBean(
-                                image.remoteUrl.toString(), image.uplodedID);
-                            images.add(photo);
-                            count++;
-                          }
-                        } else if (image is UploadedImage &&
-                            image.state == StateEnum.LOADING) {
-                          isuploaded == false;
-                          break;
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Dialogs.commonButton(() {
+                  if (_formKey.currentState.validate()) {
+                    _formKey.currentState.save();
+                    int count = 0;
+                    var images = <PhotosBean>[];
+                    bool isuploaded = true;
+                    List<ImageListItem> uploadedimges =
+                        uploadBloc.getUploadImageList;
+                    for (var image in uploadedimges) {
+                      if (image is UploadedImage &&
+                          image.state != StateEnum.LOADING) {
+                        if (image.remoteUrl != null &&
+                            image.remoteUrl.isNotEmpty) {
+                          PhotosBean photo = new PhotosBean(
+                              image.remoteUrl.toString(), image.uplodedID);
+                          images.add(photo);
+                          count++;
                         }
+                      } else if (image is UploadedImage &&
+                          image.state == StateEnum.LOADING) {
+                        isuploaded == false;
+                        break;
                       }
-                      if (isuploaded) {
-                        adsPostEntity.photos = List<PhotosBean>();
-                        adsPostEntity.photos.addAll(images);
-                      } else {
-                        scaffoldKey.currentState.showSnackBar(
-                            SnackBar(content: Text('images not all uploaded')));
-                        return;
-                      }
-                      adsPostEntity.locationLatitude =
-                          0 /*_markers.elementAt(0).position.latitude as int*/;
-                      adsPostEntity.locationLongtude =
-                          0 /*_markers.elementAt(0).position.longitude as int*/;
-                      adsPostEntity.userId = userId;
-                      adsPostEntity.isNogitable = isNeogtiable;
-                      bloc.postAds(adsPostEntity);
-                    } else {
-                      ToastUtils.showWarningMessage(
-                          allTranslations.text("missing_fields"));
                     }
-                  },
-                  child: Center(child: Text(allTranslations.text('ads_add'))),
-                  textColor: Colors.white,
-                ),
-              ),
+                    if (isuploaded) {
+                      adsPostEntity.photos = List<PhotosBean>();
+                      adsPostEntity.photos.addAll(images);
+                    } else {
+                      scaffoldKey.currentState.showSnackBar(
+                          SnackBar(content: Text('images not all uploaded')));
+                      return;
+                    }
+                    adsPostEntity.locationLatitude =
+                        0 /*_markers.elementAt(0).position.latitude as int*/;
+                    adsPostEntity.locationLongtude =
+                        0 /*_markers.elementAt(0).position.longitude as int*/;
+                    adsPostEntity.userId = userId;
+                    adsPostEntity.isNogitable = isNeogtiable;
+                    bloc.postAds(adsPostEntity);
+                  } else {
+                    ToastUtils.showWarningMessage(
+                        allTranslations.text("missing_fields"));
+                  }
+                }, allTranslations.text('ads_add'), height: 60),
+              )
+
+              // SizedBox(
+              //   width: double.infinity,
+              //   height: 60,
+              //   child: RaisedButton(
+              //     color: Colors.green,
+              //     onPressed: () {
+              //       if (_formKey.currentState.validate()) {
+              //         _formKey.currentState.save();
+              //         int count = 0;
+              //         var images = <PhotosBean>[];
+              //         bool isuploaded = true;
+              //         List<ImageListItem> uploadedimges =
+              //             uploadBloc.getUploadImageList;
+              //         for (var image in uploadedimges) {
+              //           if (image is UploadedImage &&
+              //               image.state != StateEnum.LOADING) {
+              //             if (image.remoteUrl != null &&
+              //                 image.remoteUrl.isNotEmpty) {
+              //               PhotosBean photo = new PhotosBean(
+              //                   image.remoteUrl.toString(), image.uplodedID);
+              //               images.add(photo);
+              //               count++;
+              //             }
+              //           } else if (image is UploadedImage &&
+              //               image.state == StateEnum.LOADING) {
+              //             isuploaded == false;
+              //             break;
+              //           }
+              //         }
+              //         if (isuploaded) {
+              //           adsPostEntity.photos = List<PhotosBean>();
+              //           adsPostEntity.photos.addAll(images);
+              //         } else {
+              //           scaffoldKey.currentState.showSnackBar(
+              //               SnackBar(content: Text('images not all uploaded')));
+              //           return;
+              //         }
+              //         adsPostEntity.locationLatitude =
+              //             0 /*_markers.elementAt(0).position.latitude as int*/;
+              //         adsPostEntity.locationLongtude =
+              //             0 /*_markers.elementAt(0).position.longitude as int*/;
+              //         adsPostEntity.userId = userId;
+              //         adsPostEntity.isNogitable = isNeogtiable;
+              //         bloc.postAds(adsPostEntity);
+              //       } else {
+              //         ToastUtils.showWarningMessage(
+              //             allTranslations.text("missing_fields"));
+              //       }
+              //     },
+              //     child: Center(child: Text(allTranslations.text('ads_add'))),
+              //     textColor: Colors.white,
+              //   ),
+              // ),
             ]),
           ),
         ),
@@ -807,29 +916,30 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
       String hintText,
       iswithArrowIcon = false,
       Function onClickAction}) {
-    return TextFormField(
-        validator: _emptyValidate,
-        autovalidate: categoryColor == AppColors.validValueColor ||
-            categoryColor == AppColors.errorValueColor,
-        controller: controller,
-        onTap: () {
-          onClickAction();
-        },
-        readOnly: true,
-        enableInteractiveSelection: true,
-        decoration: InputDecoration(
-          suffixIcon: iswithArrowIcon ? Icon(Icons.arrow_drop_down) : null,
-          prefixIcon: Icon(
-            Icons.check_circle,
-            color: categoryColor,
-          ),
-          filled: true,
-          fillColor: Colors.white,
-          labelText: labelText,
-          hintText: hintText,
-          border: new OutlineInputBorder(
-              borderRadius: new BorderRadius.circular(10.0)),
-        ));
+    return TextFieldDecoration(
+      validator: _emptyValidate,
+      autoValdite: categoryColor == AppColors.validValueColor ||
+          categoryColor == AppColors.errorValueColor,
+      textEditingController: controller,
+      onTap: () {
+        onClickAction();
+      },
+      readOnly: true,
+      //   enableInteractiveSelection: true,
+      // decoration: InputDecoration(
+      suffixIcon: iswithArrowIcon ? Icon(Icons.arrow_drop_down) : null,
+      prefixIcon: Icon(
+        Icons.check_circle,
+        color: categoryColor,
+      ),
+      //  filled: true,
+      fillColor: Colors.white,
+      labelText: labelText,
+      hintText: hintText,
+      // border: new OutlineInputBorder(
+      //     borderRadius: new BorderRadius.circular(10.0)),
+      //   )
+    );
   }
 
   Widget _BuildCityRoundedTextField(
@@ -839,29 +949,30 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
       iswithArrowIcon = false,
       Function onClickAction,
       bool visible}) {
-    return TextFormField(
-        enableInteractiveSelection: true,
-        readOnly: true,
-        validator: _emptyValidate,
-        autovalidate: cityColor == AppColors.validValueColor ||
-            cityColor == AppColors.errorValueColor,
-        controller: controller,
-        onTap: () {
-          onClickAction();
-        },
-        decoration: InputDecoration(
-          suffixIcon: iswithArrowIcon ? Icon(Icons.arrow_drop_down) : null,
-          prefixIcon: Icon(
-            Icons.check_circle,
-            color: cityColor,
-          ),
-          filled: true,
-          fillColor: Colors.white,
-          labelText: labelText,
-          hintText: hintText,
-          border: new OutlineInputBorder(
-              borderRadius: new BorderRadius.circular(10.0)),
-        ));
+    return TextFieldDecoration(
+      //  enableInteractiveSelection: true,
+      readOnly: true,
+      validator: _emptyValidate,
+      autoValdite: cityColor == AppColors.validValueColor ||
+          cityColor == AppColors.errorValueColor,
+      textEditingController: controller,
+      onTap: () {
+        onClickAction();
+      },
+      //  decoration: InputDecoration(
+      suffixIcon: iswithArrowIcon ? Icon(Icons.arrow_drop_down) : null,
+      prefixIcon: Icon(
+        Icons.check_circle,
+        color: cityColor,
+      ),
+      // filled: true,
+      fillColor: Colors.white,
+      labelText: labelText,
+      hintText: hintText,
+      // border: new OutlineInputBorder(
+      //     borderRadius: new BorderRadius.circular(10.0)),
+      // )
+    );
   }
 
   void _onMapCreated(GoogleMapController controller) {

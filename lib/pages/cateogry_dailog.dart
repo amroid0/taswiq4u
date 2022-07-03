@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/cateogry_bloc.dart';
 import 'package:olx/model/cateogry_entity.dart';
 import 'package:olx/utils/global_locale.dart';
@@ -28,26 +27,31 @@ class SelectDialog<T> extends StatefulWidget {
   }) : super(key: key);
 
   static Future<T> showModal<T>(
-      BuildContext context, {
-        List<T> items,
-        String label,
-        T selectedValue,
-        bool showSearchBox,
-        Future<List<T>> Function(String text) onFind,
-        SelectOneItemBuilderType<T> itemBuilder,
-        void Function(CateogryEntity) onChange,
-        InputDecoration searchBoxDecoration,
-      }) {
-    return showDialog(
+    BuildContext context, {
+    List<T> items,
+    String label,
+    T selectedValue,
+    bool showSearchBox,
+    Future<List<T>> Function(String text) onFind,
+    SelectOneItemBuilderType<T> itemBuilder,
+    void Function(CateogryEntity) onChange,
+    InputDecoration searchBoxDecoration,
+  }) {
+    return showModalBottomSheet(
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          elevation: 0,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           title: Text(label ?? ""),
           actions: <Widget>[
-            FlatButton(child:Text(allTranslations.text('cancel')), onPressed: () {
-              Navigator.of(context).pop();
-            },)
+            FlatButton(
+              child: Text(allTranslations.text('cancel')),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
           ],
           content: SelectDialog<T>(
             selectedValue: selectedValue,
@@ -73,17 +77,17 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
   void Function(CateogryEntity) onChange;
 
   _SelectDialogState(
-      List<T> itemsList,
-      this.onChange,
-      Future<List<T>> Function(String text) onFind,
-      ) {
-  }
+    List<T> itemsList,
+    this.onChange,
+    Future<List<T>> Function(String text) onFind,
+  ) {}
 
   @override
   void dispose() {
     bloc.dispose();
     super.dispose();
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -100,7 +104,6 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
       height: MediaQuery.of(context).size.height * .7,
       child: Column(
         children: <Widget>[
-
           Expanded(
             child: Scrollbar(
               child: StreamBuilder<List<CateogryEntity>>(
@@ -114,7 +117,10 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
                     return Center(child: Text("No data found"));
                   return ListView.separated(
                     itemCount: snapshot.data.length,
-                    separatorBuilder: (c,index)=>Divider(height: 1,color: Colors.grey.shade500,),
+                    separatorBuilder: (c, index) => Divider(
+                      height: 1,
+                      color: Colors.grey.shade500,
+                    ),
                     itemBuilder: (context, index) {
                       var item = snapshot.data[index];
                       if (widget.itemBuilder != null)
@@ -122,9 +128,9 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
                           child: widget.itemBuilder(
                               context, item, item == widget.selectedValue),
                           onTap: () {
-                            if(item.hasSub){
+                            if (item.hasSub) {
                               bloc.addCateogryToStack(item);
-                            }else{
+                            } else {
                               onChange(item);
                               Navigator.pop(context);
                             }
@@ -132,13 +138,14 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
                         );
                       else
                         return ListTile(
-                          title: Text(allTranslations.isEnglish?item.englishDescription.toString():
-                          item.arabicDescription.toString()),
+                          title: Text(allTranslations.isEnglish
+                              ? item.englishDescription.toString()
+                              : item.arabicDescription.toString()),
                           selected: item == widget.selectedValue,
                           onTap: () {
-                            if(item.hasSub){
+                            if (item.hasSub) {
                               bloc.addCateogryToStack(item);
-                            }else{
+                            } else {
                               onChange(item);
                               Navigator.pop(context);
                             }

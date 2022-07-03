@@ -5,10 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:olx/data/bloc/splash_bloc.dart';
 import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/model/api_response_entity.dart';
-import 'package:olx/pages/welcome_page.dart';
 
-import 'language_page.dart';
-import 'main_page.dart';
+import 'country_page.dart';
 
 class SplashScreen extends StatefulWidget {
   bool isFirst;
@@ -20,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Color gradientStart = Colors.black12; //Change start gradient color here
   Color gradientEnd = Colors.black12;
   SplashBloc _bloc;
-  List <String> l ;
+  List<String> l;
 
   @override
   void initState() {
@@ -76,19 +74,19 @@ class _SplashScreenState extends State<SplashScreen> {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ChooseLanguagePage()));
+                                  builder: (context) => CountryPage()));
                         } else if (val.data && widget.isFirst == false) {
                           //
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MainScreen()),
+                                builder: (context) => CountryPage()),
                           );
                         } else {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => WelocmeScreen()),
+                                builder: (context) => CountryPage()),
                           );
                         }
                       });
@@ -99,7 +97,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ChooseLanguagePage()),
+                              builder: (context) => CountryPage()),
                         );
                       });
                       break;
