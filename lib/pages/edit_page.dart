@@ -9,6 +9,7 @@ import 'package:olx/data/bloc/edit_bloc.dart';
 import 'package:olx/data/bloc/upload_image_bloc.dart';
 import 'package:olx/model/StateEnum.dart';
 import 'package:olx/model/ads_detail.dart';
+import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/ads_post_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/cateogry_entity.dart';
@@ -31,7 +32,7 @@ import 'ImageUploaderListPage.dart';
 import 'cateogry_dailog.dart';
 
 class EditPage extends StatefulWidget {
-  AdsDetail detail;
+  AdsModel detail;
 
   EditPage(this.detail);
 
@@ -75,7 +76,7 @@ class _EditPageState extends State<EditPage> {
   List<List> _multiselectedFieldValue =
       List<List<FieldProprtiresSpecificationoption>>();
 
-  AdsDetail adsObj;
+  AdsModel adsObj;
 
   bool isFirst = true;
 
