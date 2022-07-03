@@ -6,6 +6,7 @@ import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/user_info.dart';
 import 'package:olx/pages/bundle_page.dart';
 import 'package:olx/pages/change_pass_page.dart';
+import 'package:olx/pages/my_ads_page.dart';
 import 'package:olx/pages/settings_page.dart';
 import 'package:olx/utils/Constants.dart';
 
@@ -142,28 +143,37 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Image.asset(
-                            'images/my_ads.png',
-                            width: 45,
-                            height: 45,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text('My Ads')
-                        ],
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios_outlined,
-                        color: Colors.black87,
-                        size: 30,
-                      )
-                    ],
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MyAdsPage(),
+                          ));
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Image.asset(
+                              'images/my_ads.png',
+                              width: 45,
+                              height: 45,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text('My Ads')
+                          ],
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios_outlined,
+                          color: Colors.black87,
+                          size: 30,
+                        )
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 24,
