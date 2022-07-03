@@ -87,7 +87,13 @@ class AdsClient{
   }
 
 
+  Future<bool>deleteAds(String id)async{
+    final result=await NetworkCommon().dio.post(APIConstants.DELETE_ADS,queryParameters: {"id":id});
+    if(result.statusCode==200){
+      return true;
+    }
 
+  }
 
 
 }

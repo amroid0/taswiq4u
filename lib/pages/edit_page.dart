@@ -32,7 +32,7 @@ import 'ImageUploaderListPage.dart';
 import 'cateogry_dailog.dart';
 
 class EditPage extends StatefulWidget {
-  AdsDetail detail;
+  AdsModel detail;
   EditPage(this.detail);
 
   @override
@@ -74,7 +74,7 @@ class _EditPageState extends State<EditPage> {
   List<List> _multiselectedFieldValue =
       List<List<FieldProprtiresSpecificationoption>>();
 
-  AdsDetail adsObj;
+  AdsModel adsObj;
 
   bool isFirst = true;
 

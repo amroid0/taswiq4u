@@ -26,6 +26,7 @@ import 'package:olx/pages/edit_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/pages/slider_full+image_viewer.dart';
 import 'package:olx/utils/Constants.dart';
+import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/ToastUtils.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/favroite_widget.dart';
@@ -295,7 +296,7 @@ class _DetailPageState extends State<DetailPage> {
                     Stack(children: [
                       gettSliderImageWidget(detail.AdvertismentImages),
                       Padding(
-                        padding: EdgeInsets.all(8),
+                        padding: EdgeInsets.all(16),
                         child: Row(
                           children: <Widget>[
                             Expanded(
@@ -305,15 +306,19 @@ class _DetailPageState extends State<DetailPage> {
                                   onTap: () {
                                     Navigator.pop(context);
                                   },
-                                  child: CircleAvatar(
-                                    radius: 18,
-                                    backgroundColor:
-                                        Colors.black.withOpacity(.4),
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.arrow_back_ios,
-                                        color: Colors.white,
+                                  child: Container(
+                                    width: 45,
+                                    height: 45,
+                                    padding: EdgeInsets.all(4.0),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xffa49399),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(12.0),
                                       ),
+                                    ),
+                                    child: Icon(
+                                      Icons.arrow_back_ios,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
@@ -322,8 +327,62 @@ class _DetailPageState extends State<DetailPage> {
                             SizedBox(
                               width: 10,
                             ),
-                            Visibility(
-                              visible: widget.isEditable,
+                            Container(
+                                width: 45,
+                                height: 45,
+                                padding: EdgeInsets.all(4.0),
+                                decoration: BoxDecoration(
+                                  color: Color(0xffa49399),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(12.0),
+                                  ),
+                                ),
+                                child: FavroiteWidget(
+                                  onFavChange: (val) {
+                                    if (BlocProvider.of<LoginBloc>(context)
+                                        .isLogged())
+                                      favbloc.changeFavoriteState(
+                                          val, detail.Id);
+                                    else
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ParentAuthPage()));
+                                  },
+                                  value: detail.IsFavorite,
+                                  bgColor:  Color(0xffa49399),
+                                    iconColor: Colors.white
+            ,
+                                )),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                await FlutterShare.share(
+                                    title: 'Taswiq share',
+                                    linkUrl: detail.TextShareEn,
+                                    chooserTitle: 'taswiq Chooser Title');
+                              },
+                              child: Container(
+                                  width: 45,
+                                  height: 45,
+                                  padding: EdgeInsets.all(4.0),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xffa49399),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(12.0),
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.share,
+                                    size: 30.0,
+                                    color: Colors.white,
+                                  )),
+                            ),
+                          /*  Visibility(
+                              visible: true*//*widget.isEditable*//*,
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.push(
@@ -353,7 +412,7 @@ class _DetailPageState extends State<DetailPage> {
                               width: 10,
                             ),
                             Visibility(
-                              visible: widget.isEditable,
+                              visible: true*//*widget.isEditable*//*,
                               child: GestureDetector(
                                 onTap: () {
                                   _bloc.deleteAds(detail.Id.toString());
@@ -370,22 +429,26 @@ class _DetailPageState extends State<DetailPage> {
                                       color: Colors.red,
                                     )),
                               ),
-                            ),
+                            ),*/
                             SizedBox(
                               width: 10,
                             ),
                             Visibility(
-                              visible: widget.isEditable,
+                              visible:widget.isEditable,
                               child: GestureDetector(
                                 onTap: () {
                                   _bloc.distinictAds(detail.Id.toString());
                                 },
                                 child: Container(
+                                    width: 45,
+                                    height: 45,
+                                    padding: EdgeInsets.all(4.0),
                                     decoration: BoxDecoration(
-                                        color:
-                                            Color(0xffECECEC).withOpacity(0.6),
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
+                                      color: Color(0xffa49399),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(12.0),
+                                      ),
+                                    ),
                                     child: Icon(
                                       Icons.star,
                                       size: 30.0,
@@ -396,66 +459,13 @@ class _DetailPageState extends State<DetailPage> {
                           ],
                         ),
                       ),
-                      Align(
-                        child: Container(
-                          margin: EdgeInsets.only(
-                              top: 305, left: 12.0, right: 12.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                  // margin:EdgeInsets.only(top:300,left:12.0,right: 12.0),
-                                  decoration: BoxDecoration(
-                                      color: Color(0xffECECEC).withOpacity(0.6),
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: FavroiteWidget(
-                                    onFavChange: (val) {
-                                      if (BlocProvider.of<LoginBloc>(context)
-                                          .isLogged())
-                                        favbloc.changeFavoriteState(
-                                            val, detail.Id);
-                                      else
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ParentAuthPage()));
-                                    },
-                                    value: detail.IsFavorite,
-                                  )),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              GestureDetector(
-                                onTap: () async {
-                                      await FlutterShare.share(
-                                      title: 'Taswiq share',
-                                      linkUrl: detail.TextShareEn,
-                                      chooserTitle: 'taswiq Chooser Title');
-                                },
-                                child: Container(
-                                    height: 35,
-                                    // margin:EdgeInsets.only(top: 300 ,left:50,right: 50),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(15)),
-                                    child: Icon(
-                                      Icons.share,
-                                      size: 30.0,
-                                      color: Colors.black,
-                                    )),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+
                     ]),
                     SizedBox(
                       height: 10,
                     ),
                     Container(
-                      padding: EdgeInsets.all(8),
+                      padding: EdgeInsets.all(16),
                       decoration: BoxDecoration(color: Colors.white),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -540,39 +550,65 @@ class _DetailPageState extends State<DetailPage> {
     List<Widget> widgets = [];
     final title = Column(
       children: <Widget>[
+        Align(alignment: AlignmentDirectional.topStart,
+          child: Text(
+            allTranslations.isEnglish
+                ? detail.EnglishTitle
+                : detail.ArabicTitle,
+            style: TextStyle(fontSize: 16,color: Color(0xff2D3142),fontWeight: FontWeight.bold),
+            maxLines: 1,
+          ),
+        ),
+        SizedBox(height: 8,),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              child: Text(
-                allTranslations.isEnglish
-                    ? detail.EnglishTitle
-                    : detail.ArabicTitle,
-                style: TextStyle(fontSize: 18),
-                maxLines: 1,
-              ),
-            ),
             Text(
               detail.Price == null
                   ? ""
                   : '${detail.Price}  ${allTranslations.text('cuurency')}',
-              style: TextStyle(fontSize: 20, color: Colors.green),
+              style: TextStyle(fontSize: 16, color: Color(0xff53B553),fontWeight: FontWeight.bold),
+            ),
+            Text(
+              detail.CreationTime == null
+                  ? ""
+                  : '${detail.CreationTime}}',
+              style: TextStyle(fontSize: 11, color: Color(0xff818391)),
             ),
           ],
         ),
-        Align(
-          alignment: Alignment.topRight,
-          child: Text(
-              "${allTranslations.isEnglish ? detail.StateNameEnglish : detail.StateNameArabic}"),
-        )
+        SizedBox(height: 8,),
+        Divider(color: Colors.black.withOpacity(.16),),
+        SizedBox(height: 8,),
+
+        Row(
+          mainAxisAlignment:MainAxisAlignment.spaceBetween ,
+          children: [
+            Text(
+                "${allTranslations.isEnglish ? detail.StateNameEnglish : detail.StateNameArabic}",style: TextStyle(color:Color(0xff818391),fontSize: 11),),
+
+               InkWell(
+                 onTap: (){
+                   navigateTo(detail.LocationLatitude, detail.LocationLongtude);
+                 },
+                 child: Icon(Icons.directions,color: AppColors.accentColor,),
+               )
+          ],
+        ),
+        SizedBox(height: 8,),
+        Divider(color: Colors.black.withOpacity(.16),),
+        SizedBox(height: 16,),
+
+
+
       ],
     ); //title and price
-    final viewCount = Container(
+    /*final viewCount = Container(
       padding: EdgeInsets.symmetric(horizontal: 8),
       height: 40,
       decoration: BoxDecoration(
           color: Color(0xffe6e6e6), borderRadius: BorderRadius.circular(10)),
-      child: Row(
+      *//*child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           StreamBuilder(
@@ -586,16 +622,14 @@ class _DetailPageState extends State<DetailPage> {
               }),
           Text("${allTranslations.text('id')}: ${detail.Id}")
         ],
-      ),
-    );
+      ),*//*
+    );*/
     widgets.add(title);
     widgets.add(SizedBox(
       height: 8,
     ));
-    widgets.add(viewCount);
-    widgets.add(SizedBox(
-      height: 8,
-    ));
+  //  widgets.add(viewCount);
+
     widgets.add(Text(allTranslations.text("properties"),
         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
 
@@ -612,28 +646,38 @@ class _DetailPageState extends State<DetailPage> {
         }
 
         widgets.add(ListTile(
-          tileColor: isEvenRow ? Colors.white : Colors.grey.shade200,
+          tileColor:Color(0xffF6F8FA),
+          dense: true,
           leading: Text(
             allTranslations.isEnglish ? spec.NameEnglish : spec.NameArabic,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 14,color: Color(0xff2D3142)),
           ),
-          trailing: Text(value),
+          trailing: Text(value,style: TextStyle(fontSize: 14,color: Color(0xff2D3142))),
         ));
+        widgets.add(Container(
+            color:Color(0xffF6F8FA),
+            child: Divider(color: Color(0x1A818391),)));
       } else {
         if (spec.CustomValue != null) {
           widgets.add(ListTile(
-            tileColor: isEvenRow ? Colors.white : Colors.grey.shade200,
+            tileColor:Color(0xffF6F8FA),
             leading: Text(
                 "${allTranslations.isEnglish ? spec.NameEnglish : spec.NameArabic}",
-                style: TextStyle(fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 14,color: Color(0xff2D3142))),
             trailing: Text(
-              "${spec.CustomValue}",
+              "${spec.CustomValue}",style: TextStyle(fontSize: 14,color: Color(0xff2D3142))
             ),
           ));
+          widgets.add(Container(            color:Color(0xffF6F8FA),
+              child: Divider(color: Color(0x1A818391),)));
+
         }
       }
       isEvenRow = !isEvenRow;
     }
+    widgets.add(SizedBox(
+      height: 8,
+    ));
     widgets.add(Text(allTranslations.text('details'),
         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
     widgets.add(Row(
@@ -661,31 +705,23 @@ class _DetailPageState extends State<DetailPage> {
       ],
     ));
     widgets.add(SizedBox(
-      height: 8,
+      height: 16,
     ));
 
-    widgets.add(FlatButton.icon(
-        onPressed: () {
-          _bloc.translateAds();
-        },
-        icon: Icon(
-          Icons.translate,
-          color: Colors.blueAccent,
-        ),
-        label: Text(allTranslations.text('translate'))));
+
 
     final actions = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        FlatButton.icon(
-            onPressed: () {
-              navigateTo(detail.LocationLatitude, detail.LocationLongtude);
-            },
-            icon: Icon(
-              Icons.map,
-              color: Colors.green,
-            ),
-            label: Text(allTranslations.text('map'))),
+   FlatButton.icon(
+        onPressed: () {
+      _bloc.translateAds();
+    },
+    icon: Icon(
+    Icons.translate,
+    color: Colors.blueAccent,
+    ),
+    label: Text(allTranslations.text('translate'))),
         FlatButton.icon(
             onPressed: () {
               // setState(() {

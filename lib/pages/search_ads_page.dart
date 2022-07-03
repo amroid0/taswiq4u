@@ -3,6 +3,8 @@ import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/favroite_bloc.dart';
@@ -10,6 +12,7 @@ import 'package:olx/data/shared_prefs.dart';
 import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/utils/Constants.dart';
+import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/utils.dart';
 import 'package:olx/widget/ShowListWidget.dart';
@@ -19,6 +22,8 @@ import 'package:olx/widget/favroite_widget.dart';
 
 import 'detail_page.dart';
 import 'full_commerical_ads_screen.dart';
+import 'package:olx/widget/word_suggestion_list.dart';
+import 'package:english_words/english_words.dart' as words;
 
 class DummyDelegate extends SearchDelegate<String> {
   int _sortSelectedValue=1;
@@ -28,28 +33,72 @@ class DummyDelegate extends SearchDelegate<String> {
   ScrollController _scrollController = new ScrollController();
   String countryId ;
   int lang ;
-
+   List<String> _words;
+   List<String> _history;
   var _gridItemCount=1;
   var favbloc;
+  DummyDelegate(List<String> history){
+    _history =history;
+   _words = List.from(Set.from(words.all))
+    ..sort(
+    (w1, w2) => w1.toLowerCase().compareTo(w2.toLowerCase()),
+    );
+  }
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final Iterable<String> suggestions = this.query.isEmpty
+        ? _history
+        : _words.where((word) => word.startsWith(query));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Visibility(
+          visible: this.query.isEmpty,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16,24,16,0),
+            child: Text(allTranslations.text('recent_search'),style: TextStyle(color : Color(0x993c3c43)),),
+          ),
+        ),
+       SizedBox(height: 8,),
+        Divider(color: Color(0xffE3E7EF),),
+        Expanded(
+          child: WordSuggestionList(
+            query: this.query,
+            suggestions: suggestions.toList(),
+            onSelected: (String suggestion) {
+              this.query = suggestion;
+              this._history.insert(0, suggestion);
+              showResults(context);
+            },
+          ),
+        ),
+      ],
+    );
+  }
 
 
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
-      IconButton(
+      /*IconButton(
         icon: Icon(Icons.search),
         onPressed: () {
           showResults(context);
 
           },
-      ),
+      ),*/
     ];
   }
 
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back),
+      icon: Icon(
+        Icons.arrow_back_ios,
+        color: Color(0xff2D3142),
+        size: 30,
+      ),
       onPressed: () {
         close(context, null);
       },
@@ -113,34 +162,53 @@ class DummyDelegate extends SearchDelegate<String> {
         padding: const EdgeInsets.only(top:8.0),
         child: Column(
           children: <Widget>[
-            Row(
-              mainAxisAlignment:MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                ShowListWidget(value: 1,onvalueChange: (val){
+            IntrinsicHeight(
+              child: Padding(
+                padding: const EdgeInsets.only(left:16.0,right: 16),
+                child: Row(
+                  children: <Widget>[
+
+
+                    InkWell(
+                      onTap: () {
+                        _newSortModalBottomSheet(context);
+                      },
+                      child: Icon(
+                        FontAwesomeIcons.sortAmountDown,
+                        size: 24,
+                        color: Color(0xff2D3142),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    InkWell(
+                        onTap: () {
+                          _newSortModalBottomSheet(context);
+                        },
+                        child: Text(allTranslations.text('sort'))),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Expanded(
+                        child: VerticalDivider(
+                          color: Color(0xffF5F5F5),
+                          thickness: 1,
+                        )),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Text('12'),
+                    Text(allTranslations.text('result_count')),
+                  ShowListWidget(value: 1,onvalueChange: (val){
                     _gridItemCount=val;
                     //_buildAdsList(ads,context);
-                  _bloc.refreshData();
+                    _bloc.refreshData();
 
-                },)
-               ,
-                Text(allTranslations.text('sort')),
-                InkWell(
-                  onTap: (){
-                    _newSortModalBottomSheet(context);
-
-                  },
-                  child: Container(
-
-                    width: 36
-                    ,
-                    height: 36,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)
-                        ,boxShadow:[ BoxShadow(color: Colors.black12,blurRadius: 10)],color: Colors.white),
-                    child: Icon(Icons.sort_by_alpha), ),
-                ),
-
-              ],),
+                  },)
+                  ],),
+              ),
+            ),
 
 
 
@@ -187,11 +255,7 @@ class DummyDelegate extends SearchDelegate<String> {
       ),
     );}
 
-  @override
-  Widget buildSuggestions(BuildContext context) {
 
-    return Text('');
-  }
 
 
   Widget _buildAdsList(AdsEntity ads, BuildContext context){
