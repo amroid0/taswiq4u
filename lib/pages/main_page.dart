@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:olx/data/bloc/NavigationBloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
@@ -10,6 +11,7 @@ import 'package:olx/data/bloc/cateogry_bloc.dart';
 import 'package:olx/data/bloc/languge_bloc.dart';
 import 'package:olx/data/bloc/login_bloc.dart';
 import 'package:olx/data/shared_prefs.dart';
+import 'package:olx/model/country_entity.dart';
 import 'package:olx/model/user_info.dart';
 import 'package:olx/pages/add_ads_page.dart';
 import 'package:olx/pages/favroite_page.dart';
@@ -20,7 +22,10 @@ import 'package:olx/pages/profile_page.dart';
 import 'package:olx/pages/search_ads_page.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/Theme.dart';
+import 'package:olx/utils/ToastUtils.dart';
 import 'package:olx/utils/global_locale.dart';
+import 'package:olx/widget/country_list_dialog.dart';
+import 'package:olx/widget/country_list_sheet.dart';
 import 'package:olx/widget/custom_web_view.dart';
 import 'package:olx/widget/tab_item.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -43,21 +48,30 @@ class NavItem {
   NavItem({this.name, this.navIcon, this.isExpanded = false}) {}
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen>
+    with SingleTickerProviderStateMixin {
   SharedPreferences sharedPreferences;
   NaviagtionBloc bloc;
   String userName = "";
-  int userCountryId;
   bool isFirst;
-  String cId;
+  AnimationController _animationController;
 
-  int countryId;
+  int countryId = 1;
 
   StreamController _controller = StreamController();
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   CategoryBloc _cateogyBloc;
+
+  final _zoomDrawerController = ZoomDrawerController();
+
+  var tabIndex = 0;
+ List<String> _history = <String>['سيارة', 'شقة', 'موبايل', 'ايجار'];
+
+  var _langSelectedValue = 0;
+
+  int _countrySelectedValue;
 
 /*
   List<NavItem>depratmentNavList=[
@@ -70,6 +84,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void dispose() {
     // TODO: implement dispose
+    _animationController.dispose();
 
     super.dispose();
   }
@@ -79,11 +94,14 @@ class _MainScreenState extends State<MainScreen> {
       bloc.navigateToScreen(NavigationScreen.OFFER);
     } else if (index == 2) {
       bloc.navigateToScreen(NavigationScreen.FAVROITE);
-    } else if (index == 0) {
-      bloc.navigateToScreen(NavigationScreen.PRFOILE);
     } else if (index == 3) {
+      bloc.navigateToScreen(NavigationScreen.PRFOILE);
+    } else if (index == 0) {
       bloc.navigateToScreen(NavigationScreen.HOME);
     }
+    setState(() {
+      tabIndex = index;
+    });
   }
 
   int _navSelectedIndex = 0;
@@ -98,10 +116,12 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     // TODO: implement initState
     // getUserName();
+
     bloc = new NaviagtionBloc();
     _cateogyBloc = CategoryBloc();
     searchController = new TextEditingController();
-
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     bloc.stream.listen((data) async {
       if (data == NavigationScreen.FAVROITE ||
           data == NavigationScreen.PRFOILE ||
@@ -160,6 +180,10 @@ class _MainScreenState extends State<MainScreen> {
                   title: allTranslations.text('safety'),
                   selectedUrl: url,
                 )));
+      } else if (data == NavigationScreen.LANGUAGE) {
+        showLanguageSheet();
+      } else if (data == NavigationScreen.COUNTRY) {
+        showCountrySheet();
       }
     });
     setIsFirst();
@@ -167,23 +191,16 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
   }
 
+  _toggleAnimation() {
+    _animationController.isDismissed
+        ? _animationController.forward()
+        : _animationController.reverse();
+  }
+
   @override
   Widget build(BuildContext context) {
     getUserName();
-    getCountryId();
-    List<FABBottomAppBarItem> bottomItems = [
-      FABBottomAppBarItem(
-          iconData: Icons.person, text: allTranslations.text('account')),
-      FABBottomAppBarItem(
-          iconData: Icons.announcement, text: allTranslations.text('offers')),
-      FABBottomAppBarItem(
-          iconData: Icons.favorite, text: allTranslations.text('favroite')),
-      FABBottomAppBarItem(
-          iconData: Icons.home, text: allTranslations.text('home')),
-    ];
-    if (allTranslations.isEnglish) {
-      bottomItems.reversed.toList();
-    }
+
     List<Widget> drawerOptions = [];
 
     List<NavItem> NavItemList = [
@@ -192,15 +209,15 @@ class _MainScreenState extends State<MainScreen> {
       NavItem(
           name: allTranslations.text('my_ads'), navIcon: Icons.announcement),
       NavItem(name: allTranslations.text('favroite'), navIcon: Icons.favorite),
-      NavItem(name: allTranslations.text('settings'), navIcon: Icons.settings),
+      NavItem(name: allTranslations.text('lang'), navIcon: Icons.g_translate),
+      NavItem(name: allTranslations.text('country'), navIcon: Icons.language),
+      NavItem(
+          name: allTranslations.text('contact_us'),
+          navIcon: FontAwesomeIcons.headphones),
       NavItem(
           name: allTranslations.text('links'),
           navIcon: FontAwesomeIcons.link,
           isExpanded: true),
-      // NavItem(name:allTranslations.text('rules'),navIcon:Icons.book),
-      // NavItem(name:allTranslations.text('about_us'),navIcon:Icons.article),
-      // NavItem(name:allTranslations.text('questions'),navIcon:Icons.question_answer),
-      // NavItem(name:allTranslations.text('contact_us'),navIcon:Icons.call)
     ];
     for (var i = 0; i < NavItemList.length; i++) {
       var d = NavItemList[i];
@@ -208,476 +225,371 @@ class _MainScreenState extends State<MainScreen> {
         createNavItem(d, i),
       );
     }
-    drawerOptions.add(Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        IconButton(
-          icon: Icon(FontAwesomeIcons.facebook),
-          color: Colors.blue,
-          onPressed: () => _openSocail(1),
-        ),
-        IconButton(
-          icon: Icon(FontAwesomeIcons.instagram),
-          color: Colors.purpleAccent,
-          onPressed: () => _openSocail(3),
-        ),
-        IconButton(
-          icon: Icon(FontAwesomeIcons.twitter),
-          color: Colors.lightBlueAccent,
-          onPressed: () => _openSocail(2),
-        ),
-      ],
-    ));
+    drawerOptions.add(StreamBuilder<bool>(
+        initialData: BlocProvider.of<LoginBloc>(context).isLogged(),
+        stream: BlocProvider.of<LoginBloc>(context).Sessionstream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data)
+            return Directionality(
+              textDirection: TextDirection.ltr,
+              child: ListTile(
+                leading: Container(
+                    width: 40,
+                    height: 40,
+                    padding: EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      color: Color(0xFFEFF1F7),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(12.0),
+                      ),
+                    ),
+                    child: Icon(Icons.logout)),
+                title: Text(allTranslations.text('logout')),
+                onTap: () {
+                  _zoomDrawerController.toggle.call();
+                  Alert(
+                    context: context,
+                    title: allTranslations.text('logout'),
+                    desc: allTranslations.text('logout_msg'),
+                    style: AlertStyle(
+                      isCloseButton: false,
+                      alertBorder: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                    buttons: [
+                      DialogButton(
+                        radius: BorderRadius.all(Radius.circular(20)),
+                        child: Text(
+                          allTranslations.text('ok'),
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          BlocProvider.of<LoginBloc>(context).logout();
+                          LoginBloc.nameLogin = "null";
+                        },
+                        width: 120,
+                        height: 56,
+                      ),
+                      DialogButton(
+                        radius: BorderRadius.all(Radius.circular(20)),
+                        child: Container(
+                          width: 120,
+                          height: 56,
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
+                              border: Border.all(
+                                color: AppColors.accentColor,
+                                width: 1,
+                              )),
+                          child: Center(
+                            child: Text(
+                              allTranslations.text('cancel'),
+                              style: TextStyle(
+                                  color: AppColors.accentColor, fontSize: 20),
+                            ),
+                          ),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                        width: 120,
+                        height: 56,
+                        color: Colors.white,
+                      )
+                    ],
+                  ).show();
+                },
+              ),
+            );
+          else
+            return Container();
+        }));
+
+    final rightSlide = MediaQuery.of(context).size.width * 0.6;
+
     return BlocProvider(
-      bloc: _cateogyBloc,
-      child: StreamBuilder(
-        stream: BlocProvider.of<TranslationsBloc>(context).currentLanguage,
-        builder: (context, snap) {
-          return Scaffold(
-              key: _scaffoldKey,
-              bottomNavigationBar:
-                  Stack(alignment: new FractionalOffset(.5, 1.0), children: [
-                FABBottomAppBar(
-                  color: Colors.grey,
-                  selectedColor: Theme.of(context).accentColor,
-                  onTabSelected: _selectedTab,
-                  items: bottomItems,
-                ),
-                InkWell(
-                  onTap: () => {
-                    if (BlocProvider.of<LoginBloc>(context).isLogged() &&
-                        countryId == userCountryId)
-                      {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AddAdvertisment()),
-                        )
-                      }
-                    else if (BlocProvider.of<LoginBloc>(context).isLogged() &&
-                        countryId != userCountryId)
-                      {
-                        Alert(
-                          context: context,
-                          title: (allTranslations.text('ads_add')),
-                          desc: (allTranslations.text('err_add_ads')),
-                          type: AlertType.warning,
-                          buttons: [
-                            DialogButton(
-                              child: Text(
-                                ('ok'),
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
+        bloc: _cateogyBloc,
+        child: StreamBuilder(
+            stream: BlocProvider.of<TranslationsBloc>(context).currentLanguage,
+            builder: (context, snap) {
+              return ZoomDrawer(
+                openCurve: Curves.fastOutSlowIn,
+                closeCurve: Curves.bounceIn,
+                controller: _zoomDrawerController,
+                menuScreen: Padding(
+                  padding: const EdgeInsets.only(top: 100),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Expanded(
+                        child: ListView(children: drawerOptions),
+                      ), //listview
+
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          textDirection: TextDirection.ltr,
+                          children: [
+                            GestureDetector(
+                              onTap: () => _openSocail(1),
+                              child: Container(
+                                width: 38,
+                                height: 38,
+                                padding: EdgeInsets.all(4.0),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFCAD1E0),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(12.0),
+                                  ),
+                                ),
+                                child: Icon(FontAwesomeIcons.facebookF,
+                                    color: Color(0xff1773EA)),
                               ),
-                              onPressed: () => Navigator.pop(context),
-                              width: 120,
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            GestureDetector(
+                              onTap: () => _openSocail(3),
+                              child: Container(
+                                width: 38,
+                                height: 38,
+                                padding: EdgeInsets.all(4.0),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFCAD1E0),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(12.0),
+                                  ),
+                                ),
+                                child: Icon(FontAwesomeIcons.instagram,
+                                    color: Color(0xff7623BE)),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            GestureDetector(
+                              onTap: () => _openSocail(2),
+                              child: Container(
+                                width: 38,
+                                height: 38,
+                                padding: EdgeInsets.all(4.0),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFCAD1E0),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(12.0),
+                                  ),
+                                ),
+                                child: Icon(
+                                  FontAwesomeIcons.twitter,
+                                  color: Color(0xff1D9BF0),
+                                ),
+                              ),
                             )
                           ],
-                        ).show(),
-                      }
-                    else
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (context) => ParentAuthPage(
-                                    login: 1,
-                                  )),
-                          (Route<dynamic> route) => false)
-                  },
-                  child: Container(
-                    height: 70,
-                    width: 70,
-                    decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: new BorderRadius.only(
-                            topLeft: const Radius.circular(40.0),
-                            topRight: const Radius.circular(40.0))),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.add,
-                          color: Colors.white,
-                          size: 36,
                         ),
-                        Text(
-                          allTranslations.text('ads_add'),
-                          style: TextStyle(fontSize: 13, color: Colors.white),
-                        )
-                      ],
-                    ),
+                      )
+                    ],
                   ),
                 ),
-              ]),
-              appBar: AppBar(
-                  backgroundColor: AppColors.appBackground,
-                  title: StreamBuilder<NavigationScreen>(
-                      stream: bloc.stream,
-                      builder: (context, snap) {
-                        String title = allTranslations.text('home');
-                        switch (snap.data) {
-                          case NavigationScreen.HOME:
-                            title = allTranslations.text('home');
-                            break;
-
-                          case NavigationScreen.FAVROITE:
-                            if (BlocProvider.of<LoginBloc>(context).isLogged())
-                              title = allTranslations.text('favroite');
-                            break;
-
-                          case NavigationScreen.OFFER:
-                            title = allTranslations.text('offers');
-                            break;
-                          case NavigationScreen.PRFOILE:
-                            if (BlocProvider.of<LoginBloc>(context).isLogged())
-                              title = allTranslations.text('account');
-                            break;
-
-                          case NavigationScreen.MYADS:
-                            if (BlocProvider.of<LoginBloc>(context).isLogged())
-                              title = allTranslations.text('my_ads');
-                            break;
-                          case NavigationScreen.SETTINGS:
-                            title = allTranslations.text('settings');
-                            break;
-
-                          default:
-                            title = allTranslations.text('home');
-                        }
-                        return Text(
-                          title,
-                          style: TextStyles.appBarTitle,
-                        );
-                      }),
-                  centerTitle: true,
-                  leading: IconButton(
-                      icon: Icon(
-                        Icons.menu,
-                        color: Colors.black,
-                      ),
-                      onPressed: () {
-                        _scaffoldKey.currentState.openDrawer();
-                      }),
-                  actions: <Widget>[
-                    IconButton(
-                      icon: actionIcon,
-                      color: Colors.black,
-                      onPressed: () => showSearch(
-                        context: context,
-                        delegate: DummyDelegate(),
-                      ),
-                    ),
-                  ]),
-              //appbar
-              endDrawer: Drawer(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    DrawerHeader(
-                      child: StreamBuilder<bool>(
-                          initialData:
-                              BlocProvider.of<LoginBloc>(context).isLogged(),
-                          stream:
-                              BlocProvider.of<LoginBloc>(context).Sessionstream,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              // getUserName();
-                              return Container(
-                                alignment: Alignment.topLeft,
-                                child: Column(
-                                  children: [
-                                    Icon(Icons.notifications_paused),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        LoginBloc.nameLogin != null ||
-                                                LoginBloc.nameLogin != "null"
-                                            ? LoginBloc.nameLogin
-                                            : userName,
-                                        style: TextStyle(
-                                            fontSize: 22,
-                                            color: AppColors.validValueColor),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            } else {
-                              return Container(
-                                alignment: Alignment.topLeft,
-                                child: Icon(Icons.notifications_paused),
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage('images/logo.png'),
-                                        fit: BoxFit.cover)),
-                              );
-                            }
-                          }),
-                      //container
-                      decoration: BoxDecoration(color: AppColors.appBackground),
-                    ),
-
-                    StreamBuilder<bool>(
-                        initialData:
-                            BlocProvider.of<LoginBloc>(context).isLogged(),
-                        stream:
-                            BlocProvider.of<LoginBloc>(context).Sessionstream,
-                        builder: (context, snapshot) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 0, horizontal: 16),
-                            child: Visibility(
-                              visible: snapshot.hasData ? !snapshot.data : true,
-                              child: RaisedButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                    side: BorderSide(color: Colors.green)),
-                                onPressed: () {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (context) => ParentAuthPage(
-                                                login: 1,
-                                              )),
-                                      (Route<dynamic> route) => false);
-                                },
-                                color: Colors.green,
-                                textColor: Colors.white,
-                                child: Text(
-                                    allTranslations
-                                        .text('sign_in_up')
-                                        .toUpperCase(),
-                                    style: TextStyle(fontSize: 14)),
-                              ),
-                            ),
-                          );
-                        }),
-
-                    Expanded(
-                      child: ListView(children: drawerOptions),
-                    ), //listview
-
-                    GestureDetector(
-                      onTap: () {
-                        Alert(
-                          context: context,
-                          title: allTranslations.text('logout'),
-                          desc: allTranslations.text('logout_msg'),
-                          type: AlertType.warning,
-                          buttons: [
-                            DialogButton(
-                              child: Text(
-                                allTranslations.text('ok'),
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                                BlocProvider.of<LoginBloc>(context).logout();
-                                LoginBloc.nameLogin = "null";
-                              },
-                              width: 120,
-                            ),
-                            DialogButton(
-                              child: Text(
-                                allTranslations.text('cancel'),
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
-                              onPressed: () => Navigator.pop(context),
-                              width: 120,
-                            )
-                          ],
-                        ).show();
+                mainScreen: Scaffold(
+                    backgroundColor: Colors.white,
+                    key: _scaffoldKey,
+                    floatingActionButton: FloatingActionButton(
+                      backgroundColor: AppColors.accentColor,
+                      onPressed: () => {
+                        if (BlocProvider.of<LoginBloc>(context).isLogged())
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddAdvertisment()),
+                          )
+                        else
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => ParentAuthPage(
+                                        login: 1,
+                                      )),
+                              (Route<dynamic> route) => false)
                       },
-                      child: StreamBuilder<bool>(
-                          initialData:
-                              BlocProvider.of<LoginBloc>(context).isLogged(),
-                          stream:
-                              BlocProvider.of<LoginBloc>(context).Sessionstream,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData && snapshot.data)
-                              return Container(
-                                alignment: Alignment.center,
-                                height: 60,
-                                color: Theme.of(context).accentColor,
-                                child: Text(
-                                  allTranslations.text('logout'),
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              );
-                            else
-                              return Container();
-                          }),
+                      tooltip: 'add',
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                      elevation: 2.0,
                     ),
-                  ],
-                ), //coulmn
-              ),
-              drawer: Drawer(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    DrawerHeader(
-                      child: StreamBuilder<bool>(
-                          initialData:
-                              BlocProvider.of<LoginBloc>(context).isLogged(),
-                          stream:
-                              BlocProvider.of<LoginBloc>(context).Sessionstream,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData && snapshot.data) {
-                              //getUserName();
-                              return Container(
-                                alignment: Alignment.topLeft,
-                                child: Column(
-                                  children: [
-                                    Icon(Icons.notifications_paused),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        LoginBloc.nameLogin != null
-                                            ? LoginBloc.nameLogin
-                                            : userName,
-                                        style: TextStyle(
-                                            fontSize: 22,
-                                            color: AppColors.validValueColor),
-                                      ),
-                                    ),
-                                  ],
+                    floatingActionButtonLocation:
+                        FloatingActionButtonLocation.centerDocked,
+                    bottomNavigationBar: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15.0),
+                          topRight: Radius.circular(15.0),
+                        ),
+                        child: BottomNavigationBar(
+                          type: BottomNavigationBarType.fixed,
+                          unselectedItemColor: Color(0xff818391),
+                          onTap: _selectedTab,
+                          currentIndex: tabIndex,
+                          unselectedLabelStyle:
+                              TextStyle(color: Color(0xff818391)),
+                          selectedLabelStyle:
+                              TextStyle(color: AppColors.accentColor),
+                          items: [
+                            BottomNavigationBarItem(
+                                icon: Icon(Icons.home_outlined),
+                                activeIcon: Icon(
+                                  Icons.home,
+                                  color: AppColors.accentColor,
                                 ),
-                              );
-                            } else {
-                              return Container(
-                                alignment: Alignment.topLeft,
-                                child: Icon(Icons.notifications_paused),
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage('images/logo.png'),
-                                        fit: BoxFit.cover)),
-                              );
-                            }
-                          }),
-                      //container
-                      decoration: BoxDecoration(color: AppColors.appBackground),
-                    ),
-
-                    StreamBuilder<bool>(
-                        initialData:
-                            BlocProvider.of<LoginBloc>(context).isLogged(),
-                        stream:
-                            BlocProvider.of<LoginBloc>(context).Sessionstream,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData && !snapshot.data) {}
-                          return Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 0, horizontal: 16),
-                            child: Visibility(
-                              visible: snapshot.hasData ? !snapshot.data : true,
-                              child: RaisedButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                    side: BorderSide(color: Colors.green)),
-                                onPressed: () {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (context) => ParentAuthPage(
-                                                login: 1,
-                                              )),
-                                      (Route<dynamic> route) => false);
-                                },
-                                color: Colors.green,
-                                textColor: Colors.white,
-                                child: Text(
-                                    allTranslations
-                                        .text('sign_in_up')
-                                        .toUpperCase(),
-                                    style: TextStyle(fontSize: 14)),
-                              ),
-                            ),
-                          );
-                        }),
-
-                    Expanded(
-                      child: ListView(children: drawerOptions),
-                    ), //listview
-
-                    GestureDetector(
-                      onTap: () {
-                        Alert(
-                          context: context,
-                          title: allTranslations.text('logout'),
-                          desc: allTranslations.text('logout_msg'),
-                          type: AlertType.warning,
-                          buttons: [
-                            DialogButton(
-                              child: Text(
-                                allTranslations.text('agree'),
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
-                              onPressed: () {
-                                BlocProvider.of<LoginBloc>(context).logout();
-                                Navigator.pop(context);
-                                LoginBloc.nameLogin = "null";
-                              },
-                              width: 120,
-                            ),
-                            DialogButton(
-                              child: Text(
-                                allTranslations.text('cancel'),
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
-                              onPressed: () => Navigator.pop(context),
-                              width: 120,
-                            )
+                                label: (allTranslations.text('home'))),
+                            BottomNavigationBarItem(
+                                icon: Icon(Icons.local_offer_outlined),
+                                activeIcon: Icon(
+                                  Icons.local_offer,
+                                  color: AppColors.accentColor,
+                                ),
+                                label: allTranslations.text('offers')),
+                            BottomNavigationBarItem(
+                                icon: Icon(Icons.favorite_outline),
+                                activeIcon: Icon(
+                                  Icons.favorite,
+                                  color: AppColors.accentColor,
+                                ),
+                                label: allTranslations.text('favroite')),
+                            BottomNavigationBarItem(
+                                icon: Icon(Icons.person_outline),
+                                activeIcon: Icon(
+                                  Icons.person,
+                                  color: AppColors.accentColor,
+                                ),
+                                label: allTranslations.text('account')),
                           ],
-                        ).show();
-                      },
-                      child: StreamBuilder<bool>(
-                          initialData:
-                              BlocProvider.of<LoginBloc>(context).isLogged(),
-                          stream:
-                              BlocProvider.of<LoginBloc>(context).Sessionstream,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData && snapshot.data)
-                              return Container(
-                                alignment: Alignment.center,
-                                height: 60,
-                                color: Theme.of(context).accentColor,
-                                child: Text(
-                                  allTranslations.text('logout'),
-                                  style: TextStyle(color: Colors.white),
+                        )),
+                    appBar: AppBar(
+                        toolbarHeight: 100,
+                        backgroundColor: Colors.white,
+                        elevation: 0,
+                        title: StreamBuilder<NavigationScreen>(
+                            initialData: NavigationScreen.HOME,
+                            stream: bloc.stream,
+                            builder: (context, snapshot) {
+                              String title = allTranslations.text('welcome_title');
+                               bool isHomeScreen =snapshot.data == NavigationScreen.HOME;
+                              switch (snapshot.data) {
+                                case NavigationScreen.HOME:
+                                  title = allTranslations.text('home');
+                                  break;
+
+                                case NavigationScreen.FAVROITE:
+                                  if (BlocProvider.of<LoginBloc>(context)
+                                      .isLogged()) {
+                                    title = allTranslations.text('favroite');
+                                  }
+                                  break;
+
+                                case NavigationScreen.OFFER:
+                                  title = allTranslations.text('offers');
+
+                                  break;
+                                case NavigationScreen.PRFOILE:
+                                  if (BlocProvider.of<LoginBloc>(context)
+                                      .isLogged()) {
+                                    title = allTranslations.text('account');
+                                  }
+                                  break;
+
+                                case NavigationScreen.MYADS:
+                                  if (BlocProvider.of<LoginBloc>(context)
+                                      .isLogged()) {
+                                    title = allTranslations.text('my_ads');
+                                  }
+                                  break;
+
+                                default:
+                                  title = allTranslations.text('welcome_title');
+                              }
+
+                              return ListTile(
+                                title: Text(
+                                  title,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Visibility(
+                                  visible: isHomeScreen,
+                                  child: Text(
+                                    allTranslations.text("home_sub_title"),
+                                    style: TextStyle(
+                                        fontSize: 12, color: Color(0xff818391)),
+                                  ),
                                 ),
                               );
-                            else
-                              return Container();
-                          }),
-                    ),
-                  ],
-                ), //coulmn
-              ),
-              body: WillPopScope(
-                onWillPop: () async {
-                  if (bloc.currentScreen == NavigationScreen.HOME) {
-                    if (_cateogyBloc.isStackIsEmpty()) {
-                      // ignore: missing_return
-                      SystemNavigator.pop();
-                    } else {
-                      // ignore: missing_return
-                      _cateogyBloc.removeCateogryFromStack();
-                    }
-                  } else
-                    return false;
-                },
-                child: StreamBuilder<NavigationScreen>(
-                  initialData: NavigationScreen.HOME,
-                  stream: bloc.stream,
-                  builder: (context, snap) {
-                    return _getDrawerItemWidget(snap.data);
-                  },
-                ),
-              ));
-        },
-      ),
-    ); //scaffold
+                            }),
+                        leadingWidth: 48,
+                        centerTitle: false,
+                        leading: Padding(
+                          padding: const EdgeInsetsDirectional.only(start: 8),
+                          child: Center(
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              padding: EdgeInsets.all(4.0),
+                              decoration: BoxDecoration(
+                                color: Color(0xFFEFF1F7),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12.0),
+                                ),
+                              ),
+                              child: IconButton(
+                                  icon: Image.asset("images/menu_icon.png"),
+                                  onPressed: () {
+                                    _zoomDrawerController.toggle.call();
+                                  }),
+                            ),
+                          ),
+                        ),
+                        actions: <Widget>[
+                          /*IconButton(
+                            icon: actionIcon,
+                            color: Colors.black,
+                            onPressed: () => showSearch(
+                              context: context,
+                              delegate: DummyDelegate(),
+                            ),
+                          ),*/
+                        ]),
+                    //appbar
+
+                    body: WillPopScope(
+                      onWillPop: () async {
+                        if (bloc.currentScreen == NavigationScreen.HOME) {
+                          if (_cateogyBloc.isStackIsEmpty()) {
+                            // ignore: missing_return
+                            SystemNavigator.pop();
+                          } else {
+                            // ignore: missing_return
+                            _cateogyBloc.removeCateogryFromStack();
+                          }
+                        } else
+                          return false;
+                      },
+                      child: StreamBuilder<NavigationScreen>(
+                        initialData: NavigationScreen.HOME,
+                        stream: bloc.stream,
+                        builder: (context, snap) {
+                          return _getDrawerItemWidget(snap.data);
+                        },
+                      ),
+                    )),
+                borderRadius: 24.0,
+                showShadow: true,
+                angle: -12.0,
+                slideWidth: MediaQuery.of(context).size.width * 0.65,
+              );
+            })); //scaffold
   }
 
   _onSelectItem(int index) {
@@ -692,70 +604,93 @@ class _MainScreenState extends State<MainScreen> {
     } else if (index == 0) {
       bloc.navigateToScreen(NavigationScreen.HOME);
     } else if (index == 4) {
-      bloc.navigateToScreen(NavigationScreen.SETTINGS);
+      bloc.navigateToScreen(NavigationScreen.LANGUAGE);
+    } else if (index == 5) {
+      bloc.navigateToScreen(NavigationScreen.COUNTRY);
+    } else if (index == 6) {
+      bloc.navigateToScreen(NavigationScreen.CONTACT_US);
+    } else if (index == 7) {
+      bloc.navigateToScreen(NavigationScreen.RuLES);
+    } else if (index == 8) {
+      bloc.navigateToScreen(NavigationScreen.ABOUT);
     } else if (index == 9) {
       bloc.navigateToScreen(NavigationScreen.POLICY);
-    } else if (index == 6) {
-      bloc.navigateToScreen(NavigationScreen.RuLES);
-    } else if (index == 7) {
-      bloc.navigateToScreen(NavigationScreen.ABOUT);
-    } else if (index == 8) {
+    } else if (index == 10) {
       bloc.navigateToScreen(NavigationScreen.FAQ);
-    } else if (index == 12) {
+    } else if (index == 11) {
       bloc.navigateToScreen(NavigationScreen.SAFETY);
     } else {
-      bloc.navigateToScreen(NavigationScreen.CONTACT_US);
+      bloc.navigateToScreen(NavigationScreen.LOGOUT);
     }
-    Navigator.pop(context);
+    _zoomDrawerController.toggle.call();
   }
 
   Widget createNavItem(NavItem nav, int index) {
     if (nav.isExpanded) {
-      List<Widget> subItemlist = [];
-      return ExpansionTile(
-        leading: Icon(nav.navIcon),
-        trailing: Icon(Icons.keyboard_arrow_down),
-        title: Text(
-          nav.name,
-          textAlign: TextAlign.start,
+      return Directionality(
+        textDirection: TextDirection.ltr,
+        child: ExpansionTile(
+          leading: Container(
+              width: 40,
+              height: 40,
+              padding: EdgeInsets.all(4.0),
+              decoration: BoxDecoration(
+                color: Color(0xFFEFF1F7),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(12.0),
+                ),
+              ),
+              child: Icon(nav.navIcon)),
+          trailing: Icon(Icons.keyboard_arrow_down),
+          title: Text(
+            nav.name,
+            textAlign: TextAlign.start,
+          ),
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 40.0),
+              child: Column(
+                children: [
+                  ListTile(
+                      title: Text(allTranslations.text('rules')),
+                      onTap: () => _onSelectItem(7)),
+                  ListTile(
+                      title: Text(allTranslations.text('about_us')),
+                      onTap: () => _onSelectItem(8)),
+                  ListTile(
+                      title: Text(allTranslations.text('policy')),
+                      onTap: () => _onSelectItem(9)),
+                  ListTile(
+                      title: Text(allTranslations.text('questions')),
+                      onTap: () => _onSelectItem(10)),
+                  ListTile(
+                      title: Text(allTranslations.text('safety')),
+                      onTap: () => _onSelectItem(11))
+                ],
+              ),
+            )
+          ],
         ),
-        children: <Widget>[
-          Column(
-            children: [
-              ListTile(
-                  leading: Icon(Icons.book),
-                  title: Text(allTranslations.text('rules')),
-                  onTap: () => _onSelectItem(6)),
-              ListTile(
-                  leading: Icon(Icons.article),
-                  title: Text(allTranslations.text('about_us')),
-                  onTap: () => _onSelectItem(7)),
-              ListTile(
-                  leading: Icon(Icons.info),
-                  title: Text(allTranslations.text('policy')),
-                  onTap: () => _onSelectItem(9)),
-              ListTile(
-                  leading: Icon(Icons.question_answer),
-                  title: Text(allTranslations.text('questions')),
-                  onTap: () => _onSelectItem(8)),
-              ListTile(
-                  leading: Icon(Icons.call),
-                  title: Text(allTranslations.text('contact_us')),
-                  onTap: () => _onSelectItem(10)),
-              ListTile(
-                  leading: Icon(Icons.ac_unit),
-                  title: Text(allTranslations.text('safety')),
-                  onTap: () => _onSelectItem(12))
-            ],
-          )
-        ],
       );
     } else {
-      return ListTile(
-        leading: Icon(nav.navIcon),
-        title: Text(nav.name),
-        selected: index == _navSelectedIndex,
-        onTap: () => _onSelectItem(index),
+      return Directionality(
+        textDirection: TextDirection.ltr,
+        child: ListTile(
+          leading: Container(
+              width: 40,
+              height: 40,
+              padding: EdgeInsets.all(4.0),
+              decoration: BoxDecoration(
+                color: Color(0xFFEFF1F7),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(12.0),
+                ),
+              ),
+              child: Icon(nav.navIcon)),
+          title: Text(nav.name),
+          selected: index == _navSelectedIndex,
+          onTap: () => _onSelectItem(index),
+        ),
       );
     }
   }
@@ -766,7 +701,7 @@ class _MainScreenState extends State<MainScreen> {
     }
     switch (screen) {
       case NavigationScreen.HOME:
-        return CategoryListFragment();
+        return _homeScreen();
 
       case NavigationScreen.FAVROITE:
         if (BlocProvider.of<LoginBloc>(context).isLogged())
@@ -790,20 +725,59 @@ class _MainScreenState extends State<MainScreen> {
         break;
 
       default:
-        return CategoryListFragment();
+        return _homeScreen();
     }
-    return CategoryListFragment();
+    return _homeScreen();
+  }
+
+  Widget _homeScreen() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: InkWell(
+            onTap: () {
+              showSearch(
+                context: context,
+                delegate: DummyDelegate(_history),
+              );
+            },
+            child: AbsorbPointer(
+              absorbing: true,
+              child: Container(
+                  width: double.infinity,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xffE3E7EF)),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Center(
+                      child: TextField(
+                    readOnly: true,
+                    enableInteractiveSelection: true,
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.grey,
+                        ),
+                        hintText: allTranslations.text('search_here'),
+                        contentPadding: EdgeInsets.all(0),
+                        border: InputBorder.none),
+                  ))),
+            ),
+          ),
+        ),
+        Expanded(child: CategoryListFragment())
+      ],
+    );
   }
 
   Future getUserName() async {
     if (BlocProvider.of<LoginBloc>(context).isLogged()) {
       UserInfo userInfo = await preferences.getUserInfo();
-      userName = userInfo.firstName;
-      userCountryId = userInfo.countryId;
-
+      userName = userInfo.firstName + " " + userInfo.secondName;
       //  _controller.sink.add(userName);
       print(userName + "rrrrrr");
-      print("usercountryId:${userCountryId}");
     } else {
       userName = "";
     }
@@ -835,9 +809,101 @@ class _MainScreenState extends State<MainScreen> {
     await preferences.saveIsFirstTime(false);
   }
 
-  void getCountryId() async {
-    cId = await preferences.getCountryID();
-    countryId = int.parse(cId);
-    print("usercountryId:${countryId}");
+  void showLanguageSheet() {
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10.0),
+            topRight: Radius.circular(10.0),
+          ),
+        ),
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                allTranslations.text('select_lang'),
+                style: TextStyle(color: Colors.black, fontSize: 18),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            BlocProvider.of<TranslationsBloc>(context)
+                                .setNewLanguage("en");
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black12),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                            child: ListTile(
+                              title: Text(
+                                "English",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20),
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Divider(height: 2,color: Colors.black,thickness: 1,),
+
+                        SizedBox(
+                          height: 8,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            BlocProvider.of<TranslationsBloc>(context)
+                                .setNewLanguage("ar");
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black12),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                            child: ListTile(
+                              title: Text(
+                                "اللغه العربيه",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
+          );
+        });
+  }
+
+  void showCountrySheet() async {
+    await CountryListSheet.showModal<CountryEntity>(context,
+        label: allTranslations.text('choose_country'),
+        selectedValue: CountryEntity(),
+        items: List(), onChange: (CountryEntity selected) {
+      preferences.saveCountryID(selected.countryId.toString());
+      preferences.saveCountry(selected);
+      preferences.clearCateogry();
+      //BlocProvider.of<CategoryBloc>(context).submitQuery("");
+      _countrySelectedValue = selected.countryId;
+      Navigator.of(context).pop();
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext context) => super.widget));
+    });
   }
 }

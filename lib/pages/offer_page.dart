@@ -13,6 +13,7 @@ import 'package:olx/model/cateogry_entity.dart';
 import 'package:olx/model/offfer_entity.dart';
 import 'package:olx/pages/offer_detail_slider_page.dart';
 import 'package:olx/utils/Constants.dart';
+import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/model/popup_ads_entity_entity.dart';
 
@@ -44,6 +45,7 @@ class _OfferPageState extends State<OfferPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.appBackground,
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
         child: StreamBuilder<List<CateogryEntity>>(
@@ -205,40 +207,36 @@ class _OfferPageState extends State<OfferPage> {
       child: Container(
         // height:160,
         child: new Card(
-            elevation: 2,
+            elevation: 0,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
             child: new Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: new Container(
-                      height: 170.0,
-                      width: 100.0,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14),
-                          color: Colors.grey.shade300),
-                      child: ClipRRect(
+                new Container(
+                    height: 170.0,
+                    width: 100.0,
+                    decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
-                        child: CachedNetworkImage(
-                            height: 50,
-                            fit: BoxFit.fill,
-                            placeholder: (context, url) =>
-                                Image.asset("images/logo.png"),
-                            errorWidget: (context, url, error) =>
-                                Image.asset("images/logo.png"),
-                            imageUrl: APIConstants.getFullImageUrl(
-                                Item.systemDataFile1 == null
-                                    ? ""
-                                    : Item.systemDataFile1.url == null ||
-                                            Item.systemDataFile1.url.isEmpty
-                                        ? ""
-                                        : Item.systemDataFile1.url,
-                                ImageType.COMMAD)),
-                      )),
-                ),
+                        color: Colors.grey.shade300),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(14),
+                      child: CachedNetworkImage(
+                          fit: BoxFit.fill,
+                          placeholder: (context, url) =>
+                              Image.asset("images/logo.png"),
+                          errorWidget: (context, url, error) =>
+                              Image.asset("images/logo.png"),
+                          imageUrl: APIConstants.getFullImageUrl(
+                              Item.systemDataFile1 == null
+                                  ? ""
+                                  : Item.systemDataFile1.url == null ||
+                                          Item.systemDataFile1.url.isEmpty
+                                      ? ""
+                                      : Item.systemDataFile1.url,
+                              ImageType.COMMAD)),
+                    )),
               ],
             )),
       ),

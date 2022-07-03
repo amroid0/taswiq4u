@@ -7,8 +7,10 @@ class FavroiteWidget extends StatefulWidget {
   bool value = true;
 
   final Function(bool) onFavChange;
+  final Color iconColor;
+  final Color bgColor;
 
-  FavroiteWidget({this.onFavChange,this.value});
+  FavroiteWidget({this.onFavChange,this.value,this.iconColor =Colors.black,this.bgColor=Colors.white});
 
   @override
   _FavroiteWidgetState createState() => _FavroiteWidgetState();
@@ -34,7 +36,7 @@ class _FavroiteWidgetState extends State<FavroiteWidget> {
         child: Container(
           height:35,
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),
-              boxShadow:[ BoxShadow(blurRadius: 4,color: Colors.black26)], color: Colors.white),
+              color: widget.bgColor),
           child: widget.value
               ?
                Icon(
@@ -44,6 +46,7 @@ class _FavroiteWidgetState extends State<FavroiteWidget> {
           ): Icon(
             Icons.favorite_border,
             size: 30.0,
+            color: widget.iconColor,
           ),
         ),
       );

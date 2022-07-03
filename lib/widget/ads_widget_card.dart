@@ -8,6 +8,7 @@ import 'package:olx/model/ads_entity.dart';
 import 'package:olx/pages/detail_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/utils/Constants.dart';
+import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/utils.dart';
 import 'package:olx/widget/favorite_card.dart';
@@ -38,12 +39,12 @@ class AdsCardWidget extends StatelessWidget {
             );
           },
           child: new Card(
-            elevation: 4,
+            elevation: 0,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20)
             ),
             child: new SizedBox(
-              height: 285,
+              height: 220,
               child: new Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -57,10 +58,30 @@ class AdsCardWidget extends StatelessWidget {
                           color: Colors.grey.shade300
 
                       ),
-                      child:
-                      ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: _BuildImageWidget())
+                      child: Stack(
+                fit: StackFit.expand,
+                children: [
+                    ClipRRect(
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(12),topRight: Radius.circular(12)),
+                          child: _BuildImageWidget()),
+                  Align(
+                    alignment: AlignmentDirectional.topStart,
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: FavroiteWidgetCard(
+                          onFavChange:(val){
+                            if(BlocProvider.of<LoginBloc>(context).isLogged())
+                              BlocProvider.of<FavroiteBloc>(context).changeFavoriteState(val,model.Id);
+                            else
+                              Navigator.push(
+                                  context, MaterialPageRoute(builder: (context) => ParentAuthPage()));                          },
+                          value: (BlocProvider.of<LoginBloc>(context).isLogged())?model.IsFavorite:false
+                      ),
+                    ),
+                  ),
+
+
+                ])
                   ),
 
                   new Expanded(
@@ -71,77 +92,48 @@ class AdsCardWidget extends StatelessWidget {
 
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(model
-                                .EnglishTitle, style: TextStyle(
-                                fontSize: 15,
-                                height: 1.2
-                            ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,),
+                            Text(model.EnglishTitle,maxLines: 2,overflow: TextOverflow.ellipsis,style: TextStyle(
+                                height: 1.2,
+                                color: Color(0xff2D3142),
+                                fontSize: 14
+                            ),),
                             Text(language==1 ? "${model.Price}  ${allTranslations.text('cuurency')}" :"${model.Price}  ${allTranslations.text('cuurencyKd')}" ,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
 
-                              style: TextStyle(color: Theme
-                                  .of(context)
-                                  .accentColor),),
-                            Divider(height: 1,
-                              color: Colors.grey.shade300,
-                              thickness: 1,),
+                              style: TextStyle(
+                                  color: Color(0xff2D3142),
+                                  fontWeight: FontWeight.bold
+                              ),),
+                            SizedBox(height: 4,),
+                            SizedBox(height: 4,),
+
                             Row(
 
                               children: <Widget>[
-                                Icon(Icons.pin_drop_outlined, size: 20,),
-
-                                Text(allTranslations.isEnglish ?model.CityNameEnglish :model.CityNameArabic),
-
-                              ],),
-                            Row(
-                              children: <Widget>[
-                                Icon(Icons.update_outlined, size: 20,),
-
+                                //Icon(Icons.pin_drop_outlined, size: 20,),
                                 FittedBox(
-                                  child: Text(
-                                    displayTimeAgoFromTimestamp(model.CreationTime), style: TextStyle(fontSize: 13),),
+                                  child: Text( displayTimeAgoFromTimestamp(model.CreationTime),
+                                    style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize: 11 ,color: AppColors.secondaryTextColor),maxLines: 1,overflow: TextOverflow.ellipsis,),
                                 ),
+                                Text(" - ",style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize: 11 ,color: AppColors.secondaryTextColor),),
+                                Text(allTranslations.isEnglish ?model.CityNameEnglish :model.CityNameArabic, style:Theme.of(context).textTheme.subtitle2.copyWith(fontSize: 11 ,color: AppColors.secondaryTextColor)),
 
                               ],),
+                            SizedBox(height: 4,),
+
+
 
 
                           ],
-
 
                         ),
                       )
 
                   ),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [ InkWell(
 
-                        onTap: () {},
-                        child: Container(
-                            margin: EdgeInsets.only(left: 2),
 
-                            alignment: Alignment.topRight,
-                            color: Colors.white,
-                            child: FavroiteWidgetCard(
-                                    onFavChange: (val) {
-                                      if (BlocProvider.of<LoginBloc>(context)
-                                          .isLogged())
-                                        BlocProvider.of<FavroiteBloc>(context)
-                                            .changeFavoriteState(val, model.Id);
-                                      else
-                                        Navigator.push(
-                                            context, MaterialPageRoute(
-                                            builder: (context) => ParentAuthPage()));
-                                    },
-                                    value: model.IsFavorite
-                                ),
-                        ),
-                      ),
-                      ]
-                  ),
+
 
                 ],
               ),

@@ -97,31 +97,7 @@ class FavroitePage extends StatefulWidget {
          bloc: bloc,
          child: Column(
            children: <Widget>[
-             Row(
-               mainAxisAlignment:MainAxisAlignment.spaceEvenly,
-               children: <Widget>[
 
-
-                 IconButton(
-                   iconSize: 36,
-                   icon:Icon(Icons.view_list),
-                   onPressed: (){
-                     setState(() {
-                       if(_gridItemCount==1){
-                         _gridItemCount=2;
-                       }else{
-                         _gridItemCount=1;
-
-                       }
-                     });
-
-
-                   },
-                 )
-
-
-
-               ],),
 
 
 

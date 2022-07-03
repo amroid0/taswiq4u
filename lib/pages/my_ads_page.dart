@@ -1,7 +1,10 @@
+import 'package:ars_progress_dialog/ars_progress_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/favroite_bloc.dart';
@@ -14,10 +17,14 @@ import 'package:olx/pages/detail_page.dart';
 import 'package:olx/pages/parentAuthPage.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/Theme.dart';
+import 'package:olx/utils/ToastUtils.dart';
+import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/utils.dart';
 import 'package:olx/widget/ads_widget_card.dart';
 import 'package:olx/widget/ads_widget_row.dart';
 import 'package:olx/widget/favroite_widget.dart';
+
+import 'edit_page.dart';
 
 class MyAdsPage extends StatefulWidget {
   @override
@@ -36,13 +43,42 @@ class _MyAdsPageState extends State<MyAdsPage> {
   var bloc;
   AdsBloc _bloc= AdsBloc();
 
+  ArsProgressDialog progressDialog;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    progressDialog = ArsProgressDialog(context,
+        blur: 2,
+        backgroundColor: Color(0x33000000),
+        animationDuration: Duration(milliseconds: 500));
     getGroupId();
     bloc=new FavroiteBloc();
+    _bloc.deleteStateStream.listen((snap) {
+      if (progressDialog.isShowing) {
+        progressDialog.dismiss();
+      }
+      switch (snap.status) {
+        case Status.LOADING:
+          progressDialog.show();
+          break;
 
+        case Status.ERROR:
+          ToastUtils.showErrorMessage(allTranslations.text('err_wrong'));
+
+          break;
+
+        case Status.COMPLETED:
+          ToastUtils.showSuccessMessage(
+              allTranslations.text('success_delete_ads'));
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _bloc.getMyAdsListe(1);
+          });
+
+          break;
+      }
+    });
     bloc.stateStream.listen((data) {
       // Redirect to another view, given your condition
 
@@ -127,31 +163,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
       backgroundColor: AppColors.appBackground,
       body: Column(
         children: <Widget>[
-          Row(
-            mainAxisAlignment:MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-
-
-              IconButton(
-                iconSize: 36,
-                icon:Icon(Icons.view_list),
-                onPressed: (){
-                  setState(() {
-                    if(_gridItemCount==1){
-                      _gridItemCount=2;
-                    }else{
-                      _gridItemCount=1;
-
-                    }
-                  });
-
-
-                },
-              )
-
-
-
-            ],),
+    
 
 
 
@@ -258,7 +270,40 @@ class _MyAdsPageState extends State<MyAdsPage> {
               [adsIndex]
                   .AdvertismentImages;
 
-              return AdsRowWidget(model:ads[adsIndex],editable: true,language:lang,bloc: _bloc,);
+              return Slidable(
+                  actionPane: SlidableDrawerActionPane(),
+                  actionExtentRatio: 0.25,
+                  secondaryActions: <Widget>[
+                    IconSlideAction(
+                      caption: allTranslations.text('edit'),
+                      color: Colors.green,
+                      icon: FontAwesomeIcons.edit,
+                      onTap:(){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BlocProvider(
+                                  bloc: AdsBloc(),
+                                  child: EditPage(ads[adsIndex]),
+                                ),
+                                settings: RouteSettings(
+                                    arguments: ads[adsIndex])));
+                      } ,
+                    ),
+
+                    IconSlideAction(
+                      caption: allTranslations.text('delete'),
+                      color: Colors.red,
+                      icon: Icons.delete,
+                      onTap:(){
+                        _bloc.deleteAds(ads[adsIndex].Id.toString());
+
+                      } ,
+                    ),
+
+                  ],
+
+                  child: AdsRowWidget(model:ads[adsIndex],editable: true,language:lang,bloc: _bloc,));
 
 
             }

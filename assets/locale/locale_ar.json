@@ -166,8 +166,25 @@
   "success_delete_ads": "تم حذف الاعلان بنجاح",
   "success_distincit_ads": "تم تمييز الاعلان بنجاح",
   "zone": "المنطقه",
+  "welcome_title":"مرحبا",
+  "home_sub_title": "اكتشف ما تريده",
+"search_here": "ابحث هنا",
+  "select_lang":"اختر اللغة",
+  "select_country": "اختر الدولة",
+  "result_count": "نتيجة",
+  "recent_search": "عمليات البحث الأخيرة",
   "err_short_title": "من فضلك ادخل اكثر من 5 حروف ",
   "err_long_title": "من فضلك ادخل اقل من 60 حرف ",
   "err_short_desc": "من فضلك ادخل اكثر من 10 حروف ",
   "err_add_ads": "لا يمكنك أضافه الاعلان الا في الدوله الخاصه بك, قم بتغير الدوله"
+
+
+
+
+
+
+
+
+
+
 }
