@@ -21,52 +21,49 @@ class AuthInputWidget extends StatelessWidget {
       this.onFieldSubmitted,
       this.onChange,
       this.errorText,
-        this.onSaved,
-        this.invisbleText=false,
+      this.onSaved,
+      this.invisbleText = false,
       this.keyboardType,
-        this.contoller,
+      this.contoller,
       this.textInputAction,
-        this.readOnly=false,
-        this. suffixIcon,
-        this.onTap});
+      this.readOnly = false,
+      this.suffixIcon,
+      this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      padding: EdgeInsets.all(2),
-      decoration: BoxDecoration(color:Colors.black12,border: Border.all(
-        width: 2.0,
-        color: Colors.green,
-
-
-      ),
+    return Container(
+      padding: EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.black12,
+        border: Border.all(
+          width: 2.0,
+          color: Colors.green,
+        ),
         borderRadius: BorderRadius.all(
             Radius.circular(8.0) //         <--- border radius here
-        ),
+            ),
       ),
       child: TextFormField(
         focusNode: focusNode,
         readOnly: readOnly,
         onTap: onTap,
-
-        keyboardType:keyboardType,
+        keyboardType: keyboardType,
         decoration: InputDecoration(
-          labelText: labelText,filled: true,
-          border: InputBorder.none,
-          errorText: errorText,
-          errorStyle:TextStyle(fontSize:10,fontWeight:FontWeight.bold,height: 2),
-          fillColor: Color(0xffF2F4F6),
-          isDense: true,
-          suffixIcon: suffixIcon
-
-        ),
+            labelText: labelText,
+            filled: true,
+            border: InputBorder.none,
+            errorText: errorText,
+            errorStyle:
+                TextStyle(fontSize: 10, fontWeight: FontWeight.bold, height: 2),
+            fillColor: Color(0xffF2F4F6),
+            isDense: true,
+            suffixIcon: suffixIcon),
         obscureText: invisbleText,
         controller: contoller,
         textInputAction: TextInputAction.next,
-        onFieldSubmitted:onFieldSubmitted,
+        onFieldSubmitted: onFieldSubmitted,
         onChanged: onChange,
-
-
       ),
     );
   }

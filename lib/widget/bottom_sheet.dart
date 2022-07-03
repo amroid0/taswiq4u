@@ -6,7 +6,7 @@ import 'package:olx/utils/global_locale.dart';
 typedef Widget SelectOneItemBuilderType<T>(
     BuildContext context, CateogryEntity item, bool isSelected);
 
-class SelectDialog<T> extends StatefulWidget {
+class SelectBottom<T> extends StatefulWidget {
   final T selectedValue;
   final List<T> itemsList;
   final bool showSearchBox;
@@ -15,7 +15,7 @@ class SelectDialog<T> extends StatefulWidget {
   final SelectOneItemBuilderType<T> itemBuilder;
   final InputDecoration searchBoxDecoration;
 
-  const SelectDialog({
+  const SelectBottom({
     Key key,
     this.itemsList,
     this.showSearchBox,
@@ -26,7 +26,7 @@ class SelectDialog<T> extends StatefulWidget {
     this.searchBoxDecoration,
   }) : super(key: key);
 
-  static Future<T> showModal<T>(
+  static Future<T> showBottom<T>(
     BuildContext context, {
     List<T> items,
     String label,
@@ -39,21 +39,29 @@ class SelectDialog<T> extends StatefulWidget {
   }) {
     return showModalBottomSheet(
       context: context,
+      elevation: 2,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
       builder: (context) {
-        return AlertDialog(
-          elevation: 0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          title: Text(label ?? ""),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(allTranslations.text('cancel')),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
-          ],
-          content: SelectDialog<T>(
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.8,
+          //     elevation: 0,
+          //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          // title: Text(label ?? ""),
+          // actions: <Widget>[
+          //   FlatButton(
+          //     child: Text(allTranslations.text('cancel')),
+          //     onPressed: () {
+          //       Navigator.of(context).pop();
+          //     },
+          //   )
+          // ],
+          child: SelectBottom<T>(
             selectedValue: selectedValue,
             itemsList: items,
             onChange: onChange,
@@ -68,15 +76,15 @@ class SelectDialog<T> extends StatefulWidget {
   }
 
   @override
-  _SelectDialogState<T> createState() =>
-      _SelectDialogState<T>(itemsList, onChange, onFind);
+  _SelectBottomState<T> createState() =>
+      _SelectBottomState<T>(itemsList, onChange, onFind);
 }
 
-class _SelectDialogState<T> extends State<SelectDialog<T>> {
+class _SelectBottomState<T> extends State<SelectBottom<T>> {
   CategoryBloc bloc;
   void Function(CateogryEntity) onChange;
 
-  _SelectDialogState(
+  _SelectBottomState(
     List<T> itemsList,
     this.onChange,
     Future<List<T>> Function(String text) onFind,
@@ -118,7 +126,7 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
                   return ListView.separated(
                     itemCount: snapshot.data.length,
                     separatorBuilder: (c, index) => Divider(
-                      height: 1,
+                      height: 0.5,
                       color: Colors.grey.shade500,
                     ),
                     itemBuilder: (context, index) {
@@ -142,6 +150,13 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
                               ? item.englishDescription.toString()
                               : item.arabicDescription.toString()),
                           selected: item == widget.selectedValue,
+                          trailing: item.hasSub
+                              ? Icon(
+                                  Icons.arrow_forward_ios_outlined,
+                                  color: Colors.black87,
+                                  size: 30,
+                                )
+                              : SizedBox(),
                           onTap: () {
                             if (item.hasSub) {
                               bloc.addCateogryToStack(item);

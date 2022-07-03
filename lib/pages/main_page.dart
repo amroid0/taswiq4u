@@ -55,8 +55,8 @@ class _MainScreenState extends State<MainScreen>
   String userName = "";
   bool isFirst;
   AnimationController _animationController;
-
-  int countryId = 1;
+  int userCountryId;
+  int countryId ;
 
   StreamController _controller = StreamController();
 
@@ -72,6 +72,8 @@ class _MainScreenState extends State<MainScreen>
   var _langSelectedValue = 0;
 
   int _countrySelectedValue;
+
+  String cId;
 
 /*
   List<NavItem>depratmentNavList=[
@@ -200,7 +202,7 @@ class _MainScreenState extends State<MainScreen>
   @override
   Widget build(BuildContext context) {
     getUserName();
-
+    getCountryId();
     List<Widget> drawerOptions = [];
 
     List<NavItem> NavItemList = [
@@ -399,19 +401,43 @@ class _MainScreenState extends State<MainScreen>
                     floatingActionButton: FloatingActionButton(
                       backgroundColor: AppColors.accentColor,
                       onPressed: () => {
-                        if (BlocProvider.of<LoginBloc>(context).isLogged())
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AddAdvertisment()),
-                          )
+                        if (BlocProvider.of<LoginBloc>(context).isLogged() &&
+                            countryId == userCountryId)
+                          {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AddAdvertisment()),
+                            )
+                          }
+                        else if (BlocProvider.of<LoginBloc>(context).isLogged() &&
+                            countryId != userCountryId)
+                          {
+                            Alert(
+                              context: context,
+                              title: (allTranslations.text('ads_add')),
+                              desc: (allTranslations.text('err_add_ads')),
+                              type: AlertType.warning,
+                              buttons: [
+                                DialogButton(
+                                  child: Text(
+                                    ('ok'),
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  onPressed: () => Navigator.pop(context),
+                                  width: 120,
+                                )
+                              ],
+                            ).show(),
+                          }
                         else
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
                                   builder: (context) => ParentAuthPage(
-                                        login: 1,
-                                      )),
-                              (Route<dynamic> route) => false)
+                                    login: 1,
+                                  )),
+                                  (Route<dynamic> route) => false)
                       },
                       tooltip: 'add',
                       child: Icon(
@@ -772,16 +798,25 @@ class _MainScreenState extends State<MainScreen>
     );
   }
 
+  void getCountryId() async {
+    cId = await preferences.getCountryID();
+    countryId = int.parse(cId);
+    print("usercountryId:${countryId}");
+  }
   Future getUserName() async {
     if (BlocProvider.of<LoginBloc>(context).isLogged()) {
       UserInfo userInfo = await preferences.getUserInfo();
-      userName = userInfo.firstName + " " + userInfo.secondName;
+      userName = userInfo.firstName;
+      userCountryId = userInfo.countryId;
+
       //  _controller.sink.add(userName);
       print(userName + "rrrrrr");
+      print("usercountryId:${userCountryId}");
     } else {
       userName = "";
     }
   }
+
 
   _openSocail(int x) async {
     String url;
