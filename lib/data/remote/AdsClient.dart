@@ -94,6 +94,12 @@ class AdsClient{
     }
 
   }
+  Future<bool>featuredAds(String id)async{
+    final result=await NetworkCommon().dio.post(APIConstants.DISTINCT_ADS,queryParameters: {"adId":id});
+    if(result.statusCode==200){
+      return true;
+    }
 
+  }
 
 }

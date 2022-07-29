@@ -79,7 +79,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
           break;
       }
     });
-    bloc.stateStream.listen((data) {
+    _bloc.featureStateStream.listen((data) {
       // Redirect to another view, given your condition
 
       switch (data.status) {
@@ -98,7 +98,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
           var isss=isLogged.data;
           if(isss) {
             Fluttertoast.showToast(
-                msg: "Favorite",
+                msg: "Featured",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
@@ -109,7 +109,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
           }else{
 
             Fluttertoast.showToast(
-                msg: "UnFavorite",
+                msg: "unFeatured",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,

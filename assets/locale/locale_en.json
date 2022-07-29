@@ -178,6 +178,11 @@
   "edit": "Edit",
   "delete": "Delete",
   "recent_search": "Recent Search",
-  "err_add_ads": "You can only add Ad in your country, Please switch to your country"
+  "err_add_ads": "You can only add Ad in your country, Please switch to your country",
+ "sort_by": "Sort by",
+  "chat_now": "Chat now",
+  "call_detail":"Call us",
+  "ensure_login": "please login and try again"
+
 
 }

@@ -207,10 +207,10 @@ class _MainScreenState extends State<MainScreen>
 
     List<NavItem> NavItemList = [
       NavItem(name: allTranslations.text('home'), navIcon: Icons.home),
-      NavItem(name: allTranslations.text('account'), navIcon: Icons.person),
-      NavItem(
-          name: allTranslations.text('my_ads'), navIcon: Icons.announcement),
-      NavItem(name: allTranslations.text('favroite'), navIcon: Icons.favorite),
+     // NavItem(name: allTranslations.text('account'), navIcon: Icons.person),
+     // NavItem(
+       //   name: allTranslations.text('my_ads'), navIcon: Icons.announcement),
+      //NavItem(name: allTranslations.text('favroite'), navIcon: Icons.favorite),
       NavItem(name: allTranslations.text('lang'), navIcon: Icons.g_translate),
       NavItem(name: allTranslations.text('country'), navIcon: Icons.language),
       NavItem(
@@ -542,6 +542,7 @@ class _MainScreenState extends State<MainScreen>
                                   title,
                                   style: TextStyle(
                                       color: Colors.black,
+                                      fontSize: 20,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 subtitle: Visibility(
@@ -668,9 +669,15 @@ class _MainScreenState extends State<MainScreen>
               ),
               child: Icon(nav.navIcon)),
           trailing: Icon(Icons.keyboard_arrow_down),
-          title: Text(
-            nav.name,
-            textAlign: TextAlign.start,
+          title: Row(
+            children: [
+              Text(
+                nav.name,
+                textAlign: TextAlign.start,
+              ),
+              SizedBox(width: 100,),
+              Icon(Icons.keyboard_arrow_down),
+            ],
           ),
           children: <Widget>[
             Padding(

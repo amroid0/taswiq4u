@@ -202,8 +202,11 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
                     Text(allTranslations.text('result_count')),
                     IconButton(
                       iconSize: 24,
-                      icon: Icon(
+                      icon:_gridItemCount==1? Icon(
                         MdiIcons.viewGrid,
+                        color: Color(0xff2D3142),
+                      ): Icon(
+                        MdiIcons.viewList,
                         color: Color(0xff2D3142),
                       ),
                       onPressed: () {
@@ -481,6 +484,10 @@ class _SearchAnnounceListScreenState extends State<SearchAnnounceListScreen> {
           return Container(
             child: new Wrap(
               children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical:16.0,horizontal: 16),
+                  child: Text(allTranslations.text('sort_by'),style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                ),
                 Directionality(
                   textDirection: TextDirection.rtl,
                   child: RadioListTile(

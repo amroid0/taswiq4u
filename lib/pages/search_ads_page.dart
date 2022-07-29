@@ -43,6 +43,7 @@ class DummyDelegate extends SearchDelegate<String> {
     ..sort(
     (w1, w2) => w1.toLowerCase().compareTo(w2.toLowerCase()),
     );
+   _words.addAll(_history);
   }
   @override
   Widget buildSuggestions(BuildContext context) {
@@ -68,7 +69,7 @@ class DummyDelegate extends SearchDelegate<String> {
             suggestions: suggestions.toList(),
             onSelected: (String suggestion) {
               this.query = suggestion;
-              this._history.insert(0, suggestion);
+              //this._history.insert(0, suggestion);
               showResults(context);
             },
           ),
@@ -106,6 +107,10 @@ class DummyDelegate extends SearchDelegate<String> {
   }
   @override
   Widget buildResults(BuildContext context) {
+
+    if(!_history.contains(query))
+    _history.insert(0, query);
+
     _bloc.searchWithKey(query, _sortSelectedValue);
     favbloc=new FavroiteBloc();
 
@@ -200,7 +205,7 @@ class DummyDelegate extends SearchDelegate<String> {
                     ),
                     Text('12'),
                     Text(allTranslations.text('result_count')),
-                  ShowListWidget(value: 1,onvalueChange: (val){
+                  ShowListWidget(value: _gridItemCount,onvalueChange: (val){
                     _gridItemCount=val;
                     //_buildAdsList(ads,context);
                     _bloc.refreshData();
@@ -395,7 +400,10 @@ class DummyDelegate extends SearchDelegate<String> {
           return Container(
             child: new Wrap(
               children: <Widget>[
-
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical:16.0,horizontal: 16),
+                  child: Text(allTranslations.text('sort_by'),style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                ),
 
                 Directionality(textDirection: TextDirection.rtl,
 
