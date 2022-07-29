@@ -36,7 +36,7 @@ class _FavroiteWidgetState extends State<FavroiteWidget> {
         child: Container(
           height:35,
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),
-              color: widget.bgColor),
+             ),
           child: widget.value
               ?
                Icon(

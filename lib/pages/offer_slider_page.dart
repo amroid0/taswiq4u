@@ -7,6 +7,8 @@ import 'package:olx/model/Counter.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/model/popup_ads_entity_entity.dart';
 import 'package:olx/utils/Theme.dart';
+import 'package:olx/utils/ToastUtils.dart';
+import 'package:olx/utils/global_locale.dart';
 
 
 import 'offer_detail_slider_page.dart';
@@ -266,13 +268,17 @@ class _OfferSliderScreenState extends State<OfferSliderScreen> {
         Counter likeCounter=Counter(0,false);
         if(snapshot.hasData)
           likeCounter=snapshot.data;
+        else if(snapshot.hasError){
+          ToastUtils.showWarningMessage(allTranslations.text('ensure_login'));
+
+        }
         return  Row(mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               InkWell(onTap:(){
                 if(!likeCounter.isLiked)
                   BlocProvider.of<OfferBloc>(context).likePopUpAds(item,true);
 
-              },child: Icon(likeCounter.isLiked?Icons.favorite :Icons.favorite_border,color: AppColors.accentColor,)),
+              },child: Icon(likeCounter.isLiked?Icons.thumb_up : Icons.thumb_up_outlined,color: AppColors.accentColor,)),
               SizedBox(width: 4,),
               Text(likeCounter.count.toString(),style: TextStyle(color: AppColors.accentColor),),
 

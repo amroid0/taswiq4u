@@ -52,6 +52,7 @@ AdsDetail _$AdsDetailFromJson(Map<String, dynamic> json) {
             ? null
             : AdvertismentImage.fromJson(e as Map<String, dynamic>))
         ?.toList(),
+    IsFeatured: json['IsFeatured'] as bool,
   );
 }
 
@@ -89,6 +90,7 @@ Map<String, dynamic> _$AdsDetailToJson(AdsDetail instance) => <String, dynamic>{
       'StateNameArabic': instance.StateNameArabic,
       'StateNameEnglish': instance.StateNameEnglish,
       'IsFavorite': instance.IsFavorite,
+      'IsFeatured': instance.IsFeatured,
       'IsActive': instance.IsActive,
       'Advertisment_Specification': instance.Advertisment_Specification,
       'AdvertismentImages': instance.AdvertismentImages,

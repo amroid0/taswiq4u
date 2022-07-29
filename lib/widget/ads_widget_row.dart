@@ -16,6 +16,7 @@ import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/utils.dart';
 import 'package:olx/widget/favorite_card.dart';
 import 'package:olx/widget/favroite_widget.dart';
+import 'package:olx/widget/star_widget.dart';
 
 class AdsRowWidget extends StatelessWidget {
   AdsModel model;
@@ -24,7 +25,7 @@ class AdsRowWidget extends StatelessWidget {
   final AdsBloc bloc;
 
   Radius imageRadius;
-  AdsRowWidget({this.model,this.language,this.editable,this.bloc});
+  AdsRowWidget({this.model,this.language,this.editable=false,this.bloc});
 
 
 
@@ -89,7 +90,15 @@ class AdsRowWidget extends StatelessWidget {
                               alignment: AlignmentDirectional.topStart,
                               child: Padding(
                                 padding: const EdgeInsets.all(4.0),
-                                child: FavroiteWidgetCard(
+                                child: editable?  StarWidget(
+                                    onFavChange:(val){
+                                      if(BlocProvider.of<LoginBloc>(context).isLogged())
+                                        BlocProvider.of<AdsBloc>(context).distinictAds(model.Id.toString());
+                                      else
+                                        Navigator.push(
+                                            context, MaterialPageRoute(builder: (context) => ParentAuthPage()));                          },
+                                    value: (BlocProvider.of<LoginBloc>(context).isLogged())?model.IsFeatured:false
+                                ): FavroiteWidget(
                                     onFavChange:(val){
                                       if(BlocProvider.of<LoginBloc>(context).isLogged())
                                         BlocProvider.of<FavroiteBloc>(context).changeFavoriteState(val,model.Id);

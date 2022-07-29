@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/favroite_bloc.dart';
@@ -13,6 +14,7 @@ import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/utils.dart';
 import 'package:olx/widget/favorite_card.dart';
 import 'package:olx/widget/favroite_widget.dart';
+import 'package:olx/widget/star_widget.dart';
 
 
 class AdsCardWidget extends StatelessWidget {
@@ -68,7 +70,15 @@ class AdsCardWidget extends StatelessWidget {
                     alignment: AlignmentDirectional.topStart,
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
-                      child: FavroiteWidgetCard(
+                      child:editable?  StarWidget(
+                          onFavChange:(val){
+                            if(BlocProvider.of<LoginBloc>(context).isLogged())
+                              BlocProvider.of<AdsBloc>(context).distinictAds(model.Id.toString());
+                            else
+                              Navigator.push(
+                                  context, MaterialPageRoute(builder: (context) => ParentAuthPage()));                          },
+                          value: (BlocProvider.of<LoginBloc>(context).isLogged())?model.IsFeatured:false
+                      ): FavroiteWidget(
                           onFavChange:(val){
                             if(BlocProvider.of<LoginBloc>(context).isLogged())
                               BlocProvider.of<FavroiteBloc>(context).changeFavoriteState(val,model.Id);

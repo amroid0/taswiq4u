@@ -197,7 +197,7 @@ class CarouselDemoState extends State<CategoryListFragment> {
 
               carouselSlider = CarouselSlider(
 
-                height: MediaQuery.of(context).size.height*.22,
+                height: MediaQuery.of(context).size.height*.27,
                 initialPage: 0,
                 enlargeCenterPage: true,
                 aspectRatio: 1,

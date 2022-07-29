@@ -17,9 +17,12 @@ class _FavroiteWidgetState extends State<ShowListWidget> {
   Widget build(BuildContext context) {
     return IconButton(
       iconSize: 24,
-      icon: Icon(
+      icon: widget.value==1? Icon(
         MdiIcons.viewGrid,
-
+        color: Color(0xff2D3142),
+      ): Icon(
+        MdiIcons.viewList,
+        color: Color(0xff2D3142),
       ),
       onPressed: () {
         if (widget.value == 1) {
@@ -29,6 +32,9 @@ class _FavroiteWidgetState extends State<ShowListWidget> {
         }
 
         widget.onvalueChange(widget.value);
+        setState(() {
+
+        });
       },
     );
   }

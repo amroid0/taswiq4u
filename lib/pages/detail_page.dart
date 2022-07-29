@@ -9,7 +9,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:olx/data/bloc/Post_Report_bloc.dart';
 import 'package:olx/data/bloc/ads_bloc.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
@@ -31,6 +33,7 @@ import 'package:olx/utils/ToastUtils.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/favroite_widget.dart';
 import 'package:olx/widget/map_widget.dart';
+import 'package:olx/widget/star_widget.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -186,93 +189,7 @@ class _DetailPageState extends State<DetailPage> {
       bloc: _bloc,
       child: Scaffold(
         key: detailScaffoldMessengerKey,
-        floatingActionButton: SpeedDial(
-          /// both default to 16
-          marginEnd: 18,
-          marginBottom: 20,
-          // animatedIcon: AnimatedIcons.menu_close,
-          // animatedIconTheme: IconThemeData(size: 22.0),
-          /// This is ignored if animatedIcon is non null
-          icon: Icons.call,
-          activeIcon: Icons.call,
-          // iconTheme: IconThemeData(color: Colors.grey[50], size: 30),
-          /// The label of the main button.
-          // label: Text("Open Speed Dial"),
-          /// The active label of the main button, Defaults to label if not specified.
-          // activeLabel: Text("Close Speed Dial"),
-          /// Transition Builder between label and activeLabel, defaults to FadeTransition.
-          // labelTransitionBuilder: (widget, animation) => ScaleTransition(scale: animation,child: widget),
-          /// The below button size defaults to 56 itself, its the FAB size + It also affects relative padding and other elements
-          buttonSize: 56.0,
-          visible: true,
 
-          /// If true user is forced to close dial manually
-          /// by tapping main button and overlay is not rendered.
-          closeManually: false,
-
-          /// If true overlay will render no matter what.
-          renderOverlay: false,
-          curve: Curves.bounceIn,
-          overlayColor: Colors.black,
-          overlayOpacity: 0.5,
-          onOpen: () => print('OPENING DIAL'),
-          onClose: () => print('DIAL CLOSED'),
-          tooltip: 'phone',
-          heroTag: 'speed-dial-hero-tag',
-          backgroundColor: Colors.green,
-          foregroundColor: Colors.white,
-
-          elevation: 8.0,
-          shape: CircleBorder(),
-          // orientation: SpeedDialOrientation.Up,
-          // childMarginBottom: 2,
-          // childMarginTop: 2,
-          children: [
-            SpeedDialChild(
-              child: Icon(
-                Icons.textsms,
-                color: Colors.white,
-              ),
-              backgroundColor: Colors.green,
-              label: allTranslations.text('conversation'),
-              labelBackgroundColor: Colors.white,
-              labelStyle: TextStyle(fontSize: 18.0),
-              onTap: () => _textMe(),
-              onLongPress: () => print('FIRST CHILD LONG PRESS'),
-            ),
-            SpeedDialChild(
-              child: Icon(
-                Icons.call,
-                color: Colors.white,
-              ),
-              backgroundColor: Colors.green,
-              label: allTranslations.text('calling'),
-              labelStyle: TextStyle(fontSize: 18.0),
-              labelBackgroundColor: Colors.white,
-              onTap: () {
-                _makePhoneCall('tel:${detailArgs.UserPhone}');
-              },
-              onLongPress: () => print('SECOND CHILD LONG PRESS'),
-            ),
-            SpeedDialChild(
-              child: Icon(
-                Icons.copy,
-                color: Colors.white,
-              ),
-              backgroundColor: Colors.green,
-              label: allTranslations.text('copy_num'),
-              labelBackgroundColor: Colors.white,
-              labelStyle: TextStyle(fontSize: 18.0),
-              onTap: () => Clipboard.setData(
-                      new ClipboardData(text: detailArgs.UserPhone))
-                  .then((_) {
-                detailScaffoldMessengerKey.currentState.showSnackBar(SnackBar(
-                    content: Text(allTranslations.text('copied_num'))));
-              }),
-              onLongPress: () => print('THIRD CHILD LONG PRESS'),
-            ),
-          ],
-        ),
         body: StreamBuilder<ApiResponse<AdsDetail>>(
           stream: _bloc.stream,
           builder: (context, snapshot) {
@@ -290,187 +207,261 @@ class _DetailPageState extends State<DetailPage> {
                 var value = snapshot.data.data;
                 detail = value as AdsDetail;
                 //_bloc.viewAds();
-                return ListView(
-                  shrinkWrap: true,
-                  children: <Widget>[
-                    Stack(children: [
-                      gettSliderImageWidget(detail.AdvertismentImages),
-                      Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Container(
-                                alignment: AlignmentDirectional.topStart,
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Container(
-                                    width: 45,
-                                    height: 45,
-                                    padding: EdgeInsets.all(4.0),
-                                    decoration: BoxDecoration(
-                                      color: Color(0xffa49399),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(12.0),
+                return Column(
+                  children: [
+                    Expanded(
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: <Widget>[
+                          Stack(children: [
+                            gettSliderImageWidget(detail.AdvertismentImages),
+                            Padding(
+                              padding: EdgeInsets.all(16),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Container(
+                                      alignment: AlignmentDirectional.topStart,
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Container(
+                                          width: 45,
+                                          height: 45,
+                                          padding: EdgeInsets.all(4.0),
+                                          decoration: BoxDecoration(
+                                            color: Color(0xffa49399),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(12.0),
+                                            ),
+                                          ),
+                                          child: Icon(
+                                            Icons.arrow_back_ios,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                    child: Icon(
-                                      Icons.arrow_back_ios,
-                                      color: Colors.white,
-                                    ),
                                   ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Container(
-                                width: 45,
-                                height: 45,
-                                padding: EdgeInsets.all(4.0),
-                                decoration: BoxDecoration(
-                                  color: Color(0xffa49399),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(12.0),
+                                  SizedBox(
+                                    width: 10,
                                   ),
-                                ),
-                                child: FavroiteWidget(
-                                  onFavChange: (val) {
-                                    if (BlocProvider.of<LoginBloc>(context)
-                                        .isLogged())
-                                      favbloc.changeFavoriteState(
-                                          val, detail.Id);
-                                    else
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ParentAuthPage()));
-                                  },
-                                  value: detail.IsFavorite,
-                                  bgColor:  Color(0xffa49399),
-                                    iconColor: Colors.white
+                                  Visibility(
+                                    visible: !widget.isEditable,
+                                    child: Container(
+                                        width: 45,
+                                        height: 45,
+                                        padding: EdgeInsets.all(4.0),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xffa49399),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(12.0),
+                                          ),
+                                        ),
+                                        child: FavroiteWidget(
+                                          onFavChange: (val) {
+                                            if (BlocProvider.of<LoginBloc>(context)
+                                                .isLogged())
+                                              favbloc.changeFavoriteState(
+                                                  val, detail.Id);
+                                            else
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ParentAuthPage()));
+                                          },
+                                          value: detail.IsFavorite,
+                                          bgColor:  Color(0xffa49399),
+                                            iconColor: Colors.white
             ,
-                                )),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                await FlutterShare.share(
-                                    title: 'Taswiq share',
-                                    linkUrl: detail.TextShareEn,
-                                    chooserTitle: 'taswiq Chooser Title');
-                              },
-                              child: Container(
-                                  width: 45,
-                                  height: 45,
-                                  padding: EdgeInsets.all(4.0),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xffa49399),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(12.0),
+                                        )),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Visibility(
+                                    visible: !widget.isEditable,
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        await FlutterShare.share(
+                                            title: 'Taswiq share',
+                                            linkUrl: detail.TextShareEn,
+                                            chooserTitle: 'taswiq Chooser Title');
+                                      },
+                                      child: Container(
+                                          width: 45,
+                                          height: 45,
+                                          padding: EdgeInsets.all(4.0),
+                                          decoration: BoxDecoration(
+                                            color: Color(0xffa49399),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(12.0),
+                                            ),
+                                          ),
+                                          child: Icon(
+                                            Icons.share,
+                                            size: 30.0,
+                                            color: Colors.white,
+                                          )),
                                     ),
                                   ),
-                                  child: Icon(
-                                    Icons.share,
-                                    size: 30.0,
-                                    color: Colors.white,
-                                  )),
-                            ),
-                          /*  Visibility(
-                              visible: true*//*widget.isEditable*//*,
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => BlocProvider(
-                                                bloc: AdsBloc(),
-                                                child: EditPage(detail),
-                                              ),
-                                          settings: RouteSettings(
-                                              arguments: detail)));
-                                },
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                        color:
-                                            Color(0xffECECEC).withOpacity(0.6),
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: Icon(
-                                      Icons.edit,
-                                      size: 30.0,
-                                      color: Colors.black,
-                                    )),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Visibility(
-                              visible: true*//*widget.isEditable*//*,
-                              child: GestureDetector(
-                                onTap: () {
-                                  _bloc.deleteAds(detail.Id.toString());
-                                },
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                        color:
-                                            Color(0xffECECEC).withOpacity(0.6),
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: Icon(
-                                      Icons.delete,
-                                      size: 30.0,
-                                      color: Colors.red,
-                                    )),
-                              ),
-                            ),*/
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Visibility(
-                              visible:widget.isEditable,
-                              child: GestureDetector(
-                                onTap: () {
-                                  _bloc.distinictAds(detail.Id.toString());
-                                },
-                                child: Container(
-                                    width: 45,
-                                    height: 45,
-                                    padding: EdgeInsets.all(4.0),
-                                    decoration: BoxDecoration(
-                                      color: Color(0xffa49399),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(12.0),
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      Icons.star,
-                                      size: 30.0,
-                                      color: Colors.amber,
-                                    )),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
 
-                    ]),
-                    SizedBox(
-                      height: 10,
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Visibility(
+                                    visible: widget.isEditable,
+                                    child: Container(
+                                        width: 45,
+                                        height: 45,
+                                        padding: EdgeInsets.all(4.0),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xffa49399),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(12.0),
+                                          ),
+                                        ),
+                                        child: StarWidget(
+                                          onFavChange: (val) {
+                                            if (BlocProvider.of<LoginBloc>(context)
+                                                .isLogged())
+                                              _bloc.distinictAds(detail.Id.toString());
+                                            else
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ParentAuthPage()));
+                                          },
+                                          value: detail.IsFavorite,
+                                          bgColor:  Color(0xffa49399),
+                                          iconColor: Colors.white
+                                          ,
+                                        )),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Visibility(
+                                    visible:widget.isEditable,
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => BlocProvider(
+                                                  bloc: AdsBloc(),
+                                                  child: EditPage(detail),
+                                                ),
+                                                settings: RouteSettings(
+                                                    arguments: detail)));
+                                      },
+                                      child: Container(
+                                          width: 45,
+                                          height: 45,
+                                          padding: EdgeInsets.all(4.0),
+                                          decoration: BoxDecoration(
+                                            color: Color(0xffa49399),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(12.0),
+                                            ),
+                                          ),
+                                          child: Icon(
+                                            FontAwesomeIcons.edit,
+                                            size: 30.0,
+                                            color: Colors.white,
+                                          )),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Visibility(
+                                    visible:widget.isEditable,
+
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                      _bloc.deleteAds(detail.Id.toString());
+                                        },
+                                      child: Container(
+                                          width: 45,
+                                          height: 45,
+                                          padding: EdgeInsets.all(4.0),
+                                          decoration: BoxDecoration(
+                                            color: Color(0xffa49399),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(12.0),
+                                            ),
+                                          ),
+                                          child: Icon(
+                                            Icons.delete,
+                                            size: 30.0,
+                                            color: Colors.red,
+                                          )),
+                                    ),
+                                  ),
+
+
+
+                                ],
+                              ),
+                            ),
+
+                          ]),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(16),
+                            decoration: BoxDecoration(color: Colors.white),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: _buildDetailWidgets(detail)),
+                          ),
+                        ],
+                      ),
                     ),
                     Container(
                       padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(color: Colors.white),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: _buildDetailWidgets(detail)),
-                    ),
+                      decoration: BoxDecoration(
+
+                        color: Colors.white,
+                        borderRadius: new BorderRadius.only(
+                          topLeft: const Radius.circular(30.0),
+                          bottomLeft: const Radius.circular(30.0),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+
+                              onPressed: () {
+                                _textMe();
+                              },
+                              child: Text(allTranslations.text('chat_now')),
+                              style: OutlinedButton.styleFrom(
+                                shape: StadiumBorder(),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 16,),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                _makePhoneCall('tel:${detailArgs.UserPhone}');
+
+                              },
+                              child: Text(allTranslations.text('call_detail')),
+                              style: ElevatedButton.styleFrom(shape: StadiumBorder()),
+                            ),
+                          )
+                        ],
+                      ),
+                    )
                   ],
                 );
 
@@ -572,7 +563,7 @@ class _DetailPageState extends State<DetailPage> {
             Text(
               detail.CreationTime == null
                   ? ""
-                  : '${detail.CreationTime}}',
+                  : '${_formatDate(detail.CreationTime)}',
               style: TextStyle(fontSize: 11, color: Color(0xff818391)),
             ),
           ],
@@ -905,7 +896,14 @@ class _DetailPageState extends State<DetailPage> {
       throw 'Could not launch ${uri.toString()}';
     }
   }
+_formatDate(String date){
 
+  DateTime parseDate =
+  new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").parse(date);
+  var inputDate = DateTime.parse(parseDate.toString());
+  var outputFormat = DateFormat('MM/dd/yyyy');
+ return outputFormat.format(inputDate);
+}
   bool AddReport() {
 //     return Container(
 //       margin:EdgeInsets.only(top:100),

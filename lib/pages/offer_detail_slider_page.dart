@@ -10,6 +10,7 @@ import 'package:olx/model/offfer_entity.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/ToastUtils.dart';
+import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/base64_image.dart';
 import 'package:olx/model/popup_ads_entity_entity.dart';
 import 'package:photo_view/photo_view.dart';
@@ -74,203 +75,234 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
                      ),
                    ),
                    SizedBox(height: 16),
-                   Container(
-                     decoration: BoxDecoration(
-                       color: Colors.white,
-                       borderRadius: BorderRadius.only(
-                           topLeft: Radius.circular(12), topRight: Radius.circular(12)),
-                     ),
-                     width: MediaQuery.of(context).size.width,
-                     height: MediaQuery.of(context).size.height * 0.55,
-                     child: ClipRRect(
-                       borderRadius: BorderRadius.only(
-                           topLeft: Radius.circular(12), topRight: Radius.circular(12)),
-                       child: PhotoViewGallery.builder(
-                         itemCount: list.length,
-                         builder: (context, index) {
-                           var item=list[index];
-                           return PhotoViewGalleryPageOptions(
+                   Expanded(
+                     child:CarouselSlider(
+                         height: MediaQuery.of(context).size.height * 0.95,
+                       initialPage: currentPage,
+                         enlargeCenterPage: true,
+                         autoPlay: false,
+                         reverse: false,
 
-                             imageProvider: NetworkImage(
-                                 APIConstants.getFullImageUrl(item.systemDataFile1!=null ?item.systemDataFile1.url:"", ImageType.COMMAD)
-                             ),
-                             // Contained = the smallest possible size to fit one dimension of the screen
-                             minScale: PhotoViewComputedScale.covered ,
-                             // Covered = the smallest possible size to fit the whole screen
-                             maxScale: PhotoViewComputedScale.covered * 2,
-                           );
-                         },
-                         scrollPhysics: BouncingScrollPhysics(),
-                         // Set the background color to the "classic white"
-                         backgroundDecoration: BoxDecoration(
-                           color: Colors.white,
-                         ),
-                         pageController:_pageController,
-                         onPageChanged: (i){
-                           currentPage=i;
+                         viewportFraction: 1.0,
+                         enableInfiniteScroll: true,
+                         autoPlayInterval: Duration(seconds: 3),
+                         autoPlayAnimationDuration: Duration(milliseconds: 3000),
+                         pauseAutoPlayOnTouch: Duration(seconds: 3),
+                         scrollDirection: Axis.horizontal,
+                         onPageChanged: (index) {
+                           currentPage = index;
                            BlocProvider.of<OfferBloc>(context).refresh(list[currentPage].likes, list[currentPage].viewsCount);
                            setState(() {
                            });
+                           // _bloc.updateImageSliderNumber(index);
                          },
-                         loadingBuilder: (context, event) => Center(
-                           child: Container(
-                             width: 20.0,
-                             height: 20.0,
-                             child: CircularProgressIndicator(
-                               value: event == null
-                                   ? 0
-                                   : event.cumulativeBytesLoaded / event.expectedTotalBytes,
-                             ),
-                           ),
-                         ),
-                       ),
-                     ),
-                   ),
-                     Container(
-                       decoration: BoxDecoration(
-                           color: Colors.white,
-
-                           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12) ,bottomRight: Radius.circular(12) )
-                       ),
-                       padding: EdgeInsets.all(16),
-                       child: Column(
-                         mainAxisSize: MainAxisSize.min,
-                         crossAxisAlignment: CrossAxisAlignment.start,
-
-                         children: <Widget>[
-                           Text(
-                             list[currentPage].description==null?"":list[currentPage].description,
-                             style: TextStyle(color: Color(0xff2D3142)),
-                           ),
-                           SizedBox(
-                             height: 8,
-                           ),
-                           Row(
+                       items: list.map((e) {
+                         return Builder(builder: (context){
+                          return Column(
                              children: [
-                               Row(children: <Widget>[
-                                 _buildViewWidget(currentPage, list[currentPage]),
-                                 SizedBox(
-                                   width: 4,
+                               Container(
+                                 decoration: BoxDecoration(
+                                   color: Colors.white,
+                                   borderRadius: BorderRadius.only(
+                                       topLeft: Radius.circular(12), topRight: Radius.circular(12)),
                                  ),
-                               ]),
-                               SizedBox(
-                                 width: 8,
-                               ),
-                               _buildLikeWidget(currentPage, list[currentPage]),
-                             ],
-                           ),
-                           SizedBox(
-                             height: 19,
-                           ),
-                           Row(
-                             children: <Widget>[
-                               InkWell(
-                                   onTap: () async {
-                                     var url = list[currentPage].phoneNumber;
-                                     if (await canLaunch('tel:$url'))
-                                       await launch('tel:$url');
-                                     else
-                                       // can't launch url, there is some error
-                                       ToastUtils.showErrorMessage("رقم الهاتف غير صحيح");
-                                   },
-                                   child: Container(
-                                       width: 38,
-                                       height: 38,
-                                       padding: EdgeInsets.all(4.0),
-                                       decoration: BoxDecoration(
-                                         color: Color(0xFFCAD1E0),
-                                         borderRadius: BorderRadius.all(
-                                           Radius.circular(12.0),
-                                         ),
-                                       ),
-                                       child: Icon(
-                                         MdiIcons.phoneInTalk,
-                                         color: Color(0xff0AB3FF),
-                                         size: 30,
-                                       ))),
-                               SizedBox(
-                                 width: 12,
-                               ),
-                               InkWell(
-                                   onTap: () async {
-                                     var whatsappUrl ="whatsapp://send?phone=${list[currentPage].phoneNumber}";
-                                     await canLaunch(whatsappUrl)? launch(whatsappUrl):ToastUtils.showErrorMessage("رقم الهاتف غير صحيح");
+                                 width: MediaQuery.of(context).size.width,
+                                 height: MediaQuery.of(context).size.height * 0.55,
+                                 child: ClipRRect(
+                                   borderRadius: BorderRadius.only(
+                                       topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+                                   child: PhotoViewGallery.builder(
+                                     itemCount: list.length,
+                                     builder: (context, index) {
+                                       return PhotoViewGalleryPageOptions(
 
-                                   },
-                                   child: Container(
-                                       width: 38,
-                                       height: 38,
-                                       padding: EdgeInsets.all(4.0),
-                                       decoration: BoxDecoration(
-                                         color: Color(0xFFCAD1E0),
-                                         borderRadius: BorderRadius.all(
-                                           Radius.circular(12.0),
+                                         imageProvider: NetworkImage(
+                                             APIConstants.getFullImageUrl(list[currentPage].systemDataFile1!=null ?list[currentPage].systemDataFile1.url:"", ImageType.COMMAD)
+                                         ),
+                                         // Contained = the smallest possible size to fit one dimension of the screen
+                                         minScale: PhotoViewComputedScale.covered ,
+                                         // Covered = the smallest possible size to fit the whole screen
+                                         maxScale: PhotoViewComputedScale.covered * 2,
+                                                                 );
+                                     },
+                                     scrollPhysics: BouncingScrollPhysics(),
+                                     // Set the background color to the "classic white"
+                                     backgroundDecoration: BoxDecoration(
+                                       color: Colors.white,
+                                     ),
+                                     pageController:_pageController,
+                                     onPageChanged: (i){
+                                       currentPage=i;
+                                       BlocProvider.of<OfferBloc>(context).refresh(list[currentPage].likes, list[currentPage].viewsCount);
+                                       setState(() {
+                                       });
+                                     },
+                                     loadingBuilder: (context, event) => Center(
+                                       child: Container(
+                                         width: 20.0,
+                                         height: 20.0,
+                                         child: CircularProgressIndicator(
+                                           value: event == null
+                                               ? 0
+                                               : event.cumulativeBytesLoaded / event.expectedTotalBytes,
                                          ),
                                        ),
-                                       child: Icon(
-                                         MdiIcons.whatsapp,
-                                         color: AppColors.accentColor,
-                                         size: 30,
-                                       ))),
-                               SizedBox(
-                                 width: 12,
+                                     ),
+                                   ),
+                                 ),
                                ),
-                               InkWell(
-                                   onTap: () async {
-                                     const url = "http://taswiq4u.com/";
-                                     if (await canLaunch(url))
-                                       await launch(url);
-                                     else
-                                       // can't launch url, there is some error
-                                       throw "Could not launch $url";
-                                   },
-                                   child: Container(
-                                       width: 38,
-                                       height: 38,
-                                       padding: EdgeInsets.all(4.0),
-                                       decoration: BoxDecoration(
-                                         color: Color(0xFFCAD1E0),
-                                         borderRadius: BorderRadius.all(
-                                           Radius.circular(12.0),
+                               Container(
+                                 decoration: BoxDecoration(
+                                     color: Colors.white,
+
+                                     borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12) ,bottomRight: Radius.circular(12) )
+                                 ),
+                                 padding: EdgeInsets.all(16),
+                                 child: Column(
+                                   mainAxisSize: MainAxisSize.min,
+                                   crossAxisAlignment: CrossAxisAlignment.start,
+
+                                   children: <Widget>[
+                                     Text(
+                                       list[currentPage].description==null?"":list[currentPage].description,
+                                       style: TextStyle(color: Color(0xff2D3142)),
+                                     ),
+                                     SizedBox(
+                                       height: 8,
+                                     ),
+                                     Row(
+                                       children: [
+                                         Row(children: <Widget>[
+                                           _buildViewWidget(currentPage, list[currentPage]),
+                                           SizedBox(
+                                             width: 4,
+                                           ),
+                                         ]),
+                                         SizedBox(
+                                           width: 8,
                                          ),
-                                       ),
-                                       child: Icon(
-                                         Icons.language_outlined,
-                                         color: Color(0xff00E4F0),
-                                         size: 30,
-                                       ))),
-                               SizedBox(
-                                 width: 12,
+                                         _buildLikeWidget(currentPage, list[currentPage]),
+                                       ],
+                                     ),
+                                     SizedBox(
+                                       height: 19,
+                                     ),
+                                     Row(
+                                       children: <Widget>[
+                                         InkWell(
+                                             onTap: () async {
+                                               var url = list[currentPage].phoneNumber;
+                                               if (await canLaunch('tel:$url'))
+                                                 await launch('tel:$url');
+                                               else
+                                                 // can't launch url, there is some error
+                                                 ToastUtils.showErrorMessage("رقم الهاتف غير صحيح");
+                                             },
+                                             child: Container(
+                                                 width: 38,
+                                                 height: 38,
+                                                 padding: EdgeInsets.all(4.0),
+                                                 decoration: BoxDecoration(
+                                                   color: Color(0xFFCAD1E0),
+                                                   borderRadius: BorderRadius.all(
+                                                     Radius.circular(12.0),
+                                                   ),
+                                                 ),
+                                                 child: Icon(
+                                                   MdiIcons.phoneInTalk,
+                                                   color: Color(0xff0AB3FF),
+                                                   size: 30,
+                                                 ))),
+                                         SizedBox(
+                                           width: 12,
+                                         ),
+                                         InkWell(
+                                             onTap: () async {
+                                               var whatsappUrl ="whatsapp://send?phone=${list[currentPage].phoneNumber}";
+                                               await canLaunch(whatsappUrl)? launch(whatsappUrl):ToastUtils.showErrorMessage("رقم الهاتف غير صحيح");
+
+                                             },
+                                             child: Container(
+                                                 width: 38,
+                                                 height: 38,
+                                                 padding: EdgeInsets.all(4.0),
+                                                 decoration: BoxDecoration(
+                                                   color: Color(0xFFCAD1E0),
+                                                   borderRadius: BorderRadius.all(
+                                                     Radius.circular(12.0),
+                                                   ),
+                                                 ),
+                                                 child: Icon(
+                                                   MdiIcons.whatsapp,
+                                                   color: AppColors.accentColor,
+                                                   size: 30,
+                                                 ))),
+                                         SizedBox(
+                                           width: 12,
+                                         ),
+                                         InkWell(
+                                             onTap: () async {
+                                               const url = "http://taswiq4u.com/";
+                                               if (await canLaunch(url))
+                                                 await launch(url);
+                                               else
+                                                 // can't launch url, there is some error
+                                                 throw "Could not launch $url";
+                                             },
+                                             child: Container(
+                                                 width: 38,
+                                                 height: 38,
+                                                 padding: EdgeInsets.all(4.0),
+                                                 decoration: BoxDecoration(
+                                                   color: Color(0xFFCAD1E0),
+                                                   borderRadius: BorderRadius.all(
+                                                     Radius.circular(12.0),
+                                                   ),
+                                                 ),
+                                                 child: Icon(
+                                                   Icons.language_outlined,
+                                                   color: Color(0xff00E4F0),
+                                                   size: 30,
+                                                 ))),
+                                         SizedBox(
+                                           width: 12,
+                                         ),
+                                         InkWell(
+                                             onTap: () async {
+                                               var url = list[currentPage].instagramLink;
+                                               if (await canLaunch(url))
+                                                 await launch(url);
+                                               else
+                                                 // can't launch url, there is some error
+                                                 ToastUtils.showErrorMessage("اللينك غير صالح");
+                                             },
+                                             child: Container(
+                                                 width: 38,
+                                                 height: 38,
+                                                 padding: EdgeInsets.all(4.0),
+                                                 decoration: BoxDecoration(
+                                                   color: Color(0xFFCAD1E0),
+                                                   borderRadius: BorderRadius.all(
+                                                     Radius.circular(12.0),
+                                                   ),
+                                                 ),
+                                                 child: Icon(
+                                                   MdiIcons.instagram,
+                                                   color: Color(0xff7623BE),
+                                                   size: 30,
+                                                 ))),
+                                       ],
+                                     )
+                                   ],
+                                 ),
                                ),
-                               InkWell(
-                                   onTap: () async {
-                                     var url = list[currentPage].instagramLink;
-                                     if (await canLaunch(url))
-                                       await launch(url);
-                                     else
-                                       // can't launch url, there is some error
-                                       ToastUtils.showErrorMessage("اللينك غير صالح");
-                                   },
-                                   child: Container(
-                                       width: 38,
-                                       height: 38,
-                                       padding: EdgeInsets.all(4.0),
-                                       decoration: BoxDecoration(
-                                         color: Color(0xFFCAD1E0),
-                                         borderRadius: BorderRadius.all(
-                                           Radius.circular(12.0),
-                                         ),
-                                       ),
-                                       child: Icon(
-                                         MdiIcons.instagram,
-                                         color: Color(0xff7623BE),
-                                         size: 30,
-                                       ))),
                              ],
-                           )
-                         ],
-                       ),
-                     ),
+                           );
+                         });
+
+                       }).toList(),
+                     )
+                   ),
 
                   /*   Align(
                      alignment: Alignment.bottomLeft,
@@ -391,13 +423,16 @@ class _OfferSliderPageState extends State<OfferSliderPage> {
         Counter likeCounter=Counter(0,false);
         if(snapshot.hasData)
           likeCounter=snapshot.data;
+        else if(snapshot.hasError){
+          ToastUtils.showWarningMessage(allTranslations.text('ensure_login'));
+        }
         return  Row(mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               InkWell(onTap:(){
                 if(!likeCounter.isLiked)
                 BlocProvider.of<OfferBloc>(context).likePopUpAds(item,true);
 
-              },child: Icon(likeCounter.isLiked?Icons.favorite :Icons.favorite_border,color: AppColors.accentColor,)),
+              },child: Icon(likeCounter.isLiked?Icons.thumb_up : Icons.thumb_up_outlined,color: AppColors.accentColor,)),
             SizedBox(width: 4,),
               Text(likeCounter.count.toString(),style: TextStyle(color: AppColors.accentColor),),
 

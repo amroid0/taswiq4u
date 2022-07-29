@@ -38,6 +38,7 @@ class AdsDetail {
   String StateNameArabic;
   String StateNameEnglish;
   bool IsFavorite;
+  bool IsFeatured;
   bool IsActive;
   List<AdvertismentSpecification> Advertisment_Specification;
   List<AdvertismentImage> AdvertismentImages;
@@ -51,7 +52,7 @@ class AdsDetail {
 			this.IsDeleted, this.CreationTime, this.UpdateTime, this.ViewCount,
 			this.CityId, this.CityNameEnglish, this.CityNameArabic, this.StateId,
 			this.StateNameArabic, this.StateNameEnglish, this.IsFavorite,
-			this.IsActive, this.Advertisment_Specification, this.AdvertismentImages});
+			this.IsActive, this.Advertisment_Specification, this.AdvertismentImages,this.IsFeatured});
 
   factory AdsDetail.fromJson(Map<String, dynamic> json) => _$AdsDetailFromJson(json);
 

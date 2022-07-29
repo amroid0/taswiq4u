@@ -6,6 +6,7 @@ import 'package:olx/model/popup_ads_entity_entity.dart';
 import 'package:olx/utils/Constants.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/ToastUtils.dart';
+import 'package:olx/utils/global_locale.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PopUpAdsPage extends StatefulWidget {
@@ -253,13 +254,17 @@ class _PopUpAdsPageState extends State<PopUpAdsPage> {
       builder: (context, snapshot) {
         Counter likeCounter = Counter(0, false);
         if (snapshot.hasData) likeCounter = snapshot.data;
+        else if(snapshot.hasError){
+          ToastUtils.showWarningMessage(allTranslations.text('ensure_login'));
+
+        }
         return Row(children: <Widget>[
           InkWell(
               onTap: () {
                 if (!likeCounter.isLiked) bloc.likePopUpAds(result, true);
               },
               child: Icon(
-                likeCounter.isLiked ? Icons.favorite : Icons.favorite_border,
+                likeCounter.isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
                 color: AppColors.accentColor,
               )),
           SizedBox(

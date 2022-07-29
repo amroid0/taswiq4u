@@ -108,7 +108,7 @@ class _OfferPageState extends State<OfferPage> {
                       physics: NeverScrollableScrollPhysics(),
                       primary: true,
                       crossAxisCount: 2,
-                      childAspectRatio: .9,
+                      childAspectRatio: .65,
                       children: List.generate(offerObj.length, (index) {
                         return _getOfferGridCell(offerObj, index);
                       }),
@@ -155,36 +155,31 @@ class _OfferPageState extends State<OfferPage> {
 
   Widget _buildCategoryList(List<CateogryEntity> category) {
     return Container(
-      height: 80,
+      height: 50,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
         itemCount: category.length,
         itemBuilder: (BuildContext context, int index) {
           return Container(
-            margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
-            child: new SizedBox(
-                height: 60.0,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(
-                      vertical: 4.0, horizontal: 4.0),
-                  child: ChoiceChip(
-                    label: Text(allTranslations.isEnglish
-                        ? category[index].englishDescription
-                        : category[index].arabicDescription),
-                    selected: category[index].isSelected != null &&
-                        category[index].isSelected,
-                    onSelected: (select) {
-                      category.forEach((item) {
-                        item.isSelected = false;
-                      });
-                      category[index].isSelected = true;
-                      setState(() {
-                        offerBloc.getOfferLsit(category[index].id.toString());
-                      });
-                    },
-                  ),
-                )),
+            margin: const EdgeInsets.symmetric(
+                vertical: 4.0, horizontal: 4.0),
+            child: ChoiceChip(
+              label: Text(allTranslations.isEnglish
+                  ? category[index].englishDescription
+                  : category[index].arabicDescription),
+              selected: category[index].isSelected != null &&
+                  category[index].isSelected,
+              onSelected: (select) {
+                category.forEach((item) {
+                  item.isSelected = false;
+                });
+                category[index].isSelected = true;
+                setState(() {
+                  offerBloc.getOfferLsit(category[index].id.toString());
+                });
+              },
+            ),
           );
         },
       ),
@@ -215,7 +210,7 @@ class _OfferPageState extends State<OfferPage> {
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 new Container(
-                    height: 170.0,
+                    height: 250.0,
                     width: 100.0,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),

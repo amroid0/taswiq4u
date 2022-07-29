@@ -43,6 +43,7 @@ class _SliderFullImageViewerState extends State<SliderFullImageViewer> {
             minScale: PhotoViewComputedScale.contained * 0.8,
             // Covered = the smallest possible size to fit the whole screen
             maxScale: PhotoViewComputedScale.covered * 2,
+
           );
 
         },

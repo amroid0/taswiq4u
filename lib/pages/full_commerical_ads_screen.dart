@@ -116,7 +116,7 @@ class _FullComerialScreenState extends State<FullComerialScreen> {
                                             if(!likeCounter.isLiked) {
                                               bloc.likeAds(true);
                                             }
-                                          },child: Icon(likeCounter.isLiked?Icons.favorite:Icons.favorite_border,color: Colors.white,)),
+                                          },child: Icon(likeCounter.isLiked?Icons.thumb_up : Icons.thumb_up_outlined,color: Colors.white,)),
                                         ]
                                     );
                                   },
