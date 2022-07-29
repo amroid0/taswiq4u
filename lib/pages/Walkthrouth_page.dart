@@ -33,16 +33,22 @@ class Walkthrougth extends StatelessWidget {
           SizedBox(
             height: 5,
           ),
-          Text(
-            textContent,
-            style: TextStyle(fontWeight: FontWeight.bold),
+          Center(
+            child: Text(
+              textContent,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
           SizedBox(
             height: 5,
           ),
-          Text(
-            textDetail,
-            style: TextStyle(color: Colors.grey),
+          Center(
+            child: Text(
+              textDetail,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey),
+            ),
           )
         ],
       )),

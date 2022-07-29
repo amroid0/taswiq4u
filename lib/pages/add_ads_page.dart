@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_map_location_picker/google_map_location_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:olx/data/bloc/add_post_bloc.dart';
 import 'package:olx/data/bloc/upload_image_bloc.dart';
@@ -27,7 +26,6 @@ import 'package:olx/widget/CitiesDialog.dart';
 import 'package:olx/widget/bottom_sheet.dart';
 import 'package:olx/widget/check_box_withlabel.dart';
 import 'package:olx/widget/city_list_dialog.dart';
-import 'package:olx/widget/map_widget.dart';
 import 'package:olx/widget/mutli_select_chip_dialog.dart';
 import 'package:olx/widget/text_field_decoration.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -94,7 +92,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showDialog();
+      //  _showDialog();
     });
     bloc = AddPostBloc();
     uploadBloc = UploadImageBloc();
@@ -516,41 +514,157 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
                                       //         color: Colors.green,
                                       //         style: BorderStyle.solid)),
                                       ),
-                                  child: Container(
-                                    height: 30,
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton(
-                                        hint: Text(
-                                          '${allTranslations.text('choose')} ${allTranslations.isEnglish ? item.EnglishName : item.ArabicName}',
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Color(0xffCAD1E0)),
-                                        ),
-                                        value: _selectedFieldValue[index],
-                                        isDense: true,
-                                        items: item.SpecificationOptions.map(
-                                            (FieldProprtiresSpecificationoption
-                                                value) {
-                                          return DropdownMenuItem(
-                                            value: value.Id,
-                                            child: Text(
-                                                allTranslations.isEnglish
-                                                    ? value.EnglishName
-                                                    : value.ArabicName),
-                                          );
-                                        }).toList(),
-                                        onChanged: (int newValue) {
-                                          item.Value = newValue;
-                                          setState(() {
-                                            _selectedFieldValue[index] =
-                                                newValue;
-                                            state
-                                                .didChange(newValue.toString());
-                                            _colorFieldValue[index] =
-                                                AppColors.validValueColor;
+                                  child: InkWell(
+                                    onTap: () {
+                                      return showModalBottomSheet(
+                                          context: context,
+                                          builder: (context) {
+                                            return Container(
+                                                height: 400,
+                                                child: ListView.separated(
+                                                  itemCount: item
+                                                      .SpecificationOptions
+                                                      .length,
+                                                  separatorBuilder:
+                                                      (c, index) => Divider(
+                                                    height: 0.5,
+                                                    color: Colors.grey.shade500,
+                                                  ),
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    //  var item = item.SpecificationOptions[index];
+                                                    //   if (widget.itemBuilder != null)
+                                                    //     return InkWell(
+                                                    //       child: widget.itemBuilder(
+                                                    //           context, item, item == widget.selectedValue),
+                                                    //       onTap: () {
+                                                    //         if (item.hasSub) {
+                                                    //           bloc.addCateogryToStack(item);
+                                                    //         } else {
+                                                    //           onChange(item);
+                                                    //           Navigator.pop(context);
+                                                    //         }
+                                                    //       },
+                                                    //     );
+
+                                                    return ListTile(
+                                                      title: Text(allTranslations
+                                                              .isEnglish
+                                                          ? item
+                                                              .SpecificationOptions[
+                                                                  index]
+                                                              .EnglishName
+                                                          : item
+                                                              .SpecificationOptions[
+                                                                  index]
+                                                              .ArabicName),
+                                                      // selected: item == widget.selectedValue,
+                                                      // trailing: item.hasSub
+                                                      //     ? Icon(
+                                                      //   Icons.arrow_forward_ios_outlined,
+                                                      //   color: Colors.black87,
+                                                      //   size: 30,
+                                                      // )
+                                                      //     : SizedBox(),
+                                                      onTap: () {
+                                                        item.Value = allTranslations
+                                                                .isEnglish
+                                                            ? item
+                                                                .SpecificationOptions[
+                                                                    index]
+                                                                .EnglishName
+                                                            : item
+                                                                .SpecificationOptions[
+                                                                    index]
+                                                                .ArabicName;
+                                                        setState(() {
+                                                          _selectedFieldValue[
+                                                                  index] =
+                                                              item
+                                                                  .SpecificationOptions[
+                                                                      index]
+                                                                  .Id;
+                                                          state.didChange(item
+                                                              .SpecificationOptions[
+                                                                  index]
+                                                              .Id
+                                                              .toString());
+                                                          _colorFieldValue[
+                                                                  index] =
+                                                              AppColors
+                                                                  .validValueColor;
+                                                        });
+                                                        Navigator.pop(context);
+
+                                                        // if (item.hasSub) {
+                                                        //   bloc.addCateogryToStack(item);
+                                                        // } else {
+                                                        //   onChange(item);
+                                                        //   Navigator.pop(context);
+                                                        // }
+                                                      },
+                                                    );
+                                                  },
+                                                ));
                                           });
-                                        },
+                                    },
+                                    child: Container(
+                                      height: 30,
+                                      child: Text(
+                                        item.Value != null
+                                            ? ' ${allTranslations.isEnglish ? item.Value : item.Value}'
+                                            : '${allTranslations.text('choose')} ${allTranslations.isEnglish ? item.EnglishName : item.ArabicName}',
+                                        style: TextStyle(
+                                            fontSize:
+                                                item.Value != null ? 16 : 14,
+                                            color: item.Value != null
+                                                ? Colors.black
+                                                : Color(0xffCAD1E0)),
                                       ),
+                                      // child: DropdownButtonHideUnderline(
+                                      //   child: DropdownButton(
+                                      //     hint: Text(
+                                      //       '${allTranslations.text('choose')} ${allTranslations.isEnglish ? item.EnglishName : item.ArabicName}',
+                                      //       style: TextStyle(
+                                      //           fontSize: 14,
+                                      //           color: Color(0xffCAD1E0)),
+                                      //     ),
+                                      //     value: _selectedFieldValue[index],
+                                      //     isDense: true,
+                                      //     items: item.SpecificationOptions.map(
+                                      //         (FieldProprtiresSpecificationoption
+                                      //             value) {
+                                      //       return DropdownMenuItem(
+                                      //         value: value.Id,
+                                      //         child: Text(
+                                      //             allTranslations.isEnglish
+                                      //                 ? value.EnglishName
+                                      //                 : value.ArabicName),
+                                      //       );
+                                      //     }).toList(),
+                                      //     // onTap: () {
+                                      //     //   return showModalBottomSheet(
+                                      //     //       context: context,
+                                      //     //       builder: (context) {
+                                      //     //         return Container(
+                                      //     //             height: 200,
+                                      //     //             child: Text('Testtttt'));
+                                      //     //       });
+                                      //     // },
+                                      //
+                                      //     onChanged: (int newValue) {
+                                      //       item.Value = newValue;
+                                      //       setState(() {
+                                      //         _selectedFieldValue[index] =
+                                      //             newValue;
+                                      //         state.didChange(
+                                      //             newValue.toString());
+                                      //         _colorFieldValue[index] =
+                                      //             AppColors.validValueColor;
+                                      //       });
+                                      //     },
+                                      //   ),
+                                      // ),
                                     ),
                                   ),
                                 );
@@ -746,43 +860,43 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
               SizedBox(
                 height: 8,
               ),
-              Center(
-                child: InkWell(
-                  child: MapWidget(
-                    center: LatLng(0, 0),
-                    mapController: _mapController,
-                    onMapCreated: _onMapCreated,
-                    markers: _markers,
-                    onTap: (lat) async {
-                      LocationResult result = await showLocationPicker(
-                        context,
-                        "AIzaSyC57DQKo0jhnTJtdZX1Lp7LAIFmAFhZiNQ",
-                      );
-                      print("result = $result");
-                      setState(() {
-                        _markers.clear();
-                        final marker = Marker(
-                          markerId: MarkerId("curr_loc"),
-                          position: result.latLng,
-                          infoWindow: InfoWindow(title: 'Your Location'),
-                        );
-                        _markers.add(marker);
-                        _mapController.moveCamera(
-                          CameraUpdate.newCameraPosition(
-                            CameraPosition(
-                              target: result.latLng,
-                              zoom: 20.0,
-                            ),
-                          ),
-                        );
-                      });
-                    },
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
+              // Center(
+              //   child: InkWell(
+              //     child: MapWidget(
+              //       center: LatLng(0, 0),
+              //       mapController: _mapController,
+              //       onMapCreated: _onMapCreated,
+              //       markers: _markers,
+              //       onTap: (lat) async {
+              //         LocationResult result = await showLocationPicker(
+              //           context,
+              //           "AIzaSyC57DQKo0jhnTJtdZX1Lp7LAIFmAFhZiNQ",
+              //         );
+              //         print("result = $result");
+              //         setState(() {
+              //           _markers.clear();
+              //           final marker = Marker(
+              //             markerId: MarkerId("curr_loc"),
+              //             position: result.latLng,
+              //             infoWindow: InfoWindow(title: 'Your Location'),
+              //           );
+              //           _markers.add(marker);
+              //           _mapController.moveCamera(
+              //             CameraUpdate.newCameraPosition(
+              //               CameraPosition(
+              //                 target: result.latLng,
+              //                 zoom: 20.0,
+              //               ),
+              //             ),
+              //           );
+              //         });
+              //       },
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: 8,
+              // ),
               Center(
                 child: CheckboxLabel(
                   label: allTranslations.text('negtoable'),

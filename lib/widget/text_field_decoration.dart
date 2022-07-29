@@ -135,6 +135,7 @@ class _TextFieldDecorationState extends State<TextFieldDecoration> {
                 validator: widget.validator,
                 onChanged: widget.onChanged,
                 focusNode: widget.focusNode,
+                onSaved: widget.onSaved,
 
                 // textDirection: widget.textDirection,
                 // textDirection: widget.textDirection,

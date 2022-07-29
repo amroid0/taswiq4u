@@ -43,7 +43,7 @@ class _WelocmeScreenState extends State<WelocmeScreen> {
                     MaterialPageRoute(builder: (context) => MainScreen()));
               },
               child: Text(
-                "Skip",
+                "${allTranslations.text('skip')}",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,

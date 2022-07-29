@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:olx/data/bloc/add_post_bloc.dart';
 import 'package:olx/data/bloc/filter_bloc.dart';
 import 'package:olx/model/FieldproprtieyReposne.dart';
@@ -13,7 +12,6 @@ import 'package:olx/widget/city_list_dialog.dart';
 import 'package:olx/widget/mutli_select_chip_dialog.dart';
 import 'package:olx/widget/text_field_decoration.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 class FilterPage extends StatefulWidget {
   @override
@@ -115,8 +113,14 @@ class _FilterPageState extends State<FilterPage> {
 
   @override
   Widget build(BuildContext context) {
+    RangeValues _values = RangeValues(10, 10000);
+    RangeValues _currentRangeValues = const RangeValues(10, 100000);
+    RangeLabels _labels = RangeLabels("10", "100000");
+    double _lowerValue = 50;
+    double _upperValue = 180;
+
     return Scaffold(
-      key: _filterscaffoldKey,
+      //  key: _filterscaffoldKey,
       appBar: AppBar(
         centerTitle: true,
         title: Center(
@@ -145,383 +149,426 @@ class _FilterPageState extends State<FilterPage> {
       body: Padding(
         padding: const EdgeInsets.only(bottom: 8.0, right: 4.0, left: 4.0),
         child: SingleChildScrollView(
-          child: Form(
-            key: _filterformKey,
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-                    Widget>[
-              SizedBox(
-                height: 8,
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(bottom: 8.0, right: 4.0, left: 4.0),
-                child: _BuildRoundedTextField(
-                    labelText: allTranslations.text('cateogry'),
-                    hintText: allTranslations.text('cateogry'),
-                    controller: _cattextController,
-                    iswithArrowIcon: true,
-                    enabled: false),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(bottom: 8.0, right: 4.0, left: 4.0),
-                child: TextFieldDecoration(
-                  textEditingController: _pricetextController,
-                  readOnly: true,
-                  onTap: () {
-                    Alert(
-                        context: context,
-                        title: "${allTranslations.text('price')}",
-                        content: Column(
-                          children: <Widget>[
-                            TextField(
-                              controller: _fromController,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                labelText: '${allTranslations.text('min')}',
-                              ),
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                            ),
-                            TextField(
-                              controller: _toController,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                labelText: '${allTranslations.text('max')}',
-                              ),
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                            ),
-                          ],
-                        ),
-                        buttons: [
-                          DialogButton(
-                            onPressed: () {
-                              setState(() {
-                                minValue = _fromController.text;
-                                maxValue = _toController.text;
-                                _pricetextController.text = _fromController
-                                            .text.isNotEmpty &&
-                                        _toController.text.isNotEmpty
-                                    ? "${allTranslations.text('from')} ${_fromController.text} ${allTranslations.text('to')} ${_toController.text}"
-                                    : _fromController.text.isNotEmpty &&
-                                            _toController.text.isEmpty
-                                        ? "${allTranslations.text('from')} ${_fromController.text} "
-                                        : _fromController.text.isEmpty &&
-                                                _toController.text.isNotEmpty
-                                            ? "${allTranslations.text('to')} ${_toController.text} "
-                                            : "";
-                              });
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              "${allTranslations.text('agree')}",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            ),
-                          )
-                        ]).show();
-                  },
-                  keyboardType: TextInputType.number,
-                  //  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly,LengthLimitingTextInputFormatter((20))],
-                  onSaved: (val) {
-                    filterParamsEntity.priceMin =
-                        double.tryParse(minValue) ?? 0;
-                    filterParamsEntity.priceMax =
-                        double.tryParse(maxValue) ?? 0;
-                  },
-                  //      decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.check_circle,
-                    color: priceColor,
-                  ),
-                  //        filled: true,
-                  fillColor: Colors.white,
-                  labelText: allTranslations.text('price'),
-                  hintText: allTranslations.text('price'),
-                  // border: new OutlineInputBorder(
-                  //     borderRadius: new BorderRadius.circular(10.0)),
-                  //    )
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(bottom: 8.0, right: 4.0, left: 4.0),
-                child: _BuildCityRoundedTextField(
-                    labelText: allTranslations.text('govrnment'),
-                    hintText: allTranslations.text('govrnment'),
-                    controller: _citytextController,
-                    iswithArrowIcon: true,
-                    onClickAction: () {
-                      _showCityDialog();
-                    }),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              StreamBuilder<FieldPropReponse>(
-                stream: bloc.stream,
-                builder: (context, snapshot) {
-                  if (snapshot.data != null && snapshot.data.isSucess == false)
-                    return Visibility(
-                      child: Text(""),
-                      visible: false,
-                    );
-                  else if (!snapshot.hasData) return SizedBox.shrink();
-                  var fields = snapshot.data.data;
-                  if (_selectedFieldValue.isEmpty)
-                    _selectedFieldValue = List(snapshot.data.data.length);
-                  if (_colorFieldValue.isEmpty)
-                    _colorFieldValue = List(snapshot.data.data.length);
-                  if (_multiselectedFieldValue.isEmpty)
-                    _multiselectedFieldValue = List(snapshot.data.data.length);
-                  if (contollers.isEmpty)
-                    contollers = List(snapshot.data.data.length);
-                  if (filterParamsEntity.params == null) {
-                    filterParamsEntity.params = List(snapshot.data.data.length);
-                  }
+          child: Column(
+            children: [
+              Form(
+                key: _filterformKey,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 8.0, right: 4.0, left: 4.0),
+                        child: _BuildRoundedTextField(
+                            labelText: allTranslations.text('cateogry'),
+                            hintText: allTranslations.text('cateogry'),
+                            controller: _cattextController,
+                            iswithArrowIcon: true,
+                            enabled: false),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                  //    Text('Price'),
 
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: fields.length,
-                    itemBuilder: (context, index) {
-                      var item = fields[index];
-                      if (isFirst &&
-                          filterParamsEntity.params != null &&
-                          filterParamsEntity.params.isNotEmpty)
-                        for (var spec in filterParamsEntity.params) {
-                          if (spec != null &&
-                              spec.specificationId !=
-                                  null) if (spec.specificationId == item.Id) {
-                            if ((item.MuliSelect == null || !item.MuliSelect) &&
-                                item.SpecificationOptions.isNotEmpty) {
-                              if (spec.options[0] != 0)
-                                _selectedFieldValue[index] = spec.options[0];
-                            } else if (item.MuliSelect) {
-                              //_multiselectedFieldValue[index] = spec.options;
-                              String text = "";
-                              var selectedList =
-                                  item.SpecificationOptions.where((element) =>
-                                      spec.options.contains(element.Id));
-                              selectedList.forEach((element) {
-                                text +=
-                                    "${allTranslations.isEnglish ? element.EnglishName : element.ArabicName ?? element.EnglishName},";
-                              });
-                              _multiselectedFieldValue[index] = selectedList;
-
-                              if (contollers[index] == null)
-                                contollers[index] = new TextEditingController();
-                              contollers[index].text = text;
-                            } else {
-                              if (contollers[index] == null)
-                                contollers[index] = new TextEditingController();
-                              contollers[index].text = spec.value;
-                            }
-                            break;
-                          }
-                        }
-                      //if(item.CustomValue==null)
-                      if ((item.MuliSelect == null || !item.MuliSelect) &&
-                          item.SpecificationOptions.isNotEmpty)
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: 8.0, right: 4, left: 4),
-                          child: FormField<String>(onSaved: (val) {
-                            if (val != null) {
-                              var vv = Params();
-                              vv.specificationId = item.Id;
-                              //   vv.hasOptions=true;
-                              //vv.hasRange=false;
-                              int itemval = int.tryParse(val) ?? 0;
-                              vv.options = [itemval];
-                              filterParamsEntity.params[index] = vv;
-                            }
-                          }, builder: (FormFieldState<String> state) {
-                            return InputDecorator(
-                              decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  labelText: allTranslations.isEnglish
-                                      ? item.EnglishName
-                                      : item.ArabicName,
-                                  errorText:
-                                      state.hasError ? state.errorText : null,
-                                  prefixIcon: Icon(
-                                    Icons.check_circle,
-                                    color: _colorFieldValue[index],
-                                  ),
-                                  border: InputBorder.none,
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(22.0)),
-                                      borderSide: BorderSide(
-                                          color: Color(0xffB5B5B5),
-                                          width: 0.5)),
-                                  errorBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(22.0)),
-                                      borderSide: BorderSide(
-                                          color: Colors.red, width: 0.5))),
-                              child: Container(
-                                height: 30,
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton(
-                                    hint: Text(
-                                      '${allTranslations.text('choose')} ${allTranslations.isEnglish ? item.EnglishName : item.ArabicName}',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xffCAD1E0)),
+                      // Container(
+                      //   child: RangeSlider(
+                      //       activeColor: Colors.green,
+                      //       inactiveColor: Colors.black12,
+                      //       values: _currentRangeValues,
+                      //       min: 10,
+                      //       max: 100000,
+                      //       divisions: 5,
+                      //       labels: RangeLabels(
+                      //         _currentRangeValues.start.round().toString(),
+                      //         _currentRangeValues.end.round().toString(),
+                      //       ),
+                      //       onChanged: (RangeValues values) {
+                      //         setState(() {
+                      //           _currentRangeValues = values;
+                      //         });
+                      //       }),
+                      // ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(bottom: 8.0, right: 4.0, left: 4.0),
+                        child: TextFieldDecoration(
+                          textEditingController: _pricetextController,
+                          readOnly: true,
+                          onTap: () {
+                            Alert(
+                                context: context,
+                                title: "${allTranslations.text('price')}",
+                                content: Column(
+                                  children: <Widget>[
+                                    TextField(
+                                      controller: _fromController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        labelText: '${allTranslations.text('min')}',
+                                      ),
+                                      inputFormatters: <TextInputFormatter>[
+                                        FilteringTextInputFormatter.digitsOnly
+                                      ],
                                     ),
-                                    value: _selectedFieldValue[index],
-                                    isDense: true,
-                                    items: item.SpecificationOptions.map(
-                                        (FieldProprtiresSpecificationoption
-                                            value) {
-                                      return DropdownMenuItem(
-                                        value: value.Id,
-                                        child: Text(allTranslations.isEnglish
-                                            ? value.EnglishName
-                                            : value.ArabicName),
-                                      );
-                                    }).toList(),
-                                    onChanged: (int newValue) {
-                                      item.Value = newValue;
+                                    TextField(
+                                      controller: _toController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        labelText: '${allTranslations.text('max')}',
+                                      ),
+                                      inputFormatters: <TextInputFormatter>[
+                                        FilteringTextInputFormatter.digitsOnly
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                buttons: [
+                                  DialogButton(
+                                    onPressed: () {
                                       setState(() {
-                                        isFirst = false;
-                                        _selectedFieldValue[index] = newValue;
-                                        state.didChange(newValue.toString());
-                                        _colorFieldValue[index] =
-                                            AppColors.validValueColor;
+                                        minValue = _fromController.text;
+                                        maxValue = _toController.text;
+                                        _pricetextController.text = _fromController
+                                                    .text.isNotEmpty &&
+                                                _toController.text.isNotEmpty
+                                            ? "${allTranslations.text('from')} ${_fromController.text} ${allTranslations.text('to')} ${_toController.text}"
+                                            : _fromController.text.isNotEmpty &&
+                                                    _toController.text.isEmpty
+                                                ? "${allTranslations.text('from')} ${_fromController.text} "
+                                                : _fromController.text.isEmpty &&
+                                                        _toController.text.isNotEmpty
+                                                    ? "${allTranslations.text('to')} ${_toController.text} "
+                                                    : "";
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      "${allTranslations.text('agree')}",
+                                      style:
+                                          TextStyle(color: Colors.white, fontSize: 20),
+                                    ),
+                                  )
+                                ]).show();
+                          },
+                          keyboardType: TextInputType.number,
+                          //  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly,LengthLimitingTextInputFormatter((20))],
+                          onSaved: (val) {
+                            filterParamsEntity.priceMin =
+                                double.tryParse(minValue) ?? 0;
+                            filterParamsEntity.priceMax =
+                                double.tryParse(maxValue) ?? 0;
+                          },
+                          //      decoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.check_circle,
+                            color: priceColor,
+                          ),
+                          //        filled: true,
+                          fillColor: Colors.white,
+                          labelText: allTranslations.text('price'),
+                          hintText: allTranslations.text('price'),
+                          // border: new OutlineInputBorder(
+                          //     borderRadius: new BorderRadius.circular(10.0)),
+                          //    )
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 8.0, right: 4.0, left: 4.0),
+                        child: _BuildCityRoundedTextField(
+                            labelText: allTranslations.text('govrnment'),
+                            hintText: allTranslations.text('govrnment'),
+                            controller: _citytextController,
+                            iswithArrowIcon: true,
+                            onClickAction: () {
+                              _showCityDialog();
+                            }),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      StreamBuilder<FieldPropReponse>(
+                        stream: bloc.stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.data != null &&
+                              snapshot.data.isSucess == false)
+                            return Visibility(
+                              child: Text(""),
+                              visible: false,
+                            );
+                          else if (!snapshot.hasData) return SizedBox.shrink();
+                          var fields = snapshot.data.data;
+                          if (_selectedFieldValue.isEmpty)
+                            _selectedFieldValue =
+                                List(snapshot.data.data.length);
+                          if (_colorFieldValue.isEmpty)
+                            _colorFieldValue = List(snapshot.data.data.length);
+                          if (_multiselectedFieldValue.isEmpty)
+                            _multiselectedFieldValue =
+                                List(snapshot.data.data.length);
+                          if (contollers.isEmpty)
+                            contollers = List(snapshot.data.data.length);
+                          if (filterParamsEntity.params == null) {
+                            filterParamsEntity.params =
+                                List(snapshot.data.data.length);
+                          }
+
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: fields.length,
+                            itemBuilder: (context, index) {
+                              var item = fields[index];
+                              if (isFirst &&
+                                  filterParamsEntity.params != null &&
+                                  filterParamsEntity.params.isNotEmpty)
+                                for (var spec in filterParamsEntity.params) {
+                                  if (spec != null &&
+                                      spec.specificationId != null) if (spec
+                                          .specificationId ==
+                                      item.Id) {
+                                    if ((item.MuliSelect == null ||
+                                            !item.MuliSelect) &&
+                                        item.SpecificationOptions.isNotEmpty) {
+                                      if (spec.options[0] != 0)
+                                        _selectedFieldValue[index] =
+                                            spec.options[0];
+                                    } else if (item.MuliSelect) {
+                                      //_multiselectedFieldValue[index] = spec.options;
+                                      String text = "";
+                                      var selectedList =
+                                          item.SpecificationOptions.where(
+                                              (element) => spec.options
+                                                  .contains(element.Id));
+                                      selectedList.forEach((element) {
+                                        text +=
+                                            "${allTranslations.isEnglish ? element.EnglishName : element.ArabicName ?? element.EnglishName},";
+                                      });
+                                      _multiselectedFieldValue[index] =
+                                          selectedList;
+
+                                      if (contollers[index] == null)
+                                        contollers[index] =
+                                            new TextEditingController();
+                                      contollers[index].text = text;
+                                    } else {
+                                      if (contollers[index] == null)
+                                        contollers[index] =
+                                            new TextEditingController();
+                                      contollers[index].text = spec.value;
+                                    }
+                                    break;
+                                  }
+                                }
+                              //if(item.CustomValue==null)
+                              if ((item.MuliSelect == null ||
+                                      !item.MuliSelect) &&
+                                  item.SpecificationOptions.isNotEmpty)
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 8.0, right: 4, left: 4),
+                                  child: FormField<String>(onSaved: (val) {
+                                    if (val != null) {
+                                      var vv = Params();
+                                      vv.specificationId = item.Id;
+                                      //   vv.hasOptions=true;
+                                      //vv.hasRange=false;
+                                      int itemval = int.tryParse(val) ?? 0;
+                                      vv.options = [itemval];
+                                      filterParamsEntity.params[index] = vv;
+                                    }
+                                  }, builder: (FormFieldState<String> state) {
+                                    return InputDecorator(
+                                      decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: Colors.white,
+                                          labelText: allTranslations.isEnglish
+                                              ? item.EnglishName
+                                              : item.ArabicName,
+                                          errorText: state.hasError
+                                              ? state.errorText
+                                              : null,
+                                          prefixIcon: Icon(
+                                            Icons.check_circle,
+                                            color: _colorFieldValue[index],
+                                          ),
+                                          border: InputBorder.none,
+                                          enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(22.0)),
+                                              borderSide: BorderSide(
+                                                  color: Color(0xffB5B5B5),
+                                                  width: 0.5)),
+                                          errorBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(22.0)),
+                                              borderSide: BorderSide(
+                                                  color: Colors.red,
+                                                  width: 0.5))),
+                                      child: Container(
+                                        height: 30,
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton(
+                                            hint: Text(
+                                              '${allTranslations.text('choose')} ${allTranslations.isEnglish ? item.EnglishName : item.ArabicName}',
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Color(0xffCAD1E0)),
+                                            ),
+                                            value: _selectedFieldValue[index],
+                                            isDense: true,
+                                            items: item.SpecificationOptions.map(
+                                                (FieldProprtiresSpecificationoption
+                                                    value) {
+                                              return DropdownMenuItem(
+                                                value: value.Id,
+                                                child: Text(
+                                                    allTranslations.isEnglish
+                                                        ? value.EnglishName
+                                                        : value.ArabicName),
+                                              );
+                                            }).toList(),
+                                            onChanged: (int newValue) {
+                                              item.Value = newValue;
+                                              setState(() {
+                                                isFirst = false;
+                                                _selectedFieldValue[index] =
+                                                    newValue;
+                                                state.didChange(
+                                                    newValue.toString());
+                                                _colorFieldValue[index] =
+                                                    AppColors.validValueColor;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                );
+                              else if (item.MuliSelect)
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 8.0, right: 4.0, left: 4.0),
+                                  child: TextFieldDecoration(
+                                    textEditingController: contollers[index],
+                                    onTap: () {
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) {
+                                        _showReportDialog(
+                                            index,
+                                            allTranslations.isEnglish
+                                                ? item.EnglishName
+                                                : item.ArabicName,
+                                            item.SpecificationOptions);
                                       });
                                     },
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
-                        );
-                      else if (item.MuliSelect)
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: 8.0, right: 4.0, left: 4.0),
-                          child: TextFieldDecoration(
-                            textEditingController: contollers[index],
-                            onTap: () {
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                _showReportDialog(
-                                    index,
-                                    allTranslations.isEnglish
+                                    readOnly: true,
+                                    onSaved: (val) {
+                                      if (val.isNotEmpty) {
+                                        var vv = Params();
+                                        vv.specificationId = item.Id;
+                                        //int itemval=item.Value as int ?? 0;
+                                        vv.options =
+                                            _multiselectedFieldValue[index]
+                                                .map((e) => e.Id)
+                                                .toList();
+                                        filterParamsEntity.params[index] = vv;
+                                      }
+                                    },
+                                    //   decoration: InputDecoration(
+                                    //   filled: true,
+                                    fillColor: Colors.white,
+
+                                    labelText: allTranslations.isEnglish
                                         ? item.EnglishName
                                         : item.ArabicName,
-                                    item.SpecificationOptions);
-                              });
-                            },
-                            readOnly: true,
-                            onSaved: (val) {
-                              if (val.isNotEmpty) {
-                                var vv = Params();
-                                vv.specificationId = item.Id;
-                                //int itemval=item.Value as int ?? 0;
-                                vv.options = _multiselectedFieldValue[index]
-                                    .map((e) => e.Id)
-                                    .toList();
-                                filterParamsEntity.params[index] = vv;
+                                    hintText: allTranslations.isEnglish
+                                        ? item.EnglishName
+                                        : item.ArabicName,
+                                    prefixIcon: item.Required
+                                        ? Icon(
+                                            Icons.check_circle,
+                                            color: _colorFieldValue[index],
+                                          )
+                                        : null,
+                                    suffixIcon: Icon(Icons.arrow_drop_down),
+                                    // border: new OutlineInputBorder(
+                                    //     borderRadius: new BorderRadius.circular(10.0)),
+                                    //    )
+                                  ),
+                                );
+                              else {
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 8.0, right: 4.0, left: 4.0),
+                                  child: TextFieldDecoration(
+                                    onSaved: (val) {
+                                      var vv = Params();
+                                      vv.specificationId = item.Id;
+                                      //int itemval=item.Value as int ?? 0;
+                                      //vv.options=[val];
+                                      filterParamsEntity.params[index] = vv;
+                                    },
+                                    //     decoration: InputDecoration(
+                                    //  filled: true,
+                                    fillColor: Colors.white,
+                                    labelText: allTranslations.isEnglish
+                                        ? item.EnglishName
+                                        : item.ArabicName,
+                                    hintText: allTranslations.isEnglish
+                                        ? item.EnglishName
+                                        : item.ArabicName,
+                                    prefixIcon: item.Required
+                                        ? Icon(
+                                            Icons.check_circle,
+                                            color: _colorFieldValue[index],
+                                          )
+                                        : null,
+
+                                    // border: new OutlineInputBorder(
+                                    //     borderRadius: new BorderRadius.circular(10.0)),
+                                    // )
+                                  ),
+                                );
                               }
-                            },
-                            //   decoration: InputDecoration(
-                            //   filled: true,
-                            fillColor: Colors.white,
-
-                            labelText: allTranslations.isEnglish
-                                ? item.EnglishName
-                                : item.ArabicName,
-                            hintText: allTranslations.isEnglish
-                                ? item.EnglishName
-                                : item.ArabicName,
-                            prefixIcon: item.Required
-                                ? Icon(
-                                    Icons.check_circle,
-                                    color: _colorFieldValue[index],
-                                  )
-                                : null,
-                            suffixIcon: Icon(Icons.arrow_drop_down),
-                            // border: new OutlineInputBorder(
-                            //     borderRadius: new BorderRadius.circular(10.0)),
-                            //    )
-                          ),
-                        );
-                      else {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: 8.0, right: 4.0, left: 4.0),
-                          child: TextFieldDecoration(
-                            onSaved: (val) {
-                              var vv = Params();
-                              vv.specificationId = item.Id;
-                              //int itemval=item.Value as int ?? 0;
-                              //vv.options=[val];
-                              filterParamsEntity.params[index] = vv;
-                            },
-                            //     decoration: InputDecoration(
-                            //  filled: true,
-                            fillColor: Colors.white,
-                            labelText: allTranslations.isEnglish
-                                ? item.EnglishName
-                                : item.ArabicName,
-                            hintText: allTranslations.isEnglish
-                                ? item.EnglishName
-                                : item.ArabicName,
-                            prefixIcon: item.Required
-                                ? Icon(
-                                    Icons.check_circle,
-                                    color: _colorFieldValue[index],
-                                  )
-                                : null,
-
-                            // border: new OutlineInputBorder(
-                            //     borderRadius: new BorderRadius.circular(10.0)),
-                            // )
-                          ),
-                        );
-                      }
-                    }, //
-                  );
-                },
+                            }, //
+                          );
+                        },
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Dialogs.commonButton(() {
+                        _filterformKey.currentState.save();
+                        Navigator.pop(context, filterParamsEntity);
+                      }, allTranslations.text('ads_filter'), height: 60)
+                      // SizedBox(
+                      //   width: double.infinity,
+                      //   height: 60,
+                      //   child: RaisedButton(
+                      //     shape: RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.circular(20)),
+                      //     color: Colors.green,
+                      //     onPressed: () {
+                      //       _filterformKey.currentState.save();
+                      //       Navigator.pop(context, filterParamsEntity);
+                      //     },
+                      //     child:
+                      //         Center(child: Text(allTranslations.text('ads_filter'))),
+                      //     textColor: Colors.white,
+                      //   ),
+                      // )
+                    ]),
               ),
-              SizedBox(
-                height: 8,
-              ),
-              Dialogs.commonButton(() {
-                _filterformKey.currentState.save();
-                Navigator.pop(context, filterParamsEntity);
-              }, allTranslations.text('ads_filter'), height: 60)
-              // SizedBox(
-              //   width: double.infinity,
-              //   height: 60,
-              //   child: RaisedButton(
-              //     shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.circular(20)),
-              //     color: Colors.green,
-              //     onPressed: () {
-              //       _filterformKey.currentState.save();
-              //       Navigator.pop(context, filterParamsEntity);
-              //     },
-              //     child:
-              //         Center(child: Text(allTranslations.text('ads_filter'))),
-              //     textColor: Colors.white,
-              //   ),
-              // )
-            ]),
+            ],
           ),
         ),
       ),
@@ -570,6 +617,19 @@ class _FilterPageState extends State<FilterPage> {
       return null;
     }
   }
+
+  final RangeThumbSelector _customRangeThumbSelector = (
+    TextDirection textDirection,
+    RangeValues values,
+    double tapValue,
+    Size thumbSize,
+    Size trackSize,
+    double dx,
+  ) {
+    final double start = (tapValue - values.start).abs();
+    final double end = (tapValue - values.end).abs();
+    return start < end ? Thumb.start : Thumb.end;
+  };
 
   _showReportDialog(
       int index, String title, List<FieldProprtiresSpecificationoption> list) {
@@ -632,6 +692,7 @@ class _FilterPageState extends State<FilterPage> {
       validator: _emptyValidate,
       autoValdite: cityColor == AppColors.validValueColor,
       textEditingController: controller,
+      readOnly: true,
       onTap: () {
         onClickAction();
       },

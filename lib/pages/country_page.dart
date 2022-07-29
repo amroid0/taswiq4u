@@ -22,6 +22,7 @@ class _CountryPageState extends State<CountryPage> {
   int selectedCountry = -1;
   bool isArabic = false;
   bool isEnglish = true;
+  RangeValues _currentRangeValues = const RangeValues(10, 100000);
 
   @override
   void initState() {
@@ -37,12 +38,25 @@ class _CountryPageState extends State<CountryPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(children: [
-        // FractionallyAlignedSizedBox(
-        //   bottomFactor: .6,
-        //   child: Image.asset('images/logo.png'),
-        // ),
         FractionallyAlignedSizedBox(
-          bottomFactor: .6,
+          bottomFactor: .75,
+          child: Image.asset(
+            'images/logo.png',
+            height: 50,
+            width: 50,
+          ),
+        ),
+        FractionallyAlignedSizedBox(
+          topFactor: .2,
+          child: Text('${allTranslations.text('select_pref_lang')}',
+              textAlign: TextAlign.center,
+              style: new TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black)),
+        ),
+        FractionallyAlignedSizedBox(
+          bottomFactor: .4,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -109,7 +123,7 @@ class _CountryPageState extends State<CountryPage> {
           ),
         ),
         FractionallyAlignedSizedBox(
-          topFactor: .4,
+          topFactor: .5,
           child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: StreamBuilder<ApiResponse<List<CountryEntity>>>(
@@ -152,7 +166,10 @@ class _CountryPageState extends State<CountryPage> {
                                       borderRadius:
                                           new BorderRadius.circular(10.0),
                                       border: Border.all(
-                                          color: Color(0xffDCDCDC), width: 0.5),
+                                          color: selectedCountry == index
+                                              ? Color(0xff53B553)
+                                              : Color(0xffDCDCDC),
+                                          width: 0.5),
                                     ),
                                     child: ListTile(
                                         leading: Padding(
@@ -257,9 +274,9 @@ class _CountryPageState extends State<CountryPage> {
                 child: Dialogs.commonButton(() {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => WelocmeScreen()));
-                }, 'Continue')),
+                }, allTranslations.text("continue"))),
           ),
-        )
+        ),
       ]),
     );
   }

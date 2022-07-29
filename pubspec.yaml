@@ -61,6 +61,9 @@ dependencies:
   flutter_zoom_drawer: ^1.0.5
   flutter_slidable: 0.5.7
   english_words: ^3.1.5
+  flutter_range_slider: ^1.4.0
+  flutter_xlider: ^3.4.0
+
 
 
 
