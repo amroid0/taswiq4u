@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/country_bloc.dart';
 import 'package:olx/data/bloc/languge_bloc.dart';
@@ -22,6 +23,7 @@ class _CountryPageState extends State<CountryPage> {
   int selectedCountry = -1;
   bool isArabic = false;
   bool isEnglish = true;
+
   RangeValues _currentRangeValues = const RangeValues(10, 100000);
 
   @override
@@ -272,8 +274,21 @@ class _CountryPageState extends State<CountryPage> {
             child: Container(
                 height: 60,
                 child: Dialogs.commonButton(() {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => WelocmeScreen()));
+                  if (selectedCountry == -1) {
+                    Fluttertoast.showToast(
+                        msg: allTranslations.text('msg_choose_country'),
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Color(0xff53B553),
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  } else {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WelocmeScreen()));
+                  }
                 }, allTranslations.text("continue"))),
           ),
         ),

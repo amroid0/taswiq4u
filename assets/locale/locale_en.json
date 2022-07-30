@@ -13,6 +13,7 @@
   "err_fname": "Name Must consist from First name and Last name",
   "err_lname": "short last name ",
   "choose_category": "choose Cateogry",
+  "msg_choose_country": "Please Choose Country",
   "ads_add": "Add Ad",
   "add_image": "add Image Ads (Max no: 8 Images)",
   "ads_title": "Title",

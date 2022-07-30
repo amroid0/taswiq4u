@@ -6,8 +6,10 @@ import 'package:olx/data/bloc/profile_bloc.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/user_info.dart';
 import 'package:olx/utils/Theme.dart';
+import 'package:olx/utils/dailogs.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/loading_dialog.dart';
+import 'package:olx/widget/text_field_decoration.dart';
 
 class EditProfileScreen extends StatefulWidget {
   @override
@@ -138,29 +140,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 StreamBuilder(
                     stream: BlocProvider.of<ProfileBloc>(context).firstName,
                     builder: (context, snapshot) {
-                      return TextField(
-                          controller: firstController,
-                          onChanged: BlocProvider.of<ProfileBloc>(context)
-                              .changeFirstName,
-                          style: TextStyle(
-                              fontSize: 22.0,
-                              color: Color(0xFFbdc6cf),
-                              decoration: TextDecoration.none),
-                          decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              errorText: snapshot.error,
-                              hintText: allTranslations.text('first_name'),
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 20.0),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide(
-                                  width: 0,
-                                  style: BorderStyle.none,
-                                ),
-                              )));
+                      return TextFieldDecoration(
+                        textEditingController: firstController,
+                        onChanged: BlocProvider.of<ProfileBloc>(context)
+                            .changeFirstName,
+                        // style: TextStyle(
+                        //     fontSize: 22.0,
+                        //     color: Color(0xFFbdc6cf),
+                        //     decoration: TextDecoration.none),
+                        //    decoration: InputDecoration(
+                        //   filled: true,
+                        fillColor: Colors.white,
+                        errorText: snapshot.error,
+                        hintText: allTranslations.text('first_name'),
+                        isDense: true,
+                        // contentPadding: const EdgeInsets.symmetric(
+                        //     horizontal: 8, vertical: 20.0),
+                        // border: OutlineInputBorder(
+                        //   borderRadius: BorderRadius.circular(8),
+                        //   borderSide: BorderSide(
+                        //     width: 0,
+                        //     style: BorderStyle.none,
+                        //   ),
+                        // )
+                        //   )
+                      );
                     }),
                 SizedBox(
                   height: 10,
@@ -168,29 +172,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 StreamBuilder(
                     stream: BlocProvider.of<ProfileBloc>(context).email,
                     builder: (context, snapshot) {
-                      return TextField(
-                          controller: phoneContorller,
-                          onChanged:
-                              BlocProvider.of<ProfileBloc>(context).changeEmail,
-                          style: TextStyle(
-                              fontSize: 22.0,
-                              color: Color(0xFFbdc6cf),
-                              decoration: TextDecoration.none),
-                          decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              hintText: allTranslations.text('phone'),
-                              isDense: true,
-                              errorText: snapshot.error,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 20.0),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide(
-                                  width: 0,
-                                  style: BorderStyle.none,
-                                ),
-                              )));
+                      return TextFieldDecoration(
+                        textEditingController: phoneContorller,
+                        onChanged:
+                            BlocProvider.of<ProfileBloc>(context).changeEmail,
+                        // style: TextStyle(
+                        //     fontSize: 22.0,
+                        //     color: Color(0xFFbdc6cf),
+                        //     decoration: TextDecoration.none),
+                        //    decoration: InputDecoration(
+                        //    filled: true,
+                        fillColor: Colors.white,
+                        hintText: allTranslations.text('phone'),
+                        isDense: true,
+                        errorText: snapshot.error,
+                        // contentPadding: const EdgeInsets.symmetric(
+                        //     horizontal: 8, vertical: 20.0),
+                        // border: OutlineInputBorder(
+                        //   borderRadius: BorderRadius.circular(8),
+                        //   borderSide: BorderSide(
+                        //     width: 0,
+                        //     style: BorderStyle.none,
+                        //   ),
+                        // ))
+                      );
                     }),
               ],
             ),
@@ -200,39 +205,62 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       StreamBuilder(
           stream: BlocProvider.of<ProfileBloc>(context).submitValid,
           builder: (context, snapshot) {
-            return GestureDetector(
-              onTap: () {
-                BlocProvider.of<ProfileBloc>(context)
-                    .changeFirstName(firstController.text);
-                BlocProvider.of<ProfileBloc>(context)
-                    .changeEmail(phoneContorller.text);
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                    height: 60,
+                    child: Dialogs.commonButton(() {
+                      BlocProvider.of<ProfileBloc>(context)
+                          .changeFirstName(firstController.text);
+                      BlocProvider.of<ProfileBloc>(context)
+                          .changeEmail(phoneContorller.text);
 
-                if (firstController.text.isNotEmpty &&
-                    phoneContorller.text.isNotEmpty) {
-                  isupdated = true;
-                  snapshot.hasError
-                      ? null
-                      : BlocProvider.of<ProfileBloc>(context)
-                          .updateUserProfileInfo();
-                }
-              },
-              child: Container(
-                height: 70.0,
-                decoration: new BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: new BorderRadius.circular(8.0),
-                ),
-                child: Stack(children: <Widget>[
-                  Align(
-                    child: new Text(
-                      allTranslations.text('save_change'),
-                      style: new TextStyle(fontSize: 18.0, color: Colors.white),
-                    ),
-                    alignment: Alignment.center,
-                  ),
-                ]),
+                      if (firstController.text.isNotEmpty &&
+                          phoneContorller.text.isNotEmpty) {
+                        isupdated = true;
+                        snapshot.hasError
+                            ? null
+                            : BlocProvider.of<ProfileBloc>(context)
+                                .updateUserProfileInfo();
+                      }
+                    }, allTranslations.text('save_change'))),
               ),
             );
+            // return GestureDetector(
+            //   onTap: () {
+            //     BlocProvider.of<ProfileBloc>(context)
+            //         .changeFirstName(firstController.text);
+            //     BlocProvider.of<ProfileBloc>(context)
+            //         .changeEmail(phoneContorller.text);
+            //
+            //     if (firstController.text.isNotEmpty &&
+            //         phoneContorller.text.isNotEmpty) {
+            //       isupdated = true;
+            //       snapshot.hasError
+            //           ? null
+            //           : BlocProvider.of<ProfileBloc>(context)
+            //               .updateUserProfileInfo();
+            //     }
+            //   },
+            //   child: Container(
+            //     height: 70.0,
+            //     decoration: new BoxDecoration(
+            //       color: Colors.green,
+            //       borderRadius: new BorderRadius.circular(8.0),
+            //     ),
+            //     child: Stack(children: <Widget>[
+            //       Align(
+            //         child: new Text(
+            //           allTranslations.text('save_change'),
+            //           style: new TextStyle(fontSize: 18.0, color: Colors.white),
+            //         ),
+            //         alignment: Alignment.center,
+            //       ),
+            //     ]),
+            //   ),
+            // );
           }),
     ]);
   }
