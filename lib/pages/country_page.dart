@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/country_bloc.dart';
 import 'package:olx/data/bloc/languge_bloc.dart';
@@ -23,6 +24,8 @@ class _CountryPageState extends State<CountryPage> {
   bool isArabic = false;
   bool isEnglish = true;
 
+  RangeValues _currentRangeValues = const RangeValues(10, 100000);
+
   @override
   void initState() {
     preferences.clearCity();
@@ -37,12 +40,25 @@ class _CountryPageState extends State<CountryPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(children: [
-        // FractionallyAlignedSizedBox(
-        //   bottomFactor: .6,
-        //   child: Image.asset('images/logo.png'),
-        // ),
         FractionallyAlignedSizedBox(
-          bottomFactor: .6,
+          bottomFactor: .75,
+          child: Image.asset(
+            'images/logo.png',
+            height: 50,
+            width: 50,
+          ),
+        ),
+        FractionallyAlignedSizedBox(
+          topFactor: .2,
+          child: Text('${allTranslations.text('select_pref_lang')}',
+              textAlign: TextAlign.center,
+              style: new TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black)),
+        ),
+        FractionallyAlignedSizedBox(
+          bottomFactor: .4,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -109,7 +125,7 @@ class _CountryPageState extends State<CountryPage> {
           ),
         ),
         FractionallyAlignedSizedBox(
-          topFactor: .4,
+          topFactor: .5,
           child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: StreamBuilder<ApiResponse<List<CountryEntity>>>(
@@ -152,7 +168,10 @@ class _CountryPageState extends State<CountryPage> {
                                       borderRadius:
                                           new BorderRadius.circular(10.0),
                                       border: Border.all(
-                                          color: Color(0xffDCDCDC), width: 0.5),
+                                          color: selectedCountry == index
+                                              ? Color(0xff53B553)
+                                              : Color(0xffDCDCDC),
+                                          width: 0.5),
                                     ),
                                     child: ListTile(
                                         leading: Padding(
@@ -255,11 +274,24 @@ class _CountryPageState extends State<CountryPage> {
             child: Container(
                 height: 60,
                 child: Dialogs.commonButton(() {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => WelocmeScreen()));
-                }, 'Continue')),
+                  if (selectedCountry == -1) {
+                    Fluttertoast.showToast(
+                        msg: allTranslations.text('msg_choose_country'),
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Color(0xff53B553),
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  } else {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WelocmeScreen()));
+                  }
+                }, allTranslations.text("continue"))),
           ),
-        )
+        ),
       ]),
     );
   }

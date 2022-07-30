@@ -8,7 +8,6 @@ import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/edit_bloc.dart';
 import 'package:olx/data/bloc/upload_image_bloc.dart';
 import 'package:olx/model/StateEnum.dart';
-import 'package:olx/model/ads_detail.dart';
 import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/ads_post_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
@@ -21,6 +20,7 @@ import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/dailogs.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/loading_dialog.dart';
+import 'package:olx/widget/bottom_sheet.dart';
 import 'package:olx/widget/check_box_withlabel.dart';
 import 'package:olx/widget/city_list_dialog.dart';
 import 'package:olx/widget/map_widget.dart';
@@ -29,7 +29,6 @@ import 'package:olx/widget/progress_dialog.dart';
 import 'package:olx/widget/text_field_decoration.dart';
 
 import 'ImageUploaderListPage.dart';
-import 'cateogry_dailog.dart';
 
 class EditPage extends StatefulWidget {
   var detail;
@@ -190,14 +189,14 @@ class _EditPageState extends State<EditPage> {
   }
 
   _showDialog() async {
-    await SelectDialog.showModal<CateogryEntity>(
+    await SelectBottom.showBottom<CateogryEntity>(
       context,
       label: allTranslations.text('choose_category'),
       selectedValue: CateogryEntity(),
       items: List(),
       onChange: (CateogryEntity selected) {
         _cattextController.text = allTranslations.isEnglish
-            ? selected.name.toString()
+            ? selected.englishDescription.toString()
             : selected.arabicDescription;
         _selectedFieldValue = [];
         _colorFieldValue = [];
@@ -493,39 +492,147 @@ class _EditPageState extends State<EditPage> {
                                             borderSide: BorderSide(
                                                 color: Colors.red,
                                                 width: 0.5))),
-                                    child: Container(
-                                      height: 30,
-                                      child: DropdownButtonHideUnderline(
-                                        child: DropdownButton(
-                                          hint: Text(
-                                              '${allTranslations.text('choose')} ${allTranslations.isEnglish ? item.EnglishName : item.ArabicName}',
-                                              style: TextStyle(fontSize: 14)),
-                                          value: _selectedFieldValue[index],
-                                          isDense: true,
-                                          items: item.SpecificationOptions.map(
-                                              (FieldProprtiresSpecificationoption
-                                                  value) {
-                                            return DropdownMenuItem(
-                                              value: value.Id,
-                                              child: Text(
-                                                  allTranslations.isEnglish
-                                                      ? value.EnglishName
-                                                      : value.ArabicName),
-                                            );
-                                          }).toList(),
-                                          onChanged: (int newValue) {
-                                            item.Value = newValue;
-                                            setState(() {
-                                              isFirst = false;
-                                              _selectedFieldValue[index] =
-                                                  newValue;
-                                              state.didChange(
-                                                  newValue.toString());
-                                              _colorFieldValue[index] =
-                                                  AppColors.validValueColor;
+                                    child: InkWell(
+                                      onTap: () {
+                                        return showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) {
+                                              return Container(
+                                                  height: 350,
+                                                  child: ListView.separated(
+                                                    itemCount: item
+                                                        .SpecificationOptions
+                                                        .length,
+                                                    separatorBuilder:
+                                                        (c, index) => Divider(
+                                                      height: 0.5,
+                                                      color:
+                                                          Colors.grey.shade500,
+                                                    ),
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      //  var item = item.SpecificationOptions[index];
+                                                      //   if (widget.itemBuilder != null)
+                                                      //     return InkWell(
+                                                      //       child: widget.itemBuilder(
+                                                      //           context, item, item == widget.selectedValue),
+                                                      //       onTap: () {
+                                                      //         if (item.hasSub) {
+                                                      //           bloc.addCateogryToStack(item);
+                                                      //         } else {
+                                                      //           onChange(item);
+                                                      //           Navigator.pop(context);
+                                                      //         }
+                                                      //       },
+                                                      //     );
+
+                                                      return ListTile(
+                                                        title: Text(allTranslations
+                                                                .isEnglish
+                                                            ? item
+                                                                .SpecificationOptions[
+                                                                    index]
+                                                                .EnglishName
+                                                            : item
+                                                                .SpecificationOptions[
+                                                                    index]
+                                                                .ArabicName),
+                                                        // selected: item == widget.selectedValue,
+                                                        // trailing: item.hasSub
+                                                        //     ? Icon(
+                                                        //   Icons.arrow_forward_ios_outlined,
+                                                        //   color: Colors.black87,
+                                                        //   size: 30,
+                                                        // )
+                                                        //     : SizedBox(),
+                                                        onTap: () {
+                                                          item.Value = allTranslations
+                                                                  .isEnglish
+                                                              ? item
+                                                                  .SpecificationOptions[
+                                                                      index]
+                                                                  .EnglishName
+                                                              : item
+                                                                  .SpecificationOptions[
+                                                                      index]
+                                                                  .ArabicName;
+                                                          setState(() {
+                                                            _selectedFieldValue[
+                                                                    index] =
+                                                                item
+                                                                    .SpecificationOptions[
+                                                                        index]
+                                                                    .Id;
+                                                            state.didChange(item
+                                                                .SpecificationOptions[
+                                                                    index]
+                                                                .Id
+                                                                .toString());
+                                                            _colorFieldValue[
+                                                                    index] =
+                                                                AppColors
+                                                                    .validValueColor;
+                                                          });
+                                                          Navigator.pop(
+                                                              context);
+
+                                                          // if (item.hasSub) {
+                                                          //   bloc.addCateogryToStack(item);
+                                                          // } else {
+                                                          //   onChange(item);
+                                                          //   Navigator.pop(context);
+                                                          // }
+                                                        },
+                                                      );
+                                                    },
+                                                  ));
                                             });
-                                          },
+                                      },
+                                      child: Container(
+                                        height: 30,
+                                        child: Text(
+                                          item.Value != null
+                                              ? ' ${allTranslations.isEnglish ? item.Value : item.Value}'
+                                              : '${allTranslations.text('choose')} ${allTranslations.isEnglish ? item.EnglishName : item.ArabicName}',
+                                          style: TextStyle(
+                                              fontSize:
+                                                  item.Value != null ? 16 : 14,
+                                              color: item.Value != null
+                                                  ? Colors.black
+                                                  : Color(0xffCAD1E0)),
                                         ),
+                                        // child: DropdownButtonHideUnderline(
+                                        //   child: DropdownButton(
+                                        //     hint: Text(
+                                        //         '${allTranslations.text('choose')} ${allTranslations.isEnglish ? item.EnglishName : item.ArabicName}',
+                                        //         style: TextStyle(fontSize: 14)),
+                                        //     value: _selectedFieldValue[index],
+                                        //     isDense: true,
+                                        //     items: item.SpecificationOptions.map(
+                                        //         (FieldProprtiresSpecificationoption
+                                        //             value) {
+                                        //       return DropdownMenuItem(
+                                        //         value: value.Id,
+                                        //         child: Text(
+                                        //             allTranslations.isEnglish
+                                        //                 ? value.EnglishName
+                                        //                 : value.ArabicName),
+                                        //       );
+                                        //     }).toList(),
+                                        //     onChanged: (int newValue) {
+                                        //       item.Value = newValue;
+                                        //       setState(() {
+                                        //         isFirst = false;
+                                        //         _selectedFieldValue[index] =
+                                        //             newValue;
+                                        //         state.didChange(
+                                        //             newValue.toString());
+                                        //         _colorFieldValue[index] =
+                                        //             AppColors.validValueColor;
+                                        //       });
+                                        //     },
+                                        //   ),
+                                        // ),
                                       ),
                                     ),
                                   );

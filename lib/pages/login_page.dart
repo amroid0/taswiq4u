@@ -99,8 +99,9 @@ class _LoginPageState extends State<LoginPage> {
       bloc: BlocProvider.of<LoginBloc>(context),
       child: Scaffold(
         backgroundColor: Colors.white,
-        key: scaffoldKey,
+        //  key: scaffoldKey,
         body: ProgressHud(
+          //  key: scaffoldKey,
           child: Padding(
             padding: const EdgeInsets.only(
                 top: 16.0, right: 4.0, left: 4.0, bottom: 16.0),
@@ -209,7 +210,14 @@ class _LoginPageState extends State<LoginPage> {
           labelText: allTranslations.text('phone'),
           textEditingController: emailContoller,
           keyboardType: TextInputType.numberWithOptions(),
-          errorText: snapshot.error,
+          // errorText: snapshot.error,
+          validator: (value) {
+            if (value.isEmpty) {
+              return allTranslations.text('empty_field');
+            } else {
+              return null;
+            }
+          },
           textInputAction: TextInputAction.next,
           onFieldSubmitted: (val) {
             _fieldFocuseChange(context, _emailFocus, _passwordFocus);
@@ -226,10 +234,10 @@ class _LoginPageState extends State<LoginPage> {
         builder: (context, snapshot) {
           return Dialogs.commonButton(() {
             SystemChannels.textInput.invokeMethod('TextInput.hide');
-            if (emailContoller.text.isEmpty || passwordContoller.text.isEmpty) {
-              return;
+            if (formKey.currentState.validate()) {
+              bloc.submit();
             }
-            snapshot.hasError ? null : bloc.submit();
+            //  snapshot.hasError ? null : bloc.submit();
           }, allTranslations.text('login'));
           // return GestureDetector(
           //     onTap: () {
@@ -267,6 +275,14 @@ class _LoginPageState extends State<LoginPage> {
         });
   }
 
+  String _descAdsValidate(String value) {
+    if (value.isEmpty) {
+      return allTranslations.text('empty_field');
+    } else {
+      return null;
+    }
+  }
+
   Widget passwordField(LoginBloc bloc) {
     return StreamBuilder(
         stream: bloc.password,
@@ -287,35 +303,35 @@ class _LoginPageState extends State<LoginPage> {
               _passwordFocus.unfocus();
             },
           );
-          return Container(
-            decoration: BoxDecoration(
-              color: Colors.black12,
-              border: Border.all(
-                width: 1.0,
-                color: Colors.green,
-              ),
-              borderRadius: BorderRadius.all(
-                  Radius.circular(5.0) //         <--- border radius here
-                  ),
-            ),
-            child: TextFormField(
-              focusNode: _passwordFocus,
-              decoration: InputDecoration(
-                labelText: allTranslations.text('password'),
-                filled: true,
-                fillColor: Colors.black12,
-                border: InputBorder.none,
-                errorText: snapshot.error,
-              ),
-              validator: (val) =>
-                  val.length < 6 ? allTranslations.text('err_short') : null,
-              obscureText: true,
-              onChanged: bloc.changePassword,
-              onFieldSubmitted: (val) {
-                _passwordFocus.unfocus();
-              },
-            ),
-          );
+          // return Container(
+          //   decoration: BoxDecoration(
+          //     color: Colors.black12,
+          //     border: Border.all(
+          //       width: 1.0,
+          //       color: Colors.green,
+          //     ),
+          //     borderRadius: BorderRadius.all(
+          //         Radius.circular(5.0) //         <--- border radius here
+          //         ),
+          //   ),
+          //   child: TextFormField(
+          //     focusNode: _passwordFocus,
+          //     decoration: InputDecoration(
+          //       labelText: allTranslations.text('password'),
+          //       filled: true,
+          //       fillColor: Colors.black12,
+          //       border: InputBorder.none,
+          //       errorText: snapshot.error,
+          //     ),
+          //     validator: (val) =>
+          //         val.length < 6 ? allTranslations.text('err_short') : null,
+          //     obscureText: true,
+          //     onChanged: bloc.changePassword,
+          //     onFieldSubmitted: (val) {
+          //       _passwordFocus.unfocus();
+          //     },
+          //   ),
+          // );
         });
   }
 
