@@ -7,6 +7,7 @@ import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/ads_params.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/filter_response.dart';
+import 'package:olx/utils/global_locale.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:olx/model/favroite_entity.dart';
 
@@ -161,7 +162,10 @@ class AdsBloc implements Bloc {
     try{
       _featureStatecontroller.sink.add(ApiResponse.loading("message"));
       final results = await _client.featuredAds(adsID);
+      if(results)
       _featureStatecontroller.sink.add(ApiResponse.completed(results));
+      else
+        _featureStatecontroller.sink.add( ApiResponse.error(""));
     }catch(e){
       _featureStatecontroller.sink.add( ApiResponse.error(e.toString()));
 

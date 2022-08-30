@@ -56,7 +56,11 @@ void deleteAds(String adsID)async{
     try{
       _distnctStatecontroller.sink.add(ApiResponse.loading("message"));
       final results = await _client.distinctAds(adsID);
+      if(results)
       _distnctStatecontroller.sink.add(ApiResponse.completed(results));
+      else
+        _distnctStatecontroller.sink.add( ApiResponse.error(""));
+
     }catch(e){
       _distnctStatecontroller.sink.add( ApiResponse.error(e.toString()));
 

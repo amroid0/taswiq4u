@@ -143,6 +143,7 @@ class _DetailPageState extends State<DetailPage> {
         case Status.ERROR:
           ToastUtils.showErrorMessage(allTranslations.text('err_wrong'));
 
+
           break;
 
         case Status.COMPLETED:
@@ -173,7 +174,13 @@ class _DetailPageState extends State<DetailPage> {
         case Status.COMPLETED:
           ToastUtils.showSuccessMessage(
               allTranslations.text('success_distincit_ads'));
+          BlocProvider.of<AdsBloc>(context).getMyAdsListe(1);
 
+
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            setState(() {
+            });
+          });
           break;
       }
     });
@@ -327,7 +334,58 @@ class _DetailPageState extends State<DetailPage> {
                                           onFavChange: (val) {
                                             if (BlocProvider.of<LoginBloc>(context)
                                                 .isLogged())
-                                              _bloc.distinictAds(detail.Id.toString());
+                                              Alert(
+                                                context: context,
+                                                title: allTranslations.text('feature'),
+                                                desc: allTranslations.text('feature_msg'),
+                                                style: AlertStyle(
+                                                  isCloseButton: false,
+                                                  alertBorder: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(20.0),
+                                                  ),
+                                                ),
+                                                buttons: [
+                                                  DialogButton(
+                                                    radius: BorderRadius.all(Radius.circular(20)),
+                                                    child: Text(
+                                                      allTranslations.text('ok'),
+                                                      style: TextStyle(color: Colors.white, fontSize: 20),
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                      _bloc.distinictAds(detail.Id.toString());
+
+                                                    },
+                                                    width: 120,
+                                                    height: 56,
+                                                  ),
+                                                  DialogButton(
+                                                    radius: BorderRadius.all(Radius.circular(20)),
+                                                    child: Container(
+                                                      width: 120,
+                                                      height: 56,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                          BorderRadius.all(Radius.circular(20)),
+                                                          border: Border.all(
+                                                            color: AppColors.accentColor,
+                                                            width: 1,
+                                                          )),
+                                                      child: Center(
+                                                        child: Text(
+                                                          allTranslations.text('cancel'),
+                                                          style: TextStyle(
+                                                              color: AppColors.accentColor, fontSize: 20),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    onPressed: () => Navigator.pop(context),
+                                                    width: 120,
+                                                    height: 56,
+                                                    color: Colors.white,
+                                                  )
+                                                ],
+                                              ).show();
                                             else
                                               Navigator.push(
                                                   context,
@@ -383,7 +441,57 @@ class _DetailPageState extends State<DetailPage> {
 
                                     child: GestureDetector(
                                       onTap: () async {
-                                      _bloc.deleteAds(detail.Id.toString());
+                                        Alert(
+                                          context: context,
+                                          title: allTranslations.text('delete'),
+                                          desc: allTranslations.text('delete_msg'),
+                                          style: AlertStyle(
+                                            isCloseButton: false,
+                                            alertBorder: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(20.0),
+                                            ),
+                                          ),
+                                          buttons: [
+                                            DialogButton(
+                                              radius: BorderRadius.all(Radius.circular(20)),
+                                              child: Text(
+                                                allTranslations.text('ok'),
+                                                style: TextStyle(color: Colors.white, fontSize: 20),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                _bloc.deleteAds(detail.Id.toString());
+                                              },
+                                              width: 120,
+                                              height: 56,
+                                            ),
+                                            DialogButton(
+                                              radius: BorderRadius.all(Radius.circular(20)),
+                                              child: Container(
+                                                width: 120,
+                                                height: 56,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                    BorderRadius.all(Radius.circular(20)),
+                                                    border: Border.all(
+                                                      color: AppColors.accentColor,
+                                                      width: 1,
+                                                    )),
+                                                child: Center(
+                                                  child: Text(
+                                                    allTranslations.text('cancel'),
+                                                    style: TextStyle(
+                                                        color: AppColors.accentColor, fontSize: 20),
+                                                  ),
+                                                ),
+                                              ),
+                                              onPressed: () => Navigator.pop(context),
+                                              width: 120,
+                                              height: 56,
+                                              color: Colors.white,
+                                            )
+                                          ],
+                                        ).show();
                                         },
                                       child: Container(
                                           width: 45,
@@ -725,44 +833,64 @@ class _DetailPageState extends State<DetailPage> {
                     builder: (BuildContext context,
                             void Function(void Function()) setState) =>
                         Container(
-                      child: Column(children: <Widget>[
-                        DropdownButton<String>(
-                          hint: Text(
-                            allTranslations.text('reason'),
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical:4.0,horizontal: 16),
+                          child: Text(allTranslations.text('select_reason'),style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                        ),
+                        Container(
+                          width: 600,
+                          height: 200,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: reportReasons.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return InkWell(
+                              onTap: (){
+                              setState(() {
+                              _select_Types = reportReasons[index];
+
+                              });},
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom:8.0),
+                                  child: Row(
+                                    children: [
+                                      _select_Types == reportReasons[index]
+                                          ? Icon(
+                                              Icons.check_circle_rounded,
+                                              color: Colors.green,
+                                              size: 24,
+                                            )
+                                          : SizedBox(width: 24,),
+                                      SizedBox(width: 8,),
+                                      Text(
+                                        reportReasons[index],
+                                        style: new TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+
                           ),
-                          value: _select_Types,
-                          onChanged: (String Value) {
-                            setState(() {
-                              _select_Types = Value;
-                            });
-                          },
-                          items: reportReasons.map((String types) {
-                            return DropdownMenuItem<String>(
-                              value: types,
-                              child: Row(
-                                children: <Widget>[
-                                  reportReasons.length > 0
-                                      ? Text(
-                                          types,
-                                          style: TextStyle(color: Colors.black),
-                                        )
-                                      : Text(
-                                          'no data',
-                                          style: TextStyle(color: Colors.black),
-                                        )
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        ),
+                        )
+
+                        ,
                         SizedBox(
-                          height: 20,
+                          height: 10,
                         ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical:4.0,horizontal: 16),
+                              child: Text(allTranslations.text('comment'),style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                            ),
+
                         Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.0),
@@ -772,15 +900,16 @@ class _DetailPageState extends State<DetailPage> {
                           margin: EdgeInsets.all(20),
 
                           child: TextField(
+
                               controller: message,
                               decoration: new InputDecoration(
-                                labelText: allTranslations.text('message'),
-                                labelStyle: TextStyle(color: Colors.black),
-                                border: new OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                    const Radius.circular(8.0),
-                                  ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  borderSide: BorderSide.none,
                                 ),
+                                hintText: allTranslations.text('new_comment'),
+                                hintStyle: TextStyle(color: Colors.grey),
+
                               )),
                         ),
                       ]),
@@ -788,7 +917,9 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                   buttons: [
                     DialogButton(
+                      radius: BorderRadius.circular(20),
                       onPressed: () {
+                        if (message.text.isEmpty) return;
                         BlocProvider.of<LoginBloc>(context).isLogged()
                             ? _reportBloc.adsReport(
                                 PostReport(
@@ -830,7 +961,7 @@ class _DetailPageState extends State<DetailPage> {
                         });
                       },
                       child: Text(
-                        allTranslations.text('send'),
+                        allTranslations.text('submit'),
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     )

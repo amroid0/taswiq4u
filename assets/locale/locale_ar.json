@@ -143,7 +143,7 @@
   "egypt": "مصر",
   "kuwait": "الكويت",
   "verify_acc": "تم تفعيل الحساب",
-  "send_success":"تم اضافه الاعلان بنجاح",
+  "send_success":"تم ارسال البلاغ  بنجاح",
   "conversation": "محادثه",
   "copy_num" : "نسخ الرقم",
   "calling": "اتصال",
@@ -167,6 +167,7 @@
   "success_distincit_ads": "تم تمييز الاعلان بنجاح",
   "zone": "المنطقه",
   "welcome_title":"مرحبا",
+  "welcome_title":"مرحبا",
   "home_sub_title": "اكتشف ما تريده",
 "search_here": "ابحث هنا",
   "select_lang":"اختر اللغة",
@@ -180,7 +181,21 @@
   "sort_by": "ترتيب بواسطة",
   "chat_now": "محادثة",
   "call_detail":"اتصال",
-  "ensure_login": "يجب تسجيل الدخول أولا"
+  "ensure_login": "يجب تسجيل الدخول أولا",
+  "delete_msg": "هل تريد حذف الاعلان؟",
+  "feature_msg": "هل تريد تمييز الاعلان؟",
+  "feature": "تمييز",
+  "not_allowed_feature": "فشل في تمميز الاعلان",
+  "select_reason": "اختر السبب",
+  "comment": "تعليق",
+  "submit": "ارسال",
+  "new_comment": "اكتب تعليق"
+
+
+
+
+
+
 
 
 
