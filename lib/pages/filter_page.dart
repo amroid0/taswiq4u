@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:olx/data/bloc/add_post_bloc.dart';
 import 'package:olx/data/bloc/filter_bloc.dart';
+import 'package:olx/model/Cities.dart';
 import 'package:olx/model/FieldproprtieyReposne.dart';
 import 'package:olx/model/cityModel.dart';
 import 'package:olx/model/field_proprtires_entity.dart';
@@ -9,6 +10,7 @@ import 'package:olx/model/filter_response.dart';
 import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/dailogs.dart';
 import 'package:olx/utils/global_locale.dart';
+import 'package:olx/widget/CitiesDialog.dart';
 import 'package:olx/widget/city_list_dialog.dart';
 import 'package:olx/widget/mutli_select_chip_dialog.dart';
 import 'package:olx/widget/text_field_decoration.dart';
@@ -37,6 +39,7 @@ class _FilterPageState extends State<FilterPage> {
   final TextEditingController _nametextController = TextEditingController();
   final TextEditingController _pricetextController = TextEditingController();
   final TextEditingController _citytextController = TextEditingController();
+  final TextEditingController _citiestextController = TextEditingController();
   Color adNameColor,
       descColor,
       priceColor,
@@ -57,6 +60,8 @@ class _FilterPageState extends State<FilterPage> {
   String minValue = "";
   String maxValue = "";
   bool isFirst = true;
+  bool isVisiable = false;
+  int cityID = 0;
 
   @override
   void dispose() {
@@ -297,6 +302,24 @@ class _FilterPageState extends State<FilterPage> {
                             onClickAction: () {
                               _showCityDialog();
                             }),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Visibility(
+                        visible: isVisiable,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 8.0, right: 4.0, left: 4.0),
+                          child: _BuildCityRoundedTextField(
+                              labelText: allTranslations.text('zone'),
+                              hintText: allTranslations.text('zone'),
+                              controller: _citiestextController,
+                              iswithArrowIcon: true,
+                              onClickAction: () {
+                                _showCiiesDialog(cityID);
+                              }),
+                        ),
                       ),
                       SizedBox(
                         height: 8,
@@ -794,6 +817,29 @@ class _FilterPageState extends State<FilterPage> {
         filterParamsEntity.stateId = selected.id;
         filterParamsEntity.cityId = selected.id;
         filterParamsEntity.cityName = selected.name.toString();
+        _citiestextController.clear();
+        cityID = selected.id;
+
+        setState(() {
+          isVisiable = true;
+        });
+      },
+    );
+  }
+
+  _showCiiesDialog(int cityId) async {
+    await CitiesListDialog.showModal<Cities>(
+      context,
+      id: cityId,
+      label: allTranslations.text('zone'),
+      selectedValue: Cities(),
+      items: List(),
+      onChange: (Cities selected) {
+        _citiestextController.text = allTranslations.isEnglish
+            ? selected.englishName.toString()
+            : selected.arabicName;
+        filterParamsEntity.stateId = selected.cityId;
+        // adsPostEntity.cityId=selected.id;
       },
     );
   }

@@ -80,29 +80,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     appBar = AppBar(
-      title: Center(
-        child: Text(
-          allTranslations.text('personal_info'),
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.black38),
-        ),
+      title: Text(
+        allTranslations.text('edit_profile'),
+        //textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.black),
       ),
       backgroundColor: Colors.transparent,
       bottomOpacity: 0.0,
       elevation: 0.0,
+      centerTitle: true,
       automaticallyImplyLeading: false,
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(
-            Icons.arrow_forward_ios,
-            color: Colors.black38,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          tooltip: 'back',
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back_ios,
+          color: Colors.black,
         ),
-      ],
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        tooltip: 'back',
+      ),
+      actions: <Widget>[],
     );
     return Scaffold(
         backgroundColor: AppColors.appBackground,
@@ -123,19 +121,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(
                   height: 24,
                 ),
-                _BuildProifleImage(100, 100),
+                _BuildProifleImage(120, 120),
                 SizedBox(
                   height: 8,
                 ),
-                Text(
-                  allTranslations.text('change_profile'),
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: Colors.black87,
-                    fontSize: 18,
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
+                // Text(
+                //   allTranslations.text('change_profile'),
+                //   style: TextStyle(
+                //     fontWeight: FontWeight.normal,
+                //     color: Colors.black87,
+                //     fontSize: 18,
+                //     decoration: TextDecoration.underline,
+                //   ),
+                // ),
                 SizedBox(height: 24),
                 StreamBuilder(
                     stream: BlocProvider.of<ProfileBloc>(context).firstName,
@@ -266,10 +264,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget _BuildProifleImage(double width, double height) {
-    return CircleAvatar(
-      radius: 70.0,
-      backgroundImage: NetworkImage('https://via.placeholder.com/150'),
-      backgroundColor: Colors.grey,
+    // return CircleAvatar(
+    //   radius: 70.0,
+    //   backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+    //   backgroundColor: Colors.grey,
+    // );
+    return SizedBox(
+      child: CircleAvatar(
+        radius: 60.0,
+        backgroundColor: Colors.white,
+        child: CircleAvatar(
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: CircleAvatar(
+                backgroundColor: Colors.transparent,
+                radius: 18.0,
+                child: Image.asset(
+                  'images/cam.png',
+                  width: 60,
+                  height: 60,
+                )),
+          ),
+          radius: 60.0,
+          backgroundColor: Colors.grey,
+          backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+        ),
+      ),
     );
   }
 }

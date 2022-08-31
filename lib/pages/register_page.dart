@@ -118,7 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     Align(
                         alignment: Alignment.center,
                         child: Text(
-                          'Welcome!',
+                          '${allTranslations.text('welcome')}!',
                           style: Theme.of(context)
                               .textTheme
                               .headline5
@@ -167,7 +167,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Already have an account ?',
+                          '${allTranslations.text('have_account')} ?',
                           style: TextStyle(
                               color: Color(0xff818391),
                               fontSize: 14,

@@ -6,9 +6,10 @@ import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/user_info.dart';
 import 'package:olx/pages/bundle_page.dart';
 import 'package:olx/pages/change_pass_page.dart';
+import 'package:olx/pages/edit_profile_page.dart';
 import 'package:olx/pages/my_ads_page.dart';
-import 'package:olx/pages/settings_page.dart';
 import 'package:olx/utils/Constants.dart';
+import 'package:olx/utils/global_locale.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -164,11 +165,13 @@ class _ProfilePageState extends State<ProfilePage> {
                             SizedBox(
                               width: 10,
                             ),
-                            Text('My Ads')
+                            Text(allTranslations.text('my_ads'))
                           ],
                         ),
                         Icon(
-                          Icons.arrow_forward_ios_outlined,
+                          allTranslations.isEnglish
+                              ? Icons.arrow_forward_ios_outlined
+                              : Icons.arrow_back_ios_sharp,
                           color: Colors.black87,
                           size: 30,
                         )
@@ -200,11 +203,13 @@ class _ProfilePageState extends State<ProfilePage> {
                             SizedBox(
                               width: 10,
                             ),
-                            Text('My Bundle')
+                            Text(allTranslations.text('bundle'))
                           ],
                         ),
                         Icon(
-                          Icons.arrow_forward_ios_outlined,
+                          allTranslations.isEnglish
+                              ? Icons.arrow_forward_ios_outlined
+                              : Icons.arrow_back_ios_sharp,
                           color: Colors.black87,
                           size: 30,
                         )
@@ -220,7 +225,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => BlocProvider(
-                                bloc: ProfileBloc(), child: SettingsPage())),
+                                bloc: ProfileBloc(),
+                                child: EditProfileScreen())),
                       );
                     },
                     child: Row(
@@ -236,11 +242,13 @@ class _ProfilePageState extends State<ProfilePage> {
                             SizedBox(
                               width: 10,
                             ),
-                            Text('Edit Profile')
+                            Text(allTranslations.text('edit_profile'))
                           ],
                         ),
                         Icon(
-                          Icons.arrow_forward_ios_outlined,
+                          allTranslations.isEnglish
+                              ? Icons.arrow_forward_ios_outlined
+                              : Icons.arrow_back_ios_sharp,
                           color: Colors.black87,
                           size: 30,
                         )
@@ -271,11 +279,13 @@ class _ProfilePageState extends State<ProfilePage> {
                             SizedBox(
                               width: 10,
                             ),
-                            Text('Change Password')
+                            Text(allTranslations.text('change_pass'))
                           ],
                         ),
                         Icon(
-                          Icons.arrow_forward_ios_outlined,
+                          allTranslations.isEnglish
+                              ? Icons.arrow_forward_ios_outlined
+                              : Icons.arrow_back_ios_sharp,
                           color: Colors.black87,
                           size: 30,
                         )

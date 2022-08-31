@@ -146,6 +146,7 @@
   "egypt": "Egypt",
   "kuwait": "Kuwait",
   "verify_acc": "Account Is Verified",
+  "ads_send_success": "Sucessfully Added",
   "send_success": "Report Submitted  Successfully",
   "conversation": "Chat",
   "copy_num": "Copy Number",
@@ -159,7 +160,6 @@
   "Success_update": "Successfully Updated",
   "recive_code": "Didn't Recieve ?",
   "send_code": "Send Again",
-  "choose_govrnment": "Choose Government",
   "code_sent": "code sent successfully",
   "missing_fields": "please complete all required fields",
   "links": "Other links",
@@ -181,12 +181,16 @@
   "recent_search": "Recent Search",
   "err_add_ads": "You can only add Ad in your country, Please switch to your country",
   "select_pref_lang": "Select Your Preferred Language",
-  "continue": "Continue"
-  "err_add_ads": "You can only add Ad in your country, Please switch to your country",
+  "continue": "Continue",
  "sort_by": "Sort by",
   "chat_now": "Chat now",
   "call_detail":"Call us",
   "ensure_login": "please login and try again",
+  "edit_profile": "Edit Profile",
+  "welcome": "Welcome",
+  "have_account": "Already have an account",
+  "welcome_back": "Welcome Back",
+  "donot_have_acc": "Don't have an account",
   "delete_msg": "do you want to delete the ad ?",
   "feature_msg": "do you want to feature the ad ?",
   "feature": "Featured",
@@ -195,7 +199,4 @@
   "comment":"Comment",
   "submit": "submit",
   "new_comment": "Write your message"
-
-
-
 }

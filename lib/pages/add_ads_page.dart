@@ -114,7 +114,7 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
           var isss = isLogged.data;
           if (isss) {
             Fluttertoast.showToast(
-                msg: "${allTranslations.text('send_success')}",
+                msg: "${allTranslations.text('ads_send_success')}",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
@@ -1198,7 +1198,6 @@ class _AddAdvertismentState extends State<AddAdvertisment> {
       return allTranslations.text('err_numk');
     } else if (cId == 1 && value.length != 11) {
       return allTranslations.text('err_email');
-      ;
     } else {
       return null;
     }

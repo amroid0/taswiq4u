@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_map_location_picker/google_map_location_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/edit_bloc.dart';
 import 'package:olx/data/bloc/upload_image_bloc.dart';
+import 'package:olx/model/Cities.dart';
 import 'package:olx/model/StateEnum.dart';
-import 'package:olx/model/ads_entity.dart';
 import 'package:olx/model/ads_post_entity.dart';
 import 'package:olx/model/api_response_entity.dart';
 import 'package:olx/model/cateogry_entity.dart';
@@ -20,10 +19,10 @@ import 'package:olx/utils/Theme.dart';
 import 'package:olx/utils/dailogs.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/utils/loading_dialog.dart';
+import 'package:olx/widget/CitiesDialog.dart';
 import 'package:olx/widget/bottom_sheet.dart';
 import 'package:olx/widget/check_box_withlabel.dart';
 import 'package:olx/widget/city_list_dialog.dart';
-import 'package:olx/widget/map_widget.dart';
 import 'package:olx/widget/mutli_select_chip_dialog.dart';
 import 'package:olx/widget/progress_dialog.dart';
 import 'package:olx/widget/text_field_decoration.dart';
@@ -56,6 +55,7 @@ class _EditPageState extends State<EditPage> {
   final TextEditingController _emailtextController = TextEditingController();
   final TextEditingController _desctextController = TextEditingController();
   final TextEditingController _citytextController = TextEditingController();
+  final TextEditingController _citiestextController = TextEditingController();
 
   Color adNameColor,
       descColor,
@@ -76,7 +76,8 @@ class _EditPageState extends State<EditPage> {
       List<List<FieldProprtiresSpecificationoption>>();
 
   var adsObj;
-
+  bool isVisiable = false;
+  int cityID = 0;
   bool isFirst = true;
 
   @override
@@ -297,8 +298,8 @@ class _EditPageState extends State<EditPage> {
                 padding:
                     const EdgeInsets.only(bottom: 8.0, right: 4.0, left: 4.0),
                 child: _BuildCityRoundedTextField(
-                    labelText: allTranslations.text('city'),
-                    hintText: allTranslations.text('city'),
+                    labelText: allTranslations.text('govrnment'),
+                    hintText: allTranslations.text('govrnment'),
                     controller: _citytextController,
                     iswithArrowIcon: true,
                     onClickAction: () {
@@ -306,6 +307,24 @@ class _EditPageState extends State<EditPage> {
                     }),
               ),
 
+              SizedBox(
+                height: 8,
+              ),
+              Visibility(
+                visible: isVisiable,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 8.0, right: 4.0, left: 4.0),
+                  child: _BuildCityRoundedTextField(
+                      labelText: allTranslations.text('zone'),
+                      hintText: allTranslations.text('zone'),
+                      controller: _citiestextController,
+                      iswithArrowIcon: true,
+                      onClickAction: () {
+                        _showCiiesDialog(cityID);
+                      }),
+                ),
+              ),
               SizedBox(
                 height: 8,
               ),
@@ -591,15 +610,21 @@ class _EditPageState extends State<EditPage> {
                                       child: Container(
                                         height: 30,
                                         child: Text(
-                                          item.Value != null
-                                              ? ' ${allTranslations.isEnglish ? item.Value : item.Value}'
-                                              : '${allTranslations.text('choose')} ${allTranslations.isEnglish ? item.EnglishName : item.ArabicName}',
+                                          //  item.Value != null
+                                          // ?
+                                          ' ${allTranslations.isEnglish ? snapshot.data.AdData.Advertisment_Specification[index].AdvertismentSpecificatioOptions[0].NameEnglish : snapshot.data.AdData.Advertisment_Specification[index].AdvertismentSpecificatioOptions[0].NameArabic}',
+                                          // : '${allTranslations.text('choose')} ${allTranslations.isEnglish ? item.EnglishName : item.ArabicName}',
                                           style: TextStyle(
                                               fontSize:
-                                                  item.Value != null ? 16 : 14,
-                                              color: item.Value != null
-                                                  ? Colors.black
-                                                  : Color(0xffCAD1E0)),
+                                                  _selectedFieldValue[index] !=
+                                                          null
+                                                      ? 16
+                                                      : 14,
+                                              color:
+                                                  _selectedFieldValue[index] !=
+                                                          null
+                                                      ? Colors.black
+                                                      : Color(0xffCAD1E0)),
                                         ),
                                         // child: DropdownButtonHideUnderline(
                                         //   child: DropdownButton(
@@ -764,40 +789,7 @@ class _EditPageState extends State<EditPage> {
               SizedBox(
                 height: 8,
               ),
-              Center(
-                child: InkWell(
-                  child: MapWidget(
-                    center: LatLng(0, 0),
-                    mapController: _mapController,
-                    onMapCreated: _onMapCreated,
-                    markers: _markers,
-                    onTap: (lat) async {
-                      LocationResult result = await showLocationPicker(
-                        context,
-                        "AIzaSyC57DQKo0jhnTJtdZX1Lp7LAIFmAFhZiNQ",
-                      );
-                      print("result = $result");
-                      setState(() {
-                        _markers.clear();
-                        final marker = Marker(
-                          markerId: MarkerId("curr_loc"),
-                          position: result.latLng,
-                          infoWindow: InfoWindow(title: 'Your Location'),
-                        );
-                        _markers.add(marker);
-                        _mapController.moveCamera(
-                          CameraUpdate.newCameraPosition(
-                            CameraPosition(
-                              target: result.latLng,
-                              zoom: 20.0,
-                            ),
-                          ),
-                        );
-                      });
-                    },
-                  ),
-                ),
-              ),
+
               SizedBox(
                 height: 8,
               ),
@@ -1109,6 +1101,23 @@ class _EditPageState extends State<EditPage> {
         });
   }
 
+  _showCiiesDialog(int cityId) async {
+    await CitiesListDialog.showModal<Cities>(
+      context,
+      id: cityId,
+      label: allTranslations.text('zone'),
+      selectedValue: Cities(),
+      items: List(),
+      onChange: (Cities selected) {
+        _citiestextController.text = allTranslations.isEnglish
+            ? selected.englishName.toString()
+            : selected.arabicName;
+        adsPostEntity.stateId = selected.cityId;
+        // adsPostEntity.cityId=selected.id;
+      },
+    );
+  }
+
   Widget _BuildCityRoundedTextField(
       {String labelText,
       TextEditingController controller = null,
@@ -1153,6 +1162,12 @@ class _EditPageState extends State<EditPage> {
             : selected.arabicDescription;
         adsPostEntity.stateId = selected.id;
         adsPostEntity.cityId = selected.id;
+        _citiestextController.clear();
+        cityID = selected.id;
+
+        setState(() {
+          isVisiable = true;
+        });
       },
     );
   }

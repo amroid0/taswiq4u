@@ -145,6 +145,7 @@
   "kuwait": "الكويت",
   "verify_acc": "تم تفعيل الحساب",
   "send_success":"تم ارسال البلاغ  بنجاح",
+  "ads_send_success":"تم اضافه الاعلان بنجاح",
   "conversation": "محادثه",
   "copy_num" : "نسخ الرقم",
   "calling": "اتصال",
@@ -168,7 +169,6 @@
   "success_distincit_ads": "تم تمييز الاعلان بنجاح",
   "zone": "المنطقه",
   "welcome_title":"مرحبا",
-  "welcome_title":"مرحبا",
   "home_sub_title": "اكتشف ما تريده",
 "search_here": "ابحث هنا",
   "select_lang":"اختر اللغة",
@@ -180,8 +180,7 @@
   "err_short_desc": "من فضلك ادخل اكثر من 10 حروف ",
   "err_add_ads": "لا يمكنك أضافه الاعلان الا في الدوله الخاصه بك, قم بتغير الدوله",
   "select_pref_lang": "اختار لغتك المفضله",
-  "continue": "استمرار"
-  "err_add_ads": "لا يمكنك أضافه الاعلان الا في الدوله الخاصه بك, قم بتغير الدوله",
+  "continue": "استمرار",
   "sort_by": "ترتيب بواسطة",
   "chat_now": "محادثة",
   "call_detail":"اتصال",
@@ -193,24 +192,11 @@
   "select_reason": "اختر السبب",
   "comment": "تعليق",
   "submit": "ارسال",
-  "new_comment": "اكتب تعليق"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  "new_comment": "اكتب تعليق",
+  "edit_profile": "تعديل الملف الشخصي",
+  "welcome": "مرحبا",
+  "have_account": "لديك حساب",
+  "welcome_back": "مرحبا مجددا",
+  "donot_have_acc": "ليس لديك حساب"
 
 }

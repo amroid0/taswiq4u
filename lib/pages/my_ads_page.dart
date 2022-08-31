@@ -15,7 +15,6 @@ import 'package:olx/utils/ToastUtils.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/ads_widget_card.dart';
 import 'package:olx/widget/ads_widget_row.dart';
-import 'package:olx/widget/favroite_widget.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'edit_page.dart';
@@ -91,20 +90,15 @@ class _MyAdsPageState extends State<MyAdsPage> {
           var isss = isLogged.data;
           if (isss) {
             Fluttertoast.showToast(
-                msg:  allTranslations.text('success_distincit_ads'),
+                msg: allTranslations.text('success_distincit_ads'),
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
                 backgroundColor: Colors.green,
                 textColor: Colors.white,
                 fontSize: 16.0);
+            _bloc.getMyAdsListe(1);
           } else {
-                fontSize: 16.0
-            );
-              _bloc.getMyAdsListe(1);
-
-          }else{
-
             Fluttertoast.showToast(
                 msg: "unFeatured",
                 toastLength: Toast.LENGTH_SHORT,
@@ -159,7 +153,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
               icon: Icon(
                 Icons.arrow_back_ios_sharp,
                 color: Colors.black,
-                size:35,
+                size: 35,
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -313,9 +307,6 @@ class _MyAdsPageState extends State<MyAdsPage> {
                       color: Colors.red,
                       icon: Icons.delete,
                       onTap: () {
-                        _bloc.deleteAds(ads[adsIndex].Id.toString());
-                      },
-                      onTap:(){
                         Alert(
                           context: context,
                           title: allTranslations.text('delete'),
@@ -331,12 +322,12 @@ class _MyAdsPageState extends State<MyAdsPage> {
                               radius: BorderRadius.all(Radius.circular(20)),
                               child: Text(
                                 allTranslations.text('ok'),
-                                style: TextStyle(color: Colors.white, fontSize: 20),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
                               ),
                               onPressed: () {
                                 Navigator.pop(context);
                                 _bloc.deleteAds(ads[adsIndex].Id.toString());
-
                               },
                               width: 120,
                               height: 56,
@@ -348,7 +339,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
                                 height: 56,
                                 decoration: BoxDecoration(
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                        BorderRadius.all(Radius.circular(20)),
                                     border: Border.all(
                                       color: AppColors.accentColor,
                                       width: 1,
@@ -357,7 +348,8 @@ class _MyAdsPageState extends State<MyAdsPage> {
                                   child: Text(
                                     allTranslations.text('cancel'),
                                     style: TextStyle(
-                                        color: AppColors.accentColor, fontSize: 20),
+                                        color: AppColors.accentColor,
+                                        fontSize: 20),
                                   ),
                                 ),
                               ),
@@ -368,8 +360,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
                             )
                           ],
                         ).show();
-
-                      } ,
+                      },
                     ),
                   ],
                   child: AdsRowWidget(

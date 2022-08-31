@@ -116,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                   Align(
                       alignment: Alignment.center,
                       child: Text(
-                        'Welcome Back !',
+                        '${allTranslations.text('welcome_back')} !',
                         style: Theme.of(context)
                             .textTheme
                             .headline5
@@ -168,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don't have an account ?",
+                        "${allTranslations.text('donot_have_acc')} ?",
                         style: TextStyle(
                             color: Color(0xff818391),
                             fontSize: 14,

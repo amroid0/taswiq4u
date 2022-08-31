@@ -21,14 +21,20 @@ class CountryPage extends StatefulWidget {
 class _CountryPageState extends State<CountryPage> {
   CountryBloc bloc;
   int selectedCountry = -1;
-  bool isArabic = false;
-  bool isEnglish = true;
+  bool isArabic;
+  bool isEnglish;
 
   RangeValues _currentRangeValues = const RangeValues(10, 100000);
 
   @override
   void initState() {
+    // getLangauage();
     preferences.clearCity();
+    if (allTranslations.isEnglish) {
+      isEnglish = true;
+    } else {
+      isArabic = true;
+    }
     // TODO: implement initState
     bloc = new CountryBloc();
     bloc.getCountryList();
@@ -294,5 +300,16 @@ class _CountryPageState extends State<CountryPage> {
         ),
       ]),
     );
+  }
+
+  getLangauage() async {
+    String lang = await preferences.getLang();
+    if (lang == 'ar') {
+      isArabic = true;
+      isEnglish = false;
+    } else {
+      isArabic = false;
+      isEnglish = true;
+    }
   }
 }
