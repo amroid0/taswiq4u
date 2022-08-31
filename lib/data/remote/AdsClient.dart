@@ -96,8 +96,10 @@ class AdsClient{
   }
   Future<bool>featuredAds(String id)async{
     final result=await NetworkCommon().dio.post(APIConstants.DISTINCT_ADS,queryParameters: {"adId":id});
-    if(result.statusCode==200){
+    if(result.statusCode==200&&!(result.data["result"] as String).toLowerCase().contains("NotAllowed".toLowerCase())){
       return true;
+    }else{
+      return false;
     }
 
   }

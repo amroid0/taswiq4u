@@ -22,7 +22,8 @@ class _StarWidgetState extends State<StarWidget> {
   Widget build(BuildContext context) {
     return  InkWell(
       onTap: () {
-        setState(() {
+        if(widget.value) return;
+
           if(BlocProvider.of<LoginBloc>(context).isLogged()){
             widget.value = !widget.value;
           }
@@ -31,7 +32,7 @@ class _StarWidgetState extends State<StarWidget> {
 
 
 
-        });
+
       },
       child: Container(
         height:35,

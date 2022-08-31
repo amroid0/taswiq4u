@@ -146,7 +146,7 @@
   "egypt": "Egypt",
   "kuwait": "Kuwait",
   "verify_acc": "Account Is Verified",
-  "send_success": "Sucessfully Added",
+  "send_success": "Report Submitted  Successfully",
   "conversation": "Chat",
   "copy_num": "Copy Number",
   "calling": "Call",
@@ -186,7 +186,16 @@
  "sort_by": "Sort by",
   "chat_now": "Chat now",
   "call_detail":"Call us",
-  "ensure_login": "please login and try again"
+  "ensure_login": "please login and try again",
+  "delete_msg": "do you want to delete the ad ?",
+  "feature_msg": "do you want to feature the ad ?",
+  "feature": "Featured",
+  "not_allowed_feature": "Not Allowed",
+  "select_reason": "Select Reason",
+  "comment":"Comment",
+  "submit": "submit",
+  "new_comment": "Write your message"
+
 
 
 }

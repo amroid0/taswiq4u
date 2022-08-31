@@ -27,6 +27,7 @@ class _OfferSliderScreenState extends State<OfferSliderScreen> {
   PageController _pageController;
   List< PopupAdsEntityList>  list ;
   int currentPage=0;
+  bool isFirstLoad=true;
 
   @override
   void initState() {
@@ -38,7 +39,8 @@ class _OfferSliderScreenState extends State<OfferSliderScreen> {
 
 
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
-    if (arguments != null) {
+    if (arguments != null&&isFirstLoad) {
+      isFirstLoad = false;
       list = arguments["list"] as List< PopupAdsEntityList> ;
       currentPage=arguments["index"]as int;
     }
@@ -91,6 +93,9 @@ class _OfferSliderScreenState extends State<OfferSliderScreen> {
                       scrollDirection: Axis.horizontal,
                       onPageChanged: (index) {
                         widget.ImageIndex=index;
+                        currentPage = index;
+                        setState(() {
+                        });
 
                         // _bloc.updateImageSliderNumber(index);
                       },

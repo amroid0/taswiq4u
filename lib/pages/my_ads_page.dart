@@ -15,6 +15,8 @@ import 'package:olx/utils/ToastUtils.dart';
 import 'package:olx/utils/global_locale.dart';
 import 'package:olx/widget/ads_widget_card.dart';
 import 'package:olx/widget/ads_widget_row.dart';
+import 'package:olx/widget/favroite_widget.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'edit_page.dart';
 
@@ -79,6 +81,9 @@ class _MyAdsPageState extends State<MyAdsPage> {
           break;
 
         case Status.ERROR:
+          ToastUtils.showErrorMessage(
+              allTranslations.text('not_allowed_feature'));
+
           break;
         case Status.COMPLETED:
           // TODO: Handle this case.
@@ -86,7 +91,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
           var isss = isLogged.data;
           if (isss) {
             Fluttertoast.showToast(
-                msg: "Featured",
+                msg:  allTranslations.text('success_distincit_ads'),
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
@@ -94,6 +99,12 @@ class _MyAdsPageState extends State<MyAdsPage> {
                 textColor: Colors.white,
                 fontSize: 16.0);
           } else {
+                fontSize: 16.0
+            );
+              _bloc.getMyAdsListe(1);
+
+          }else{
+
             Fluttertoast.showToast(
                 msg: "unFeatured",
                 toastLength: Toast.LENGTH_SHORT,
@@ -304,6 +315,61 @@ class _MyAdsPageState extends State<MyAdsPage> {
                       onTap: () {
                         _bloc.deleteAds(ads[adsIndex].Id.toString());
                       },
+                      onTap:(){
+                        Alert(
+                          context: context,
+                          title: allTranslations.text('delete'),
+                          desc: allTranslations.text('delete_msg'),
+                          style: AlertStyle(
+                            isCloseButton: false,
+                            alertBorder: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                          buttons: [
+                            DialogButton(
+                              radius: BorderRadius.all(Radius.circular(20)),
+                              child: Text(
+                                allTranslations.text('ok'),
+                                style: TextStyle(color: Colors.white, fontSize: 20),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                _bloc.deleteAds(ads[adsIndex].Id.toString());
+
+                              },
+                              width: 120,
+                              height: 56,
+                            ),
+                            DialogButton(
+                              radius: BorderRadius.all(Radius.circular(20)),
+                              child: Container(
+                                width: 120,
+                                height: 56,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                                    border: Border.all(
+                                      color: AppColors.accentColor,
+                                      width: 1,
+                                    )),
+                                child: Center(
+                                  child: Text(
+                                    allTranslations.text('cancel'),
+                                    style: TextStyle(
+                                        color: AppColors.accentColor, fontSize: 20),
+                                  ),
+                                ),
+                              ),
+                              onPressed: () => Navigator.pop(context),
+                              width: 120,
+                              height: 56,
+                              color: Colors.white,
+                            )
+                          ],
+                        ).show();
+
+                      } ,
                     ),
                   ],
                   child: AdsRowWidget(

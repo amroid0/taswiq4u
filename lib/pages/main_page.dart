@@ -494,7 +494,7 @@ class _MainScreenState extends State<MainScreen>
                           ],
                         )),
                     appBar: AppBar(
-                        toolbarHeight: 100,
+                        toolbarHeight: 70,
                         backgroundColor: Colors.white,
                         elevation: 0,
                         title: StreamBuilder<NavigationScreen>(
@@ -622,19 +622,13 @@ class _MainScreenState extends State<MainScreen>
   _onSelectItem(int index) {
     //  setState(() => _navSelectedIndex = index);
 
-    if (index == 2) {
-      bloc.navigateToScreen(NavigationScreen.MYADS);
-    } else if (index == 1) {
-      bloc.navigateToScreen(NavigationScreen.PRFOILE);
-    } else if (index == 3) {
-      bloc.navigateToScreen(NavigationScreen.FAVROITE);
-    } else if (index == 0) {
+     if (index == 0) {
       bloc.navigateToScreen(NavigationScreen.HOME);
-    } else if (index == 4) {
+    } else if (index == 1) {
       bloc.navigateToScreen(NavigationScreen.LANGUAGE);
-    } else if (index == 5) {
+    } else if (index == 2) {
       bloc.navigateToScreen(NavigationScreen.COUNTRY);
-    } else if (index == 6) {
+    } else if (index == 3) {
       bloc.navigateToScreen(NavigationScreen.CONTACT_US);
     } else if (index == 7) {
       bloc.navigateToScreen(NavigationScreen.RuLES);

@@ -15,6 +15,7 @@ import 'package:olx/utils/utils.dart';
 import 'package:olx/widget/favorite_card.dart';
 import 'package:olx/widget/favroite_widget.dart';
 import 'package:olx/widget/star_widget.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 
 class AdsCardWidget extends StatelessWidget {
@@ -73,7 +74,58 @@ class AdsCardWidget extends StatelessWidget {
                       child:editable?  StarWidget(
                           onFavChange:(val){
                             if(BlocProvider.of<LoginBloc>(context).isLogged())
-                              BlocProvider.of<AdsBloc>(context).distinictAds(model.Id.toString());
+                              Alert(
+                                context: context,
+                                title: allTranslations.text('feature'),
+                                desc: allTranslations.text('feature_msg'),
+                                style: AlertStyle(
+                                  isCloseButton: false,
+                                  alertBorder: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                ),
+                                buttons: [
+                                  DialogButton(
+                                    radius: BorderRadius.all(Radius.circular(20)),
+                                    child: Text(
+                                      allTranslations.text('ok'),
+                                      style: TextStyle(color: Colors.white, fontSize: 20),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      BlocProvider.of<AdsBloc>(context).distinictAds(model.Id.toString());
+
+                                    },
+                                    width: 120,
+                                    height: 56,
+                                  ),
+                                  DialogButton(
+                                    radius: BorderRadius.all(Radius.circular(20)),
+                                    child: Container(
+                                      width: 120,
+                                      height: 56,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                          BorderRadius.all(Radius.circular(20)),
+                                          border: Border.all(
+                                            color: AppColors.accentColor,
+                                            width: 1,
+                                          )),
+                                      child: Center(
+                                        child: Text(
+                                          allTranslations.text('cancel'),
+                                          style: TextStyle(
+                                              color: AppColors.accentColor, fontSize: 20),
+                                        ),
+                                      ),
+                                    ),
+                                    onPressed: () => Navigator.pop(context),
+                                    width: 120,
+                                    height: 56,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ).show();
                             else
                               Navigator.push(
                                   context, MaterialPageRoute(builder: (context) => ParentAuthPage()));                          },
