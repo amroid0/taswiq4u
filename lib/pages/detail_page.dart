@@ -5,9 +5,7 @@ import 'package:auto_direction/auto_direction.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_share/flutter_share.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -18,8 +16,6 @@ import 'package:olx/data/bloc/bloc_provider.dart';
 import 'package:olx/data/bloc/detail_bloc.dart';
 import 'package:olx/data/bloc/favroite_bloc.dart';
 import 'package:olx/data/bloc/login_bloc.dart';
-import 'package:olx/data/bloc/offer_bloc.dart';
-import 'package:olx/model/Counter.dart';
 import 'package:olx/model/Post_Report_entity.dart';
 import 'package:olx/model/ads_detail.dart';
 import 'package:olx/model/ads_entity.dart';
@@ -35,11 +31,7 @@ import 'package:olx/widget/favroite_widget.dart';
 import 'package:olx/widget/map_widget.dart';
 import 'package:olx/widget/star_widget.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'image_viewer_page.dart';
-import 'offer_detail_slider_page.dart';
 
 class DetailPage extends StatefulWidget {
   bool isEditable;
@@ -143,7 +135,6 @@ class _DetailPageState extends State<DetailPage> {
         case Status.ERROR:
           ToastUtils.showErrorMessage(allTranslations.text('err_wrong'));
 
-
           break;
 
         case Status.COMPLETED:
@@ -176,10 +167,8 @@ class _DetailPageState extends State<DetailPage> {
               allTranslations.text('success_distincit_ads'));
           BlocProvider.of<AdsBloc>(context).getMyAdsListe(1);
 
-
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            setState(() {
-            });
+            setState(() {});
           });
           break;
       }
@@ -196,7 +185,6 @@ class _DetailPageState extends State<DetailPage> {
       bloc: _bloc,
       child: Scaffold(
         key: detailScaffoldMessengerKey,
-
         body: StreamBuilder<ApiResponse<AdsDetail>>(
           stream: _bloc.stream,
           builder: (context, snapshot) {
@@ -268,7 +256,8 @@ class _DetailPageState extends State<DetailPage> {
                                         ),
                                         child: FavroiteWidget(
                                           onFavChange: (val) {
-                                            if (BlocProvider.of<LoginBloc>(context)
+                                            if (BlocProvider.of<LoginBloc>(
+                                                    context)
                                                 .isLogged())
                                               favbloc.changeFavoriteState(
                                                   val, detail.Id);
@@ -280,9 +269,8 @@ class _DetailPageState extends State<DetailPage> {
                                                           ParentAuthPage()));
                                           },
                                           value: detail.IsFavorite,
-                                          bgColor:  Color(0xffa49399),
-                                            iconColor: Colors.white
-            ,
+                                          bgColor: Color(0xffa49399),
+                                          iconColor: Colors.white,
                                         )),
                                   ),
                                   SizedBox(
@@ -295,7 +283,8 @@ class _DetailPageState extends State<DetailPage> {
                                         await FlutterShare.share(
                                             title: 'Taswiq share',
                                             linkUrl: detail.TextShareEn,
-                                            chooserTitle: 'taswiq Chooser Title');
+                                            chooserTitle:
+                                                'taswiq Chooser Title');
                                       },
                                       child: Container(
                                           width: 45,
@@ -314,7 +303,6 @@ class _DetailPageState extends State<DetailPage> {
                                           )),
                                     ),
                                   ),
-
                                   SizedBox(
                                     width: 10,
                                   ),
@@ -332,54 +320,73 @@ class _DetailPageState extends State<DetailPage> {
                                         ),
                                         child: StarWidget(
                                           onFavChange: (val) {
-                                            if (BlocProvider.of<LoginBloc>(context)
+                                            if (BlocProvider.of<LoginBloc>(
+                                                    context)
                                                 .isLogged())
                                               Alert(
                                                 context: context,
-                                                title: allTranslations.text('feature'),
-                                                desc: allTranslations.text('feature_msg'),
+                                                title: allTranslations
+                                                    .text('feature'),
+                                                desc: allTranslations
+                                                    .text('feature_msg'),
                                                 style: AlertStyle(
                                                   isCloseButton: false,
-                                                  alertBorder: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(20.0),
+                                                  alertBorder:
+                                                      RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20.0),
                                                   ),
                                                 ),
                                                 buttons: [
                                                   DialogButton(
-                                                    radius: BorderRadius.all(Radius.circular(20)),
+                                                    radius: BorderRadius.all(
+                                                        Radius.circular(20)),
                                                     child: Text(
-                                                      allTranslations.text('ok'),
-                                                      style: TextStyle(color: Colors.white, fontSize: 20),
+                                                      allTranslations
+                                                          .text('ok'),
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 20),
                                                     ),
                                                     onPressed: () {
                                                       Navigator.pop(context);
-                                                      _bloc.distinictAds(detail.Id.toString());
-
+                                                      _bloc.distinictAds(
+                                                          detail.Id.toString());
                                                     },
                                                     width: 120,
                                                     height: 56,
                                                   ),
                                                   DialogButton(
-                                                    radius: BorderRadius.all(Radius.circular(20)),
+                                                    radius: BorderRadius.all(
+                                                        Radius.circular(20)),
                                                     child: Container(
                                                       width: 120,
                                                       height: 56,
                                                       decoration: BoxDecoration(
                                                           borderRadius:
-                                                          BorderRadius.all(Radius.circular(20)),
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          20)),
                                                           border: Border.all(
-                                                            color: AppColors.accentColor,
+                                                            color: AppColors
+                                                                .accentColor,
                                                             width: 1,
                                                           )),
                                                       child: Center(
                                                         child: Text(
-                                                          allTranslations.text('cancel'),
+                                                          allTranslations
+                                                              .text('cancel'),
                                                           style: TextStyle(
-                                                              color: AppColors.accentColor, fontSize: 20),
+                                                              color: AppColors
+                                                                  .accentColor,
+                                                              fontSize: 20),
                                                         ),
                                                       ),
                                                     ),
-                                                    onPressed: () => Navigator.pop(context),
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
                                                     width: 120,
                                                     height: 56,
                                                     color: Colors.white,
@@ -394,25 +401,25 @@ class _DetailPageState extends State<DetailPage> {
                                                           ParentAuthPage()));
                                           },
                                           value: detail.IsFavorite,
-                                          bgColor:  Color(0xffa49399),
-                                          iconColor: Colors.white
-                                          ,
+                                          bgColor: Color(0xffa49399),
+                                          iconColor: Colors.white,
                                         )),
                                   ),
                                   SizedBox(
                                     width: 10,
                                   ),
                                   Visibility(
-                                    visible:widget.isEditable,
+                                    visible: widget.isEditable,
                                     child: GestureDetector(
                                       onTap: () async {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => BlocProvider(
-                                                  bloc: AdsBloc(),
-                                                  child: EditPage(detail),
-                                                ),
+                                                builder: (context) =>
+                                                    BlocProvider(
+                                                      bloc: AdsBloc(),
+                                                      child: EditPage(detail),
+                                                    ),
                                                 settings: RouteSettings(
                                                     arguments: detail)));
                                       },
@@ -437,62 +444,75 @@ class _DetailPageState extends State<DetailPage> {
                                     width: 10,
                                   ),
                                   Visibility(
-                                    visible:widget.isEditable,
-
+                                    visible: widget.isEditable,
                                     child: GestureDetector(
                                       onTap: () async {
                                         Alert(
                                           context: context,
                                           title: allTranslations.text('delete'),
-                                          desc: allTranslations.text('delete_msg'),
+                                          desc: allTranslations
+                                              .text('delete_msg'),
                                           style: AlertStyle(
                                             isCloseButton: false,
                                             alertBorder: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(20.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0),
                                             ),
                                           ),
                                           buttons: [
                                             DialogButton(
-                                              radius: BorderRadius.all(Radius.circular(20)),
+                                              radius: BorderRadius.all(
+                                                  Radius.circular(20)),
                                               child: Text(
                                                 allTranslations.text('ok'),
-                                                style: TextStyle(color: Colors.white, fontSize: 20),
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20),
                                               ),
                                               onPressed: () {
                                                 Navigator.pop(context);
-                                                _bloc.deleteAds(detail.Id.toString());
+                                                _bloc.deleteAds(
+                                                    detail.Id.toString());
                                               },
                                               width: 120,
                                               height: 56,
                                             ),
                                             DialogButton(
-                                              radius: BorderRadius.all(Radius.circular(20)),
+                                              radius: BorderRadius.all(
+                                                  Radius.circular(20)),
                                               child: Container(
                                                 width: 120,
                                                 height: 56,
                                                 decoration: BoxDecoration(
                                                     borderRadius:
-                                                    BorderRadius.all(Radius.circular(20)),
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                20)),
                                                     border: Border.all(
-                                                      color: AppColors.accentColor,
+                                                      color:
+                                                          AppColors.accentColor,
                                                       width: 1,
                                                     )),
                                                 child: Center(
                                                   child: Text(
-                                                    allTranslations.text('cancel'),
+                                                    allTranslations
+                                                        .text('cancel'),
                                                     style: TextStyle(
-                                                        color: AppColors.accentColor, fontSize: 20),
+                                                        color: AppColors
+                                                            .accentColor,
+                                                        fontSize: 20),
                                                   ),
                                                 ),
                                               ),
-                                              onPressed: () => Navigator.pop(context),
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
                                               width: 120,
                                               height: 56,
                                               color: Colors.white,
                                             )
                                           ],
                                         ).show();
-                                        },
+                                      },
                                       child: Container(
                                           width: 45,
                                           height: 45,
@@ -510,13 +530,9 @@ class _DetailPageState extends State<DetailPage> {
                                           )),
                                     ),
                                   ),
-
-
-
                                 ],
                               ),
                             ),
-
                           ]),
                           SizedBox(
                             height: 10,
@@ -534,7 +550,6 @@ class _DetailPageState extends State<DetailPage> {
                     Container(
                       padding: EdgeInsets.all(16),
                       decoration: BoxDecoration(
-
                         color: Colors.white,
                         borderRadius: new BorderRadius.only(
                           topLeft: const Radius.circular(30.0),
@@ -546,7 +561,6 @@ class _DetailPageState extends State<DetailPage> {
                         children: [
                           Expanded(
                             child: OutlinedButton(
-
                               onPressed: () {
                                 _textMe();
                               },
@@ -556,15 +570,17 @@ class _DetailPageState extends State<DetailPage> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 16,),
+                          SizedBox(
+                            width: 16,
+                          ),
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () {
                                 _makePhoneCall('tel:${detailArgs.UserPhone}');
-
                               },
                               child: Text(allTranslations.text('call_detail')),
-                              style: ElevatedButton.styleFrom(shape: StadiumBorder()),
+                              style: ElevatedButton.styleFrom(
+                                  shape: StadiumBorder()),
                             ),
                           )
                         ],
@@ -649,16 +665,22 @@ class _DetailPageState extends State<DetailPage> {
     List<Widget> widgets = [];
     final title = Column(
       children: <Widget>[
-        Align(alignment: AlignmentDirectional.topStart,
+        Align(
+          alignment: AlignmentDirectional.topStart,
           child: Text(
             allTranslations.isEnglish
                 ? detail.EnglishTitle
                 : detail.ArabicTitle,
-            style: TextStyle(fontSize: 16,color: Color(0xff2D3142),fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: 16,
+                color: Color(0xff2D3142),
+                fontWeight: FontWeight.bold),
             maxLines: 1,
           ),
         ),
-        SizedBox(height: 8,),
+        SizedBox(
+          height: 8,
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -666,7 +688,10 @@ class _DetailPageState extends State<DetailPage> {
               detail.Price == null
                   ? ""
                   : '${detail.Price}  ${allTranslations.text('cuurency')}',
-              style: TextStyle(fontSize: 16, color: Color(0xff53B553),fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 16,
+                  color: Color(0xff53B553),
+                  fontWeight: FontWeight.bold),
             ),
             Text(
               detail.CreationTime == null
@@ -676,30 +701,56 @@ class _DetailPageState extends State<DetailPage> {
             ),
           ],
         ),
-        SizedBox(height: 8,),
-        Divider(color: Colors.black.withOpacity(.16),),
-        SizedBox(height: 8,),
-
+        SizedBox(
+          height: 8,
+        ),
         Row(
-          mainAxisAlignment:MainAxisAlignment.spaceBetween ,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-                "${allTranslations.isEnglish ? detail.StateNameEnglish : detail.StateNameArabic}",style: TextStyle(color:Color(0xff818391),fontSize: 11),),
-
-               InkWell(
-                 onTap: (){
-                   navigateTo(detail.LocationLatitude, detail.LocationLongtude);
-                 },
-                 child: Icon(Icons.directions,color: AppColors.accentColor,),
-               )
+            Image.asset(
+              'images/car_brand.png',
+              fit: BoxFit.cover,
+            ),
+            Image.asset('images/car_name.png', fit: BoxFit.cover),
+            Image.asset('images/car_year.png', fit: BoxFit.cover),
           ],
         ),
-        SizedBox(height: 8,),
-        Divider(color: Colors.black.withOpacity(.16),),
-        SizedBox(height: 16,),
-
-
-
+        SizedBox(
+          height: 8,
+        ),
+        Divider(
+          color: Colors.black.withOpacity(.16),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "${allTranslations.isEnglish ? detail.StateNameEnglish : detail.StateNameArabic}",
+              style: TextStyle(color: Color(0xff818391), fontSize: 11),
+            ),
+            InkWell(
+              onTap: () {
+                navigateTo(detail.LocationLatitude, detail.LocationLongtude);
+              },
+              child: Icon(
+                Icons.directions,
+                color: AppColors.accentColor,
+              ),
+            )
+          ],
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        Divider(
+          color: Colors.black.withOpacity(.16),
+        ),
+        SizedBox(
+          height: 16,
+        ),
       ],
     ); //title and price
     /*final viewCount = Container(
@@ -707,7 +758,7 @@ class _DetailPageState extends State<DetailPage> {
       height: 40,
       decoration: BoxDecoration(
           color: Color(0xffe6e6e6), borderRadius: BorderRadius.circular(10)),
-      *//*child: Row(
+      */ /*child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           StreamBuilder(
@@ -721,13 +772,13 @@ class _DetailPageState extends State<DetailPage> {
               }),
           Text("${allTranslations.text('id')}: ${detail.Id}")
         ],
-      ),*//*
+      ),*/ /*
     );*/
     widgets.add(title);
     widgets.add(SizedBox(
       height: 8,
     ));
-  //  widgets.add(viewCount);
+    //  widgets.add(viewCount);
 
     widgets.add(Text(allTranslations.text("properties"),
         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)));
@@ -745,31 +796,35 @@ class _DetailPageState extends State<DetailPage> {
         }
 
         widgets.add(ListTile(
-          tileColor:Color(0xffF6F8FA),
+          tileColor: Color(0xffF6F8FA),
           dense: true,
           leading: Text(
             allTranslations.isEnglish ? spec.NameEnglish : spec.NameArabic,
-            style: TextStyle(fontSize: 14,color: Color(0xff2D3142)),
+            style: TextStyle(fontSize: 14, color: Color(0xff2D3142)),
           ),
-          trailing: Text(value,style: TextStyle(fontSize: 14,color: Color(0xff2D3142))),
+          trailing: Text(value,
+              style: TextStyle(fontSize: 14, color: Color(0xff2D3142))),
         ));
         widgets.add(Container(
-            color:Color(0xffF6F8FA),
-            child: Divider(color: Color(0x1A818391),)));
+            color: Color(0xffF6F8FA),
+            child: Divider(
+              color: Color(0x1A818391),
+            )));
       } else {
         if (spec.CustomValue != null) {
           widgets.add(ListTile(
-            tileColor:Color(0xffF6F8FA),
+            tileColor: Color(0xffF6F8FA),
             leading: Text(
                 "${allTranslations.isEnglish ? spec.NameEnglish : spec.NameArabic}",
-              style: TextStyle(fontSize: 14,color: Color(0xff2D3142))),
-            trailing: Text(
-              "${spec.CustomValue}",style: TextStyle(fontSize: 14,color: Color(0xff2D3142))
-            ),
+                style: TextStyle(fontSize: 14, color: Color(0xff2D3142))),
+            trailing: Text("${spec.CustomValue}",
+                style: TextStyle(fontSize: 14, color: Color(0xff2D3142))),
           ));
-          widgets.add(Container(            color:Color(0xffF6F8FA),
-              child: Divider(color: Color(0x1A818391),)));
-
+          widgets.add(Container(
+              color: Color(0xffF6F8FA),
+              child: Divider(
+                color: Color(0x1A818391),
+              )));
         }
       }
       isEvenRow = !isEvenRow;
@@ -807,20 +862,18 @@ class _DetailPageState extends State<DetailPage> {
       height: 16,
     ));
 
-
-
     final actions = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-   FlatButton.icon(
-        onPressed: () {
-      _bloc.translateAds();
-    },
-    icon: Icon(
-    Icons.translate,
-    color: Colors.blueAccent,
-    ),
-    label: Text(allTranslations.text('translate'))),
+        FlatButton.icon(
+            onPressed: () {
+              _bloc.translateAds();
+            },
+            icon: Icon(
+              Icons.translate,
+              color: Colors.blueAccent,
+            ),
+            label: Text(allTranslations.text('translate'))),
         FlatButton.icon(
             onPressed: () {
               // setState(() {
@@ -837,82 +890,91 @@ class _DetailPageState extends State<DetailPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical:4.0,horizontal: 16),
-                          child: Text(allTranslations.text('select_reason'),style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
-                        ),
-                        Container(
-                          width: 600,
-                          height: 200,
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: reportReasons.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return InkWell(
-                              onTap: (){
-                              setState(() {
-                              _select_Types = reportReasons[index];
-
-                              });},
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom:8.0),
-                                  child: Row(
-                                    children: [
-                                      _select_Types == reportReasons[index]
-                                          ? Icon(
-                                              Icons.check_circle_rounded,
-                                              color: Colors.green,
-                                              size: 24,
-                                            )
-                                          : SizedBox(width: 24,),
-                                      SizedBox(width: 8,),
-                                      Text(
-                                        reportReasons[index],
-                                        style: new TextStyle(
-                                            fontSize: 12.0,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-
-                          ),
-                        )
-
-                        ,
-                        SizedBox(
-                          height: 10,
-                        ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical:4.0,horizontal: 16),
-                              child: Text(allTranslations.text('comment'),style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4.0, horizontal: 16),
+                              child: Text(
+                                allTranslations.text('select_reason'),
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
                             ),
+                            Container(
+                              width: 600,
+                              height: 200,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: reportReasons.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        _select_Types = reportReasons[index];
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 8.0),
+                                      child: Row(
+                                        children: [
+                                          _select_Types == reportReasons[index]
+                                              ? Icon(
+                                                  Icons.check_circle_rounded,
+                                                  color: Colors.green,
+                                                  size: 24,
+                                                )
+                                              : SizedBox(
+                                                  width: 24,
+                                                ),
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text(
+                                            reportReasons[index],
+                                            style: new TextStyle(
+                                                fontSize: 12.0,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4.0, horizontal: 16),
+                              child: Text(
+                                allTranslations.text('comment'),
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  color: Colors.white10.withOpacity(0.5)),
+                              height: 100,
+                              //  color:Colors.black12,
+                              margin: EdgeInsets.all(20),
 
-                        Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              color: Colors.white10.withOpacity(0.5)),
-                          height: 100,
-                          //  color:Colors.black12,
-                          margin: EdgeInsets.all(20),
-
-                          child: TextField(
-
-                              controller: message,
-                              decoration: new InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  borderSide: BorderSide.none,
-                                ),
-                                hintText: allTranslations.text('new_comment'),
-                                hintStyle: TextStyle(color: Colors.grey),
-
-                              )),
-                        ),
-                      ]),
+                              child: TextField(
+                                  controller: message,
+                                  decoration: new InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    hintText:
+                                        allTranslations.text('new_comment'),
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                  )),
+                            ),
+                          ]),
                     ),
                   ),
                   buttons: [
@@ -1027,14 +1089,15 @@ class _DetailPageState extends State<DetailPage> {
       throw 'Could not launch ${uri.toString()}';
     }
   }
-_formatDate(String date){
 
-  DateTime parseDate =
-  new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").parse(date);
-  var inputDate = DateTime.parse(parseDate.toString());
-  var outputFormat = DateFormat('MM/dd/yyyy');
- return outputFormat.format(inputDate);
-}
+  _formatDate(String date) {
+    DateTime parseDate =
+        new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").parse(date);
+    var inputDate = DateTime.parse(parseDate.toString());
+    var outputFormat = DateFormat('MM/dd/yyyy');
+    return outputFormat.format(inputDate);
+  }
+
   bool AddReport() {
 //     return Container(
 //       margin:EdgeInsets.only(top:100),

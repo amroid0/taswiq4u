@@ -37,7 +37,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
   AdsBloc _bloc = AdsBloc();
 
   ArsProgressDialog progressDialog;
-
+  AppBar appBar;
   @override
   void initState() {
     // TODO: implement initState
@@ -144,38 +144,63 @@ class _MyAdsPageState extends State<MyAdsPage> {
   @override
   Widget build(BuildContext context) {
     //  appBar=
+    appBar = AppBar(
+      title: Text(
+        allTranslations.text('my_ads'),
+        //textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.black),
+      ),
+      backgroundColor: Colors.transparent,
+      bottomOpacity: 0.0,
+      elevation: 0.0,
+      centerTitle: true,
+      automaticallyImplyLeading: false,
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back_ios,
+          color: Colors.black,
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        tooltip: 'back',
+      ),
+      actions: <Widget>[],
+    );
     return Scaffold(
       backgroundColor: AppColors.appBackground,
-      appBar: AppBar(
-        leading: Row(
-          children: [
-            IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios_sharp,
-                color: Colors.black,
-                size: 35,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              tooltip: 'back',
-            ),
-          ],
-        ),
-        title: Text(
-          'My Ads',
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.black),
-        ),
+      appBar: appBar,
 
-        backgroundColor: Colors.transparent,
-        bottomOpacity: 0.0,
-        elevation: 0.0,
-        automaticallyImplyLeading: false,
-        // actions: <Widget>[
-        //
-        // ],
-      ),
+      // appBar: AppBar(
+      //   leading: Row(
+      //     children: [
+      //       IconButton(
+      //         icon: Icon(
+      //           Icons.arrow_back_ios_sharp,
+      //           color: Colors.black,
+      //           size: 35,
+      //         ),
+      //         onPressed: () {
+      //           Navigator.pop(context);
+      //         },
+      //         tooltip: 'back',
+      //       ),
+      //     ],
+      //   ),
+      //   title: Text(
+      //     'My Ads',
+      //     textAlign: TextAlign.center,
+      //     style: TextStyle(color: Colors.black),
+      //   ),
+      //
+      //   backgroundColor: Colors.transparent,
+      //   bottomOpacity: 0.0,
+      //   elevation: 0.0,
+      //   automaticallyImplyLeading: false,
+      //   // actions: <Widget>[
+      //   //
+      //   // ],
+      // ),
       body: Column(
         children: <Widget>[
           SizedBox(
